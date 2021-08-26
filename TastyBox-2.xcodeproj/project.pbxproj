@@ -1,0 +1,508 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 51;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		6C42AB79224F82F291E8649C /* Pods_TastyBox_2.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 31998F575D6DFD85DDEBE41B /* Pods_TastyBox_2.framework */; };
+		6FB06F3D26D67E0100E110B4 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FB06F3C26D67E0100E110B4 /* AppDelegate.swift */; };
+		6FB06F3F26D67E0100E110B4 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FB06F3E26D67E0100E110B4 /* SceneDelegate.swift */; };
+		6FB06F4126D67E0100E110B4 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FB06F4026D67E0100E110B4 /* ViewController.swift */; };
+		6FB06F4426D67E0100E110B4 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 6FB06F4226D67E0100E110B4 /* Main.storyboard */; };
+		6FB06F4626D67E0600E110B4 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 6FB06F4526D67E0600E110B4 /* Assets.xcassets */; };
+		6FB06F4926D67E0600E110B4 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 6FB06F4726D67E0600E110B4 /* LaunchScreen.storyboard */; };
+		6FBCB91226D7B5F200C050B2 /* User.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FBCB91126D7B5F200C050B2 /* User.swift */; };
+		6FBCB92126D7B73200C050B2 /* Login in Resources */ = {isa = PBXBuildFile; fileRef = 6FBCB92026D7B73100C050B2 /* Login */; };
+		6FF66B8926D7975C0024495E /* Login.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 6FF66B8826D7975C0024495E /* Login.storyboard */; };
+		6FF66B9726D7AEC20024495E /* BindableType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FF66B9626D7AEC20024495E /* BindableType.swift */; };
+		6FF66B9C26D7AF430024495E /* LoginMainVM.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FF66B9826D7AF430024495E /* LoginMainVM.swift */; };
+		6FF66B9D26D7AF430024495E /* RegisterUserProfileVM.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FF66B9926D7AF430024495E /* RegisterUserProfileVM.swift */; };
+		6FF66B9E26D7AF430024495E /* RegisterEmailVM.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FF66B9A26D7AF430024495E /* RegisterEmailVM.swift */; };
+		6FF66B9F26D7AF430024495E /* ResetPasswordVM.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FF66B9B26D7AF430024495E /* ResetPasswordVM.swift */; };
+		6FF66BA426D7B0800024495E /* LoginMainDM.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FF66BA226D7B0800024495E /* LoginMainDM.swift */; };
+		6FF66BA526D7B0800024495E /* RegisterAccountDM.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FF66BA326D7B0800024495E /* RegisterAccountDM.swift */; };
+		6FF66BA826D7B13D0024495E /* About.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 6FF66BA726D7B13D0024495E /* About.storyboard */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		31998F575D6DFD85DDEBE41B /* Pods_TastyBox_2.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_TastyBox_2.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		5EB9D5E76D189AE2537CC252 /* Pods-TastyBox-2.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-TastyBox-2.release.xcconfig"; path = "Target Support Files/Pods-TastyBox-2/Pods-TastyBox-2.release.xcconfig"; sourceTree = "<group>"; };
+		6FB06F3926D67E0100E110B4 /* TastyBox-2.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "TastyBox-2.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		6FB06F3C26D67E0100E110B4 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
+		6FB06F3E26D67E0100E110B4 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
+		6FB06F4026D67E0100E110B4 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
+		6FB06F4326D67E0100E110B4 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
+		6FB06F4526D67E0600E110B4 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		6FB06F4826D67E0600E110B4 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
+		6FB06F4A26D67E0600E110B4 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		6FBCB91126D7B5F200C050B2 /* User.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = User.swift; sourceTree = "<group>"; };
+		6FBCB92026D7B73100C050B2 /* Login */ = {isa = PBXFileReference; lastKnownFileType = folder; path = Login; sourceTree = "<group>"; };
+		6FF66B8826D7975C0024495E /* Login.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = Login.storyboard; sourceTree = "<group>"; };
+		6FF66B9626D7AEC20024495E /* BindableType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BindableType.swift; sourceTree = "<group>"; };
+		6FF66B9826D7AF430024495E /* LoginMainVM.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LoginMainVM.swift; sourceTree = "<group>"; };
+		6FF66B9926D7AF430024495E /* RegisterUserProfileVM.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RegisterUserProfileVM.swift; sourceTree = "<group>"; };
+		6FF66B9A26D7AF430024495E /* RegisterEmailVM.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RegisterEmailVM.swift; sourceTree = "<group>"; };
+		6FF66B9B26D7AF430024495E /* ResetPasswordVM.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ResetPasswordVM.swift; sourceTree = "<group>"; };
+		6FF66BA226D7B0800024495E /* LoginMainDM.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LoginMainDM.swift; sourceTree = "<group>"; };
+		6FF66BA326D7B0800024495E /* RegisterAccountDM.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RegisterAccountDM.swift; sourceTree = "<group>"; };
+		6FF66BA726D7B13D0024495E /* About.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = About.storyboard; sourceTree = "<group>"; };
+		DA5A563E1246A4C7C506034F /* Pods-TastyBox-2.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-TastyBox-2.debug.xcconfig"; path = "Target Support Files/Pods-TastyBox-2/Pods-TastyBox-2.debug.xcconfig"; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		6FB06F3626D67E0100E110B4 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				6C42AB79224F82F291E8649C /* Pods_TastyBox_2.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		4264DBE177D299CC222EC2CC /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				31998F575D6DFD85DDEBE41B /* Pods_TastyBox_2.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		45ADD427D57A033E99108C72 /* Pods */ = {
+			isa = PBXGroup;
+			children = (
+				DA5A563E1246A4C7C506034F /* Pods-TastyBox-2.debug.xcconfig */,
+				5EB9D5E76D189AE2537CC252 /* Pods-TastyBox-2.release.xcconfig */,
+			);
+			path = Pods;
+			sourceTree = "<group>";
+		};
+		6FB06F3026D67E0100E110B4 = {
+			isa = PBXGroup;
+			children = (
+				6FB06F3B26D67E0100E110B4 /* TastyBox-2 */,
+				6FB06F3A26D67E0100E110B4 /* Products */,
+				45ADD427D57A033E99108C72 /* Pods */,
+				4264DBE177D299CC222EC2CC /* Frameworks */,
+			);
+			sourceTree = "<group>";
+		};
+		6FB06F3A26D67E0100E110B4 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				6FB06F3926D67E0100E110B4 /* TastyBox-2.app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		6FB06F3B26D67E0100E110B4 /* TastyBox-2 */ = {
+			isa = PBXGroup;
+			children = (
+				6FB06F3C26D67E0100E110B4 /* AppDelegate.swift */,
+				6FB06F3E26D67E0100E110B4 /* SceneDelegate.swift */,
+				6FB06F4026D67E0100E110B4 /* ViewController.swift */,
+				6FF66BA626D7B0870024495E /* DataManager */,
+				6FF66B8D26D7A9DE0024495E /* ViewControllers */,
+				6FF66BA126D7AF570024495E /* ViewModel */,
+				6FF66B7926D693350024495E /* Storyboard */,
+				6FB06F4526D67E0600E110B4 /* Assets.xcassets */,
+				6FB06F4726D67E0600E110B4 /* LaunchScreen.storyboard */,
+				6FB06F4A26D67E0600E110B4 /* Info.plist */,
+				6FF66B9626D7AEC20024495E /* BindableType.swift */,
+				6FBCB91126D7B5F200C050B2 /* User.swift */,
+			);
+			path = "TastyBox-2";
+			sourceTree = "<group>";
+		};
+		6FBCB92226D7B75900C050B2 /* Login */ = {
+			isa = PBXGroup;
+			children = (
+				6FF66BA226D7B0800024495E /* LoginMainDM.swift */,
+				6FF66BA326D7B0800024495E /* RegisterAccountDM.swift */,
+			);
+			path = Login;
+			sourceTree = "<group>";
+		};
+		6FF66B7926D693350024495E /* Storyboard */ = {
+			isa = PBXGroup;
+			children = (
+				6FB06F4226D67E0100E110B4 /* Main.storyboard */,
+				6FF66B8826D7975C0024495E /* Login.storyboard */,
+				6FF66BA726D7B13D0024495E /* About.storyboard */,
+			);
+			path = Storyboard;
+			sourceTree = "<group>";
+		};
+		6FF66B8D26D7A9DE0024495E /* ViewControllers */ = {
+			isa = PBXGroup;
+			children = (
+				6FBCB92026D7B73100C050B2 /* Login */,
+			);
+			path = ViewControllers;
+			sourceTree = "<group>";
+		};
+		6FF66BA026D7AF4D0024495E /* Login */ = {
+			isa = PBXGroup;
+			children = (
+				6FF66B9826D7AF430024495E /* LoginMainVM.swift */,
+				6FF66B9A26D7AF430024495E /* RegisterEmailVM.swift */,
+				6FF66B9926D7AF430024495E /* RegisterUserProfileVM.swift */,
+				6FF66B9B26D7AF430024495E /* ResetPasswordVM.swift */,
+			);
+			path = Login;
+			sourceTree = "<group>";
+		};
+		6FF66BA126D7AF570024495E /* ViewModel */ = {
+			isa = PBXGroup;
+			children = (
+				6FF66BA026D7AF4D0024495E /* Login */,
+			);
+			path = ViewModel;
+			sourceTree = "<group>";
+		};
+		6FF66BA626D7B0870024495E /* DataManager */ = {
+			isa = PBXGroup;
+			children = (
+				6FBCB92226D7B75900C050B2 /* Login */,
+			);
+			path = DataManager;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		6FB06F3826D67E0100E110B4 /* TastyBox-2 */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 6FB06F4D26D67E0600E110B4 /* Build configuration list for PBXNativeTarget "TastyBox-2" */;
+			buildPhases = (
+				071FC321DF8EA7940A81DCA0 /* [CP] Check Pods Manifest.lock */,
+				6FB06F3526D67E0100E110B4 /* Sources */,
+				6FB06F3626D67E0100E110B4 /* Frameworks */,
+				6FB06F3726D67E0100E110B4 /* Resources */,
+				77C62435A37559D3FAEBB34C /* [CP] Embed Pods Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "TastyBox-2";
+			productName = "TastyBox-2";
+			productReference = 6FB06F3926D67E0100E110B4 /* TastyBox-2.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		6FB06F3126D67E0100E110B4 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastSwiftUpdateCheck = 1250;
+				LastUpgradeCheck = 1250;
+				TargetAttributes = {
+					6FB06F3826D67E0100E110B4 = {
+						CreatedOnToolsVersion = 12.5.1;
+					};
+				};
+			};
+			buildConfigurationList = 6FB06F3426D67E0100E110B4 /* Build configuration list for PBXProject "TastyBox-2" */;
+			compatibilityVersion = "Xcode 9.3";
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = 6FB06F3026D67E0100E110B4;
+			productRefGroup = 6FB06F3A26D67E0100E110B4 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				6FB06F3826D67E0100E110B4 /* TastyBox-2 */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		6FB06F3726D67E0100E110B4 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				6FBCB92126D7B73200C050B2 /* Login in Resources */,
+				6FF66B8926D7975C0024495E /* Login.storyboard in Resources */,
+				6FF66BA826D7B13D0024495E /* About.storyboard in Resources */,
+				6FB06F4926D67E0600E110B4 /* LaunchScreen.storyboard in Resources */,
+				6FB06F4626D67E0600E110B4 /* Assets.xcassets in Resources */,
+				6FB06F4426D67E0100E110B4 /* Main.storyboard in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		071FC321DF8EA7940A81DCA0 /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-TastyBox-2-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+		77C62435A37559D3FAEBB34C /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-TastyBox-2/Pods-TastyBox-2-frameworks-${CONFIGURATION}-input-files.xcfilelist",
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-TastyBox-2/Pods-TastyBox-2-frameworks-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-TastyBox-2/Pods-TastyBox-2-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+/* End PBXShellScriptBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		6FB06F3526D67E0100E110B4 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				6FF66B9726D7AEC20024495E /* BindableType.swift in Sources */,
+				6FF66B9C26D7AF430024495E /* LoginMainVM.swift in Sources */,
+				6FF66BA526D7B0800024495E /* RegisterAccountDM.swift in Sources */,
+				6FB06F4126D67E0100E110B4 /* ViewController.swift in Sources */,
+				6FBCB91226D7B5F200C050B2 /* User.swift in Sources */,
+				6FF66B9E26D7AF430024495E /* RegisterEmailVM.swift in Sources */,
+				6FB06F3D26D67E0100E110B4 /* AppDelegate.swift in Sources */,
+				6FF66B9D26D7AF430024495E /* RegisterUserProfileVM.swift in Sources */,
+				6FF66B9F26D7AF430024495E /* ResetPasswordVM.swift in Sources */,
+				6FB06F3F26D67E0100E110B4 /* SceneDelegate.swift in Sources */,
+				6FF66BA426D7B0800024495E /* LoginMainDM.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXVariantGroup section */
+		6FB06F4226D67E0100E110B4 /* Main.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				6FB06F4326D67E0100E110B4 /* Base */,
+			);
+			name = Main.storyboard;
+			sourceTree = "<group>";
+		};
+		6FB06F4726D67E0600E110B4 /* LaunchScreen.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				6FB06F4826D67E0600E110B4 /* Base */,
+			);
+			name = LaunchScreen.storyboard;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
+
+/* Begin XCBuildConfiguration section */
+		6FB06F4B26D67E0600E110B4 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 14.5;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = iphoneos;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+			};
+			name = Debug;
+		};
+		6FB06F4C26D67E0600E110B4 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 14.5;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				SDKROOT = iphoneos;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		6FB06F4E26D67E0600E110B4 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = DA5A563E1246A4C7C506034F /* Pods-TastyBox-2.debug.xcconfig */;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = KS3JUH2DN7;
+				INFOPLIST_FILE = "TastyBox-2/Info.plist";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = "com.shihomikitajima.TastyBox-2";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		6FB06F4F26D67E0600E110B4 /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 5EB9D5E76D189AE2537CC252 /* Pods-TastyBox-2.release.xcconfig */;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = KS3JUH2DN7;
+				INFOPLIST_FILE = "TastyBox-2/Info.plist";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = "com.shihomikitajima.TastyBox-2";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		6FB06F3426D67E0100E110B4 /* Build configuration list for PBXProject "TastyBox-2" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				6FB06F4B26D67E0600E110B4 /* Debug */,
+				6FB06F4C26D67E0600E110B4 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		6FB06F4D26D67E0600E110B4 /* Build configuration list for PBXNativeTarget "TastyBox-2" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				6FB06F4E26D67E0600E110B4 /* Debug */,
+				6FB06F4F26D67E0600E110B4 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 6FB06F3126D67E0100E110B4 /* Project object */;
+}
