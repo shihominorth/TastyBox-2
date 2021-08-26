@@ -56,8 +56,8 @@ class FirstTimeUserProfileTableViewController: UITableViewController, UIPickerVi
         userNameTextField.text = Auth.auth().currentUser?.displayName
         emailTextField.text = Auth.auth().currentUser?.email
         
-        var ref: DatabaseReference!
-        ref = Database.database().reference()
+//        var ref: DatabaseReference!
+//        ref = Database.database().reference()
         
         familyPicker.delegate = self
         familyPicker.dataSource = self
@@ -76,9 +76,9 @@ class FirstTimeUserProfileTableViewController: UITableViewController, UIPickerVi
         let tap = UITapGestureRecognizer(target: self, action: #selector(closeKeyboard))
         view.addGestureRecognizer(tap)
         
-        dataManager.delegate = self
-        dataManager.getUserImageInFirst()
-        dataManager.getUserDetail(id: uid!)
+//        dataManager.delegate = self
+//        dataManager.getUserImageInFirst()
+//        dataManager.getUserDetail(id: uid!)
        
         userImageButton.imageView?.contentMode = .scaleAspectFit
         userImageButton.layer.cornerRadius = 0.5 * userImageButton.bounds.size.width
@@ -91,9 +91,9 @@ class FirstTimeUserProfileTableViewController: UITableViewController, UIPickerVi
     override func viewWillDisappear(_ animated: Bool) {
         if self.isMovingFromParent {
             
-            let fbLoginManager = LoginManager()
-            fbLoginManager.logOut()
-            
+//            let fbLoginManager = LoginManager()
+//            fbLoginManager.logOut()
+//
         }
     }
     
@@ -156,7 +156,7 @@ class FirstTimeUserProfileTableViewController: UITableViewController, UIPickerVi
         } else {
 
             
-            dataManager.userRegister(userName: userNameTextField.text ?? "", eMailAddress: emailTextField.text ?? "", familySize: Int(familySizeTextField!.text!) ?? 0, cuisineType: cuisineTypeTextField!.text ?? "", accountImage: userImage!, isVIP: isVIP)
+//            dataManager.userRegister(userName: userNameTextField.text ?? "", eMailAddress: emailTextField.text ?? "", familySize: Int(familySizeTextField!.text!) ?? 0, cuisineType: cuisineTypeTextField!.text ?? "", accountImage: userImage!, isVIP: isVIP)
             
             if Auth.auth().currentUser?.displayName == nil {
                 let changeRequest = Auth.auth().currentUser?.createProfileChangeRequest()
@@ -335,50 +335,50 @@ extension FirstTimeUserProfileTableViewController:  RSKImageCropViewControllerDe
     
 }
 
-extension FirstTimeUserProfileTableViewController: getUserDataDelegate {
-    func gotUserData(user: User) {
-        self.familySizeTextField.text = String(user.familySize!)
-        self.cuisineTypeTextField.text = user.cuisineType
-        
-        if let isVIP = user.isVIP {
-            self.isVIP = isVIP
-        }
-        
-        if Auth.auth().currentUser?.displayName == nil {
-            self.userNameTextField.text = user.name
-        }
-        
-        var rowNumberCuisineType: Int {
-            var temp: Int?
-            
-            cuisineType.map { if $0 == self.cuisineTypeTextField.text {
-                temp = cuisineType.firstIndex(of: $0)
-                }
-            }
-            
-            return temp ?? 0
-        }
-        
-        self.cuisinePicker.selectRow(rowNumberCuisineType, inComponent: 0, animated: true)
-        
-        var rowNumberFamilySize: Int {
-            var temp: Int?
-            
-            familySize.map { if $0 == self.familySizeTextField.text {
-                temp = familySize.firstIndex(of: $0)
-                }
-            }
-            
-            return temp!
-        }
-        
-        self.familyPicker.selectRow(rowNumberFamilySize, inComponent: 0, animated: true)
-    }
-    
-    func assignUserImage(image: UIImage) {
-        self.userImage = image
-        self.userImageButton.setBackgroundImage(image, for: .normal)
-        doneButton.isEnabled = true
-    }
-    
-}
+//extension FirstTimeUserProfileTableViewController: getUserDataDelegate {
+//    func gotUserData(user: User) {
+//        self.familySizeTextField.text = String(user.familySize!)
+//        self.cuisineTypeTextField.text = user.cuisineType
+//
+//        if let isVIP = user.isVIP {
+//            self.isVIP = isVIP
+//        }
+//
+//        if Auth.auth().currentUser?.displayName == nil {
+//            self.userNameTextField.text = user.name
+//        }
+//
+//        var rowNumberCuisineType: Int {
+//            var temp: Int?
+//
+//            cuisineType.map { if $0 == self.cuisineTypeTextField.text {
+//                temp = cuisineType.firstIndex(of: $0)
+//                }
+//            }
+//
+//            return temp ?? 0
+//        }
+//
+//        self.cuisinePicker.selectRow(rowNumberCuisineType, inComponent: 0, animated: true)
+//
+//        var rowNumberFamilySize: Int {
+//            var temp: Int?
+//
+//            familySize.map { if $0 == self.familySizeTextField.text {
+//                temp = familySize.firstIndex(of: $0)
+//                }
+//            }
+//
+//            return temp!
+//        }
+//
+//        self.familyPicker.selectRow(rowNumberFamilySize, inComponent: 0, animated: true)
+//    }
+//
+//    func assignUserImage(image: UIImage) {
+//        self.userImage = image
+//        self.userImageButton.setBackgroundImage(image, for: .normal)
+//        doneButton.isEnabled = true
+//    }
+//
+//}
