@@ -10,6 +10,9 @@
 		6C42AB79224F82F291E8649C /* Pods_TastyBox_2.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 31998F575D6DFD85DDEBE41B /* Pods_TastyBox_2.framework */; };
 		6F9BE63926D7CD9D005DD80B /* UserdataManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F9BE63826D7CD9D005DD80B /* UserdataManager.swift */; };
 		6F9BE63B26D7CF0B005DD80B /* AboutViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F9BE63A26D7CF0B005DD80B /* AboutViewController.swift */; };
+		6F9BE63E26D7D63C005DD80B /* ResetPasswordDM.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F9BE63D26D7D63C005DD80B /* ResetPasswordDM.swift */; };
+		6F9BE64026D7DC7D005DD80B /* RegisterMyInfoDataManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F9BE63F26D7DC7D005DD80B /* RegisterMyInfoDataManager.swift */; };
+		6F9BE64226D7E3F1005DD80B /* UIImage+.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F9BE64126D7E3F1005DD80B /* UIImage+.swift */; };
 		6FB06F3D26D67E0100E110B4 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FB06F3C26D67E0100E110B4 /* AppDelegate.swift */; };
 		6FB06F3F26D67E0100E110B4 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FB06F3E26D67E0100E110B4 /* SceneDelegate.swift */; };
 		6FB06F4126D67E0100E110B4 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FB06F4026D67E0100E110B4 /* ViewController.swift */; };
@@ -37,6 +40,9 @@
 		5EB9D5E76D189AE2537CC252 /* Pods-TastyBox-2.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-TastyBox-2.release.xcconfig"; path = "Target Support Files/Pods-TastyBox-2/Pods-TastyBox-2.release.xcconfig"; sourceTree = "<group>"; };
 		6F9BE63826D7CD9D005DD80B /* UserdataManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserdataManager.swift; sourceTree = "<group>"; };
 		6F9BE63A26D7CF0B005DD80B /* AboutViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AboutViewController.swift; sourceTree = "<group>"; };
+		6F9BE63D26D7D63C005DD80B /* ResetPasswordDM.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ResetPasswordDM.swift; sourceTree = "<group>"; };
+		6F9BE63F26D7DC7D005DD80B /* RegisterMyInfoDataManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RegisterMyInfoDataManager.swift; sourceTree = "<group>"; };
+		6F9BE64126D7E3F1005DD80B /* UIImage+.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIImage+.swift"; sourceTree = "<group>"; };
 		6FB06F3926D67E0100E110B4 /* TastyBox-2.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "TastyBox-2.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		6FB06F3C26D67E0100E110B4 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		6FB06F3E26D67E0100E110B4 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -99,6 +105,30 @@
 			path = About;
 			sourceTree = "<group>";
 		};
+		6F9BE64326D7E4B3005DD80B /* Extensions */ = {
+			isa = PBXGroup;
+			children = (
+				6F9BE64426D7E4C5005DD80B /* UIKit */,
+			);
+			path = Extensions;
+			sourceTree = "<group>";
+		};
+		6F9BE64426D7E4C5005DD80B /* UIKit */ = {
+			isa = PBXGroup;
+			children = (
+				6F9BE64126D7E3F1005DD80B /* UIImage+.swift */,
+			);
+			path = UIKit;
+			sourceTree = "<group>";
+		};
+		6F9BE64526D7E53E005DD80B /* Model */ = {
+			isa = PBXGroup;
+			children = (
+				6FBCB91126D7B5F200C050B2 /* User.swift */,
+			);
+			path = Model;
+			sourceTree = "<group>";
+		};
 		6FB06F3026D67E0100E110B4 = {
 			isa = PBXGroup;
 			children = (
@@ -123,15 +153,16 @@
 				6FB06F3C26D67E0100E110B4 /* AppDelegate.swift */,
 				6FB06F3E26D67E0100E110B4 /* SceneDelegate.swift */,
 				6FB06F4026D67E0100E110B4 /* ViewController.swift */,
+				6F9BE64326D7E4B3005DD80B /* Extensions */,
 				6FF66BA626D7B0870024495E /* DataManager */,
-				6FF66B8D26D7A9DE0024495E /* ViewControllers */,
+				6FF66B8D26D7A9DE0024495E /* ViewController */,
 				6FF66BA126D7AF570024495E /* ViewModel */,
 				6FF66B7926D693350024495E /* Storyboard */,
 				6FB06F4526D67E0600E110B4 /* Assets.xcassets */,
 				6FB06F4726D67E0600E110B4 /* LaunchScreen.storyboard */,
 				6FB06F4A26D67E0600E110B4 /* Info.plist */,
 				6FF66B9626D7AEC20024495E /* BindableType.swift */,
-				6FBCB91126D7B5F200C050B2 /* User.swift */,
+				6F9BE64526D7E53E005DD80B /* Model */,
 			);
 			path = "TastyBox-2";
 			sourceTree = "<group>";
@@ -141,6 +172,8 @@
 			children = (
 				6FF66BA226D7B0800024495E /* LoginMainDM.swift */,
 				6FF66BA326D7B0800024495E /* RegisterAccountDM.swift */,
+				6F9BE63D26D7D63C005DD80B /* ResetPasswordDM.swift */,
+				6F9BE63F26D7DC7D005DD80B /* RegisterMyInfoDataManager.swift */,
 			);
 			path = Login;
 			sourceTree = "<group>";
@@ -166,13 +199,13 @@
 			path = Storyboard;
 			sourceTree = "<group>";
 		};
-		6FF66B8D26D7A9DE0024495E /* ViewControllers */ = {
+		6FF66B8D26D7A9DE0024495E /* ViewController */ = {
 			isa = PBXGroup;
 			children = (
 				6FBCB92E26D7CBE300C050B2 /* Login */,
 				6F9BE63C26D7CF14005DD80B /* About */,
 			);
-			path = ViewControllers;
+			path = ViewController;
 			sourceTree = "<group>";
 		};
 		6FF66BA026D7AF4D0024495E /* Login */ = {
@@ -324,6 +357,8 @@
 				6FF66BA526D7B0800024495E /* RegisterAccountDM.swift in Sources */,
 				6FB06F4126D67E0100E110B4 /* ViewController.swift in Sources */,
 				6F9BE63926D7CD9D005DD80B /* UserdataManager.swift in Sources */,
+				6F9BE64026D7DC7D005DD80B /* RegisterMyInfoDataManager.swift in Sources */,
+				6F9BE63E26D7D63C005DD80B /* ResetPasswordDM.swift in Sources */,
 				6FBCB91226D7B5F200C050B2 /* User.swift in Sources */,
 				6FBCB92D26D7CBD500C050B2 /* LoginMainPageViewController.swift in Sources */,
 				6FF66B9E26D7AF430024495E /* RegisterEmailVM.swift in Sources */,
@@ -334,6 +369,7 @@
 				6FBCB92B26D7CBD500C050B2 /* ResetPasswordViewController.swift in Sources */,
 				6FBCB92C26D7CBD500C050B2 /* EmailRegisterViewController.swift in Sources */,
 				6FF66B9F26D7AF430024495E /* ResetPasswordVM.swift in Sources */,
+				6F9BE64226D7E3F1005DD80B /* UIImage+.swift in Sources */,
 				6FB06F3F26D67E0100E110B4 /* SceneDelegate.swift in Sources */,
 				6FF66BA426D7B0800024495E /* LoginMainDM.swift in Sources */,
 			);

@@ -9,5 +9,28 @@
 import Foundation
 
 class ResetPasswordVM {
+ 
+    let dataManager = RessetPasswordDM()
     
+    func resetPassword(email: String?) {
+        _ = dataManager.resetPassword(email: email).subscribe(onNext: { isSentRequest in
+            
+            
+            
+        }, onError: { err in
+        
+            print(err.localizedDescription)
+            // error alert is needed to show.
+            
+            switch err {
+            case PasswordResetError.invailedEmail:
+                print("incorrect email")
+            default:
+                print("not meet any errors, but something happens.")
+                
+            }
+        })
+        
+        
+    }
 }

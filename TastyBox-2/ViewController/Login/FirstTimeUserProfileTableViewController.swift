@@ -158,6 +158,7 @@ class FirstTimeUserProfileTableViewController: UITableViewController, UIPickerVi
             
 //            dataManager.userRegister(userName: userNameTextField.text ?? "", eMailAddress: emailTextField.text ?? "", familySize: Int(familySizeTextField!.text!) ?? 0, cuisineType: cuisineTypeTextField!.text ?? "", accountImage: userImage!, isVIP: isVIP)
             
+            
             if Auth.auth().currentUser?.displayName == nil {
                 let changeRequest = Auth.auth().currentUser?.createProfileChangeRequest()
                 changeRequest?.displayName = userNameTextField.text
