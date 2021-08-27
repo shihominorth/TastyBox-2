@@ -14,7 +14,7 @@ import AuthenticationServices
 import CryptoKit
 //import Crashlytics
 
-class LoginMainVM {
+class LoginMainVM: ViewModelBase {
     private var userImage: UIImage = #imageLiteral(resourceName: "imageFile")
     private let dataManager = LoginMainDM()
     

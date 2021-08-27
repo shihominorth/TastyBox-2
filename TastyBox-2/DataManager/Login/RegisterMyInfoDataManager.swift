@@ -15,9 +15,11 @@ class RegisterMyInfoDataManager {
     let storageRef = Storage.storage().reference()
     
     // account image should convert from uiimage to data?
-    // in order to convert it, use .jpegData() before call userRegister.
+    // in order to convert it, use .defineUserImage() before call userRegister.
     
-    func userRegister(userName: String, email: String, familySize: Int, cuisineType: String, accountImage: Data?, isVIP: Bool) -> Observable<Bool>{
+    // observer or maybe are the best because the functions for firebase is nested.
+    
+    func userRegister(userName: String?, email: String?, familySize: String?, cuisineType: String?, accountImage: Data?) -> Observable<Bool>{
         
         
         return Observable.create { observer in
@@ -25,10 +27,25 @@ class RegisterMyInfoDataManager {
             guard let uid = Auth.auth().currentUser?.uid else {
                 return Disposables.create()
             }
+            guard let userName = userName else {
+                return Disposables.create()
+            }
+            guard let email = email else {
+                return Disposables.create()
+            }
+            guard let familySize = familySize?.convertToInt() else {
+                return Disposables.create()
+            }
+            guard let cuisineType = cuisineType else {
+                return Disposables.create()
+            }
+ 
+            guard let myImage = accountImage else {
+                return Disposables.create()
+            }
+
             
-//            guard let myImage = accountImage else {
-//                return Disposables.create()
-//            }
+            
             
             self.db.collection("user").document(uid).setData([
                 
@@ -37,31 +54,55 @@ class RegisterMyInfoDataManager {
                 "eMailAddress": email,
                 "familySize": familySize,
                 "cuisineType": cuisineType,
-                "isVIP": isVIP,
+                "isVIP": false,
                 "isFirst": false
                 
             ], merge: true) { err in
                 if let err = err {
                     observer.onError(err)
-                   
+                    
                 } else {
-                    observer.onNext(true)
-                    print("Document successfully written!")
+                    
+                    if Auth.auth().currentUser?.displayName == nil {
+                        
+                        guard let changeRequest = Auth.auth().currentUser?.createProfileChangeRequest() else {
+                            return
+                        }
+                        
+                        changeRequest.displayName = userName
+                        
+                        changeRequest.commitChanges { err in
+                            
+                            if let err = err {
+                                
+                                observer.onError(err)
+                                
+                            } else {
+                                
+                                //                            guard let imgData = accountImage.jpegData(compressionQuality: 0.75) else { return }
+                                let metaData = StorageMetadata()
+                                metaData.contentType = "image/jpg"
+                                
+                                self.storageRef.child("user/\(uid)/usertImage").putData(myImage, metadata: metaData) { metaData, err in
+                                    if let err = err {
+                                        
+                                        observer.onError(err)
+                                    }
+                                    else if metaData != nil {
+                                        
+                                        observer.onNext(true)
+                                    }
+                                }
+                                print("Document successfully written!")
+                            }
+                        }
+                    }
                 }
+                
+                
+                
             }
-//
-//                    guard let imgData = accountImage.jpegData(compressionQuality: 0.75) else{ return }
-//                    let metaData = StorageMetadata()
-//                    metaData.contentType = "image/jpg"
             
-//                    storageRef.child("user/\(uid)/userAccountImage").putData(imgData, metadata: metaData){ (metaData, error) in
-//                        if error == nil, metaData != nil{
-//                            print("success")
-//            
-//                        }else{
-//                            print("error in save image")
-//                        }
-//                    }
             
             return Disposables.create()
         }

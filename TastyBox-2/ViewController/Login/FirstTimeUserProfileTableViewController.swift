@@ -16,7 +16,12 @@ import RSKImageCropper
 //import Crashlytics
 
 
-class FirstTimeUserProfileTableViewController: UITableViewController, UIPickerViewDelegate, UIPickerViewDataSource{
+class FirstTimeUserProfileTableViewController: UITableViewController, UIPickerViewDelegate, UIPickerViewDataSource, BindableType {
+    
+    var viewModel: RegisterUserProfileVM!
+    
+    typealias ViewModelType = RegisterUserProfileVM
+    
         
     
     @IBOutlet weak var userNameTextField: UITextField!
@@ -33,19 +38,16 @@ class FirstTimeUserProfileTableViewController: UITableViewController, UIPickerVi
     
     var userImage: UIImage?
     
-    var familySize = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15", "16", "17", "18", "19", "20"]
+ 
     
     var familyPicker = UIPickerView()
     
-    var cuisineType = ["Chinese Food", "Japanese Food", "Thai food"]
     
     var cuisinePicker = UIPickerView()
-    
-    let dataManager = UserdataManager()
-    
+        
     let uid = Auth.auth().currentUser?.uid
     
-    var isVIP: Bool = false
+  
     
     override func viewDidLoad() {
         
@@ -97,6 +99,13 @@ class FirstTimeUserProfileTableViewController: UITableViewController, UIPickerVi
         }
     }
     
+    func bindViewModel() {
+        
+    }
+    
+   
+ 
+    
     private func PickerColor(){
         
         familyPicker.setValue( #colorLiteral(red: 1, green: 1, blue: 1, alpha: 1) , forKey: "backgroundColor")
@@ -113,34 +122,34 @@ class FirstTimeUserProfileTableViewController: UITableViewController, UIPickerVi
     }
     
     func pickerView(_ pickerView: UIPickerView, numberOfRowsInComponent component: Int) -> Int {
-        if (pickerView.tag==10) {
-            return familySize.count
+        if (pickerView.tag == 10) {
+            return viewModel.familySize.count
         }
         else {
-            return cuisineType.count
+            return viewModel.cuisineType.count
         }
         
     }
     
     func pickerView(_ pickerView: UIPickerView, titleForRow row: Int, forComponent component: Int) -> String? {
-        if (pickerView.tag==10) {
-            return familySize[row]
+        if (pickerView.tag == 10) {
+            return viewModel.familySize[row]
         }
         else {
-            return cuisineType[row]
+            return viewModel.cuisineType[row]
         }
         
     }
     
     func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
         
-        if (pickerView.tag==10) {
+        if (pickerView.tag == 10) {
             let familySizeTextField = self.view?.viewWithTag(100) as? UITextField
-            familySizeTextField?.text = familySize[row]
+            familySizeTextField?.text = viewModel.familySize[row]
         }
         else {
             let cuisineTypeTextField = self.view?.viewWithTag(200) as? UITextField
-            cuisineTypeTextField?.text = cuisineType[row]
+            cuisineTypeTextField?.text = viewModel.cuisineType[row]
         }
     }
     
@@ -155,15 +164,18 @@ class FirstTimeUserProfileTableViewController: UITableViewController, UIPickerVi
         
         } else {
 
+            // account image should convert from uiimage to data?
+            // in order to convert it, use .jpegData() before call userRegister.
             
+            viewModel.userRegister(userName: userNameTextField.text, email: emailTextField.text, familySize: familySizeTextField.text, cuisineType: cuisineTypeTextField.text, accountImage: userImageButton.imageView?.image?.defineUserImage())
 //            dataManager.userRegister(userName: userNameTextField.text ?? "", eMailAddress: emailTextField.text ?? "", familySize: Int(familySizeTextField!.text!) ?? 0, cuisineType: cuisineTypeTextField!.text ?? "", accountImage: userImage!, isVIP: isVIP)
             
             
-            if Auth.auth().currentUser?.displayName == nil {
-                let changeRequest = Auth.auth().currentUser?.createProfileChangeRequest()
-                changeRequest?.displayName = userNameTextField.text
-            }
-            
+//            if Auth.auth().currentUser?.displayName == nil {
+//                let changeRequest = Auth.auth().currentUser?.createProfileChangeRequest()
+//                changeRequest?.displayName = userNameTextField.text
+//            }
+//            
             let Storyboard: UIStoryboard = UIStoryboard(name: "Main", bundle: nil)
             let vc = Storyboard.instantiateViewController(withIdentifier: "Discovery")
             vc.modalTransitionStyle = .crossDissolve

@@ -13,7 +13,7 @@ protocol BindableType {
   associatedtype ViewModelType
   
   var viewModel: ViewModelType! { get set }
-
+    
   func bindViewModel()
 }
 

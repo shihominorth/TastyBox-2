@@ -11,9 +11,8 @@ import Firebase
 import RxSwift
 import RxCocoa
 
-class RegisterEmailVM {
+class RegisterEmailVM: ViewModelBase {
     
-    private let bag = DisposeBag()
     
     let apiType: RegisterAccountProtocol.Type
     

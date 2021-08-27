@@ -15,4 +15,13 @@ extension UIImage {
         
         return imgData
     }
+    
+    func defineUserImage() -> Data? {
+        if let imgData = self.jpegData(compressionQuality: 0.75) {
+            return imgData
+        } else {
+            guard let defaultImg = UIImage(named: "defaultUserImage")?.convertToData()  else { return nil }
+            return defaultImg
+        }
+    }
 }
