@@ -29,11 +29,23 @@ class RegisterAccountDM: RegisterAccountProtocol {
     }
     
     
+    // https://qiita.com/mtkmr/items/078b715d9965fea1bd04
+    // 作り直し
+    
     static func registerEmail<T: Any>(email: String, password: String) ->  Observable<T> {
         
         return Observable.create { observer in
             
-            Auth.auth().createUser(withEmail: email, password: password) { (result, error) in
+            let actionCodeSettings = ActionCodeSettings()
+            actionCodeSettings.url = URL(string: "https://www.example.com")
+            // The sign-in operation has to always be completed in the app.
+            actionCodeSettings.handleCodeInApp = true
+            actionCodeSettings.setIOSBundleID(Bundle.main.bundleIdentifier!)
+            actionCodeSettings.setAndroidPackageName("com.example.android",
+                                                     installIfNotAvailable: false, minimumVersion: "12")
+            
+            Auth.auth().sendSignInLink(toEmail: email,
+                                       actionCodeSettings: actionCodeSettings) { error in
                 
                 if let error = error {
                     
@@ -43,25 +55,29 @@ class RegisterAccountDM: RegisterAccountProtocol {
                     return
                 }
                 
-                if let changeRequest = Auth.auth().currentUser?.createProfileChangeRequest(){
-                    changeRequest.commitChanges(completion: { error in
-                        if let error = error {
-                            print("Failed to change the display name: \(error.localizedDescription)")
-                            observer.onError(RegisterErrors.requestRefused)
-                        }
-                    })
-                }
+//                if let changeRequest = Auth.auth().currentUser?.createProfileChangeRequest(){
+//                    changeRequest.commitChanges(completion: { err in
+//                        if let err = error {
+//                            observer.onError(err)
+//                        }
+//                    })
+//                }
                 
                 Auth.auth().currentUser?.sendEmailVerification { err in
                     observer.onError(RegisterErrors.failedTosendEmailVerification)
                     return
                 }
                 
-                if let isEmailVerified = result?.user.isEmailVerified as? T {
-                    observer.onNext(isEmailVerified)
-                } else {
-                    observer.onError(RegisterErrors.invailedUser)
-                }
+//                if let isEmailVerified = result?.user.isEmailVerified as? T {
+//                    observer.onNext(isEmailVerified)
+//                } else {
+//                    observer.onError(RegisterErrors.invailedUser)
+//                }
+            }
+            
+            Auth.auth().createUser(withEmail: email, password: password) { (result, error) in
+                
+              
                 
             }
             

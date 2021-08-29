@@ -14,7 +14,7 @@ import GoogleSignIn
 import AuthenticationServices
 import CryptoKit
 import RxSwift
-import RxCocoa
+
 
 enum LoginErrors: Error {
     case incorrectEmail, incorrectPassword, invailedEmail, invailedUser, inVailedClientID
@@ -23,52 +23,45 @@ enum LoginErrors: Error {
 class LoginMainDM {
     
     let bag = DisposeBag()
-    
+    let uid = Auth.auth().currentUser?.uid
     // Unhashed nonce.
     fileprivate var currentNonce: String?
     
-    var isLogined: Observable<Bool> {
+    
+    
+    
+    
+    
+    //    var isNewUser: Bool? //　observable<bool>にするべき
+    //    Singleは一回のみElementかErrorを送信することが保証されているObservableです。
+    //    一回イベントを送信すると、disposeされるようになってます。
+    
+    
+    var isFirstLogin: Single<Bool> {
         
-        return Observable.create { observer in
+        
+        return Single.create { single in
             
-            if Auth.auth().currentUser != nil && Auth.auth().currentUser?.uid != nil {
-                observer.onNext(true)
-            } else {
-                observer.onNext(false)
+            guard let uid = self.uid else {
+                single(.failure(LoginErrors.invailedUser))
+                return Disposables.create()
             }
             
-            return Disposables.create()
-        }
-        
-    }
-    
-//    var isNewUser: Bool? //　observable<bool>にするべき
-    
-    
-    var isFirstLogin: Observable<Bool> {
-        
-        
-        return Observable.create { observer in
-            
-            Firestore.firestore().collection("user").document(Auth.auth().currentUser!.uid).addSnapshotListener { data, err in
+            Firestore.firestore().collection("user").document(uid).addSnapshotListener { data, err in
                 
                 if let err = err {
-                    
-                   
-                    
-                    observer.onError(err)
+                    single(.failure(err))
                     
                 } else {
                     
                     guard let data = data else { return }
                     guard let isFirst = data["isFirst"] as? Bool else {
                         
-                        observer.onNext(true)
+                        single(.success(true))
                         return
                         
                     }
-                    
-                    observer.onNext(isFirst)
+                    single(.success(isFirst))
                 }
             }
             
@@ -82,18 +75,20 @@ class LoginMainDM {
         return Observable.create { observer in
             
             guard let result = Auth.auth().currentUser?.isEmailVerified else {
-                 
+                
                 observer.onError(LoginErrors.invailedUser)
                 
                 return Disposables.create()
             }
             
             observer.onNext(result)
-                
+            
             return Disposables.create()
         }
-               
+        
     }
+    
+    
     
     func authorizationController(controller: ASAuthorizationController, didCompleteWithAuthorization authorization: ASAuthorization)  -> Observable<AuthDataResult> {
         
@@ -144,7 +139,7 @@ class LoginMainDM {
             
             return Disposables.create()
         }
-
+        
     }
     
     @available(iOS 13, *)
@@ -233,10 +228,6 @@ class LoginMainDM {
                 
                 self.isUserVailed(err, user, observer)
                 
-                if let err = err {
-                    
-                    print(err)
-                }
             }
             
             return Disposables.create()
@@ -277,77 +268,73 @@ class LoginMainDM {
         }
     }
     
-    func sendEmailVailidation() -> Observable<Bool> {
+    func sendEmailVailidation() -> Completable {
         
-        return Observable.create { observer in
+        return Completable.create { completed in
             
             Auth.auth().currentUser?.sendEmailVerification { err in
                 
                 if let err = err {
-                    observer.onError(err)
+                    
+                    completed(.error(err))
                     return
+                    
                 } else {
                     
-                    Auth.auth().currentUser?.sendEmailVerification { err in
-                        
-                        if let err = err {
-                            
-                            observer.onError(err)
-                            return
-                            
-                        } else {
-                            observer.onNext(true)
-                        }
-                      
-                    }
+                    completed(.completed)
                     
                 }
-               
                 
             }
             
             return Disposables.create()
         }
-       
+        
     }
     
-    func googleLogin(presenting: UIViewController, callback: @escaping GIDSignInCallback) ->  Observable<GIDGoogleUser> {
-      
-        return Observable.create { observer in
+    func googleLogin(presenting: UIViewController, callback: @escaping GIDSignInCallback) ->  Single<AuthCredential> {
+        
+        return Single.create { single in
             guard let clientID = FirebaseApp.app()?.options.clientID else {
                 
-                observer.onError(LoginErrors.inVailedClientID)
+                single(.failure(LoginErrors.inVailedClientID))
                 
                 return Disposables.create()
                 
             }
-
-           // Create Google Sign In configuration object.
-           let config = GIDConfiguration(clientID: clientID)
+            
+            // Create Google Sign In configuration object.
+            let config = GIDConfiguration(clientID: clientID)
             
             GIDSignIn.sharedInstance.signIn(with: config, presenting: presenting) { user, err in
                 
                 if let err = err {
-                    observer.onError(err)
+                    
+                    single(.failure(err))
+                    
                 } else {
                     
                     guard let currentUser = Auth.auth().currentUser, currentUser.isEmailVerified else {
-                        observer.onError(LoginErrors.invailedEmail)
                         
-                        //本当に何も返さなくてもいいのか？
+                        single(.failure(LoginErrors.invailedEmail))
                         return
                     }
                     
                     guard let user = user else {
                         
-                        observer.onError(LoginErrors.invailedUser)
-                        
-                        //本当に何も返さなくてもいいのか？
+                        single(.failure(LoginErrors.invailedUser))
                         return
-                        
                     }
-              
-                    observer.onNext(user)
+                    
+                    
+                    
+                    let authentication = user.authentication
+                    guard let idToken = authentication.idToken else { return }
+                    
+                    let credential = GoogleAuthProvider.credential(withIDToken: idToken,
+                                                                   accessToken: authentication.accessToken)
+                    
+                    single(.success(credential))
                 }
             }
             
@@ -355,29 +342,104 @@ class LoginMainDM {
         }
         
         
-   }
-    
-    func signInWithGoogle<T:Any>(_ signIn: GIDSignIn!, didSignInFor user: GIDGoogleUser!, withError err: Error!) ->Observable<T> {
-        
-        return Observable.create { observer in
-            
-            if let err = err {
-                observer.onError(err)
-            }
-            
-            
-            guard let idToken = user.authentication.idToken else {
-                return Disposables.create {}
-            }
-            
-            let credential = GoogleAuthProvider.credential(withIDToken: idToken, accessToken: user.authentication.accessToken)
-            
-          
-            return Disposables.create()
-            
-        }
     }
-   
+    
+    //    func loginWithCredential(credential: AuthCredential) {
+    //
+    //        Auth.auth().signIn(with: credential) { authResult, error in
+    //            if let error = error {
+    //
+    //                let authError = error as NSError
+    //
+    //                if isMFAEnabled, authError.code == AuthErrorCode.secondFactorRequired.rawValue {
+    //                // The user is a multi-factor user. Second factor challenge is required.
+    //                let resolver = authError
+    //                  .userInfo[AuthErrorUserInfoMultiFactorResolverKey] as! MultiFactorResolver
+    //
+    //                var displayNameString = ""
+    //
+    //                for tmpFactorInfo in resolver.hints {
+    //                  displayNameString += tmpFactorInfo.displayName ?? ""
+    //                  displayNameString += " "
+    //                }
+    //
+    //                self.showTextInputPrompt(
+    //                  withMessage: "Select factor to sign in\n\(displayNameString)",
+    //                  completionBlock: { userPressedOK, displayName in
+    //
+    //                    var selectedHint: PhoneMultiFactorInfo?
+    //
+    //                    for tmpFactorInfo in resolver.hints {
+    //                      if displayName == tmpFactorInfo.displayName {
+    //                        selectedHint = tmpFactorInfo as? PhoneMultiFactorInfo
+    //                      }
+    //                    }
+    //
+    //                    PhoneAuthProvider.provider()
+    //                      .verifyPhoneNumber(with: selectedHint!, uiDelegate: nil,
+    //                                         multiFactorSession: resolver
+    //                                           .session) { verificationID, error in
+    //                        if error != nil {
+    //                          print(
+    //                            "Multi factor start sign in failed. Error: \(error.debugDescription)"
+    //                          )
+    //                        } else {
+    //                          self.showTextInputPrompt(
+    //                            withMessage: "Verification code for \(selectedHint?.displayName ?? "")",
+    //                            completionBlock: { userPressedOK, verificationCode in
+    //                              let credential: PhoneAuthCredential? = PhoneAuthProvider.provider()
+    //                                .credential(withVerificationID: verificationID!,
+    //                                            verificationCode: verificationCode!)
+    //                              let assertion: MultiFactorAssertion? = PhoneMultiFactorGenerator
+    //                                .assertion(with: credential!)
+    //                              resolver.resolveSignIn(with: assertion!) { authResult, error in
+    //                                if error != nil {
+    //                                  print(
+    //                                    "Multi factor finanlize sign in failed. Error: \(error.debugDescription)"
+    //                                  )
+    //                                } else {
+    //                                  self.navigationController?.popViewController(animated: true)
+    //                                }
+    //                              }
+    //                            }
+    //                          )
+    //                        }
+    //                      }
+    //                  }
+    //                )
+    //              } else {
+    //
+    //                self.showMessagePrompt(error.localizedDescription)
+    //                return
+    //              }
+    //              // ...
+    //              return
+    //            }
+    //            // User is signed in
+    //            // ...
+    //    }
+    
+    //    func signInWithGoogle<T:Any>(_ signIn: GIDSignIn!, didSignInFor user: GIDGoogleUser!, withError err: Error!) ->Observable<T> {
+    //
+    //        return Observable.create { observer in
+    //
+    //            if let err = err {
+    //                observer.onError(err)
+    //            }
+    //
+    //
+    //            guard let idToken = user.authentication.idToken else {
+    //                return Disposables.create {}
+    //            }
+    //
+    //            let credential = GoogleAuthProvider.credential(withIDToken: idToken, accessToken: user.authentication.accessToken)
+    //
+    //
+    //            return Disposables.create()
+    //
+    //        }
+    //    }
+    
     
 }
 

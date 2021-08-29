@@ -8,9 +8,20 @@
 import UIKit
 import Firebase
 import FirebaseAuth
+import RxSwift
+import RxCocoa
 //import Crashlytics
 
-class ResetPasswordViewController: UIViewController {
+class ResetPasswordViewController: UIViewController, BindableType {
+    var viewModel: ResetPasswordVM!
+    
+
+    typealias ViewModelType = ResetPasswordVM
+    
+    
+    @IBOutlet weak var cancelBtn: UIBarButtonItem!
+    @IBOutlet weak var submitBtn: UIButton!
+    @IBOutlet weak var emailTextField: UITextField!
 
     override func viewDidLoad() {
         roundCorners(view: submitBtn, cornerRadius: 5.0)
@@ -18,9 +29,10 @@ class ResetPasswordViewController: UIViewController {
         view.addGestureRecognizer(tap)
     }
     
+    func bindViewModel() {
+        cancelBtn.rx.action = viewModel.cancelAction
+    }
     
-    @IBOutlet weak var submitBtn: UIButton!
-    @IBOutlet weak var emailTextField: UITextField!
     
     @IBAction func submitAction(_ sender: Any) {
         

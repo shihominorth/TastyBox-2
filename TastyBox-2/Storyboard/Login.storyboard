@@ -202,7 +202,7 @@
         <!--Navigation Controller-->
         <scene sceneID="EJS-sD-OTq">
             <objects>
-                <navigationController storyboardIdentifier="First TimeProfile" id="RS2-tL-Fia" sceneMemberID="viewController">
+                <navigationController id="RS2-tL-Fia" sceneMemberID="viewController">
                     <navigationBar key="navigationBar" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" id="Esc-yh-VsA">
                         <rect key="frame" x="0.0" y="44" width="414" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
@@ -496,6 +496,7 @@
         <!--Navigation Controller-->
         <scene sceneID="InH-Jd-cdu">
             <objects>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="LaQ-gI-sPX" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
                 <navigationController id="d7E-C1-4Zi" sceneMemberID="viewController">
                     <navigationItem key="navigationItem" id="R2D-4b-RGG"/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" id="z3t-pn-kUi">
@@ -506,14 +507,13 @@
                         <segue destination="ivs-jN-hGc" kind="relationship" relationship="rootViewController" id="GSK-bM-qMe"/>
                     </connections>
                 </navigationController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="LaQ-gI-sPX" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="2106" y="-372"/>
         </scene>
         <!--Reset Password View Controller-->
         <scene sceneID="Coa-31-RKP">
             <objects>
-                <viewController id="ivs-jN-hGc" customClass="ResetPasswordViewController" customModule="TastyBox_2" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="resetPassword" id="ivs-jN-hGc" customClass="ResetPasswordViewController" customModule="TastyBox_2" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="KVw-fZ-O3e">
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -593,8 +593,11 @@
                             <constraint firstItem="Jmm-Pr-FTg" firstAttribute="centerX" secondItem="KVw-fZ-O3e" secondAttribute="centerX" id="w1u-VW-Eep"/>
                         </constraints>
                     </view>
-                    <navigationItem key="navigationItem" id="yg5-Xy-wR0"/>
+                    <navigationItem key="navigationItem" id="yg5-Xy-wR0">
+                        <barButtonItem key="leftBarButtonItem" systemItem="cancel" id="1rv-hC-uut"/>
+                    </navigationItem>
                     <connections>
+                        <outlet property="cancelBtn" destination="1rv-hC-uut" id="BgX-UE-7Py"/>
                         <outlet property="emailTextField" destination="Pau-Jc-9qa" id="SJ8-vd-tZg"/>
                         <outlet property="submitBtn" destination="Jmm-Pr-FTg" id="YF5-Oc-D5t"/>
                         <segue destination="8Lr-7Y-exO" kind="unwind" identifier="backToLoginMainSegue" unwindAction="unwindtoLoginMainWithSegue:" id="ANG-Qu-VwH"/>
@@ -753,6 +756,7 @@
         <!--Navigation Controller-->
         <scene sceneID="D2J-Yc-dOs">
             <objects>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="SC7-Qb-HXd" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
                 <navigationController automaticallyAdjustsScrollViewInsets="NO" id="76i-FX-Qho" sceneMemberID="viewController">
                     <toolbarItems/>
                     <navigationItem key="navigationItem" id="8xu-6e-Rt4"/>
@@ -765,7 +769,6 @@
                         <segue destination="9IK-EB-0Nw" kind="relationship" relationship="rootViewController" id="NUg-6y-5UB"/>
                     </connections>
                 </navigationController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="SC7-Qb-HXd" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="2871" y="713"/>
         </scene>

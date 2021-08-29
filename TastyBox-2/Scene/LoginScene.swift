@@ -6,3 +6,7 @@
 //
 
 import Foundation
+
+enum LoginScene {
+    case main(LoginMainVM), resetPassword(ResetPasswordVM), emailVerify(RegisterEmailVM), profileRegister(RegisterUserProfileVM)
+}

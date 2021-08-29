@@ -7,10 +7,24 @@
 //
 
 import Foundation
+import RxSwift
+import Action
 
 class ResetPasswordVM: ViewModelBase {
  
     let dataManager = RessetPasswordDM()
+    let cancelAction: CocoaAction
+    
+    init(coordinator: SceneCoordinator, cancelAction: CocoaAction? = nil) {
+        self.cancelAction = CocoaAction {
+            if let cancelAction = cancelAction {
+              cancelAction.execute(())
+            }
+            return coordinator.pop()
+              .asObservable()
+              .map { _ in }
+        }
+    }
     
     func resetPassword(email: String?) {
         _ = dataManager.resetPassword(email: email).subscribe(onNext: { isSentRequest in

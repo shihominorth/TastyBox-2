@@ -15,6 +15,10 @@ import FirebaseFirestore
 import AuthenticationServices
 import CryptoKit
 //import Crashlytics
+import RxSwift
+import RxCocoa
+import RxTimelane
+
 
 class LoginMainPageViewController: UIViewController,  BindableType{
 
@@ -110,7 +114,9 @@ class LoginMainPageViewController: UIViewController,  BindableType{
         
     }
     
-    func bindViewModel() {}
+    func bindViewModel() {
+        resetPasswordButton.rx.action = viewModel.resetPassword()
+    }
     
     
     @IBAction func unwindtoLoginMain(segue: UIStoryboardSegue) {
