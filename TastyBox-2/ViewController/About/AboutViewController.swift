@@ -10,7 +10,12 @@ import Firebase
 //import FBSDKLoginKit
 //import Crashlytics
 
-class AboutViewController: UIViewController {
+class AboutViewController: UIViewController, BindableType {
+   
+    var viewModel: AboutViewModel!
+    
+    typealias ViewModelType = AboutViewModel
+    
 
     
     @IBOutlet weak var firstPart: UITextView!
@@ -18,13 +23,13 @@ class AboutViewController: UIViewController {
     
     @IBOutlet weak var segmentedControl: UISegmentedControl!
     
-    var isFirst: Bool?
+    
    
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        if isFirst == true {
+        if viewModel.isAgreed {
             segmentedControl.selectedSegmentIndex = 1
             firstPart.isHidden = true
             secondPart.isHidden = false
@@ -37,8 +42,15 @@ class AboutViewController: UIViewController {
             firstPart.isHidden = false
             secondPart.isHidden = true
         }
+        
         segmentedControl.setTitleTextAttributes([NSAttributedString.Key.foregroundColor: UIColor.white], for: UIControl.State.selected)
     }
+    
+    func bindViewModel() {
+        
+    }
+    
+    
     
     @objc func agreeTermsAndConditions() {
         
@@ -61,7 +73,7 @@ class AboutViewController: UIViewController {
     
     override func viewWillDisappear(_ animated: Bool) {
 
-        if self.isMovingFromParent && self.isFirst != nil {
+        if self.isMovingFromParent && viewModel.isAgreed != nil {
               
 //              let fbLoginManager = LoginManager()
 //              fbLoginManager.logOut()

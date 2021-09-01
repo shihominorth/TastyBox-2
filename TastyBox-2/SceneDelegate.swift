@@ -21,7 +21,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         let sceneCoodinator = SceneCoordinator(window: window!)
         let viewModel = LoginMainVM(sceneCoodinator: sceneCoodinator)
         
-        let firstScene = LoginScene.main(viewModel)
+        let firstScene = LoginScene.main(viewModel).viewController()
         sceneCoodinator.transition(to: firstScene, type: .root)
         
         guard let _ = (scene as? UIWindowScene) else { return }

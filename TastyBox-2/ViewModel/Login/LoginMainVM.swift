@@ -144,8 +144,10 @@ class LoginMainVM: ViewModelBase {
       return CocoaAction { _ in
       
         let resetPasswordVM = ResetPasswordVM(coordinator: self.sceneCoodinator)
+        let viewController = LoginScene.resetPassword(resetPasswordVM).viewController()
+
             return self.sceneCoodinator
-                .transition(to: LoginScene.resetPassword(resetPasswordVM), type: .push)
+                .transition(to: viewController, type: .push)
                 .asObservable()
         //Cannot convert return expression of type 'Observable<Never>' to return type 'Observable<Void>'
                 .map { _ in }  // 上記のエラーがこれで解決する
@@ -155,9 +157,10 @@ class LoginMainVM: ViewModelBase {
     
   func registerEmail() -> CocoaAction {
       return CocoaAction { task in
-        let registerEmailVM = RegisterEmailVM()
+        let registerEmailVM = RegisterEmailVM(sceneCoordinator: self.sceneCoodinator)
+        let viewController =  LoginScene.emailVerify(registerEmailVM).viewController()
         return self.sceneCoodinator
-            .transition(to: LoginScene.emailVerify(registerEmailVM), type: .push)
+            .transition(to: viewController, type: .push)
           .asObservable()
             .map {_ in }
       }
@@ -166,9 +169,12 @@ class LoginMainVM: ViewModelBase {
     
     lazy var registerMyProfile: Action<Void, Swift.Never> = { this in
       return Action { task in
+        
         let registerAccountVM = RegisterUserProfileVM()
+        let viewController = LoginScene.profileRegister(registerAccountVM).viewController()
+        
         return this.sceneCoodinator
-          .transition(to: LoginScene.profileRegister(registerAccountVM), type: .push)
+          .transition(to: viewController, type: .push)
           .asObservable()
       }
     }(self)

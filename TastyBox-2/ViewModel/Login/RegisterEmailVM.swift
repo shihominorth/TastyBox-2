@@ -18,11 +18,11 @@ class RegisterEmailVM: ViewModelBase {
     
     var isRegistered: Single<Bool>?
     
-    let sceneCoodinator: SceneCoordinator
+    let sceneCoordinator: SceneCoordinator
     
-    init(apiType: RegisterAccountProtocol.Type = RegisterAccountDM.self, sceneCoodinator: SceneCoordinator) {
+    init(apiType: RegisterAccountProtocol.Type = RegisterAccountDM.self, sceneCoordinator: SceneCoordinator) {
         self.apiType = apiType
-        self.sceneCoodinator = sceneCoodinator
+        self.sceneCoordinator = sceneCoordinator
 
     }
     
@@ -33,14 +33,29 @@ class RegisterEmailVM: ViewModelBase {
         
     }
     
-    func showTermsAndConditions() -> CocoaAction {
+    func aboutAction() -> CocoaAction {
+      return CocoaAction { _ in
         
-        return CocoaAction { task in
-          let registerEmailVM = RegisterEmailVM()
-          return self.sceneCoodinator
-              .transition(to: LoginScene.emailVerify(registerEmailVM), type: .push)
-            .asObservable()
-              .map {_ in }
+        let viewModel = AboutViewModel(sceneCoodinator: self.sceneCoordinator, prevVC: .registerEmail)
+        let viewController = LoginScene.about(viewModel).viewController()
+        
+            return self.sceneCoordinator
+                .transition(to: viewController, type: .push)
+              .asObservable()
+              .map { _ in }
         }
+        
     }
+//    
+//    func showTermsAndConditions() -> CocoaAction {
+//        
+//        return CocoaAction { task in
+//          let registerEmailVM = RegisterEmailVM()
+//            let viewController = LoginScene.emailVerify(registerEmailVM)
+//          return self.sceneCoodinator
+//              .transition(to: viewController, type: .push)
+//            .asObservable()
+//              .map {_ in }
+//        }
+//    }
 }

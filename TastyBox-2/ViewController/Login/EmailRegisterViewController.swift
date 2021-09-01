@@ -43,6 +43,7 @@ class EmailRegisterViewController: UIViewController, BindableType {
     
     func bindViewModel() {
         createUser()
+        termsConditionsBtn.rx.action = viewModel.aboutAction()
     }
     
     
@@ -51,11 +52,11 @@ class EmailRegisterViewController: UIViewController, BindableType {
        // self.performSegue(withIdentifier: "LoginMainPage", sender: nil)
     }
     
-    @IBAction func toTermsPage(_ sender: Any) {
-        let Storyboard: UIStoryboard = UIStoryboard(name: "AboutPage", bundle: nil)
-        let vc = Storyboard.instantiateViewController(withIdentifier:"about")
-        self.present(vc, animated:true, completion:nil)
-    }
+//    @IBAction func toTermsPage(_ sender: Any) {
+//        let Storyboard: UIStoryboard = UIStoryboard(name: "About", bundle: nil)
+//        let vc = Storyboard.instantiateViewController(withIdentifier:"about")
+//        self.present(vc, animated:true, completion:nil)
+//    }
     
     @IBAction func createAccountAction(_ sender: Any) {
         if emailTextField.text == nil || passwordTextField.text == nil || confirmPasswordTextField.text == nil {

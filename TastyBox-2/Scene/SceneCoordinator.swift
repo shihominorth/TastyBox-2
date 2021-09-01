@@ -28,9 +28,10 @@ class SceneCoordinator: NSObject, SceneCoordinatorType {
   }
   
   @discardableResult
-  func transition(to scene: LoginScene, type: SceneTransitionType) -> Completable {
+  func transition(to viewController: UIViewController, type: SceneTransitionType) -> Completable {
+    
     let subject = PublishSubject<Void>()
-    let viewController = scene.viewController()
+   
     switch type {
     case .root:
       currentViewController = SceneCoordinator.actualViewController(for: viewController)

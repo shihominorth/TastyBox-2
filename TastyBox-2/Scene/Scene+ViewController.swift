@@ -10,6 +10,7 @@ import UIKit
 extension LoginScene {
   func viewController() -> UIViewController {
     let storyboard = UIStoryboard(name: "Login", bundle: nil)
+    let aboutStoryBoard =  UIStoryboard(name: "About", bundle: nil)
     
     switch self {
     
@@ -39,6 +40,13 @@ extension LoginScene {
         var vc = storyboard.instantiateViewController(withIdentifier: "FirstTimeProfile") as! FirstTimeUserProfileTableViewController
         vc.bindViewModel(to: viewModel)
         return vc
+        
+    case .about(let viewModel):
+        
+        var vc =  aboutStoryBoard.instantiateViewController(withIdentifier: "about") as! AboutViewController
+        vc.bindViewModel(to: viewModel)
+        return vc
+        
     }
   }
 }

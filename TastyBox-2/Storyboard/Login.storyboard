@@ -703,9 +703,6 @@
                                 <state key="normal" title="Terms of Service">
                                     <color key="titleColor" systemColor="systemIndigoColor"/>
                                 </state>
-                                <connections>
-                                    <action selector="toTermsPage:" destination="9IK-EB-0Nw" eventType="touchUpInside" id="ozd-6e-P3l"/>
-                                </connections>
                             </button>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="OHW-8K-YZu"/>
