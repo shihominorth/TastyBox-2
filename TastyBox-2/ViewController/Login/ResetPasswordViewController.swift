@@ -19,7 +19,7 @@ class ResetPasswordViewController: UIViewController, BindableType {
     typealias ViewModelType = ResetPasswordVM
     
     
-    @IBOutlet weak var cancelBtn: UIBarButtonItem!
+//    @IBOutlet weak var cancelBtn: UIBarButtonItem!
     @IBOutlet weak var submitBtn: UIButton!
     @IBOutlet weak var emailTextField: UITextField!
 
@@ -30,7 +30,7 @@ class ResetPasswordViewController: UIViewController, BindableType {
     }
     
     func bindViewModel() {
-        cancelBtn.rx.action = viewModel.cancelAction
+//        cancelBtn.rx.action = viewModel.cancelAction
     }
     
     

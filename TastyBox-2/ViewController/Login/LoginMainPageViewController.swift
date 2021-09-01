@@ -116,6 +116,7 @@ class LoginMainPageViewController: UIViewController,  BindableType{
     
     func bindViewModel() {
         resetPasswordButton.rx.action = viewModel.resetPassword()
+        registerButton.rx.action = viewModel.registerEmail()
     }
     
     

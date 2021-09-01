@@ -9,7 +9,7 @@
 import Foundation
 import Firebase
 import RxSwift
-import RxCocoa
+import Action
 
 class RegisterEmailVM: ViewModelBase {
     
@@ -18,8 +18,12 @@ class RegisterEmailVM: ViewModelBase {
     
     var isRegistered: Single<Bool>?
     
-    init(apiType: RegisterAccountProtocol.Type = RegisterAccountDM.self) {
+    let sceneCoodinator: SceneCoordinator
+    
+    init(apiType: RegisterAccountProtocol.Type = RegisterAccountDM.self, sceneCoodinator: SceneCoordinator) {
         self.apiType = apiType
+        self.sceneCoodinator = sceneCoodinator
+
     }
     
     func registerEmail(email: String?, password: String?) {
@@ -27,5 +31,16 @@ class RegisterEmailVM: ViewModelBase {
         
         isRegistered = self.apiType.registerEmail(email: email, password: password).asSingle()
         
+    }
+    
+    func showTermsAndConditions() -> CocoaAction {
+        
+        return CocoaAction { task in
+          let registerEmailVM = RegisterEmailVM()
+          return self.sceneCoodinator
+              .transition(to: LoginScene.emailVerify(registerEmailVM), type: .push)
+            .asObservable()
+              .map {_ in }
+        }
     }
 }

@@ -153,14 +153,15 @@ class LoginMainVM: ViewModelBase {
       }
     }
     
-    lazy var registerEmail: Action<Void, Swift.Never> = { this in
-      return Action { task in
+  func registerEmail() -> CocoaAction {
+      return CocoaAction { task in
         let registerEmailVM = RegisterEmailVM()
-        return this.sceneCoodinator
+        return self.sceneCoodinator
             .transition(to: LoginScene.emailVerify(registerEmailVM), type: .push)
           .asObservable()
+            .map {_ in }
       }
-    }(self)
+    }
     
     
     lazy var registerMyProfile: Action<Void, Swift.Never> = { this in
