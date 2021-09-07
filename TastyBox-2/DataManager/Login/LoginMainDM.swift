@@ -17,7 +17,7 @@ import RxSwift
 
 
 enum LoginErrors: Error {
-    case incorrectEmail, incorrectPassword, invailedEmail, invailedUser, inVailedClientID
+    case incorrectEmail, incorrectPassword, invailedEmail, invailedUser, inVailedClientID, invailedUrl
 }
 
 class LoginMainDM {
@@ -26,12 +26,7 @@ class LoginMainDM {
     let uid = Auth.auth().currentUser?.uid
     // Unhashed nonce.
     fileprivate var currentNonce: String?
-    
-    
-    
-    
-    
-    
+
     //    var isNewUser: Bool? //　observable<bool>にするべき
     //    Singleは一回のみElementかErrorを送信することが保証されているObservableです。
     //    一回イベントを送信すると、disposeされるようになってます。
@@ -343,6 +338,8 @@ class LoginMainDM {
         
         
     }
+    
+    
     
     //    func loginWithCredential(credential: AuthCredential) {
     //

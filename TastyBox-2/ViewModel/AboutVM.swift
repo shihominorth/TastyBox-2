@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import Action
 
 enum isFrom {
     case main, registerEmail
@@ -26,5 +27,14 @@ class AboutViewModel {
         self.isAgreed = isAgreed
     }
     
+//    func agreeAction() -> CocoaAction {
+//        return CocoaAction { _ in
+//
+//            let viewModel = DiscoveryViewModel()
+//
+//            return self.sceneCoodinator.transition(to: <#T##UIViewController#>, type: <#T##SceneTransitionType#>)
+//
+//        }
+//    }
     
 }

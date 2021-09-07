@@ -20,10 +20,9 @@ class AboutViewController: UIViewController, BindableType {
     
     @IBOutlet weak var firstPart: UITextView!
     @IBOutlet weak var secondPart: UITextView!
-    
     @IBOutlet weak var segmentedControl: UISegmentedControl!
     
-    
+    let agreeButton = UIBarButtonItem(title: "Agree", style: .plain, target: self, action: #selector(agreeTermsAndConditions))
    
     
     override func viewDidLoad() {
@@ -34,7 +33,7 @@ class AboutViewController: UIViewController, BindableType {
             firstPart.isHidden = true
             secondPart.isHidden = false
             
-            let agreeButton = UIBarButtonItem(title: "Agree", style: .plain, target: self, action: #selector(agreeTermsAndConditions))
+           
             self.navigationItem.rightBarButtonItem = agreeButton
         
         } else {

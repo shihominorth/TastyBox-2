@@ -661,9 +661,6 @@
                                 <state key="normal" title="Sign up">
                                     <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 </state>
-                                <connections>
-                                    <action selector="createAccountAction:" destination="9IK-EB-0Nw" eventType="touchUpInside" id="f9T-45-NrF"/>
-                                </connections>
                             </button>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Already had an account?" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="1hi-v3-NZS">
                                 <rect key="frame" x="57" y="620" width="200.5" height="30"/>
@@ -736,10 +733,10 @@
                     </view>
                     <navigationItem key="navigationItem" id="iSa-j0-A0C"/>
                     <connections>
-                        <outlet property="SignUpBtn" destination="JTN-kc-wFh" id="Hm4-ks-alV"/>
                         <outlet property="confirmPasswordTextField" destination="8FW-uc-q3B" id="0gy-9k-Sht"/>
                         <outlet property="emailTextField" destination="CH4-8l-PlZ" id="ayG-gJ-7Ti"/>
                         <outlet property="passwordTextField" destination="1jb-OG-4Qr" id="ZJ0-ux-hSL"/>
+                        <outlet property="signUpBtn" destination="JTN-kc-wFh" id="Hm4-ks-alV"/>
                         <outlet property="termsConditionsBtn" destination="568-dY-Jl4" id="fq3-AU-onH"/>
                     </connections>
                 </viewController>

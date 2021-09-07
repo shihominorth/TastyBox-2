@@ -23,7 +23,17 @@
 			<string>Editor</string>
 			<key>CFBundleURLSchemes</key>
 			<array>
-				<string>com.googleusercontent.apps.281683197727-83k6knkp2i3kkcmj64bqtj7cbvi6drc7</string>
+				<string>com.googleusercontent.apps.665718174469-k92fcqd5t51sb8f6vfahuvjuiuds34g6</string>
+			</array>
+		</dict>
+		<dict>
+			<key>CFBundleTypeRole</key>
+			<string>Editor</string>
+			<key>CFBundleURLName</key>
+			<string>TastyBox-2</string>
+			<key>CFBundleURLSchemes</key>
+			<array>
+				<string>com.shihomikitajima.individual.TastyBox-2</string>
 			</array>
 		</dict>
 	</array>

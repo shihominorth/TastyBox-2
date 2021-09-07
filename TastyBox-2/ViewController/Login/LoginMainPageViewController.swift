@@ -160,7 +160,7 @@ class LoginMainPageViewController: UIViewController,  BindableType{
                 
                 if  (user?.additionalUserInfo!.isNewUser)! {
                     
-                    self.vc.isFirst = true
+//                    self.vc.isFirst = true
                     
                     guard self.navigationController?.topViewController == self else { return }
                     self.navigationController?.pushViewController(self.vc, animated: true)
@@ -176,13 +176,13 @@ class LoginMainPageViewController: UIViewController,  BindableType{
                                 let isFirst = data["isFirst"] as? Bool
                                 if let isFirst = isFirst {
                                     if isFirst == true {
-                                        self.vc.isFirst = true
+//                                        self.vc.isFirst = true
                                         
                                         guard self.navigationController?.topViewController == self else { return }
                                         self.navigationController?.pushViewController(self.vc, animated: true)
                                         
                                     } else {
-                                        self.vc.isFirst = false
+//                                        self.vc.isFirst = false
                                         let Storyboard: UIStoryboard = UIStoryboard(name: "Login", bundle: nil)
                                         let vc = Storyboard.instantiateViewController(withIdentifier: "FirstTimeProfile")
                                         
@@ -190,7 +190,7 @@ class LoginMainPageViewController: UIViewController,  BindableType{
                                         self.navigationController?.pushViewController(vc, animated: true)
                                     }
                                 } else {
-                                    self.vc.isFirst = true
+//                                    self.vc.isFirst = true
                                     
                                     guard self.navigationController?.topViewController == self else { return }
                                     self.navigationController?.pushViewController(self.vc, animated: true)
@@ -485,7 +485,7 @@ extension LoginMainPageViewController: ASAuthorizationControllerDelegate {
                     // ...
                     if  (authResult?.additionalUserInfo?.isNewUser)! {
                         
-                        self.vc.isFirst = true
+//                        self.vc.isFirst = true
                         
                         guard self.navigationController?.topViewController == self else { return }
                         self.navigationController?.pushViewController(self.vc, animated: true)
@@ -500,15 +500,15 @@ extension LoginMainPageViewController: ASAuthorizationControllerDelegate {
                                     let isFirst = data["isFirst"] as? Bool
                                     if let isFirst = isFirst {
                                         if isFirst == true {
-                                            self.vc.isFirst = true
-                                            
+//                                            self.vc.isFirst = true
+//
                                             guard self.navigationController?.topViewController == self else { return }
                                             
                                             
                                             self.navigationController?.pushViewController(self.vc, animated: true)
                                             
                                         } else {
-                                            self.vc.isFirst = false
+//                                            self.vc.isFirst = false
                                             let Storyboard: UIStoryboard = UIStoryboard(name: "Login", bundle: nil)
                                             let vc = Storyboard.instantiateViewController(withIdentifier: "FirstTimeProfile")
                                             
@@ -516,7 +516,7 @@ extension LoginMainPageViewController: ASAuthorizationControllerDelegate {
                                             self.navigationController?.pushViewController(vc, animated: true)
                                         }
                                     } else {
-                                        self.vc.isFirst = true
+//                                        self.vc.isFirst = true
                                         
                                         guard self.navigationController?.topViewController == self else { return }
                                         self.navigationController?.pushViewController(self.vc, animated: true)

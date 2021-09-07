@@ -36,7 +36,7 @@ class RegisterEmailVM: ViewModelBase {
     func aboutAction() -> CocoaAction {
       return CocoaAction { _ in
         
-        let viewModel = AboutViewModel(sceneCoodinator: self.sceneCoordinator, prevVC: .registerEmail)
+        let viewModel = AboutViewModel(sceneCoodinator: self.sceneCoordinator, prevVC: .registerEmail, isAgreed: false)
         let viewController = LoginScene.about(viewModel).viewController()
         
             return self.sceneCoordinator
@@ -46,6 +46,22 @@ class RegisterEmailVM: ViewModelBase {
         }
         
     }
+    
+    lazy var sendEmailWithLink: Action<String, Swift.Never> = { this in
+        
+        return Action { email in
+            
+            print(email)
+            
+            return self.apiType.sendEmailWithLink(email: email)
+                .catch { err in
+                    
+                    print(err)
+                    return .empty()
+                    
+                }.asObservable()
+        }
+    }(self)
 //    
 //    func showTermsAndConditions() -> CocoaAction {
 //        

@@ -9,6 +9,7 @@
 import Foundation
 import RxSwift
 import RxCocoa
+import Action
 import Firebase
 
 enum RegisterErrors: Error {
@@ -19,6 +20,7 @@ enum RegisterErrors: Error {
 protocol RegisterAccountProtocol {
     
     static func registerEmail(email: String, password: String) -> Observable<Bool>
+    static func sendEmailWithLink(email: String?) -> Completable
 }
 
 
@@ -31,6 +33,66 @@ class RegisterAccountDM: RegisterAccountProtocol {
     
     // https://qiita.com/mtkmr/items/078b715d9965fea1bd04
     // 作り直し
+
+    static func sendEmailWithLink(email: String?) -> Completable {
+        
+        return Completable.create { completable in
+           
+            guard let email = email, !email.isEmpty else {
+            
+                completable(.error( LoginErrors.invailedEmail))
+                return Disposables.create()
+                
+            } //ユーザーのメールアドレス
+
+                let actionCodeSettings = ActionCodeSettings() //メールリンクの作成方法をFirebaseに伝えるオブジェクト
+                actionCodeSettings.handleCodeInApp = true //ログインをアプリ内で完結させる必要があります
+            actionCodeSettings.dynamicLinkDomain = "tastybox2.page.link"
+                actionCodeSettings.setIOSBundleID(Bundle.main.bundleIdentifier!)
+            //iOSデバイス内でログインリンクを開くアプリのBundle ID
+                //リンクURL
+                var components = URLComponents()
+                components.scheme = "https"
+                components.host = "tastybox2.page.link" //Firebaseコンソールで作成したダイナミックリンクURLドメイン
+           
+                let queryItemEmailName = "email" //URLにemail情報(パラメータ)を追加する
+                let emailTypeQueryItem = URLQueryItem(name: queryItemEmailName, value: email)
+                components.queryItems = [emailTypeQueryItem]
+           
+            guard let linkParameter = components.url else {
+                
+                completable(.error(LoginErrors.invailedUrl))
+                
+                return Disposables.create()
+            }
+                actionCodeSettings.url = linkParameter
+            
+            //ユーザーのメールアドレスに認証リンクを送信
+               Auth.auth().sendSignInLink(toEmail: email, actionCodeSettings: actionCodeSettings) { (err) in
+                   if let err = err {
+                    
+                    completable(.error(err))
+                    
+                   } else {
+                    print("送信完了")
+
+                    //後で認証に使用するのでローカルにメールアドレスを保存しておく
+                    UserDefaults.standard.set(email, forKey: "email")
+
+                    //・・・
+                    //アラートを表示するなど、ユーザーにメールの確認を促す処理
+                 completable(.completed)
+//                    DynamicLinks.performDiagnostics(completion: nil)
+                   }
+                   
+
+               }
+            
+            return Disposables.create()
+        }
+       
+
+    }
     
     static func registerEmail<T: Any>(email: String, password: String) ->  Observable<T> {
         

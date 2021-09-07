@@ -20,7 +20,7 @@ class EmailRegisterViewController: UIViewController, BindableType {
     @IBOutlet weak var emailTextField: UITextField!
     @IBOutlet weak var passwordTextField: UITextField!
     @IBOutlet weak var confirmPasswordTextField: UITextField!
-    @IBOutlet weak var SignUpBtn: UIButton!
+    @IBOutlet weak var signUpBtn: UIButton!
     
     @IBOutlet weak var termsConditionsBtn: UIButton!
     var lineView = UIView()
@@ -30,7 +30,7 @@ class EmailRegisterViewController: UIViewController, BindableType {
 //
 //
     override func viewDidLoad() {
-        roundCorners(view: SignUpBtn, cornerRadius: 5.0)
+        roundCorners(view: signUpBtn, cornerRadius: 5.0)
         let tap: UITapGestureRecognizer = UITapGestureRecognizer(target: self.view, action: #selector(UIView.endEditing))
         view.addGestureRecognizer(tap)
         
@@ -44,6 +44,11 @@ class EmailRegisterViewController: UIViewController, BindableType {
     func bindViewModel() {
         createUser()
         termsConditionsBtn.rx.action = viewModel.aboutAction()
+        
+        signUpBtn.rx.tap
+            .withLatestFrom(emailTextField.rx.text.orEmpty)
+            .bind(to: viewModel.sendEmailWithLink.inputs)
+            .disposed(by: viewModel.disposeBag)
     }
     
     
@@ -58,27 +63,27 @@ class EmailRegisterViewController: UIViewController, BindableType {
 //        self.present(vc, animated:true, completion:nil)
 //    }
     
-    @IBAction func createAccountAction(_ sender: Any) {
-        if emailTextField.text == nil || passwordTextField.text == nil || confirmPasswordTextField.text == nil {
-            let alertController = UIAlertController(title: "Error", message: "Please enter your email and password", preferredStyle: .alert)
-                
-            let defaultAction = UIAlertAction(title: "OK", style: .cancel, handler: nil)
-            alertController.addAction(defaultAction)
-                
-            present(alertController, animated: true, completion: nil)
-            
-        } else if passwordTextField.text != confirmPasswordTextField.text {
-            let alertController = UIAlertController(title: "Error", message: "Two passwords are not the same.", preferredStyle: .alert)
-                
-            let defaultAction = UIAlertAction(title: "OK", style: .cancel, handler: nil)
-            alertController.addAction(defaultAction)
-                
-            present(alertController, animated: true, completion: nil)
-            
-        } else {
-            self.confirm()
-        }
-    }
+//    @IBAction func createAccountAction(_ sender: Any) {
+//        if emailTextField.text == nil || passwordTextField.text == nil || confirmPasswordTextField.text == nil {
+//            let alertController = UIAlertController(title: "Error", message: "Please enter your email and password", preferredStyle: .alert)
+//                
+//            let defaultAction = UIAlertAction(title: "OK", style: .cancel, handler: nil)
+//            alertController.addAction(defaultAction)
+//                
+//            present(alertController, animated: true, completion: nil)
+//            
+//        } else if passwordTextField.text != confirmPasswordTextField.text {
+//            let alertController = UIAlertController(title: "Error", message: "Two passwords are not the same.", preferredStyle: .alert)
+//                
+//            let defaultAction = UIAlertAction(title: "OK", style: .cancel, handler: nil)
+//            alertController.addAction(defaultAction)
+//                
+//            present(alertController, animated: true, completion: nil)
+//            
+//        } else {
+//            self.confirm()
+//        }
+//    }
     
     private func confirm(){
         let alertController = UIAlertController(title: "Terms of Service Agreement", message: "Please make sure you read the terms and conditions carefully before using the app. Do you agree to these terms of agreement?", preferredStyle: .alert)
