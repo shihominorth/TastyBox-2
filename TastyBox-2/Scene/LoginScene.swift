@@ -8,5 +8,5 @@
 import Foundation
 
 enum LoginScene {
-    case main(LoginMainVM), resetPassword(ResetPasswordVM), emailVerify(RegisterEmailVM), profileRegister(RegisterUserProfileVM), about(AboutViewModel)
+    case main(LoginMainVM), resetPassword(ResetPasswordVM), emailVerify(RegisterEmailVM), setPassword(SetPasswordVM), profileRegister(RegisterUserProfileVM), about(AboutViewModel)
 }

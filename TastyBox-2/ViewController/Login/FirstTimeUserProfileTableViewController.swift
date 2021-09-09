@@ -176,18 +176,18 @@ class FirstTimeUserProfileTableViewController: UITableViewController, UIPickerVi
 //                changeRequest?.displayName = userNameTextField.text
 //            }
 //            
-            let Storyboard: UIStoryboard = UIStoryboard(name: "Main", bundle: nil)
-            let vc = Storyboard.instantiateViewController(withIdentifier: "Discovery")
-            vc.modalTransitionStyle = .crossDissolve
-            vc.modalPresentationStyle = .overFullScreen
-            
-            guard self.navigationController?.topViewController == self else { return }
-            
-            if Auth.auth().currentUser?.uid != nil {
-                self.navigationController?.pushViewController(vc, animated: false)
-                } else {
-                
-            }
+//            let Storyboard: UIStoryboard = UIStoryboard(name: "Main", bundle: nil)
+//            let vc = Storyboard.instantiateViewController(withIdentifier: "Discovery")
+//            vc.modalTransitionStyle = .crossDissolve
+//            vc.modalPresentationStyle = .overFullScreen
+//            
+//            guard self.navigationController?.topViewController == self else { return }
+//            
+//            if Auth.auth().currentUser?.uid != nil {
+//                self.navigationController?.pushViewController(vc, animated: false)
+//                } else {
+//                
+//            }
             
         }
     }

@@ -21,11 +21,13 @@ protocol RegisterAccountProtocol {
     
     static func registerEmail(email: String, password: String) -> Observable<Bool>
     static func sendEmailWithLink(email: String?) -> Completable
+    static func signUpWithPassword(email: String, password: String) -> Completable
+    static func failedSignUp() -> Completable
 }
 
 
 class RegisterAccountDM: RegisterAccountProtocol {
-    
+
     enum registerStatus {
         case failed(RegisterErrors), success
     }
@@ -93,6 +95,41 @@ class RegisterAccountDM: RegisterAccountProtocol {
        
 
     }
+    
+    static func signUpWithPassword(email: String, password: String) -> Completable {
+
+        return Completable.create { completable in
+
+            print("success to sign up.")
+            Auth.auth().createUser(withEmail: email, password: password) { result, err in
+                
+                if let err = err {
+                    completable(.error(err))
+                }
+                else {
+                    completable(.completed)
+                }
+                
+            }
+            return Disposables.create ()
+            
+        }
+    }
+    
+    static func failedSignUp() -> Completable {
+        
+        return Completable.create { completable in
+            print("failed to sign up.")
+            
+            completable(.completed)
+            
+            return Disposables.create()
+        }
+
+    }
+    
+
+    
     
     static func registerEmail<T: Any>(email: String, password: String) ->  Observable<T> {
         

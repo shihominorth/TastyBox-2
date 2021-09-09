@@ -21,7 +21,7 @@ class LoginMainVM: ViewModelBase {
     
     private var userImage: UIImage = #imageLiteral(resourceName: "imageFile")
     private let dataManager = LoginMainDM()
-    
+    let sceneCoodinator: SceneCoordinator
 
     
     //    Singleは一回のみElementかErrorを送信することが保証されているObservableです。
@@ -43,10 +43,10 @@ class LoginMainVM: ViewModelBase {
     }
     
     
-    let sceneCoodinator: SceneCoordinator
     
     init(sceneCoodinator: SceneCoordinator) {
         self.sceneCoodinator = sceneCoodinator
+        
     }
     
     
@@ -168,7 +168,7 @@ class LoginMainVM: ViewModelBase {
     
     
     lazy var registerMyProfile: Action<Void, Swift.Never> = { this in
-      return Action { task in
+      return Action { _ in
         
         let registerAccountVM = RegisterUserProfileVM()
         let viewController = LoginScene.profileRegister(registerAccountVM).viewController()
@@ -178,4 +178,6 @@ class LoginMainVM: ViewModelBase {
           .asObservable()
       }
     }(self)
+    
+
 }

@@ -15,14 +15,14 @@ class EmailRegisterViewController: UIViewController, BindableType {
     var viewModel: RegisterEmailVM!
     typealias ViewModelType = RegisterEmailVM
     
-    
-    
+ 
     @IBOutlet weak var emailTextField: UITextField!
-    @IBOutlet weak var passwordTextField: UITextField!
-    @IBOutlet weak var confirmPasswordTextField: UITextField!
-    @IBOutlet weak var signUpBtn: UIButton!
+
+    @IBOutlet weak var sendLinkBtn: UIButton!
     
     @IBOutlet weak var termsConditionsBtn: UIButton!
+    @IBOutlet weak var toLoginMainBtn: UIButton!
+    
     var lineView = UIView()
 //    @IBAction func pressBackToLoginMainSegue(_ sender: UIBarButtonItem) {
 //        self.performSegue(withIdentifier: "LoginMain", sender: nil)
@@ -30,7 +30,7 @@ class EmailRegisterViewController: UIViewController, BindableType {
 //
 //
     override func viewDidLoad() {
-        roundCorners(view: signUpBtn, cornerRadius: 5.0)
+        roundCorners(view: sendLinkBtn, cornerRadius: 5.0)
         let tap: UITapGestureRecognizer = UITapGestureRecognizer(target: self.view, action: #selector(UIView.endEditing))
         view.addGestureRecognizer(tap)
         
@@ -45,10 +45,12 @@ class EmailRegisterViewController: UIViewController, BindableType {
         createUser()
         termsConditionsBtn.rx.action = viewModel.aboutAction()
         
-        signUpBtn.rx.tap
+        sendLinkBtn.rx.tap
             .withLatestFrom(emailTextField.rx.text.orEmpty)
             .bind(to: viewModel.sendEmailWithLink.inputs)
             .disposed(by: viewModel.disposeBag)
+        
+        toLoginMainBtn.rx.action = viewModel.toLoginMainAction()
     }
     
     

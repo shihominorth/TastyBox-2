@@ -62,6 +62,21 @@ class RegisterEmailVM: ViewModelBase {
                 }.asObservable()
         }
     }(self)
+    
+    func toLoginMainAction() -> CocoaAction {
+        return CocoaAction { this in
+            
+            let vm = LoginMainVM(sceneCoodinator: self.sceneCoordinator)
+            return self.sceneCoordinator.transition(to: LoginScene.main(vm).viewController(), type: .modal).asObservable().map { _ in }
+        }
+    }
+    
+    func toSetPassword(email: String) {
+        
+        let vm = SetPasswordVM(email: email, apiType: self.apiType, sceneCoordinator: self.sceneCoordinator)
+        let vc = LoginScene.setPassword(vm).viewController()
+        self.sceneCoordinator.transition(to: vc, type: .push)
+    }
 //    
 //    func showTermsAndConditions() -> CocoaAction {
 //        

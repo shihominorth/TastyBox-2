@@ -23,24 +23,36 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
                 print("メールアドレスが存在しません")
                 return
             }
+            
+            
+            
+            let sceneCoordinator = SceneCoordinator(window: window!)
+            
+            let viewModel = SetPasswordVM(email: email, sceneCoordinator: sceneCoordinator)
+            
+            let vc = LoginScene.setPassword(viewModel).viewController()
+            
+            sceneCoordinator.transition(to: vc, type: .root)
+
             //ログイン処理
-            Auth.auth().signIn(withEmail: email, link: link) { (auth, err) in
-                if let err = err {
-                    print("ログイン失敗")
-                    return
-                }
-                print("ログイン成功")
+//            Auth.auth().signIn(withEmail: email, link: link) { (auth, err) in
+//                if let err = err {
+//                    print("ログイン失敗")
+//                    print(err)
+//                    return
+//                }
+//                print("ログイン成功")
                 
                 //ログイン成功時の処理 (例えば、今回は画面切り替えなどの処理)
 //                guard let scene = (scene as? UIWindowScene) else { return }
 //                let window = UIWindow(windowScene: scene)
-//                let storyboard = UIStoryboard(name: "Main", bundle: Bundle.main)
-//                let didSignInVC = storyboard.instantiateViewController(withIdentifier: "DidSignInViewController")
+//                let storyboard = UIStoryboard(name: "Login", bundle: Bundle.main)
+//                let didSignInVC = storyboard.instantiateViewController(withIdentifier: "setPassword")
 //                window.rootViewController = didSignInVC
 //                self.window = window
 //                window.makeKeyAndVisible()
             }
-        }
+//        }
     }
     
     

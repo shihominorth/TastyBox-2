@@ -48,6 +48,14 @@ class LoginMainPageViewController: UIViewController,  BindableType{
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        let firebaseAuth = Auth.auth()
+    do {
+      try firebaseAuth.signOut()
+    } catch let signOutError as NSError {
+      print("Error signing out: %@", signOutError)
+    }
+
+
         let view = UIView(frame: CGRect(x: 0, y: 0, width: self.view.frame.width, height: self.view.frame.height))
         view.backgroundColor = #colorLiteral(red: 0.9977325797, green: 0.9879661202, blue: 0.7689270973, alpha: 1)
         view.tag = 100
@@ -64,21 +72,29 @@ class LoginMainPageViewController: UIViewController,  BindableType{
         
         self.view.addSubview(view)
         
+        if let user = Auth.auth().currentUser {
+            
+        } else {
+     
+        }
+        
         if Auth.auth().currentUser != nil && Auth.auth().currentUser?.uid != nil {
             // User is signed in.
             
-            let Storyboard: UIStoryboard = UIStoryboard(name: "Main", bundle: nil)
-            let vc = Storyboard.instantiateViewController(withIdentifier: "Discovery")
+//            let Storyboard: UIStoryboard = UIStoryboard(name: "Main", bundle: nil)
+//            let vc = Storyboard.instantiateViewController(withIdentifier: "Discovery")
+//            
+//            //guard self.navigationController?.topViewController == self else { return }
+//            
+//            
+//            vc.modalTransitionStyle = .flipHorizontal
+//            vc.modalPresentationStyle = .overFullScreen
+//            self.navigationController?.pushViewController(vc, animated: false)
+//            
             
-            //guard self.navigationController?.topViewController == self else { return }
-            
-            
-            vc.modalTransitionStyle = .flipHorizontal
-            vc.modalPresentationStyle = .overFullScreen
-            self.navigationController?.pushViewController(vc, animated: false)
-            
-            
-        } else {
+        }
+        
+        else {
             if let viewWithTag = self.view.viewWithTag(100) {
                 viewWithTag.removeFromSuperview()
                 
@@ -220,46 +236,46 @@ class LoginMainPageViewController: UIViewController,  BindableType{
     }
     
     
-    //MARK: keyboard delegate
-    @objc func keyboardWillShow(notification: NSNotification) {
-        if ((notification.userInfo?[UIResponder.keyboardFrameBeginUserInfoKey] as? NSValue)?.cgRectValue) != nil {
-            if self.view.frame.origin.y == 0 {
-                self.view.frame.origin.y -= 100
-            }
-        }
-        
-        tapRecognizer = UITapGestureRecognizer(target: self, action: #selector(tapRecognizerAction))
-        
-        self.view.addGestureRecognizer(tapRecognizer!)
-    }
-    
-    @objc func tapRecognizerAction() {
-        
-        
-        if let tapRecognizer = tapRecognizer {
-            self.view.removeGestureRecognizer(tapRecognizer)
-            self.tapRecognizer = nil
-        }
-        
-        UIView.animate(withDuration: 0.3, animations: {
-            self.view.endEditing(true)
-            if self.view.frame.origin.y != 0 {
-                self.view.frame.origin.y = 0
-            }
-        })
-        
-    }
-    
-    @objc func keyboardWillHide(notification: NSNotification) {
-        
-        UIView.animate(withDuration: 0.3, animations: {
-            self.view.endEditing(true)
-            if self.view.frame.origin.y != 0 {
-                self.view.frame.origin.y = 0
-            }
-        })
-        
-    }
+//    //MARK: keyboard delegate
+//    @objc func keyboardWillShow(notification: NSNotification) {
+//        if ((notification.userInfo?[UIResponder.keyboardFrameBeginUserInfoKey] as? NSValue)?.cgRectValue) != nil {
+//            if self.view.frame.origin.y == 0 {
+//                self.view.frame.origin.y -= 100
+//            }
+//        }
+//        
+//        tapRecognizer = UITapGestureRecognizer(target: self, action: #selector(tapRecognizerAction))
+//        
+//        self.view.addGestureRecognizer(tapRecognizer!)
+//    }
+//    
+//    @objc func tapRecognizerAction() {
+//        
+//        
+//        if let tapRecognizer = tapRecognizer {
+//            self.view.removeGestureRecognizer(tapRecognizer)
+//            self.tapRecognizer = nil
+//        }
+//        
+//        UIView.animate(withDuration: 0.3, animations: {
+//            self.view.endEditing(true)
+//            if self.view.frame.origin.y != 0 {
+//                self.view.frame.origin.y = 0
+//            }
+//        })
+//        
+//    }
+//    
+//    @objc func keyboardWillHide(notification: NSNotification) {
+//        
+//        UIView.animate(withDuration: 0.3, animations: {
+//            self.view.endEditing(true)
+//            if self.view.frame.origin.y != 0 {
+//                self.view.frame.origin.y = 0
+//            }
+//        })
+//        
+//    }
     
     
 }

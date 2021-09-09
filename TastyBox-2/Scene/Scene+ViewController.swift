@@ -34,6 +34,15 @@ extension LoginScene {
         vc.bindViewModel(to: viewModel)
         
         return vc
+        
+    case .setPassword(let viewModel):
+        
+        var vc = storyboard.instantiateViewController(withIdentifier: "setPassword") as! SetPasswordViewController
+        
+        vc.bindViewModel(to: viewModel)
+        
+        return vc
+        
 
     case .profileRegister(let viewModel):
         
