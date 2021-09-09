@@ -29,12 +29,15 @@ class SetPasswordViewController: UIViewController, BindableType{
         super.viewDidLoad()
         
         emailLbl.text = viewModel.email
+        setUpTxtField()
         setUpKeyboard()
     }
     
     
     func bindViewModel() {
         
+        
+        // check if password and comfirm password is same.
         Observable
             .combineLatest(passwordTxtField.rx.text.orEmpty, comfirmTxtField.rx.text.orEmpty) { password, comfirmPassword -> Bool in
                 print(password, comfirmPassword)
@@ -68,6 +71,9 @@ class SetPasswordViewController: UIViewController, BindableType{
             }
             .disposed(by: viewModel.disposeBag)
         
+        self.loginbtn.rx.action = viewModel.toLoginMainAction()
+        self.termAndConditionsBtn.rx.action = viewModel.aboutAction()
+        
     }
     
     func failedSendPassword(){
@@ -85,11 +91,15 @@ class SetPasswordViewController: UIViewController, BindableType{
 
 extension SetPasswordViewController: UITextFieldDelegate {
     
-    func textFieldShouldEndEditing(_ textField: UITextField) -> Bool {
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
         if textField == passwordTxtField {
+           
+            passwordTxtField.resignFirstResponder()
             comfirmTxtField.becomeFirstResponder()
+
+            return false
         }
         
-        return false
+        return true
     }
 }

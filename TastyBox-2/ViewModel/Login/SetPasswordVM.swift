@@ -45,6 +45,34 @@ class SetPasswordVM: ViewModelBase {
         
     }(self)
     
+    func toLoginMainAction() ->  CocoaAction {
+        
+        return CocoaAction { _ in
+            
+            let vm = LoginMainVM(sceneCoodinator: self.sceneCoordinator)
+            let vc = LoginScene.main(vm).viewController()
+            
+            return self.sceneCoordinator.transition(to: vc, type: .root)
+                .asObservable().map { _ in }
+            
+        }
+        
+    }
+    
+    func aboutAction() -> CocoaAction {
+      return CocoaAction { _ in
+        
+        let viewModel = AboutViewModel(sceneCoodinator: self.sceneCoordinator, prevVC: .registerEmail, isAgreed: false)
+        let viewController = LoginScene.about(viewModel).viewController()
+        
+            return self.sceneCoordinator
+                .transition(to: viewController, type: .push)
+              .asObservable()
+              .map { _ in }
+        }
+        
+    }
+    
 }
 
 

@@ -36,12 +36,14 @@ extension LoginScene {
         return vc
         
     case .setPassword(let viewModel):
-        
-        var vc = storyboard.instantiateViewController(withIdentifier: "setPassword") as! SetPasswordViewController
+
+        let nc = storyboard.instantiateViewController(withIdentifier: "setPassword") as! UINavigationController
+        var vc = nc.viewControllers.first as! SetPasswordViewController
+//        var vc = storyboard.instantiateViewController(identifier: "setPassword") as! SetPasswordViewController
         
         vc.bindViewModel(to: viewModel)
         
-        return vc
+        return nc
         
 
     case .profileRegister(let viewModel):
