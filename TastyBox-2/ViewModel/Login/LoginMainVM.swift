@@ -50,10 +50,9 @@ class LoginMainVM: ViewModelBase {
     }
     
     
-    func googleLogin(presenting vc: UIViewController) -> Observable<FirebaseAuth.User>{
+    func googleLogin(presenting vc: UIViewController) -> Single<FirebaseAuth.User> {
         
-        return self.apiType.loginWithGoogleFunc(viewController: vc)
-    
+        return self.apiType.loginWithGoogle(viewController: vc)
     }
 
     

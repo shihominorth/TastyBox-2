@@ -23,8 +23,8 @@ enum LoginErrors: Error {
 }
 
 protocol LoginMainProtocol: AnyObject {
-    static func loginWithGoogle(viewController presenting: UIViewController) -> Completable
-    static func loginWithGoogleFunc(viewController presenting: UIViewController)  -> Observable<FirebaseAuth.User>
+    static func loginWithGoogle(viewController presenting: UIViewController) -> Single<Firebase.User>
+//    static func loginWithGoogleFunc(viewController presenting: UIViewController)  -> Observable<FirebaseAuth.User>
 }
 
 class LoginMainDM: LoginMainProtocol {
@@ -94,58 +94,58 @@ class LoginMainDM: LoginMainProtocol {
     }
         
 
-    static func loginWithGoogleFunc(viewController presenting: UIViewController) -> Observable<FirebaseAuth.User>{
-        
-        return  Observable.create { observalble in
-           
-            guard let clientID = FirebaseApp.app()?.options.clientID else {
-                return Disposables.create()
-            }
-            
-            // Create Google Sign In configuration object.
-            let config = GIDConfiguration(clientID: clientID)
-            
-            // Start the sign in flow!
-            GIDSignIn.sharedInstance.signIn(with: config, presenting: presenting) { user, err in
-                
-                if let err = err {
-                    observalble.onError(err)
-                }
-                
-                guard
-                    let authentication = user?.authentication,
-                    let idToken = authentication.idToken
-                else {
-                    
-                    return
-                }
-                
-                let credential = GoogleAuthProvider.credential(withIDToken: idToken,
-                                                               accessToken: authentication.accessToken)
-                
-                Auth.auth().signIn(with: credential) { authResult, err in
-                    
-                    if let err = err {
-                        observalble.onError(err)
-                    } else {
-                        
-                        if let user = authResult?.user {
-                            print(user)
-                            print("success")
-                            observalble.onNext(user)
-                            
-                        }
-                    }
-                }
-            }
-            return Disposables.create()
-
-        }
-    }
+//    static func loginWithGoogleFunc(viewController presenting: UIViewController) -> Observable<FirebaseAuth.User>{
+//        
+//        return  Observable.create { observalble in
+//           
+//            guard let clientID = FirebaseApp.app()?.options.clientID else {
+//                return Disposables.create()
+//            }
+//            
+//            // Create Google Sign In configuration object.
+//            let config = GIDConfiguration(clientID: clientID)
+//            
+//            // Start the sign in flow!
+//            GIDSignIn.sharedInstance.signIn(with: config, presenting: presenting) { user, err in
+//                
+//                if let err = err {
+//                    observalble.onError(err)
+//                }
+//                
+//                guard
+//                    let authentication = user?.authentication,
+//                    let idToken = authentication.idToken
+//                else {
+//                    
+//                    return
+//                }
+//                
+//                let credential = GoogleAuthProvider.credential(withIDToken: idToken,
+//                                                               accessToken: authentication.accessToken)
+//                
+//                Auth.auth().signIn(with: credential) { authResult, err in
+//                    
+//                    if let err = err {
+//                        observalble.onError(err)
+//                    } else {
+//                        
+//                        if let user = authResult?.user {
+//                            print(user)
+//                            print("success")
+//                            observalble.onNext(user)
+//                            
+//                        }
+//                    }
+//                }
+//            }
+//            return Disposables.create()
+//
+//        }
+//    }
     
-    static func loginWithGoogle(viewController presenting: UIViewController) -> Completable {
+    static func loginWithGoogle(viewController presenting: UIViewController) -> Single<FirebaseAuth.User> {
         
-        return Completable.create { completable in
+        return Single.create { single in
             
             
             guard let clientID = FirebaseApp.app()?.options.clientID else {
@@ -156,10 +156,10 @@ class LoginMainDM: LoginMainProtocol {
             let config = GIDConfiguration(clientID: clientID)
             
             // Start the sign in flow!
-            GIDSignIn.sharedInstance.signIn(with: config, presenting: presenting) { user, error in
+            GIDSignIn.sharedInstance.signIn(with: config, presenting: presenting) { user, err in
                 
-                if let error = error {
-                    completable(.error(error))
+                if let err = err {
+                    single(.failure(err))
                     return
                 }
                 
@@ -167,7 +167,7 @@ class LoginMainDM: LoginMainProtocol {
                     let authentication = user?.authentication,
                     let idToken = authentication.idToken
                 else {
-                    completable(.error(LoginErrors.invailedAuthentication))
+                    single(.failure(LoginErrors.invailedAuthentication))
                     return
                 }
                 
@@ -177,12 +177,12 @@ class LoginMainDM: LoginMainProtocol {
                 Auth.auth().signIn(with: credential) { authResult, err in
                     
                     if let err = err {
-                        completable(.error(err))
+                        single(.failure(err))
                     } else {
                         
                         if let user = authResult?.user {
                             
-                            completable(.completed)
+                            single(.success(user))
                         }
                     }
                 
