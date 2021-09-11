@@ -146,7 +146,23 @@ class LoginMainVM: ViewModelBase {
     
     lazy var loginAction: Action<(String, String), Void> = { this in
         return Action { email, password in
-            return this.apiType.login(email: email, password: password).asObservable().map { _ in }
+            
+            this.apiType.login(email: email, password: password)
+                .subscribe(onSuccess: { result in
+                    let user = result.user
+                    if user.isEmailVerified {
+                        
+//                        return this.sceneCoodinator.transition(to: <#T##UIViewController#>, type: <#T##SceneTransitionType#>)
+                    }
+                    
+                    print(user)
+                }, onFailure: { err in
+                    print(err)
+                }).disposed(by: this.disposeBag)
+            
+            return Observable.create { _ in
+                return Disposables.create()
+            }
         }
     }(self)
     
