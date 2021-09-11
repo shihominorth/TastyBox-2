@@ -194,6 +194,7 @@
                     </view>
                     <navigationItem key="navigationItem" id="wuy-Ai-yTQ"/>
                     <connections>
+                        <outlet property="button" destination="fAR-gQ-rN1" id="o2y-va-qDz"/>
                         <outlet property="emailTextField" destination="Fse-Hy-zwo" id="LDH-oy-jHg"/>
                         <outlet property="googleLoginBtn" destination="EcU-YZ-vqX" id="Yxa-Gp-ptl"/>
                         <outlet property="login" destination="1AW-Wj-Qt7" id="cBd-Zc-hEI"/>

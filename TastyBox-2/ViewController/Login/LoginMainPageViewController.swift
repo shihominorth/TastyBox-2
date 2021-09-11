@@ -40,6 +40,7 @@ class LoginMainPageViewController: UIViewController,  BindableType{
     
     @IBOutlet var loginButtonStackView: UIStackView!
     
+    @IBOutlet weak var button: UIButton!
     @IBOutlet weak var googleLoginBtn: GIDSignInButton!
     @IBOutlet weak var resetPasswordButton: UIButton!
     @IBOutlet weak var registerButton: UIButton!
@@ -138,6 +139,7 @@ class LoginMainPageViewController: UIViewController,  BindableType{
         resetPasswordButton.rx.action = viewModel.resetPassword()
         registerButton.rx.action = viewModel.registerEmail()
         
+        //MARK: after tap password or email text fields, cant use google login button
         let _ = googleLoginBtn.rx.controlEvent(.touchUpInside)
             .flatMap {
                 return self.viewModel.googleLogin(presenting: self)
@@ -159,6 +161,12 @@ class LoginMainPageViewController: UIViewController,  BindableType{
         }
         .disposed(by: viewModel.disposeBag)
         
+        
+        let info = Observable.combineLatest(emailTextField.rx.text.orEmpty, passwordTextField.rx.text.orEmpty)
+        login.rx.tap
+            .withLatestFrom(info)
+            .bind(to: viewModel.loginAction.inputs)
+            .disposed(by: viewModel.disposeBag)
     }
     
     

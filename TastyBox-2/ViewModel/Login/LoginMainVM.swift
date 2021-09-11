@@ -78,23 +78,24 @@ class LoginMainVM: ViewModelBase {
     
     
     
-    func Login(email: String?, password: String?) {
+//    func Login(email: String?, password: String?) {
+//
+//        let login = self.apiType.login(email: email, password: password)
+//
+//
+//
+//        let _ = login.subscribe({ user in
+//
+//            let _ = self.dataManager.isFirstLogin.subscribe(onSuccess: { successed in
+//
+//
+//
+//            }, onFailure: { err in
+//
+//            })
+//
+//        }
         
-        let login = self.apiType.login(email: email, password: password)
-        
-        
-        
-        let _ = login.subscribe({ user in
-            
-            let _ = self.dataManager.isFirstLogin.subscribe(onSuccess: { successed in
-                
-                
-                
-            }, onFailure: { err in
-                
-            })
-            
-        }
 //        ,
 //
 //        onError: { err in
@@ -122,9 +123,32 @@ class LoginMainVM: ViewModelBase {
 //            }
 //
 //        }
-        )
+//        )
         
+//    }
+    
+    func login(email: String, password: String) {
+        let _ = self.apiType.login(email: email, password: password)
+            .subscribe(onSuccess: { result in
+                print("success")
+//                let user = result.user
+//
+//                if user.isEmailVerified {
+//
+//                } else {
+//
+//                }
+            }, onFailure: { err in
+                print("failed", err)
+            })
     }
+       
+    
+    lazy var loginAction: Action<(String, String), Void> = { this in
+        return Action { email, password in
+            return this.apiType.login(email: email, password: password).asObservable().map { _ in }
+        }
+    }(self)
     
     
     func login(controller: ASAuthorizationController, didCompleteWithAuthorization authorization: ASAuthorization) {
