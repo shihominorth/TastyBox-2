@@ -14,19 +14,29 @@ import GoogleSignIn
 import AuthenticationServices
 import CryptoKit
 import RxSwift
+import RxCocoa
+import Action
 
 
 enum LoginErrors: Error {
-    case incorrectEmail, incorrectPassword, invailedEmail, invailedUser, inVailedClientID, invailedUrl
+    case incorrectEmail, incorrectPassword, invailedEmail, invailedUser, inVailedClientID, invailedUrl, invailedAuthentication
 }
 
-class LoginMainDM {
+protocol LoginMainProtocol: AnyObject {
+    static func loginWithGoogle(viewController presenting: UIViewController) -> Completable
+    static func loginWithGoogleFunc(viewController presenting: UIViewController)  -> Observable<FirebaseAuth.User>
+}
+
+class LoginMainDM: LoginMainProtocol {
+    
     
     let bag = DisposeBag()
     let uid = Auth.auth().currentUser?.uid
     // Unhashed nonce.
     fileprivate var currentNonce: String?
-
+    
+    let googleLoginPublishSubject = PublishSubject<FirebaseAuth.User>()
+    
     //    var isNewUser: Bool? //　observable<bool>にするべき
     //    Singleは一回のみElementかErrorを送信することが保証されているObservableです。
     //    一回イベントを送信すると、disposeされるようになってます。
@@ -82,7 +92,106 @@ class LoginMainDM {
         }
         
     }
+        
+
+    static func loginWithGoogleFunc(viewController presenting: UIViewController) -> Observable<FirebaseAuth.User>{
+        
+        return  Observable.create { observalble in
+           
+            guard let clientID = FirebaseApp.app()?.options.clientID else {
+                return Disposables.create()
+            }
+            
+            // Create Google Sign In configuration object.
+            let config = GIDConfiguration(clientID: clientID)
+            
+            // Start the sign in flow!
+            GIDSignIn.sharedInstance.signIn(with: config, presenting: presenting) { user, err in
+                
+                if let err = err {
+                    observalble.onError(err)
+                }
+                
+                guard
+                    let authentication = user?.authentication,
+                    let idToken = authentication.idToken
+                else {
+                    
+                    return
+                }
+                
+                let credential = GoogleAuthProvider.credential(withIDToken: idToken,
+                                                               accessToken: authentication.accessToken)
+                
+                Auth.auth().signIn(with: credential) { authResult, err in
+                    
+                    if let err = err {
+                        observalble.onError(err)
+                    } else {
+                        
+                        if let user = authResult?.user {
+                            print(user)
+                            print("success")
+                            observalble.onNext(user)
+                            
+                        }
+                    }
+                }
+            }
+            return Disposables.create()
+
+        }
+    }
     
+    static func loginWithGoogle(viewController presenting: UIViewController) -> Completable {
+        
+        return Completable.create { completable in
+            
+            
+            guard let clientID = FirebaseApp.app()?.options.clientID else {
+                return Disposables.create ()
+            }
+            
+            // Create Google Sign In configuration object.
+            let config = GIDConfiguration(clientID: clientID)
+            
+            // Start the sign in flow!
+            GIDSignIn.sharedInstance.signIn(with: config, presenting: presenting) { user, error in
+                
+                if let error = error {
+                    completable(.error(error))
+                    return
+                }
+                
+                guard
+                    let authentication = user?.authentication,
+                    let idToken = authentication.idToken
+                else {
+                    completable(.error(LoginErrors.invailedAuthentication))
+                    return
+                }
+                
+                let credential = GoogleAuthProvider.credential(withIDToken: idToken,
+                                                               accessToken: authentication.accessToken)
+                
+                Auth.auth().signIn(with: credential) { authResult, err in
+                    
+                    if let err = err {
+                        completable(.error(err))
+                    } else {
+                        
+                        if let user = authResult?.user {
+                            
+                            completable(.completed)
+                        }
+                    }
+                
+                }
+            }
+            
+            return Disposables.create()
+        }
+    }
     
     
     func authorizationController(controller: ASAuthorizationController, didCompleteWithAuthorization authorization: ASAuthorization)  -> Observable<AuthDataResult> {

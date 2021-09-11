@@ -86,9 +86,9 @@
                                                 <rect key="frame" x="0.0" y="47.5" width="300" height="30"/>
                                                 <state key="normal" title="Button"/>
                                             </button>
-                                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="EcU-YZ-vqX">
+                                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="EcU-YZ-vqX" customClass="GIDSignInButton">
                                                 <rect key="frame" x="0.0" y="104.5" width="300" height="34"/>
-                                                <state key="normal" title="Google">
+                                                <state key="normal">
                                                     <color key="titleColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                 </state>
                                             </button>
@@ -195,7 +195,7 @@
                     <navigationItem key="navigationItem" id="wuy-Ai-yTQ"/>
                     <connections>
                         <outlet property="emailTextField" destination="Fse-Hy-zwo" id="LDH-oy-jHg"/>
-                        <outlet property="googleLoginButton" destination="EcU-YZ-vqX" id="9Mq-kt-Hpl"/>
+                        <outlet property="googleLoginBtn" destination="EcU-YZ-vqX" id="Yxa-Gp-ptl"/>
                         <outlet property="login" destination="1AW-Wj-Qt7" id="cBd-Zc-hEI"/>
                         <outlet property="loginButtonStackView" destination="cyv-I1-yHM" id="ghp-me-tWl"/>
                         <outlet property="passwordTextField" destination="X3a-Uh-AYS" id="i8h-xh-LUS"/>

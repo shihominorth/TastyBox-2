@@ -11,7 +11,7 @@ import Firebase
 import FirebaseAuth
 import FirebaseFirestore
 //import FBSDKLoginKit
-//import GoogleSignIn
+import GoogleSignIn
 import AuthenticationServices
 import CryptoKit
 //import Crashlytics
@@ -39,8 +39,8 @@ class LoginMainPageViewController: UIViewController,  BindableType{
     @IBOutlet weak var login: UIButton!
     
     @IBOutlet var loginButtonStackView: UIStackView!
-    @IBOutlet weak var googleLoginButton: UIButton!
 
+    @IBOutlet weak var googleLoginBtn: GIDSignInButton!
     @IBOutlet weak var resetPasswordButton: UIButton!
     @IBOutlet weak var registerButton: UIButton!
     
@@ -131,8 +131,21 @@ class LoginMainPageViewController: UIViewController,  BindableType{
     }
     
     func bindViewModel() {
+        
         resetPasswordButton.rx.action = viewModel.resetPassword()
         registerButton.rx.action = viewModel.registerEmail()
+        
+        let _ = googleLoginBtn.rx.controlEvent(.touchUpInside)
+            .flatMap {
+                return self.viewModel.googleLogin(presenting: self)
+            }
+            .subscribe(onNext: { user in
+                print(user)
+            }, onError: { err in
+                print(err)
+            })
+            .disposed(by: viewModel.disposeBag)
+ 
     }
     
     

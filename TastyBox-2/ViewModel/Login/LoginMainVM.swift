@@ -22,7 +22,7 @@ class LoginMainVM: ViewModelBase {
     private var userImage: UIImage = #imageLiteral(resourceName: "imageFile")
     private let dataManager = LoginMainDM()
     let sceneCoodinator: SceneCoordinator
-
+    let apiType: LoginMainProtocol.Type
     
     //    Singleは一回のみElementかErrorを送信することが保証されているObservableです。
     //    一回イベントを送信すると、disposeされるようになってます。
@@ -44,13 +44,19 @@ class LoginMainVM: ViewModelBase {
     
     
     
-    init(sceneCoodinator: SceneCoordinator) {
+    init(sceneCoodinator: SceneCoordinator, apiType: LoginMainProtocol.Type = LoginMainDM.self) {
         self.sceneCoodinator = sceneCoodinator
-        
+        self.apiType = apiType
     }
     
     
- 
+    func googleLogin(presenting vc: UIViewController) -> Observable<FirebaseAuth.User>{
+        
+        return self.apiType.loginWithGoogleFunc(viewController: vc)
+    
+    }
+
+    
     
     func Login(email: String?, password: String?) {
         
@@ -98,7 +104,7 @@ class LoginMainVM: ViewModelBase {
         
     }
     
- 
+    
     func login(controller: ASAuthorizationController, didCompleteWithAuthorization authorization: ASAuthorization) {
         let authentication = dataManager.authorizationController(controller: controller, didCompleteWithAuthorization: authorization)
         
@@ -106,7 +112,7 @@ class LoginMainVM: ViewModelBase {
             
             let _ = self.dataManager.isFirstLogin.subscribe(onSuccess: { isFirstLogin in
                 
-              // go to main page.
+                // go to main page.
                 
             }, onFailure:{ err in
                 // go to register my info detail page.
@@ -141,43 +147,43 @@ class LoginMainVM: ViewModelBase {
     }
     
     func resetPassword() -> CocoaAction {
-      return CocoaAction { _ in
-      
-        let resetPasswordVM = ResetPasswordVM(coordinator: self.sceneCoodinator)
-        let viewController = LoginScene.resetPassword(resetPasswordVM).viewController()
-
+        return CocoaAction { _ in
+            
+            let resetPasswordVM = ResetPasswordVM(coordinator: self.sceneCoodinator)
+            let viewController = LoginScene.resetPassword(resetPasswordVM).viewController()
+            
             return self.sceneCoodinator
                 .transition(to: viewController, type: .push)
                 .asObservable()
-        //Cannot convert return expression of type 'Observable<Never>' to return type 'Observable<Void>'
+                //Cannot convert return expression of type 'Observable<Never>' to return type 'Observable<Void>'
                 .map { _ in }  // 上記のエラーがこれで解決する
-
-      }
+            
+        }
     }
     
-  func registerEmail() -> CocoaAction {
-      return CocoaAction { task in
-        let registerEmailVM = RegisterEmailVM(sceneCoordinator: self.sceneCoodinator)
-        let viewController =  LoginScene.emailVerify(registerEmailVM).viewController()
-        return self.sceneCoodinator
-            .transition(to: viewController, type: .push)
-          .asObservable()
-            .map {_ in }
-      }
+    func registerEmail() -> CocoaAction {
+        return CocoaAction { task in
+            let registerEmailVM = RegisterEmailVM(sceneCoordinator: self.sceneCoodinator)
+            let viewController =  LoginScene.emailVerify(registerEmailVM).viewController()
+            return self.sceneCoodinator
+                .transition(to: viewController, type: .push)
+                .asObservable()
+                .map {_ in }
+        }
     }
     
     
     lazy var registerMyProfile: Action<Void, Swift.Never> = { this in
-      return Action { _ in
-        
-        let registerAccountVM = RegisterUserProfileVM()
-        let viewController = LoginScene.profileRegister(registerAccountVM).viewController()
-        
-        return this.sceneCoodinator
-          .transition(to: viewController, type: .push)
-          .asObservable()
-      }
+        return Action { _ in
+            
+            let registerAccountVM = RegisterUserProfileVM()
+            let viewController = LoginScene.profileRegister(registerAccountVM).viewController()
+            
+            return this.sceneCoodinator
+                .transition(to: viewController, type: .push)
+                .asObservable()
+        }
     }(self)
     
-
+    
 }

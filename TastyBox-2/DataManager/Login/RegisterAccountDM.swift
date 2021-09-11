@@ -70,8 +70,8 @@ class RegisterAccountDM: RegisterAccountProtocol {
                 actionCodeSettings.url = linkParameter
             
             //ユーザーのメールアドレスに認証リンクを送信
-               Auth.auth().sendSignInLink(toEmail: email, actionCodeSettings: actionCodeSettings) { (err) in
-                   if let err = err {
+               Auth.auth().sendSignInLink(toEmail: email, actionCodeSettings: actionCodeSettings) { err in
+                if let err = err as NSError? {
                     
                     completable(.error(err))
                     
@@ -103,7 +103,7 @@ class RegisterAccountDM: RegisterAccountProtocol {
             print("success to sign up.")
             Auth.auth().createUser(withEmail: email, password: password) { result, err in
                 
-                if let err = err {
+                if let err = err as NSError? {
                     completable(.error(err))
                 }
                 else {
