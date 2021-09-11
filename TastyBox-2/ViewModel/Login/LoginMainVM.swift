@@ -53,25 +53,26 @@ class LoginMainVM: ViewModelBase {
     }
     
     
-    func googleLogin(presenting vc: UIViewController) -> Completable {
+    func googleLogin(presenting vc: UIViewController) -> Observable<ReasonWhyError> {
         
-        return Completable.create { completable in
+        return Observable.create { observer in
             
             self.apiType.loginWithGoogle(viewController: vc).subscribe { event in
             
                 switch event {
                 case .failure(let err as NSError):
-                
+                    
                     self.err = err
-                    completable(.error(err))
+                    guard let errDescription = err.handleAuthenticationError() else { return }
+                    observer.onNext(errDescription)
                     
                 case .success(let user):
 
                     self.user = user
-
+                   
                 }
                 
-                completable(.completed)
+            }
         }
     }
         

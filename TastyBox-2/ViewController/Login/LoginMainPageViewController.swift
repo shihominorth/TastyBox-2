@@ -139,10 +139,8 @@ class LoginMainPageViewController: UIViewController,  BindableType{
             .flatMap {
                 return self.viewModel.googleLogin(presenting: self)
             }
-            .subscribe(onNext: { user in
-                print(user)
-            }, onError: { err in
-                print(err)
+            .subscribe(onNext: { errDesciption in
+                print(errDesciption)
             })
             .disposed(by: viewModel.disposeBag)
  
