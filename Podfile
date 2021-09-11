@@ -32,4 +32,8 @@ pod 'GoogleSignIn'
 
 # edit image 
 pod 'RSKImageCropper'
+
+# Alert 
+pod 'SCLAlertView'
+
 end

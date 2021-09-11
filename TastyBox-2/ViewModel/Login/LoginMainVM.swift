@@ -52,82 +52,130 @@ class LoginMainVM: ViewModelBase {
         self.apiType = apiType
     }
     
+//    lazy var loginWithEmailAction: Action<(String, String), Swift.Never> = { this in
+//
+//        return Action { email, password in
+//            self.apiType.login(email: email, password: password)
+//
+//            return self.sceneCoodinator.transition(to: <#T##UIViewController#>, type: <#T##SceneTransitionType#>)
+//        }
+//    }(self)
     
-    func googleLogin(presenting vc: UIViewController) -> Observable<ReasonWhyError> {
+    
+    func Login(email: String?, password: String?) -> Observable<ReasonWhyError>{
+        
         
         return Observable.create { observer in
             
-            self.apiType.loginWithGoogle(viewController: vc).subscribe { event in
-            
-                switch event {
-                case .failure(let err as NSError):
+            let login = self.apiType.login(email: email, password: password)
+                .subscribe(onSuccess: { result in
                     
-                    self.err = err
-                    guard let errDescription = err.handleAuthenticationError() else { return }
-                    observer.onNext(errDescription)
+                    self.user = result.user
                     
-                case .success(let user):
-
-                    self.user = user
+                    guard let user = self.user else { return }
                    
-                }
-                
-            }
+                    if user.isEmailVerified {
+                      
+                        // check if this is first login
+                        // and then go to main or set profile page.
+                        
+                        print("user is email verified.")
+                        
+                    } else {
+                        let description = ReasonWhyError(reason: "Not vailify email", solution: "You can recieve email validation.")
+                        
+                        print(description.reason)
+                    }
+                    
+                }, onFailure: { err in
+                    self.err = err as NSError
+                    
+                    if err is LoginErrors {
+                       
+                        guard let err = err as? LoginErrors else { return  }
+                        let errDescription = err.handleError()
+                        
+                        observer.onNext(errDescription)
+                    }
+                    else {
+                        guard let errDescription = err.handleAuthenticationError() else { return }
+                        observer.onNext(errDescription)
+                        
+                    }
+                  
+                })
+            
+            return Disposables.create ()
         }
-    }
         
+        
+        
+//        let _ = login.subscribe(onNext: { user in
+//
+//            let _ = self.dataManager.isFirstLogin.subscribe(onSuccess: { successed in
+//
+//
+//
+//            }, onFailure: { err in
+//
+//            })
+//
+//        },
+//
+//        onError: { err in
+//
+//            print(err.localizedDescription)
+//            // error alert is needed to show.
+//
+//            switch err {
+//            case LoginErrors.incorrectEmail:
+//                print("incorrect email")
+//            // tells users it's not correct email
+//            case LoginErrors.incorrectPassword:
+//                print("incorrect password.")
+//            // tells users it's not correct password.
+//            case LoginErrors.invailedEmail:
+//                print("email isn't valified")
+//            //tells users check email and velify our app.
+//            case LoginErrors.invailedUser:
+//                print("user instance couldn't be unwrapped. it's nil.")
+//            case LoginErrors.inVailedClientID:
+//                print("client id ouldn't be unwrapped. it's nil.")
+//            default:
+//                print("not meet any errors, but something happens.")
+//
+//            }
+//
+//        })
+        
+    }
+    
+    
+    func googleLogin(presenting vc: UIViewController) -> Observable<ReasonWhyError> {
+          
+          return Observable.create { observer in
+              
+              self.apiType.loginWithGoogle(viewController: vc).subscribe { event in
+              
+                  switch event {
+                  case .failure(let err as NSError):
+                      
+                      self.err = err
+                      guard let errDescription = err.handleAuthenticationError() else { return }
+                      observer.onNext(errDescription)
+                      
+                  case .success(let user):
 
-    
-    
-    func Login(email: String?, password: String?) {
-        
-        let login = dataManager.login(email: email, password: password)
-        
-        
-        
-        let _ = login.subscribe(onNext: { user in
-            
-            let _ = self.dataManager.isFirstLogin.subscribe(onSuccess: { successed in
-                
-                
-                
-            }, onFailure: { err in
-                
-            })
-            
-        },
-        
-        onError: { err in
-            
-            print(err.localizedDescription)
-            // error alert is needed to show.
-            
-            switch err {
-            case LoginErrors.incorrectEmail:
-                print("incorrect email")
-            // tells users it's not correct email
-            case LoginErrors.incorrectPassword:
-                print("incorrect password.")
-            // tells users it's not correct password.
-            case LoginErrors.invailedEmail:
-                print("email isn't valified")
-            //tells users check email and velify our app.
-            case LoginErrors.invailedUser:
-                print("user instance couldn't be unwrapped. it's nil.")
-            case LoginErrors.inVailedClientID:
-                print("client id ouldn't be unwrapped. it's nil.")
-            default:
-                print("not meet any errors, but something happens.")
-                
-            }
-            
-        })
-        
-    }
-    
+                      self.user = user
+                     
+                  }
+                  
+              }
+          }
+      }
     
     func login(controller: ASAuthorizationController, didCompleteWithAuthorization authorization: ASAuthorization) {
-        let authentication = dataManager.authorizationController(controller: controller, didCompleteWithAuthorization: authorization)
+        let authentication = self.apiType.authorizationController(controller: controller, didCompleteWithAuthorization: authorization)
         
         let _ = authentication.subscribe(onNext: { user in
             

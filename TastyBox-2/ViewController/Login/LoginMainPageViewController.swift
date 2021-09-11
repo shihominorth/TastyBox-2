@@ -21,9 +21,9 @@ import RxTimelane
 
 
 class LoginMainPageViewController: UIViewController,  BindableType{
-
+    
     var viewModel: LoginMainVM!
-
+    
     typealias ViewModelType = LoginMainVM
     
     // Unhashed nonce.
@@ -39,7 +39,7 @@ class LoginMainPageViewController: UIViewController,  BindableType{
     @IBOutlet weak var login: UIButton!
     
     @IBOutlet var loginButtonStackView: UIStackView!
-
+    
     @IBOutlet weak var googleLoginBtn: GIDSignInButton!
     @IBOutlet weak var resetPasswordButton: UIButton!
     @IBOutlet weak var registerButton: UIButton!
@@ -49,13 +49,16 @@ class LoginMainPageViewController: UIViewController,  BindableType{
         super.viewDidLoad()
         
         let firebaseAuth = Auth.auth()
-    do {
-      try firebaseAuth.signOut()
-    } catch let signOutError as NSError {
-      print("Error signing out: %@", signOutError)
-    }
-
-
+        do {
+            try firebaseAuth.signOut()
+        } catch let signOutError as NSError {
+            print("Error signing out: %@", signOutError)
+        }
+        
+        emailTextField.delegate = self
+        passwordTextField.delegate = self
+        setUpKeyboard()
+        
         let view = UIView(frame: CGRect(x: 0, y: 0, width: self.view.frame.width, height: self.view.frame.height))
         view.backgroundColor = #colorLiteral(red: 0.9977325797, green: 0.9879661202, blue: 0.7689270973, alpha: 1)
         view.tag = 100
@@ -75,22 +78,22 @@ class LoginMainPageViewController: UIViewController,  BindableType{
         if let user = Auth.auth().currentUser {
             
         } else {
-     
+            
         }
         
         if Auth.auth().currentUser != nil && Auth.auth().currentUser?.uid != nil {
             // User is signed in.
             
-//            let Storyboard: UIStoryboard = UIStoryboard(name: "Main", bundle: nil)
-//            let vc = Storyboard.instantiateViewController(withIdentifier: "Discovery")
-//            
-//            //guard self.navigationController?.topViewController == self else { return }
-//            
-//            
-//            vc.modalTransitionStyle = .flipHorizontal
-//            vc.modalPresentationStyle = .overFullScreen
-//            self.navigationController?.pushViewController(vc, animated: false)
-//            
+            //            let Storyboard: UIStoryboard = UIStoryboard(name: "Main", bundle: nil)
+            //            let vc = Storyboard.instantiateViewController(withIdentifier: "Discovery")
+            //
+            //            //guard self.navigationController?.topViewController == self else { return }
+            //
+            //
+            //            vc.modalTransitionStyle = .flipHorizontal
+            //            vc.modalPresentationStyle = .overFullScreen
+            //            self.navigationController?.pushViewController(vc, animated: false)
+            //
             
         }
         
@@ -100,8 +103,8 @@ class LoginMainPageViewController: UIViewController,  BindableType{
                 
                 // make login button rounded
                 roundCorners(view: login, cornerRadius: 5.0)
-//                GIDSignIn.sharedInstance.delegate = self
-//                GIDSignIn.sharedInstance.presentingViewController = self
+                //                GIDSignIn.sharedInstance.delegate = self
+                //                GIDSignIn.sharedInstance.presentingViewController = self
                 // Do any additional setup after loading the view.
                 let tap: UITapGestureRecognizer = UITapGestureRecognizer(target: self.view, action: #selector(UIView.endEditing))
                 view.addGestureRecognizer(tap)
@@ -115,7 +118,7 @@ class LoginMainPageViewController: UIViewController,  BindableType{
                 NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide), name: UIResponder.keyboardWillHideNotification, object: nil)
                 
                 setUpFaceBookLogin()
-//                setUpGoogleLogin()
+                //                setUpGoogleLogin()
                 setUpSignInAppleButton()
                 loginButtonStackView.spacing = 10.0
                 
@@ -143,7 +146,17 @@ class LoginMainPageViewController: UIViewController,  BindableType{
                 print(errDesciption)
             })
             .disposed(by: viewModel.disposeBag)
- 
+        
+        passwordTextField.rx.controlEvent(.touchUpInside).subscribe { event in
+            print("tapped.")
+        }
+        .disposed(by: viewModel.disposeBag)
+        
+        emailTextField.rx.controlEvent(.touchUpInside).subscribe { event in
+            print("tapped.")
+        }
+        .disposed(by: viewModel.disposeBag)
+        
     }
     
     
@@ -187,7 +200,7 @@ class LoginMainPageViewController: UIViewController,  BindableType{
                 
                 if  (user?.additionalUserInfo!.isNewUser)! {
                     
-//                    self.vc.isFirst = true
+                    //                    self.vc.isFirst = true
                     
                     guard self.navigationController?.topViewController == self else { return }
                     self.navigationController?.pushViewController(self.vc, animated: true)
@@ -203,13 +216,13 @@ class LoginMainPageViewController: UIViewController,  BindableType{
                                 let isFirst = data["isFirst"] as? Bool
                                 if let isFirst = isFirst {
                                     if isFirst == true {
-//                                        self.vc.isFirst = true
+                                        //                                        self.vc.isFirst = true
                                         
                                         guard self.navigationController?.topViewController == self else { return }
                                         self.navigationController?.pushViewController(self.vc, animated: true)
                                         
                                     } else {
-//                                        self.vc.isFirst = false
+                                        //                                        self.vc.isFirst = false
                                         let Storyboard: UIStoryboard = UIStoryboard(name: "Login", bundle: nil)
                                         let vc = Storyboard.instantiateViewController(withIdentifier: "FirstTimeProfile")
                                         
@@ -217,7 +230,7 @@ class LoginMainPageViewController: UIViewController,  BindableType{
                                         self.navigationController?.pushViewController(vc, animated: true)
                                     }
                                 } else {
-//                                    self.vc.isFirst = true
+                                    //                                    self.vc.isFirst = true
                                     
                                     guard self.navigationController?.topViewController == self else { return }
                                     self.navigationController?.pushViewController(self.vc, animated: true)
@@ -236,57 +249,57 @@ class LoginMainPageViewController: UIViewController,  BindableType{
     //MARK: Facebook Login
     
     func setUpFaceBookLogin() {
-//        let faceBookLoginButton = FBLoginButton()
-//        let fbLoginManager = LoginManager()
-//        fbLoginManager.logOut() // this is an instance function
-//        faceBookLoginButton.layer.cornerRadius = 10
-//        faceBookLoginButton.delegate = self
-//        
-//        print(faceBookLoginButton.frame.height)
-//        loginButtonStackView.addArrangedSubview(faceBookLoginButton)
+        //        let faceBookLoginButton = FBLoginButton()
+        //        let fbLoginManager = LoginManager()
+        //        fbLoginManager.logOut() // this is an instance function
+        //        faceBookLoginButton.layer.cornerRadius = 10
+        //        faceBookLoginButton.delegate = self
+        //
+        //        print(faceBookLoginButton.frame.height)
+        //        loginButtonStackView.addArrangedSubview(faceBookLoginButton)
     }
     
     
-//    //MARK: keyboard delegate
-//    @objc func keyboardWillShow(notification: NSNotification) {
-//        if ((notification.userInfo?[UIResponder.keyboardFrameBeginUserInfoKey] as? NSValue)?.cgRectValue) != nil {
-//            if self.view.frame.origin.y == 0 {
-//                self.view.frame.origin.y -= 100
-//            }
-//        }
-//        
-//        tapRecognizer = UITapGestureRecognizer(target: self, action: #selector(tapRecognizerAction))
-//        
-//        self.view.addGestureRecognizer(tapRecognizer!)
-//    }
-//    
-//    @objc func tapRecognizerAction() {
-//        
-//        
-//        if let tapRecognizer = tapRecognizer {
-//            self.view.removeGestureRecognizer(tapRecognizer)
-//            self.tapRecognizer = nil
-//        }
-//        
-//        UIView.animate(withDuration: 0.3, animations: {
-//            self.view.endEditing(true)
-//            if self.view.frame.origin.y != 0 {
-//                self.view.frame.origin.y = 0
-//            }
-//        })
-//        
-//    }
-//    
-//    @objc func keyboardWillHide(notification: NSNotification) {
-//        
-//        UIView.animate(withDuration: 0.3, animations: {
-//            self.view.endEditing(true)
-//            if self.view.frame.origin.y != 0 {
-//                self.view.frame.origin.y = 0
-//            }
-//        })
-//        
-//    }
+    //    //MARK: keyboard delegate
+    //    @objc func keyboardWillShow(notification: NSNotification) {
+    //        if ((notification.userInfo?[UIResponder.keyboardFrameBeginUserInfoKey] as? NSValue)?.cgRectValue) != nil {
+    //            if self.view.frame.origin.y == 0 {
+    //                self.view.frame.origin.y -= 100
+    //            }
+    //        }
+    //
+    //        tapRecognizer = UITapGestureRecognizer(target: self, action: #selector(tapRecognizerAction))
+    //
+    //        self.view.addGestureRecognizer(tapRecognizer!)
+    //    }
+    //
+    //    @objc func tapRecognizerAction() {
+    //
+    //
+    //        if let tapRecognizer = tapRecognizer {
+    //            self.view.removeGestureRecognizer(tapRecognizer)
+    //            self.tapRecognizer = nil
+    //        }
+    //
+    //        UIView.animate(withDuration: 0.3, animations: {
+    //            self.view.endEditing(true)
+    //            if self.view.frame.origin.y != 0 {
+    //                self.view.frame.origin.y = 0
+    //            }
+    //        })
+    //
+    //    }
+    //
+    //    @objc func keyboardWillHide(notification: NSNotification) {
+    //
+    //        UIView.animate(withDuration: 0.3, animations: {
+    //            self.view.endEditing(true)
+    //            if self.view.frame.origin.y != 0 {
+    //                self.view.frame.origin.y = 0
+    //            }
+    //        })
+    //
+    //    }
     
     
 }
@@ -384,21 +397,21 @@ extension LoginMainPageViewController: ASAuthorizationControllerDelegate {
     
     func setUpSignInAppleButton() {
         
-//        let appleLoginButton = UIButton(type: .custom)
-//        appleLoginButton.addTarget(self, action: #selector(handleAppleIdRequest), for: .touchUpInside)
-//        appleLoginButton.layer.cornerRadius = 10
-//        appleLoginButton.layer.backgroundColor = #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1)
-//        appleLoginButton.tintColor = .black
+        //        let appleLoginButton = UIButton(type: .custom)
+        //        appleLoginButton.addTarget(self, action: #selector(handleAppleIdRequest), for: .touchUpInside)
+        //        appleLoginButton.layer.cornerRadius = 10
+        //        appleLoginButton.layer.backgroundColor = #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1)
+        //        appleLoginButton.tintColor = .black
         
-//        let image = #imageLiteral(resourceName: "apple-24")
-//        appleLoginButton.setImage(image, for: .normal)
-//
-//        appleLoginButton.setTitle(" Apple ", for: .normal)
-//        appleLoginButton.titleLabel?.font = UIFont(name: "Helvetica-Bold", size: 20.0)
-//        appleLoginButton.setTitleColor(#colorLiteral(red: 1, green: 1, blue: 1, alpha: 1), for: .normal)
-//        appleLoginButton.frame.size.height = 25.0
+        //        let image = #imageLiteral(resourceName: "apple-24")
+        //        appleLoginButton.setImage(image, for: .normal)
+        //
+        //        appleLoginButton.setTitle(" Apple ", for: .normal)
+        //        appleLoginButton.titleLabel?.font = UIFont(name: "Helvetica-Bold", size: 20.0)
+        //        appleLoginButton.setTitleColor(#colorLiteral(red: 1, green: 1, blue: 1, alpha: 1), for: .normal)
+        //        appleLoginButton.frame.size.height = 25.0
         let appleLoginButton = ASAuthorizationAppleIDButton()
-
+        
         
         self.loginButtonStackView.addArrangedSubview(appleLoginButton)
     }
@@ -512,7 +525,7 @@ extension LoginMainPageViewController: ASAuthorizationControllerDelegate {
                     // ...
                     if  (authResult?.additionalUserInfo?.isNewUser)! {
                         
-//                        self.vc.isFirst = true
+                        //                        self.vc.isFirst = true
                         
                         guard self.navigationController?.topViewController == self else { return }
                         self.navigationController?.pushViewController(self.vc, animated: true)
@@ -527,15 +540,15 @@ extension LoginMainPageViewController: ASAuthorizationControllerDelegate {
                                     let isFirst = data["isFirst"] as? Bool
                                     if let isFirst = isFirst {
                                         if isFirst == true {
-//                                            self.vc.isFirst = true
-//
+                                            //                                            self.vc.isFirst = true
+                                            //
                                             guard self.navigationController?.topViewController == self else { return }
                                             
                                             
                                             self.navigationController?.pushViewController(self.vc, animated: true)
                                             
                                         } else {
-//                                            self.vc.isFirst = false
+                                            //                                            self.vc.isFirst = false
                                             let Storyboard: UIStoryboard = UIStoryboard(name: "Login", bundle: nil)
                                             let vc = Storyboard.instantiateViewController(withIdentifier: "FirstTimeProfile")
                                             
@@ -543,7 +556,7 @@ extension LoginMainPageViewController: ASAuthorizationControllerDelegate {
                                             self.navigationController?.pushViewController(vc, animated: true)
                                         }
                                     } else {
-//                                        self.vc.isFirst = true
+                                        //                                        self.vc.isFirst = true
                                         
                                         guard self.navigationController?.topViewController == self else { return }
                                         self.navigationController?.pushViewController(self.vc, animated: true)
