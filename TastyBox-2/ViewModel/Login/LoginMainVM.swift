@@ -5,7 +5,6 @@
 //  Created by 北島　志帆美 on 2021-08-21.
 //  Copyright © 2021 Argus Chen. All rights reserved.
 //
-
 import Foundation
 import Firebase
 //import FBSDKLoginKit
@@ -52,75 +51,51 @@ class LoginMainVM: ViewModelBase {
         self.apiType = apiType
     }
     
-//    lazy var loginWithEmailAction: Action<(String, String), Swift.Never> = { this in
-//
-//        return Action { email, password in
-//            self.apiType.login(email: email, password: password)
-//
-//            return self.sceneCoodinator.transition(to: <#T##UIViewController#>, type: <#T##SceneTransitionType#>)
-//        }
-//    }(self)
     
-    
-    func Login(email: String?, password: String?) -> Observable<ReasonWhyError>{
+    func googleLogin(presenting vc: UIViewController) -> Completable {
         
-        
-        return Observable.create { observer in
+        return Completable.create { completable in
             
-            let login = self.apiType.login(email: email, password: password)
-                .subscribe(onSuccess: { result in
+            self.apiType.loginWithGoogle(viewController: vc).subscribe { event in
+                
+                switch event {
+                case .failure(let err as NSError):
                     
-                    self.user = result.user
+                    self.err = err
+                    completable(.error(err))
                     
-                    guard let user = self.user else { return }
-                   
-                    if user.isEmailVerified {
-                      
-                        // check if this is first login
-                        // and then go to main or set profile page.
-                        
-                        print("user is email verified.")
-                        
-                    } else {
-                        let description = ReasonWhyError(reason: "Not vailify email", solution: "You can recieve email validation.")
-                        
-                        print(description.reason)
-                    }
+                case .success(let user):
                     
-                }, onFailure: { err in
-                    self.err = err as NSError
+                    self.user = user
                     
-                    if err is LoginErrors {
-                       
-                        guard let err = err as? LoginErrors else { return  }
-                        let errDescription = err.handleError()
-                        
-                        observer.onNext(errDescription)
-                    }
-                    else {
-                        guard let errDescription = err.handleAuthenticationError() else { return }
-                        observer.onNext(errDescription)
-                        
-                    }
-                  
-                })
-            
-            return Disposables.create ()
+                }
+                
+                completable(.completed)
+            }
         }
+    }
+    
+    
+    
+    
+    func Login(email: String?, password: String?) {
+        
+        let login = self.apiType.login(email: email, password: password)
         
         
         
-//        let _ = login.subscribe(onNext: { user in
-//
-//            let _ = self.dataManager.isFirstLogin.subscribe(onSuccess: { successed in
-//
-//
-//
-//            }, onFailure: { err in
-//
-//            })
-//
-//        },
+        let _ = login.subscribe({ user in
+            
+            let _ = self.dataManager.isFirstLogin.subscribe(onSuccess: { successed in
+                
+                
+                
+            }, onFailure: { err in
+                
+            })
+            
+        }
+//        ,
 //
 //        onError: { err in
 //
@@ -146,33 +121,11 @@ class LoginMainVM: ViewModelBase {
 //
 //            }
 //
-//        })
+//        }
+        )
         
     }
     
-    
-    func googleLogin(presenting vc: UIViewController) -> Observable<ReasonWhyError> {
-          
-          return Observable.create { observer in
-              
-              self.apiType.loginWithGoogle(viewController: vc).subscribe { event in
-              
-                  switch event {
-                  case .failure(let err as NSError):
-                      
-                      self.err = err
-                      guard let errDescription = err.handleAuthenticationError() else { return }
-                      observer.onNext(errDescription)
-                      
-                  case .success(let user):
-
-                      self.user = user
-                     
-                  }
-                  
-              }
-          }
-      }
     
     func login(controller: ASAuthorizationController, didCompleteWithAuthorization authorization: ASAuthorization) {
         let authentication = self.apiType.authorizationController(controller: controller, didCompleteWithAuthorization: authorization)
@@ -256,3 +209,4 @@ class LoginMainVM: ViewModelBase {
     
     
 }
+

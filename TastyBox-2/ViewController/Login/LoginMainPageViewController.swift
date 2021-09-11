@@ -142,8 +142,10 @@ class LoginMainPageViewController: UIViewController,  BindableType{
             .flatMap {
                 return self.viewModel.googleLogin(presenting: self)
             }
-            .subscribe(onNext: { errDesciption in
-                print(errDesciption)
+            .subscribe(onNext: { user in
+                print(user)
+            }, onError: { err in
+                print(err)
             })
             .disposed(by: viewModel.disposeBag)
         
@@ -260,46 +262,46 @@ class LoginMainPageViewController: UIViewController,  BindableType{
     }
     
     
-    //    //MARK: keyboard delegate
-    //    @objc func keyboardWillShow(notification: NSNotification) {
-    //        if ((notification.userInfo?[UIResponder.keyboardFrameBeginUserInfoKey] as? NSValue)?.cgRectValue) != nil {
-    //            if self.view.frame.origin.y == 0 {
-    //                self.view.frame.origin.y -= 100
-    //            }
-    //        }
-    //
-    //        tapRecognizer = UITapGestureRecognizer(target: self, action: #selector(tapRecognizerAction))
-    //
-    //        self.view.addGestureRecognizer(tapRecognizer!)
-    //    }
-    //
-    //    @objc func tapRecognizerAction() {
-    //
-    //
-    //        if let tapRecognizer = tapRecognizer {
-    //            self.view.removeGestureRecognizer(tapRecognizer)
-    //            self.tapRecognizer = nil
-    //        }
-    //
-    //        UIView.animate(withDuration: 0.3, animations: {
-    //            self.view.endEditing(true)
-    //            if self.view.frame.origin.y != 0 {
-    //                self.view.frame.origin.y = 0
-    //            }
-    //        })
-    //
-    //    }
-    //
-    //    @objc func keyboardWillHide(notification: NSNotification) {
-    //
-    //        UIView.animate(withDuration: 0.3, animations: {
-    //            self.view.endEditing(true)
-    //            if self.view.frame.origin.y != 0 {
-    //                self.view.frame.origin.y = 0
-    //            }
-    //        })
-    //
-    //    }
+//        //MARK: keyboard delegate
+//        @objc func keyboardWillShow(notification: NSNotification) {
+//            if ((notification.userInfo?[UIResponder.keyboardFrameBeginUserInfoKey] as? NSValue)?.cgRectValue) != nil {
+//                if self.view.frame.origin.y == 0 {
+//                    self.view.frame.origin.y -= 100
+//                }
+//            }
+//
+//            tapRecognizer = UITapGestureRecognizer(target: self, action: #selector(tapRecognizerAction))
+//
+//            self.view.addGestureRecognizer(tapRecognizer!)
+//        }
+//
+//        @objc func tapRecognizerAction() {
+//
+//
+//            if let tapRecognizer = tapRecognizer {
+//                self.view.removeGestureRecognizer(tapRecognizer)
+//                self.tapRecognizer = nil
+//            }
+//
+//            UIView.animate(withDuration: 0.3, animations: {
+//                self.view.endEditing(true)
+//                if self.view.frame.origin.y != 0 {
+//                    self.view.frame.origin.y = 0
+//                }
+//            })
+//
+//        }
+//
+//        @objc func keyboardWillHide(notification: NSNotification) {
+//
+//            UIView.animate(withDuration: 0.3, animations: {
+//                self.view.endEditing(true)
+//                if self.view.frame.origin.y != 0 {
+//                    self.view.frame.origin.y = 0
+//                }
+//            })
+//
+//        }
     
     
 }
