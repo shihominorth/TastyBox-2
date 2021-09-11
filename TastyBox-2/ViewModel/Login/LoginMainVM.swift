@@ -23,6 +23,9 @@ class LoginMainVM: ViewModelBase {
     private let dataManager = LoginMainDM()
     let sceneCoodinator: SceneCoordinator
     let apiType: LoginMainProtocol.Type
+    var user: FirebaseAuth.User?
+    var err = NSError()
+    
     
     //    Singleは一回のみElementかErrorを送信することが保証されているObservableです。
     //    一回イベントを送信すると、disposeされるようになってます。
@@ -50,10 +53,28 @@ class LoginMainVM: ViewModelBase {
     }
     
     
-    func googleLogin(presenting vc: UIViewController) -> Single<FirebaseAuth.User> {
+    func googleLogin(presenting vc: UIViewController) -> Completable {
         
-        return self.apiType.loginWithGoogle(viewController: vc)
+        return Completable.create { completable in
+            
+            self.apiType.loginWithGoogle(viewController: vc).subscribe { event in
+            
+                switch event {
+                case .failure(let err as NSError):
+                
+                    self.err = err
+                    completable(.error(err))
+                    
+                case .success(let user):
+
+                    self.user = user
+
+                }
+                
+                completable(.completed)
+        }
     }
+        
 
     
     
