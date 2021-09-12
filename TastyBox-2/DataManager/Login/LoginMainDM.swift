@@ -264,7 +264,7 @@ class LoginMainDM: LoginMainProtocol {
         return Observable.create { observer in
             
             let nonce = self.randomNonceString()
-            self.currentNonce = nonce
+//            self.currentNonce = nonce
             let appleIDProvider = ASAuthorizationAppleIDProvider()
             let request = appleIDProvider.createRequest()
             request.requestedScopes = [.fullName, .email]
@@ -275,6 +275,8 @@ class LoginMainDM: LoginMainProtocol {
             authorizationController.presentationContextProvider = authorizationController as? ASAuthorizationControllerPresentationContextProviding
             
             authorizationController.performRequests()
+            UserDefaults.standard.set(nonce, forKey: "nonce")
+
             observer.onNext(authorizationController)
             
             return Disposables.create()

@@ -16,7 +16,8 @@ class RxAppleDelegateProxy: DelegateProxy<ASAuthorizationController, ASAuthoriza
     
     public weak private(set) var controller: ASAuthorizationController?
     internal lazy var signInSubject = PublishSubject<FirebaseAuth.User>()
-    var currentNonce: String?
+    var currentNonce = UserDefaults.standard.string(forKey: "nonce")
+
     
     
     // 初期化処理
@@ -126,7 +127,6 @@ extension Reactive where Base: ASAuthorizationController {
     public var signIn: Observable<FirebaseAuth.User> {
         
         let proxy = RxAppleDelegateProxy.proxy(for: base)
-        
         proxy.signInSubject = PublishSubject<FirebaseAuth.User>()
 
         return proxy.signInSubject.asObservable()
