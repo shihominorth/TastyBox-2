@@ -13,6 +13,7 @@ import AuthenticationServices
 import CryptoKit
 //import Crashlytics
 import RxSwift
+import RxRelay
 import Action
 
 
@@ -70,64 +71,92 @@ class LoginMainVM: ViewModelBase {
                     observable.onNext(user)
                 }
                 
-               
+                
             }
         }
     }
     
-    
-    
-    
-//    func Login(email: String?, password: String?) {
-//
-//        let login = self.apiType.login(email: email, password: password)
-//
-//
-//
-//        let _ = login.subscribe({ user in
-//
-//            let _ = self.dataManager.isFirstLogin.subscribe(onSuccess: { successed in
-//
-//
-//
-//            }, onFailure: { err in
-//
-//            })
-//
-//        }
+    func appleLogin(presenting: UIViewController) -> Observable<FirebaseAuth.User> {
         
-//        ,
-//
-//        onError: { err in
-//
-//            print(err.localizedDescription)
-//            // error alert is needed to show.
-//
-//            switch err {
-//            case LoginErrors.incorrectEmail:
-//                print("incorrect email")
-//            // tells users it's not correct email
-//            case LoginErrors.incorrectPassword:
-//                print("incorrect password.")
-//            // tells users it's not correct password.
-//            case LoginErrors.invailedEmail:
-//                print("email isn't valified")
-//            //tells users check email and velify our app.
-//            case LoginErrors.invailedUser:
-//                print("user instance couldn't be unwrapped. it's nil.")
-//            case LoginErrors.inVailedClientID:
-//                print("client id ouldn't be unwrapped. it's nil.")
-//            default:
-//                print("not meet any errors, but something happens.")
-//
-//            }
-//
-//        }
-//        )
+        return Observable.create { observer in
+            _ =
+                self.apiType.startSignInWithAppleFlow(authorizationController: presenting)
+                .subscribe(onNext: { controller in
+                    
+                    let _ =  controller.rx.signIn
+                        .subscribe(onNext: { user in
+                            
+                            self.user = user
+                            observer.onNext(user)
+                            
+                        }, onError: { err in
+                            self.err = err as NSError
+                            observer.onError(err)
+                        })
+                    
+                },
+                onError: { err in
+                    self.err = err as NSError
+                    observer.onError(err)
+                }
+                )
+            
+            return Disposables.create()
+        }
         
-//    }
+    }
     
-
+    
+    //    func Login(email: String?, password: String?) {
+    //
+    //        let login = self.apiType.login(email: email, password: password)
+    //
+    //
+    //
+    //        let _ = login.subscribe({ user in
+    //
+    //            let _ = self.dataManager.isFirstLogin.subscribe(onSuccess: { successed in
+    //
+    //
+    //
+    //            }, onFailure: { err in
+    //
+    //            })
+    //
+    //        }
+    
+    //        ,
+    //
+    //        onError: { err in
+    //
+    //            print(err.localizedDescription)
+    //            // error alert is needed to show.
+    //
+    //            switch err {
+    //            case LoginErrors.incorrectEmail:
+    //                print("incorrect email")
+    //            // tells users it's not correct email
+    //            case LoginErrors.incorrectPassword:
+    //                print("incorrect password.")
+    //            // tells users it's not correct password.
+    //            case LoginErrors.invailedEmail:
+    //                print("email isn't valified")
+    //            //tells users check email and velify our app.
+    //            case LoginErrors.invailedUser:
+    //                print("user instance couldn't be unwrapped. it's nil.")
+    //            case LoginErrors.inVailedClientID:
+    //                print("client id ouldn't be unwrapped. it's nil.")
+    //            default:
+    //                print("not meet any errors, but something happens.")
+    //
+    //            }
+    //
+    //        }
+    //        )
+    
+    //    }
+    
+    
     lazy var loginAction: Action<(String, String), Void> = { this in
         return Action { email, password in
             
@@ -136,7 +165,7 @@ class LoginMainVM: ViewModelBase {
                     let user = result.user
                     if user.isEmailVerified {
                         
-//                        return this.sceneCoodinator.transition(to: <#T##UIViewController#>, type: <#T##SceneTransitionType#>)
+                        //                        return this.sceneCoodinator.transition(to: <#T##UIViewController#>, type: <#T##SceneTransitionType#>)
                     }
                     
                     print(user)
@@ -151,46 +180,46 @@ class LoginMainVM: ViewModelBase {
     }(self)
     
     
-    func login(controller: ASAuthorizationController, didCompleteWithAuthorization authorization: ASAuthorization) {
-        let authentication = self.apiType.authorizationController(controller: controller, didCompleteWithAuthorization: authorization)
-        
-        let _ = authentication.subscribe(onNext: { user in
-            
-            let _ = self.dataManager.isFirstLogin.subscribe(onSuccess: { isFirstLogin in
-                
-                // go to main page.
-                
-            }, onFailure:{ err in
-                // go to register my info detail page.
-                
-            }).disposed(by: self.disposeBag)
-            
-        },
-        onError: { err in
-            
-            print(err.localizedDescription)
-            // error alert is needed to show.
-            
-            switch err {
-            
-            // tells users it's not correct password.
-            case LoginErrors.invailedEmail:
-                print("email isn't valified")
-            //tells users check email and velify our app.
-            case LoginErrors.invailedUser:
-                print("user instance couldn't be unwrapped. it's nil.")
-            case LoginErrors.inVailedClientID:
-                print("client id ouldn't be unwrapped. it's nil.")
-            default:
-                print("not meet any errors, but something happens.")
-                
-            }
-            
-        })
-        .disposed(by: self.disposeBag)
-        
-        
-    }
+    //    func login(controller: ASAuthorizationController, didCompleteWithAuthorization authorization: ASAuthorization) {
+    //        let authentication = self.apiType.authorizationController(controller: controller, didCompleteWithAuthorization: authorization)
+    //
+    //        let _ = authentication.subscribe(onNext: { user in
+    //
+    //            let _ = self.dataManager.isFirstLogin.subscribe(onSuccess: { isFirstLogin in
+    //
+    //                // go to main page.
+    //
+    //            }, onFailure:{ err in
+    //                // go to register my info detail page.
+    //
+    //            }).disposed(by: self.disposeBag)
+    //
+    //        },
+    //        onError: { err in
+    //
+    //            print(err.localizedDescription)
+    //            // error alert is needed to show.
+    //
+    //            switch err {
+    //
+    //            // tells users it's not correct password.
+    //            case LoginErrors.invailedEmail:
+    //                print("email isn't valified")
+    //            //tells users check email and velify our app.
+    //            case LoginErrors.invailedUser:
+    //                print("user instance couldn't be unwrapped. it's nil.")
+    //            case LoginErrors.inVailedClientID:
+    //                print("client id ouldn't be unwrapped. it's nil.")
+    //            default:
+    //                print("not meet any errors, but something happens.")
+    //
+    //            }
+    //
+    //        })
+    //        .disposed(by: self.disposeBag)
+    //
+    //
+    //    }
     
     func resetPassword() -> CocoaAction {
         return CocoaAction { _ in

@@ -156,7 +156,16 @@ class LoginMainPageViewController: UIViewController,  BindableType{
         self.loginButtonStackView.addArrangedSubview(appleLoginButton)
       
         appleLoginButton.rx.controlEvent(.touchUpInside)
-            .flatMap { viewModel.login(controller: self, didCompleteWithAuthorization: <#T##ASAuthorization#>)}
+            .flatMap {
+                return self.viewModel.appleLogin(presenting: self)
+            }
+            .subscribe(onNext: { user in
+                print(user)
+            }, onError: { err in
+                print(err)
+            })
+            .disposed(by: viewModel.disposeBag)
+        
         
     }
     

@@ -20,11 +20,10 @@ import Action
 protocol LoginMainProtocol: AnyObject {
     static func loginWithGoogle(viewController presenting: UIViewController) -> Single<Firebase.User>
     static func login(email: String?, password: String?) -> Single<AuthDataResult>
-    static func authorizationController(controller: ASAuthorizationController, didCompleteWithAuthorization authorization: ASAuthorization)  -> Observable<AuthDataResult>
+    static func startSignInWithAppleFlow(authorizationController: UIViewController) -> Observable<ASAuthorizationController> 
 }
 
 class LoginMainDM: LoginMainProtocol {
-    
 
     let bag = DisposeBag()
     let uid = Auth.auth().currentUser?.uid
@@ -260,19 +259,27 @@ class LoginMainDM: LoginMainProtocol {
     }
     
     @available(iOS 13, *)
-   static func startSignInWithAppleFlow(authorizationController: UIViewController) {
-        let nonce = self.randomNonceString()
-        self.currentNonce = nonce
-        let appleIDProvider = ASAuthorizationAppleIDProvider()
-        let request = appleIDProvider.createRequest()
-        request.requestedScopes = [.fullName, .email]
-        request.nonce = sha256(nonce)
+    static func startSignInWithAppleFlow(authorizationController: UIViewController) -> Observable<ASAuthorizationController> {
+       
+        return Observable.create { observer in
+            
+            let nonce = self.randomNonceString()
+            self.currentNonce = nonce
+            let appleIDProvider = ASAuthorizationAppleIDProvider()
+            let request = appleIDProvider.createRequest()
+            request.requestedScopes = [.fullName, .email]
+            request.nonce = sha256(nonce)
+            
+            let authorizationController = ASAuthorizationController(authorizationRequests: [request])
+                    authorizationController.delegate = authorizationController as? ASAuthorizationControllerDelegate
+            authorizationController.presentationContextProvider = authorizationController as? ASAuthorizationControllerPresentationContextProviding
+            
+            authorizationController.performRequests()
+            observer.onNext(authorizationController)
+            
+            return Disposables.create()
+        }
         
-        let authorizationController = ASAuthorizationController(authorizationRequests: [request])
-        authorizationController.delegate = authorizationController as? ASAuthorizationControllerDelegate
-        authorizationController.presentationContextProvider = self as? ASAuthorizationControllerPresentationContextProviding
-        
-        authorizationController.performRequests()
     }
     
     
