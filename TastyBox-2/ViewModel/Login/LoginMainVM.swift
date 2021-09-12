@@ -52,28 +52,6 @@ class LoginMainVM: ViewModelBase {
     }
     
     
-//    func googleLogin(presenting vc: UIViewController) -> Completable {
-//
-//        return Completable.create { completable in
-//
-//            self.apiType.loginWithGoogle(viewController: vc).subscribe { event in
-//
-//                switch event {
-//                case .failure(let err as NSError):
-//
-//                    self.err = err
-//                    completable(.error(err))
-//
-//                case .success(let user):
-//
-//                    self.user = user
-//
-//                }
-//
-//                completable(.completed)
-//            }
-//        }
-//    }
     
     func googleLogin(presenting vc: UIViewController) -> Observable<FirebaseAuth.User> {
         
@@ -149,23 +127,7 @@ class LoginMainVM: ViewModelBase {
         
 //    }
     
-    func login(email: String, password: String) {
-        let _ = self.apiType.login(email: email, password: password)
-            .subscribe(onSuccess: { result in
-                print("success")
-//                let user = result.user
-//
-//                if user.isEmailVerified {
-//
-//                } else {
-//
-//                }
-            }, onFailure: { err in
-                print("failed", err)
-            })
-    }
-       
-    
+
     lazy var loginAction: Action<(String, String), Void> = { this in
         return Action { email, password in
             

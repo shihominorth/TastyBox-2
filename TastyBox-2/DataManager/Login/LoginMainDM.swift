@@ -184,6 +184,22 @@ class LoginMainDM: LoginMainProtocol {
         }
     }
     
+    static func appleLogin(vc: UIViewController) {
+       
+        let appleIDProvider = ASAuthorizationAppleIDProvider()
+        
+        let request = appleIDProvider.createRequest()
+        request.requestedScopes = [.fullName, .email]
+       
+        let nonce = randomNonceString()
+        currentNonce = nonce
+        request.nonce = sha256(nonce)
+
+        let authorizationController = ASAuthorizationController(authorizationRequests: [request])
+        authorizationController.delegate = vc as? ASAuthorizationControllerDelegate
+        authorizationController.performRequests()
+        
+    }
     
     static func authorizationController(controller: ASAuthorizationController, didCompleteWithAuthorization authorization: ASAuthorization)  -> Observable<AuthDataResult> {
 

@@ -194,11 +194,10 @@
                     </view>
                     <navigationItem key="navigationItem" id="wuy-Ai-yTQ"/>
                     <connections>
-                        <outlet property="button" destination="fAR-gQ-rN1" id="o2y-va-qDz"/>
                         <outlet property="emailTextField" destination="Fse-Hy-zwo" id="LDH-oy-jHg"/>
                         <outlet property="googleLoginBtn" destination="EcU-YZ-vqX" id="Yxa-Gp-ptl"/>
                         <outlet property="login" destination="1AW-Wj-Qt7" id="cBd-Zc-hEI"/>
-                        <outlet property="loginButtonStackView" destination="cyv-I1-yHM" id="ghp-me-tWl"/>
+                        <outlet property="loginButtonStackView" destination="SFU-7A-36n" id="P5w-lM-DyR"/>
                         <outlet property="passwordTextField" destination="X3a-Uh-AYS" id="i8h-xh-LUS"/>
                         <outlet property="registerButton" destination="SLt-lc-Q4Q" id="c5Y-JU-7Tf"/>
                         <outlet property="resetPasswordButton" destination="NyG-hk-adB" id="OM2-XT-uyi"/>
