@@ -56,9 +56,12 @@ class LoginMainPageViewController: UIViewController,  BindableType{
             print("Error signing out: %@", signOutError)
         }
         
-        emailTextField.delegate = self
-        passwordTextField.delegate = self
-        setUpKeyboard()
+        //        emailTextField.delegate = self
+        //        passwordTextField.delegate = self
+        //        setUpKeyboard()
+        
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow), name: UIResponder.keyboardWillShowNotification, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide), name: UIResponder.keyboardWillHideNotification, object: nil)
         
         let view = UIView(frame: CGRect(x: 0, y: 0, width: self.view.frame.width, height: self.view.frame.height))
         view.backgroundColor = #colorLiteral(red: 0.9977325797, green: 0.9879661202, blue: 0.7689270973, alpha: 1)
@@ -146,20 +149,9 @@ class LoginMainPageViewController: UIViewController,  BindableType{
             }
             .subscribe(onNext: { user in
                 print(user)
-            }, onError: { err in
-                print(err)
-            })
+            }
+            )
             .disposed(by: viewModel.disposeBag)
-        
-        passwordTextField.rx.controlEvent(.touchUpInside).subscribe { event in
-            print("tapped.")
-        }
-        .disposed(by: viewModel.disposeBag)
-        
-        emailTextField.rx.controlEvent(.touchUpInside).subscribe { event in
-            print("tapped.")
-        }
-        .disposed(by: viewModel.disposeBag)
         
         
         let info = Observable.combineLatest(emailTextField.rx.text.orEmpty, passwordTextField.rx.text.orEmpty)
@@ -270,46 +262,77 @@ class LoginMainPageViewController: UIViewController,  BindableType{
     }
     
     
-//        //MARK: keyboard delegate
-//        @objc func keyboardWillShow(notification: NSNotification) {
-//            if ((notification.userInfo?[UIResponder.keyboardFrameBeginUserInfoKey] as? NSValue)?.cgRectValue) != nil {
-//                if self.view.frame.origin.y == 0 {
-//                    self.view.frame.origin.y -= 100
-//                }
-//            }
-//
-//            tapRecognizer = UITapGestureRecognizer(target: self, action: #selector(tapRecognizerAction))
-//
-//            self.view.addGestureRecognizer(tapRecognizer!)
-//        }
-//
-//        @objc func tapRecognizerAction() {
-//
-//
-//            if let tapRecognizer = tapRecognizer {
-//                self.view.removeGestureRecognizer(tapRecognizer)
-//                self.tapRecognizer = nil
-//            }
-//
-//            UIView.animate(withDuration: 0.3, animations: {
-//                self.view.endEditing(true)
-//                if self.view.frame.origin.y != 0 {
-//                    self.view.frame.origin.y = 0
-//                }
-//            })
-//
-//        }
-//
-//        @objc func keyboardWillHide(notification: NSNotification) {
-//
-//            UIView.animate(withDuration: 0.3, animations: {
-//                self.view.endEditing(true)
-//                if self.view.frame.origin.y != 0 {
-//                    self.view.frame.origin.y = 0
-//                }
-//            })
-//
-//        }
+    //MARK: keyboard delegate
+    @objc func keyboardWillShow(notification: NSNotification) {
+        if ((notification.userInfo?[UIResponder.keyboardFrameBeginUserInfoKey] as? NSValue)?.cgRectValue) != nil {
+            if self.view.frame.origin.y == 0 {
+                self.view.frame.origin.y -= 100
+            }
+        }
+        
+        tapRecognizer = UITapGestureRecognizer(target: self, action: #selector(tapRecognizerAction))
+        tapRecognizer?.name = "dissmiss"
+        
+        if let gestureRecognizers = self.view.gestureRecognizers, let tapRecognizer = tapRecognizer{
+            
+            if gestureRecognizers.filter({ $0.name == "dissmiss"}).isEmpty {
+                self.view.addGestureRecognizer(tapRecognizer)
+            }
+        } else {
+            self.view.addGestureRecognizer(tapRecognizer!)
+        }
+        
+    }
+    //
+    @objc func tapRecognizerAction() {
+        
+        self.view.endEditing(true)
+        
+        if let tapRecognizers = self.view.gestureRecognizers?.filter({ $0.name == "dissmiss"}) {
+            
+            if !tapRecognizers.isEmpty {
+                let _ = tapRecognizers.map {
+                    $0.cancelsTouchesInView = false
+                    self.view.removeGestureRecognizer($0)
+                }
+                
+            }
+            
+        }
+        
+        UIView.animate(withDuration: 0.3, animations: {
+            
+            if self.view.frame.origin.y != 0 {
+                self.view.frame.origin.y = 0
+            }
+        })
+        
+    }
+    
+    @objc func keyboardWillHide(notification: NSNotification) {
+        
+        self.view.endEditing(true)
+        
+        if let tapRecognizers = self.view.gestureRecognizers?.filter({ $0.name == "dissmiss"}) {
+            
+            if !tapRecognizers.isEmpty {
+                let _ = tapRecognizers.map {
+                    $0.cancelsTouchesInView = false
+                    self.view.removeGestureRecognizer($0)
+                }
+                
+            }
+
+        }
+        
+        UIView.animate(withDuration: 0.3, animations: {
+            
+            if self.view.frame.origin.y != 0 {
+                self.view.frame.origin.y = 0
+            }
+        })
+        
+    }
     
     
 }

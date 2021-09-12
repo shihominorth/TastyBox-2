@@ -52,9 +52,32 @@ class LoginMainVM: ViewModelBase {
     }
     
     
-    func googleLogin(presenting vc: UIViewController) -> Completable {
+//    func googleLogin(presenting vc: UIViewController) -> Completable {
+//
+//        return Completable.create { completable in
+//
+//            self.apiType.loginWithGoogle(viewController: vc).subscribe { event in
+//
+//                switch event {
+//                case .failure(let err as NSError):
+//
+//                    self.err = err
+//                    completable(.error(err))
+//
+//                case .success(let user):
+//
+//                    self.user = user
+//
+//                }
+//
+//                completable(.completed)
+//            }
+//        }
+//    }
+    
+    func googleLogin(presenting vc: UIViewController) -> Observable<FirebaseAuth.User> {
         
-        return Completable.create { completable in
+        return Observable.create { observable in
             
             self.apiType.loginWithGoogle(viewController: vc).subscribe { event in
                 
@@ -62,15 +85,14 @@ class LoginMainVM: ViewModelBase {
                 case .failure(let err as NSError):
                     
                     self.err = err
-                    completable(.error(err))
                     
                 case .success(let user):
                     
                     self.user = user
-                    
+                    observable.onNext(user)
                 }
                 
-                completable(.completed)
+               
             }
         }
     }
