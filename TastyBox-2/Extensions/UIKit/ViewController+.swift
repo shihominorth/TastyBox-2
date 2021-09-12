@@ -14,9 +14,9 @@ extension UIViewController {
     
     var tap: UITapGestureRecognizer {
         get {
-            return UITapGestureRecognizer(target: self, action: #selector(dismissOnTap))
+            return UITapGestureRecognizer(target: self, action: #selector(tapRecognizerAction))
         }
-        
+ 
     }
     
     
@@ -24,69 +24,108 @@ extension UIViewController {
         
         self.navigationItem.hidesBackButton = true;
         
-//        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow), name: UIResponder.keyboardWillShowNotification, object: nil)
-//        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide), name: UIResponder.keyboardWillHideNotification, object: nil)
+       let keyboardShown = NotificationCenter.default.rx.notification(UIResponder.keyboardWillShowNotification)
+            .subscribe ( onNext: { [unowned self] notification in
+
+                guard let userInfo = notification.userInfo else { return }
+                
+
+                if let _ = (userInfo[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue)?.cgRectValue {
+                    if self.view.frame.origin.y == 0 {
+                        self.view.frame.origin.y -= 100
+                    }
+                }
+                               
+                
+                if let gestureRecognizers = self.view.gestureRecognizers  {
+                    
+                    if gestureRecognizers.filter({ $0.name == "dissmiss"}).isEmpty {
+                        self.view.addGestureRecognizer(tap)
+                        self.view.gestureRecognizers![0].name = "dissmiss"
+                    }
+                    
+                } else {
+
+                    self.view.addGestureRecognizer(tap)
+                    self.view.gestureRecognizers![0].name = "dissmiss"
+                }
+                
+            
+            })
         
-        //        view.addGestureRecognizer(tap)
-        dismissOnTap()
+        let keyboardClosed = NotificationCenter.default.rx.notification(UIResponder.keyboardWillHideNotification)
+             .subscribe( onNext: { notification in
+                 
+                 self.view.endEditing(true)
+                 
+                 if let tapRecognizers = self.view.gestureRecognizers?.filter({ $0.name == "dissmiss"}) {
+                     
+                     if !tapRecognizers.isEmpty {
+                         let _ = tapRecognizers.map {
+                             $0.cancelsTouchesInView = false
+                             self.view.removeGestureRecognizer($0)
+                         }
+                         
+                     }
+
+                 }
+                 
+                 UIView.animate(withDuration: 0.3, animations: {
+                     
+                     if self.view.frame.origin.y != 0 {
+                         self.view.frame.origin.y = 0
+                     }
+                 })
+             })
+        
     }
     
-    //MARK: keyboard delegate
-//    @objc func keyboardWillShow(notification: NSNotification) {
-//        if ((notification.userInfo?[UIResponder.keyboardFrameBeginUserInfoKey] as? NSValue)?.cgRectValue) != nil {
-//            if self.view.frame.origin.y == 0 {
-//                self.view.frame.origin.y -= 100
-//            }
-//        }
-//        
-//        //        let tapRecognizer = UITapGestureRecognizer(target: self, action: #selector(tapRecognizerAction))
-//        self.view.addGestureRecognizer(tap)
-//    }
+  
     
-//    @objc func tapRecognizerAction() {
-//
-//        self.view.endEditing(true)
-//        self.view.removeGestureRecognizer(tap)
-//
-//        UIView.animate(withDuration: 0.3, animations: {
-//
-//            if self.view.frame.origin.y != 0 {
-//                self.view.frame.origin.y = 0
-//            }
-//        })
-//
-//    }
-//
-//    @objc func keyboardWillHide(notification: NSNotification) {
-//        self.view.endEditing(true)
-//
-//        UIView.animate(withDuration: 0.3, animations: {
-//            if self.view.frame.origin.y != 0 {
-//                self.view.frame.origin.y = 0
-//            }
-//        })
-//
-//    }
+    @objc func tapRecognizerAction() {
+        
+        self.view.endEditing(true)
+        
+        if let tapRecognizers = self.view.gestureRecognizers?.filter({ $0.name == "dissmiss"}) {
+            
+            if !tapRecognizers.isEmpty {
+                let _ = tapRecognizers.map {
+                    $0.cancelsTouchesInView = false
+                    self.view.removeGestureRecognizer($0)
+                }
+                
+            }
+            
+        }
+        
+        UIView.animate(withDuration: 0.3, animations: {
+            
+            if self.view.frame.origin.y != 0 {
+                self.view.frame.origin.y = 0
+            }
+        })
+        
+    }
 }
 
 extension UIViewController: UIGestureRecognizerDelegate {
     
-    @objc func dismissOnTap() {
-        self.view.isUserInteractionEnabled = true
-        let tap = UITapGestureRecognizer(target: self, action: #selector(dismissKeyboard))
-        tap.delegate = self
-        tap.cancelsTouchesInView = false
-        self.view.addGestureRecognizer(tap)
-    }
-    
-    public func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldReceive touch: UITouch) -> Bool {
-        if touch.view is GIDSignInButton {
-            return false
-        }
-        return true
-    }
-    
-    @objc func dismissKeyboard() {
-        self.view.endEditing(true)
-    }
+//    @objc func dismissOnTap() {
+//        self.view.isUserInteractionEnabled = true
+//        let tap = UITapGestureRecognizer(target: self, action: #selector(dismissKeyboard))
+//        tap.delegate = self
+//        tap.cancelsTouchesInView = false
+//        self.view.addGestureRecognizer(tap)
+//    }
+//
+//    public func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldReceive touch: UITouch) -> Bool {
+//        if touch.view is GIDSignInButton {
+//            return false
+//        }
+//        return true
+//    }
+//
+//    @objc func dismissKeyboard() {
+//        self.view.endEditing(true)
+//    }
 }
