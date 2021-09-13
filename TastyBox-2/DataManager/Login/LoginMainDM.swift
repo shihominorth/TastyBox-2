@@ -183,88 +183,13 @@ class LoginMainDM: LoginMainProtocol {
         }
     }
     
-    static func appleLogin(vc: UIViewController) {
-       
-        let appleIDProvider = ASAuthorizationAppleIDProvider()
-        
-        let request = appleIDProvider.createRequest()
-        request.requestedScopes = [.fullName, .email]
-       
-        let nonce = randomNonceString()
-        currentNonce = nonce
-        request.nonce = sha256(nonce)
-
-        let authorizationController = ASAuthorizationController(authorizationRequests: [request])
-        authorizationController.delegate = vc as? ASAuthorizationControllerDelegate
-        authorizationController.performRequests()
-        
-    }
-    
-    static func authorizationController(controller: ASAuthorizationController, didCompleteWithAuthorization authorization: ASAuthorization)  -> Observable<AuthDataResult> {
-
-
-        return Observable.create { observer in
-
-            self.currentNonce = self.randomNonceString()
-
-            if let appleIDCredential = authorization.credential as? ASAuthorizationAppleIDCredential {
-
-                guard let nonce = self.currentNonce else {
-                    fatalError("Invalid state: A login callback was received, but no login request was sent.")
-                }
-
-                guard let appleIDToken = appleIDCredential.identityToken else {
-                    print("Unable to fetch identity token")
-                    return Disposables.create()
-                }
-
-                guard let idTokenString = String(data: appleIDToken, encoding: .utf8) else {
-                    print("Unable to serialize token string from data: \(appleIDToken.debugDescription)")
-                    return Disposables.create()
-                }
-
-                // Initialize a Firebase credential.
-                let firebaseCredential = OAuthProvider.credential(withProviderID: "apple.com",
-                                                                  idToken: idTokenString,
-                                                                  rawNonce: nonce)
-
-                UserDefaults.standard.set(appleIDCredential.user, forKey: "appleAuthorizedUserIdKey")
-
-
-                // Sign in with Firebase.
-                Auth.auth().signIn(with: firebaseCredential) { result, err in
-                    if let err = err {
-                        // Error. If error.code == .MissingOrInvalidNonce, make sure
-                        // you're sending the SHA256-hashed nonce as a hex string with
-                        // your request to Apple.
-
-                        observer.onError(err)
-                        return
-                    } else {
-//                        self.isUserVailed(err, result, observer)
-                        if let user = result?.user {
-//                            self.isEmailVerified.onNext(user.isEmailVerified)
-                        } else {
-//                            self.isEmailVerified.onNext(false)
-                        }
-                       
-                    }
-                }
-
-            }
-
-            return Disposables.create()
-        }
-
-    }
-    
     @available(iOS 13, *)
     static func startSignInWithAppleFlow(authorizationController: UIViewController) -> Observable<ASAuthorizationController> {
        
         return Observable.create { observer in
             
             let nonce = self.randomNonceString()
-//            self.currentNonce = nonce
+            self.currentNonce = nonce
             let appleIDProvider = ASAuthorizationAppleIDProvider()
             let request = appleIDProvider.createRequest()
             request.requestedScopes = [.fullName, .email]

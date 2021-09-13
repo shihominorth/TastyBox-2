@@ -7,7 +7,7 @@
 //
 import Foundation
 import Firebase
-//import FBSDKLoginKit
+import FBSDKLoginKit
 import GoogleSignIn
 import AuthenticationServices
 import CryptoKit
@@ -106,7 +106,22 @@ class LoginMainVM: ViewModelBase {
         
     }
     
-    
+    func faceBookLogin(presenting: UIViewController) -> Observable<FirebaseAuth.User> {
+        
+        return Observable.create { observer in
+            
+            let button = FBLoginButton()
+            
+           let _ = button.rx.signIn.subscribe(onNext: { user in
+                observer.onNext(user)
+            }, onError: { err in
+                self.err = err as NSError
+                observer.onError(err)
+            })
+            
+            return Disposables.create()
+        }
+    }
     //    func Login(email: String?, password: String?) {
     //
     //        let login = self.apiType.login(email: email, password: password)

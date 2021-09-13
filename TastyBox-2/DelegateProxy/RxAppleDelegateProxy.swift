@@ -77,7 +77,8 @@ class RxAppleDelegateProxy: DelegateProxy<ASAuthorizationController, ASAuthoriza
                         //                            self.isEmailVerified.onNext(user.isEmailVerified)
                         self.signInSubject.onNext(user)
                     } else {
-                        
+                        print("result is nil.")
+
                         //                            self.isEmailVerified.onNext(false)
                     }
                     

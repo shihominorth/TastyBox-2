@@ -14,6 +14,7 @@ pod 'Firebase/DynamicLinks'
 pod 'Firebase/Auth'
 pod 'Firebase/Firestore'
 pod 'Firebase/Storage'
+pod 'Firebase/Core'
 
 
 # for reactive-programming
@@ -29,6 +30,10 @@ pod 'RxTimelane'
 
 #pods for Google sign in
 pod 'GoogleSignIn'
+
+# pods for facebook sign in
+pod 'FBSDKLoginKit'
+
 
 # edit image 
 pod 'RSKImageCropper'
