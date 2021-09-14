@@ -173,7 +173,7 @@ class LoginMainPageViewController: UIViewController,  BindableType{
         
         facebookLoginBtn.rx.controlEvent(.touchUpInside)
             .flatMap {
-                return self.viewModel.faceBookLogin(presenting: self)
+                return self.viewModel.faceBookLogin(presenting: self, button: facebookLoginBtn)
             }
             .subscribe(onNext: { user in
                 print(user)

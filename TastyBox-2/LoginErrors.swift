@@ -8,7 +8,7 @@
 import Foundation
 
 enum LoginErrors: Error {
-    case incorrectEmail, incorrectPassword, invailedEmail, invaildPassword, invailedUser, inVailedClientID, invailedUrl, invailedAuthentication
+    case incorrectEmail, incorrectPassword, invailedEmail, invaildPassword, invailedUser, inVailedClientID, invailedUrl, invailedAuthentication, invailedAccessToken
 }
 
 

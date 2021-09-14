@@ -106,11 +106,11 @@ class LoginMainVM: ViewModelBase {
         
     }
     
-    func faceBookLogin(presenting: UIViewController) -> Observable<FirebaseAuth.User> {
+    func faceBookLogin(presenting: UIViewController, button: FBLoginButton) -> Observable<FirebaseAuth.User> {
         
         return Observable.create { observer in
             
-            let button = FBLoginButton()
+           
             
            let _ = button.rx.signIn.subscribe(onNext: { user in
                 observer.onNext(user)

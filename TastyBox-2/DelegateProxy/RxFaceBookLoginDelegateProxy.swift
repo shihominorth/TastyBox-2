@@ -28,14 +28,25 @@ class RxFaceBookLoginDelegateProxy: DelegateProxy<FBLoginButton, LoginButtonDele
             signInSubject.onError(err)
         } else {
             
-            let credential = FacebookAuthProvider
-              .credential(withAccessToken: AccessToken.current!.tokenString)
-            
-            Auth.auth().signIn(with: credential) { result, err in
-                if let err = error {
-                    self.signInSubject.onError(err)
-                } else {
 
+            guard let tokenString = AccessToken.current?.tokenString else {
+                
+                self.signInSubject.onError(LoginErrors.invailedAccessToken)
+                return
+                
+            }
+            
+            let credential = FacebookAuthProvider
+                .credential(withAccessToken: tokenString)
+                        
+            Auth.auth().signIn(with: credential) { result, err in
+                
+                if let err = err {
+                    
+                    self.signInSubject.onError(err)
+                    
+                } else {
+                    
                     if let user = result?.user {
                         self.signInSubject.onNext(user)
                     } else {
@@ -44,6 +55,8 @@ class RxFaceBookLoginDelegateProxy: DelegateProxy<FBLoginButton, LoginButtonDele
                     
                 }
             }
+            
+            
         }
     }
     
