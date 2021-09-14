@@ -51,8 +51,10 @@ class LoginMainPageViewController: UIViewController,  BindableType{
 
         //This causes ⚠️ Reentrancy anomaly was detected.
 
-//        setUpKeyboard()
-   
+        setUpKeyboard()
+        
+        emailTextField.delegate = self
+        passwordTextField.delegate = self
 //        
 //        let view = UIView(frame: CGRect(x: 0, y: 0, width: self.view.frame.width, height: self.view.frame.height))
 //        view.backgroundColor = #colorLiteral(red: 0.9977325797, green: 0.9879661202, blue: 0.7689270973, alpha: 1)
@@ -101,8 +103,6 @@ class LoginMainPageViewController: UIViewController,  BindableType{
                 
                 self.navigationItem.hidesBackButton = true;
                 
-                emailTextField.delegate = self
-                passwordTextField.delegate = self
                 
                 loginButtonStackView.spacing = 10.0
                 
@@ -306,15 +306,17 @@ extension LoginMainPageViewController: UITextFieldDelegate {
             // they work
             emailTextField.resignFirstResponder()
             passwordTextField.becomeFirstResponder()
-            break
+            
         case 2:
             // not close the keyboard
             textField.resignFirstResponder()
-            break
+            self.view.endEditing(true)
+            return true
+            
         default:
             break
         }
-        return true
+        return false
     }
     
 }

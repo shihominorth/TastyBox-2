@@ -37,9 +37,7 @@ extension UIViewController {
                         self.view.frame.origin.y -= 100
                     }
                 }
-                
-                
-                
+     
                 if let gestureRecognizers = self.view.gestureRecognizers  {
                     
                     if gestureRecognizers.filter({ $0.name == "dissmiss"}).isEmpty {
@@ -56,33 +54,32 @@ extension UIViewController {
                 
                 
             })
-        
+
         let keyboardClosed = NotificationCenter.default.rx.notification(UIResponder.keyboardWillHideNotification)
             .observe(on: MainScheduler.asyncInstance)
             .subscribe( onNext: { notification in
-                
-                self.view.endEditing(true)
-                
+
+
                 if let tapRecognizers = self.view.gestureRecognizers?.filter({ $0.name == "dissmiss"}) {
-                    
+
                     if !tapRecognizers.isEmpty {
                         let _ = tapRecognizers.map {
                             $0.cancelsTouchesInView = false
                             self.view.removeGestureRecognizer($0)
                         }
-                        
+
                     }
-                    
+
                 }
-                
+
                 UIView.animate(withDuration: 0.3, animations: {
-                    
+
                     if self.view.frame.origin.y != 0 {
                         self.view.frame.origin.y = 0
                     }
                 })
             })
-        
+ 
     }
     
     
@@ -111,27 +108,8 @@ extension UIViewController {
         })
         
     }
-}
-
-
-extension UIViewController: UIGestureRecognizerDelegate {
     
-    //    @objc func dismissOnTap() {
-    //        self.view.isUserInteractionEnabled = true
-    //        let tap = UITapGestureRecognizer(target: self, action: #selector(dismissKeyboard))
-    //        tap.delegate = self
-    //        tap.cancelsTouchesInView = false
-    //        self.view.addGestureRecognizer(tap)
-    //    }
-    //
-    //    public func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldReceive touch: UITouch) -> Bool {
-    //        if touch.view is GIDSignInButton {
-    //            return false
-    //        }
-    //        return true
-    //    }
-    //
-    //    @objc func dismissKeyboard() {
-    //        self.view.endEditing(true)
-    //    }
+    
+ 
 }
+
