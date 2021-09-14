@@ -9,17 +9,20 @@ import Foundation
 import Firebase
 import RxSwift
 
-class RegisterMyInfoDataManager {
+
+protocol RegisterMyInfoProtocol: AnyObject {
+    static func userRegister(userName: String?, email: String?, familySize: String?, cuisineType: String?, accountImage: Data?) -> Observable<Bool>
+}
+
+class RegisterMyInfoDataManager: RegisterMyInfoProtocol {
     
-    let db = Firestore.firestore()
-    let storageRef = Storage.storage().reference()
     
     // account image should convert from uiimage to data?
     // in order to convert it, use .defineUserImage() before call userRegister.
     
     // observer or maybe are the best because the functions for firebase is nested.
     
-    func userRegister(userName: String?, email: String?, familySize: String?, cuisineType: String?, accountImage: Data?) -> Observable<Bool>{
+   static func userRegister(userName: String?, email: String?, familySize: String?, cuisineType: String?, accountImage: Data?) -> Observable<Bool>{
         
         
         return Observable.create { observer in
@@ -44,10 +47,7 @@ class RegisterMyInfoDataManager {
                 return Disposables.create()
             }
 
-            
-            
-            
-            self.db.collection("user").document(uid).setData([
+            Firestore.firestore().collection("user").document(uid).setData([
                 
                 "id": uid,
                 "userName": userName,
@@ -83,7 +83,7 @@ class RegisterMyInfoDataManager {
                                 let metaData = StorageMetadata()
                                 metaData.contentType = "image/jpg"
                                 
-                                self.storageRef.child("user/\(uid)/usertImage").putData(myImage, metadata: metaData) { metaData, err in
+                                Storage.storage().reference().child("user/\(uid)/usertImage").putData(myImage, metadata: metaData) { metaData, err in
                                     if let err = err {
                                         
                                         observer.onError(err)

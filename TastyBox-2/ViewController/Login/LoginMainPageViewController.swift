@@ -48,34 +48,27 @@ class LoginMainPageViewController: UIViewController,  BindableType{
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
-        let firebaseAuth = Auth.auth()
-        do {
-            try firebaseAuth.signOut()
-        } catch let signOutError as NSError {
-            print("Error signing out: %@", signOutError)
-        }
-        
-        //        emailTextField.delegate = self
-        //        passwordTextField.delegate = self
-                setUpKeyboard()
+
+        //This causes ⚠️ Reentrancy anomaly was detected.
+
+//        setUpKeyboard()
    
+//        
+//        let view = UIView(frame: CGRect(x: 0, y: 0, width: self.view.frame.width, height: self.view.frame.height))
+//        view.backgroundColor = #colorLiteral(red: 0.9977325797, green: 0.9879661202, blue: 0.7689270973, alpha: 1)
+//        view.tag = 100
+//        
+//        let indicator = UIActivityIndicatorView()
+//        indicator.transform = CGAffineTransform(scaleX: 2, y: 2)
+//        
+//        indicator.color = .orange
+//        indicator.startAnimating()
+//        
+//        view.addSubview(indicator)
+//        indicator.center = self.view.center
         
-        let view = UIView(frame: CGRect(x: 0, y: 0, width: self.view.frame.width, height: self.view.frame.height))
-        view.backgroundColor = #colorLiteral(red: 0.9977325797, green: 0.9879661202, blue: 0.7689270973, alpha: 1)
-        view.tag = 100
         
-        let indicator = UIActivityIndicatorView()
-        indicator.transform = CGAffineTransform(scaleX: 2, y: 2)
-        
-        indicator.color = .orange
-        indicator.startAnimating()
-        
-        view.addSubview(indicator)
-        indicator.center = self.view.center
-        
-        
-        self.view.addSubview(view)
+//        self.view.addSubview(view)
         
         if let user = Auth.auth().currentUser {
             
@@ -111,8 +104,6 @@ class LoginMainPageViewController: UIViewController,  BindableType{
                 emailTextField.delegate = self
                 passwordTextField.delegate = self
                 
-             
-                setUpFaceBookLogin()
                 loginButtonStackView.spacing = 10.0
                 
                 resetPasswordButton.contentHorizontalAlignment = .right
@@ -126,20 +117,50 @@ class LoginMainPageViewController: UIViewController,  BindableType{
         
     }
     
+    override func viewWillAppear(_ animated: Bool) {
+        
+        let firebaseAuth = Auth.auth()
+        do {
+            try firebaseAuth.signOut()
+        } catch let signOutError as NSError {
+            print("Error signing out: %@", signOutError)
+        }
+  
+    }
+    
+    override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
+        if let tapRecognizers = self.view.gestureRecognizers?.filter({ $0.name == "dissmiss"}) {
+            
+            if !tapRecognizers.isEmpty {
+                let _ = tapRecognizers.map {
+                    $0.cancelsTouchesInView = false
+                    self.view.removeGestureRecognizer($0)
+                }
+                
+            }
+            
+        }
+    }
+    
+    
+    
     func bindViewModel() {
         
         resetPasswordButton.rx.action = viewModel.resetPassword()
         registerButton.rx.action = viewModel.registerEmail()
         
         
-        let info = Observable.combineLatest(emailTextField.rx.text.orEmpty, passwordTextField.rx.text.orEmpty)
+        let info = Observable.combineLatest(emailTextField.rx.text.orEmpty.observe(on: MainScheduler.asyncInstance), passwordTextField.rx.text.orEmpty.observe(on: MainScheduler.asyncInstance))
         login.rx.tap
+            .throttle(.milliseconds(1000), scheduler: MainScheduler.instance)
             .withLatestFrom(info)
             .bind(to: viewModel.loginAction.inputs)
             .disposed(by: viewModel.disposeBag)
         
-        //MARK: after tap password or email text fields, cant use google login button - solved.
+        
+//        MARK: after tap password or email text fields, cant use google login button - solved.
         let _ = googleLoginBtn.rx.controlEvent(.touchUpInside)
+            .observe(on: MainScheduler.asyncInstance)
             .flatMap {
                 return self.viewModel.googleLogin(presenting: self)
             }
@@ -156,6 +177,7 @@ class LoginMainPageViewController: UIViewController,  BindableType{
         self.loginButtonStackView.addArrangedSubview(appleLoginBtn)
       
         appleLoginBtn.rx.controlEvent(.touchUpInside)
+            .observe(on: MainScheduler.asyncInstance)
             .flatMap {
                 return self.viewModel.appleLogin(presenting: self)
             }
@@ -165,13 +187,14 @@ class LoginMainPageViewController: UIViewController,  BindableType{
                 print(err)
             })
             .disposed(by: viewModel.disposeBag)
-        
+
         let facebookLoginBtn = FBLoginButton()
         facebookLoginBtn.permissions = ["public_profile", "email"]
 
         self.loginButtonStackView.addArrangedSubview(facebookLoginBtn)
-        
+
         facebookLoginBtn.rx.controlEvent(.touchUpInside)
+            .observe(on: MainScheduler.asyncInstance)
             .flatMap {
                 return self.viewModel.faceBookLogin(presenting: self, button: facebookLoginBtn)
             }
@@ -270,36 +293,9 @@ class LoginMainPageViewController: UIViewController,  BindableType{
             }
         }
     }
-    
-    //MARK: Facebook Login
-    
-    func setUpFaceBookLogin() {
-        //        let faceBookLoginButton = FBLoginButton()
-        //        let fbLoginManager = LoginManager()
-        //        fbLoginManager.logOut() // this is an instance function
-        //        faceBookLoginButton.layer.cornerRadius = 10
-        //        faceBookLoginButton.delegate = self
-        //
-        //        print(faceBookLoginButton.frame.height)
-        //        loginButtonStackView.addArrangedSubview(faceBookLoginButton)
-    }
-    
-    
 }
 
 
-
-//extension FBLoginButton {
-//  /**
-//   Create a new `LoginButton` with a given optional frame and read permissions.
-//   - Parameter frame: Optional frame to initialize with. Default: `nil`, which uses a default size for the button.
-//   - Parameter permissions: Array of read permissions to request when logging in.
-//   */
-//  convenience init(frame: CGRect = .zero, permissions: [Permission] = [.publicProfile]) {
-//    self.init(frame: frame)
-//    self.permissions = permissions.map { $0.name }
-//  }
-//}
 
 extension LoginMainPageViewController: UITextFieldDelegate {
     

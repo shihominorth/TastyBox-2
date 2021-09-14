@@ -6,9 +6,30 @@
 //
 
 import Foundation
+import SCLAlertView
 
 struct ReasonWhyError {
     var reason: String
     var solution: String
     var isReportRequired = false
+}
+
+
+extension ReasonWhyError {
+    
+    func generateAlert() {
+        
+        let alertView = SCLAlertView()
+//        let context = SCLAlertView().showTitle(
+//            "Congratulations", // Title of view
+//            subTitle: "Operation successfully completed.",
+//            timeout: .none, // String of view
+//            completeText: "Done", // Optional button value, default: ""
+//            style: .success, // Styles - see below.
+//            colorStyle: 0xA429FF,
+//            colorTextButton: 0xFFFFFF
+//        )
+        
+        alertView.showError(self.reason, subTitle: self.solution)
+    }
 }

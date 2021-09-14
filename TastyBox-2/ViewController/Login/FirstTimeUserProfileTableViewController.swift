@@ -18,9 +18,9 @@ import RSKImageCropper
 
 class FirstTimeUserProfileTableViewController: UITableViewController, UIPickerViewDelegate, UIPickerViewDataSource, BindableType {
     
-    var viewModel: RegisterUserProfileVM!
+    var viewModel: RegisterMyInfoProfileVM!
     
-    typealias ViewModelType = RegisterUserProfileVM
+    typealias ViewModelType = RegisterMyInfoProfileVM
     
         
     

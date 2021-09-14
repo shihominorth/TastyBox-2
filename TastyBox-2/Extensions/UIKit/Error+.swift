@@ -20,7 +20,7 @@ extension Error {
     func handleAuthenticationError() -> ReasonWhyError? {
         
         let code = self.convertToNSError().code
-        let authErrorCode = FirebaseAuth.AuthErrorCode.self
+//        let authErrorCode = FirebaseAuth.AuthErrorCode.self
         var result: ReasonWhyError?
         
         switch code {

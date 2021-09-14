@@ -5,16 +5,15 @@
 //  Created by 北島　志帆美 on 2021-08-21.
 //  Copyright © 2021 Argus Chen. All rights reserved.
 //
+import Action
+import AuthenticationServices
+import CryptoKit
 import Foundation
 import Firebase
 import FBSDKLoginKit
 import GoogleSignIn
-import AuthenticationServices
-import CryptoKit
-//import Crashlytics
 import RxSwift
 import RxRelay
-import Action
 
 
 class LoginMainVM: ViewModelBase {
@@ -29,22 +28,22 @@ class LoginMainVM: ViewModelBase {
     
     //    Singleは一回のみElementかErrorを送信することが保証されているObservableです。
     //    一回イベントを送信すると、disposeされるようになってます。
-    var isLogined: Observable<Bool> {
-        
-        return Observable.create { observable in
-            
-            if (Auth.auth().currentUser?.uid) != nil {
-                observable.onNext(true)
-                
-            } else {
-                observable.onNext(false)
-            }
-            
-            return Disposables.create()
-        }
-        
-    }
-    
+//    var isLogined: Observable<Bool> {
+//        
+//        return Observable.create { observable in
+//            
+//            if (Auth.auth().currentUser?.uid) != nil {
+//                observable.onNext(true)
+//                
+//            } else {
+//                observable.onNext(false)
+//            }
+//            
+//            return Disposables.create()
+//        }
+//        
+//    }
+//    
     
     
     init(sceneCoodinator: SceneCoordinator, apiType: LoginMainProtocol.Type = LoginMainDM.self) {
@@ -53,6 +52,16 @@ class LoginMainVM: ViewModelBase {
     }
     
     
+    
+    fileprivate func goToRegisterMyInfo() {
+        
+        if let user = self.user {
+            let vm = RegisterMyInfoProfileVM(sceneCoodinator: sceneCoodinator, user: user)
+            let vc = LoginScene.profileRegister(vm).viewController()
+            self.sceneCoodinator.transition(to: vc, type: .push)
+        }
+       
+    }
     
     func googleLogin(presenting vc: UIViewController) -> Observable<FirebaseAuth.User> {
         
@@ -68,6 +77,8 @@ class LoginMainVM: ViewModelBase {
                 case .success(let user):
                     
                     self.user = user
+                    
+                    self.goToRegisterMyInfo()
                     observable.onNext(user)
                 }
                 
@@ -87,6 +98,8 @@ class LoginMainVM: ViewModelBase {
                         .subscribe(onNext: { user in
                             
                             self.user = user
+                            self.goToRegisterMyInfo()
+
                             observer.onNext(user)
                             
                         }, onError: { err in
@@ -107,69 +120,25 @@ class LoginMainVM: ViewModelBase {
     }
     
     func faceBookLogin(presenting: UIViewController, button: FBLoginButton) -> Observable<FirebaseAuth.User> {
-        
+
         return Observable.create { observer in
-            
-           
-            
-           let _ = button.rx.signIn.subscribe(onNext: { user in
+
+            let _ = button.rx.signIn.subscribe(onNext: { user in
+
+                self.user = user
+                self.goToRegisterMyInfo()
                 observer.onNext(user)
+
             }, onError: { err in
+
                 self.err = err as NSError
                 observer.onError(err)
+
             })
-            
+
             return Disposables.create()
         }
     }
-    //    func Login(email: String?, password: String?) {
-    //
-    //        let login = self.apiType.login(email: email, password: password)
-    //
-    //
-    //
-    //        let _ = login.subscribe({ user in
-    //
-    //            let _ = self.dataManager.isFirstLogin.subscribe(onSuccess: { successed in
-    //
-    //
-    //
-    //            }, onFailure: { err in
-    //
-    //            })
-    //
-    //        }
-    
-    //        ,
-    //
-    //        onError: { err in
-    //
-    //            print(err.localizedDescription)
-    //            // error alert is needed to show.
-    //
-    //            switch err {
-    //            case LoginErrors.incorrectEmail:
-    //                print("incorrect email")
-    //            // tells users it's not correct email
-    //            case LoginErrors.incorrectPassword:
-    //                print("incorrect password.")
-    //            // tells users it's not correct password.
-    //            case LoginErrors.invailedEmail:
-    //                print("email isn't valified")
-    //            //tells users check email and velify our app.
-    //            case LoginErrors.invailedUser:
-    //                print("user instance couldn't be unwrapped. it's nil.")
-    //            case LoginErrors.inVailedClientID:
-    //                print("client id ouldn't be unwrapped. it's nil.")
-    //            default:
-    //                print("not meet any errors, but something happens.")
-    //
-    //            }
-    //
-    //        }
-    //        )
-    
-    //    }
     
     
     lazy var loginAction: Action<(String, String), Void> = { this in
@@ -179,8 +148,9 @@ class LoginMainVM: ViewModelBase {
                 .subscribe(onSuccess: { result in
                     let user = result.user
                     if user.isEmailVerified {
-                        
-                        //                        return this.sceneCoodinator.transition(to: <#T##UIViewController#>, type: <#T##SceneTransitionType#>)
+                        self.user = user
+                        self.goToRegisterMyInfo()
+
                     }
                     
                     print(user)
@@ -195,46 +165,46 @@ class LoginMainVM: ViewModelBase {
     }(self)
     
     
-    //    func login(controller: ASAuthorizationController, didCompleteWithAuthorization authorization: ASAuthorization) {
-    //        let authentication = self.apiType.authorizationController(controller: controller, didCompleteWithAuthorization: authorization)
-    //
-    //        let _ = authentication.subscribe(onNext: { user in
-    //
-    //            let _ = self.dataManager.isFirstLogin.subscribe(onSuccess: { isFirstLogin in
-    //
-    //                // go to main page.
-    //
-    //            }, onFailure:{ err in
-    //                // go to register my info detail page.
-    //
-    //            }).disposed(by: self.disposeBag)
-    //
-    //        },
-    //        onError: { err in
-    //
-    //            print(err.localizedDescription)
-    //            // error alert is needed to show.
-    //
-    //            switch err {
-    //
-    //            // tells users it's not correct password.
-    //            case LoginErrors.invailedEmail:
-    //                print("email isn't valified")
-    //            //tells users check email and velify our app.
-    //            case LoginErrors.invailedUser:
-    //                print("user instance couldn't be unwrapped. it's nil.")
-    //            case LoginErrors.inVailedClientID:
-    //                print("client id ouldn't be unwrapped. it's nil.")
-    //            default:
-    //                print("not meet any errors, but something happens.")
-    //
-    //            }
-    //
-    //        })
-    //        .disposed(by: self.disposeBag)
-    //
-    //
-    //    }
+//        func login(controller: ASAuthorizationController, didCompleteWithAuthorization authorization: ASAuthorization) {
+//            let authentication = self.apiType.authorizationController(controller: controller, didCompleteWithAuthorization: authorization)
+//    
+//            let _ = authentication.subscribe(onNext: { user in
+//    
+//                let _ = self.dataManager.isFirstLogin.subscribe(onSuccess: { isFirstLogin in
+//    
+//                    // go to main page.
+//    
+//                }, onFailure:{ err in
+//                    // go to register my info detail page.
+//    
+//                }).disposed(by: self.disposeBag)
+//    
+//            },
+//            onError: { err in
+//    
+//                print(err.localizedDescription)
+//                // error alert is needed to show.
+//    
+//                switch err {
+//    
+//                // tells users it's not correct password.
+//                case LoginErrors.invailedEmail:
+//                    print("email isn't valified")
+//                //tells users check email and velify our app.
+//                case LoginErrors.invailedUser:
+//                    print("user instance couldn't be unwrapped. it's nil.")
+//                case LoginErrors.inVailedClientID:
+//                    print("client id ouldn't be unwrapped. it's nil.")
+//                default:
+//                    print("not meet any errors, but something happens.")
+//    
+//                }
+//    
+//            })
+//            .disposed(by: self.disposeBag)
+//    
+//    
+//        }
     
     func resetPassword() -> CocoaAction {
         return CocoaAction { _ in
@@ -263,18 +233,26 @@ class LoginMainVM: ViewModelBase {
     }
     
     
-    lazy var registerMyProfile: Action<Void, Swift.Never> = { this in
-        return Action { _ in
-            
-            let registerAccountVM = RegisterUserProfileVM()
-            let viewController = LoginScene.profileRegister(registerAccountVM).viewController()
-            
-            return this.sceneCoodinator
-                .transition(to: viewController, type: .push)
-                .asObservable()
-        }
-    }(self)
+//    lazy var registerMyProfile: Action<Void, Swift.Never> = { this in
+//        return Action { _ in
+//
+//            if let user = self.user {
+//                let registerAccountVM = RegisterMyInfoProfileVM(sceneCoodinator: self.sceneCoodinator, user: user)
+//                let viewController = LoginScene.profileRegister(registerAccountVM).viewController()
+//
+//                return this.sceneCoodinator
+//                    .transition(to: viewController, type: .push)
+//                    .asObservable()
+//            }
+//
+//            let reason = ReasonWhyError(reason: "Please Login", solution: "You can use google, facebook, email to login in")
+//
+//            return this.sceneCoodinator
+//                .transition(to: viewController, type: .push)
+//                .asObservable()
+//        }
+//    }(self)
     
-    
+
 }
 
