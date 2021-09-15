@@ -29,22 +29,22 @@ class LoginMainVM: ViewModelBase {
     
     //    Singleは一回のみElementかErrorを送信することが保証されているObservableです。
     //    一回イベントを送信すると、disposeされるようになってます。
-//    var isLogined: Observable<Bool> {
-//        
-//        return Observable.create { observable in
-//            
-//            if (Auth.auth().currentUser?.uid) != nil {
-//                observable.onNext(true)
-//                
-//            } else {
-//                observable.onNext(false)
-//            }
-//            
-//            return Disposables.create()
-//        }
-//        
-//    }
-//    
+    var isLogined: Observable<Bool> {
+        
+        return Observable.create { observable in
+            
+            if (Auth.auth().currentUser?.uid) != nil {
+                observable.onNext(true)
+                
+            } else {
+                observable.onNext(false)
+            }
+            
+            return Disposables.create()
+        }
+        
+    }
+    
     
     
     init(sceneCoodinator: SceneCoordinator, apiType: LoginMainProtocol.Type = LoginMainDM.self) {

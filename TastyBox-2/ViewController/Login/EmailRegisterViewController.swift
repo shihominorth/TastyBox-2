@@ -45,6 +45,12 @@ class EmailRegisterViewController: UIViewController, BindableType {
         createUser()
         termsConditionsBtn.rx.action = viewModel.aboutAction()
         
+       _ = sendLinkBtn.rx.tap
+            .subscribe { _ in
+                
+                self.view.endEditing(true)
+            }
+        
         sendLinkBtn.rx.tap
             .withLatestFrom(emailTextField.rx.text.orEmpty)
             .bind(to: viewModel.sendEmailWithLink.inputs)
@@ -59,33 +65,6 @@ class EmailRegisterViewController: UIViewController, BindableType {
        // self.performSegue(withIdentifier: "LoginMainPage", sender: nil)
     }
     
-//    @IBAction func toTermsPage(_ sender: Any) {
-//        let Storyboard: UIStoryboard = UIStoryboard(name: "About", bundle: nil)
-//        let vc = Storyboard.instantiateViewController(withIdentifier:"about")
-//        self.present(vc, animated:true, completion:nil)
-//    }
-    
-//    @IBAction func createAccountAction(_ sender: Any) {
-//        if emailTextField.text == nil || passwordTextField.text == nil || confirmPasswordTextField.text == nil {
-//            let alertController = UIAlertController(title: "Error", message: "Please enter your email and password", preferredStyle: .alert)
-//                
-//            let defaultAction = UIAlertAction(title: "OK", style: .cancel, handler: nil)
-//            alertController.addAction(defaultAction)
-//                
-//            present(alertController, animated: true, completion: nil)
-//            
-//        } else if passwordTextField.text != confirmPasswordTextField.text {
-//            let alertController = UIAlertController(title: "Error", message: "Two passwords are not the same.", preferredStyle: .alert)
-//                
-//            let defaultAction = UIAlertAction(title: "OK", style: .cancel, handler: nil)
-//            alertController.addAction(defaultAction)
-//                
-//            present(alertController, animated: true, completion: nil)
-//            
-//        } else {
-//            self.confirm()
-//        }
-//    }
     
     private func confirm(){
         let alertController = UIAlertController(title: "Terms of Service Agreement", message: "Please make sure you read the terms and conditions carefully before using the app. Do you agree to these terms of agreement?", preferredStyle: .alert)

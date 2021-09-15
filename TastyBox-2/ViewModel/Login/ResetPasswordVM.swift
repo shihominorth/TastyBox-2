@@ -6,45 +6,85 @@
 //  Copyright © 2021 Shihomi Kitajima. All rights reserved.
 //
 
+import Action
 import Foundation
 import RxSwift
-import Action
+import RxRelay
+import SCLAlertView
 
 class ResetPasswordVM: ViewModelBase {
- 
-    let dataManager = RessetPasswordDM()
+    
+    let dataManager = ResetPasswordDM()
+    let apiType: ResetPasswordProtocol.Type
     let cancelAction: CocoaAction
     
-    init(coordinator: SceneCoordinator, cancelAction: CocoaAction? = nil) {
+    init(coordinator: SceneCoordinator, cancelAction: CocoaAction? = nil, apiType: ResetPasswordProtocol.Type = ResetPasswordDM.self) {
+        
+        self.apiType = apiType
+        
         self.cancelAction = CocoaAction {
             if let cancelAction = cancelAction {
-              cancelAction.execute(())
+                cancelAction.execute(())
             }
             return coordinator.pop()
-              .asObservable()
-              .map { _ in }
+                .asObservable()
+                .map { _ in }
         }
     }
     
-    func resetPassword(email: String?) {
-        _ = dataManager.resetPassword(email: email).subscribe(onNext: { isSentRequest in
+  
+    lazy var resetPasswordAction: Action<String, Swift.Never> = { this in
+       
+        return Action { email in
             
-            
-            
-        }, onError: { err in
-        
-            print(err.localizedDescription)
-            // error alert is needed to show.
-            
-            switch err {
-            case PasswordResetError.invailedEmail:
-                print("incorrect email")
-            default:
-                print("not meet any errors, but something happens.")
+            return Observable.create { observer in
+               
+               let _ = self.apiType.resetPassword(email: email)
+                    .subscribe(onCompleted: {
+                        
+                        SCLAlertView().showTitle(
+                            "Check your email", // Title of view
+                            subTitle: "We sent the email that can reset password to you.",
+                            timeout: .none, // String of view
+                            completeText: "Done", // Optional button value, default: ""
+                            style: .notice, // Styles - see below.
+                            colorStyle: 0xA429FF,
+                            colorTextButton: 0xFFFFFF
+                        )
+                        
+                        
+                    }, onError: {  err in
+                        
+                        guard let reason = err.handleAuthenticationError() else {
+                            
+                            SCLAlertView().showTitle(
+                                "Error", // Title of view
+                                subTitle: "You can't login.",
+                                timeout: .none, // String of view
+                                completeText: "Done", // Optional button value, default: ""
+                                style: .error, // Styles - see below.
+                                colorStyle: 0xA429FF,
+                                colorTextButton: 0xFFFFFF
+                            )
+                            return
+                            
+                        }
+                        
+                        SCLAlertView().showTitle(
+                            reason.reason, // Title of view
+                            subTitle: reason.solution,
+                            timeout: .none, // String of view
+                            completeText: "Done", // Optional button value, default: ""
+                            style: .error, // Styles - see below.
+                            colorStyle: 0xA429FF,
+                            colorTextButton: 0xFFFFFF
+                        )}
+                    )
                 
+                return Disposables.create ()
             }
-        })
+        }
         
-        
-    }
+    }(self)
+    
 }

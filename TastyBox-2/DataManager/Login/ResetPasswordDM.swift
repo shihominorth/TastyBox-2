@@ -13,17 +13,21 @@ enum PasswordResetError: Error {
     case invailedEmail
 }
 
-class RessetPasswordDM {
+protocol ResetPasswordProtocol: AnyObject {
+    static func resetPassword(email: String?) -> Completable
+}
+
+class ResetPasswordDM: ResetPasswordProtocol {
     
-    func resetPassword(email: String?) -> Observable<Bool>{
+   static func resetPassword(email: String?) -> Completable {
  
         
-        return Observable.create { observer in
+        return Completable.create { completable in
             
             
             guard let email = email else {
                 
-                observer.onError(PasswordResetError.invailedEmail)
+                completable(.error(PasswordResetError.invailedEmail))
                 return Disposables.create()
                 
             }
@@ -32,15 +36,14 @@ class RessetPasswordDM {
                 
                 if let err = err {
                     
-                    observer.onError(err)
+                    completable(.error(err))
                     
                 } else {
-                    observer.onNext(true)
+                    completable(.completed)
                 }
                 
             }
-            
-           
+
             )
 
             return Disposables.create()

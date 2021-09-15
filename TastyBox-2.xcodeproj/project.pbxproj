@@ -39,7 +39,7 @@
 		6FBCB92C26D7CBD500C050B2 /* EmailRegisterViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FBCB92826D7CBD500C050B2 /* EmailRegisterViewController.swift */; };
 		6FBCB92D26D7CBD500C050B2 /* LoginMainPageViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FBCB92926D7CBD500C050B2 /* LoginMainPageViewController.swift */; };
 		6FC062C026EAE4020016B990 /* Error+.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FC062BF26EAE4000016B990 /* Error+.swift */; };
-		6FC062C226ECA3D90016B990 /* ReasonWhyError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FC062C126ECA3D70016B990 /* ReasonWhyError.swift */; };
+		6FC062C226ECA3D90016B990 /* AlertContext.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FC062C126ECA3D70016B990 /* AlertContext.swift */; };
 		6FC062C426ECC9B00016B990 /* LoginErrors.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FC062C326ECC9AF0016B990 /* LoginErrors.swift */; };
 		6FEA390C26D8BEEB002F81A3 /* String+.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FEA390B26D8BEEB002F81A3 /* String+.swift */; };
 		6FEA390E26D8C35B002F81A3 /* CustomPickerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FEA390D26D8C35B002F81A3 /* CustomPickerView.swift */; };
@@ -93,7 +93,7 @@
 		6FBCB92826D7CBD500C050B2 /* EmailRegisterViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EmailRegisterViewController.swift; sourceTree = "<group>"; };
 		6FBCB92926D7CBD500C050B2 /* LoginMainPageViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LoginMainPageViewController.swift; sourceTree = "<group>"; };
 		6FC062BF26EAE4000016B990 /* Error+.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Error+.swift"; sourceTree = "<group>"; };
-		6FC062C126ECA3D70016B990 /* ReasonWhyError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReasonWhyError.swift; sourceTree = "<group>"; };
+		6FC062C126ECA3D70016B990 /* AlertContext.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlertContext.swift; sourceTree = "<group>"; };
 		6FC062C326ECC9AF0016B990 /* LoginErrors.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginErrors.swift; sourceTree = "<group>"; };
 		6FEA390B26D8BEEB002F81A3 /* String+.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "String+.swift"; sourceTree = "<group>"; };
 		6FEA390D26D8C35B002F81A3 /* CustomPickerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomPickerView.swift; sourceTree = "<group>"; };
@@ -202,7 +202,7 @@
 			isa = PBXGroup;
 			children = (
 				6FBCB91126D7B5F200C050B2 /* User.swift */,
-				6FC062C126ECA3D70016B990 /* ReasonWhyError.swift */,
+				6FC062C126ECA3D70016B990 /* AlertContext.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -470,7 +470,7 @@
 				6FF66B9E26D7AF430024495E /* RegisterEmailVM.swift in Sources */,
 				6F26D4E826DF9E360050BA84 /* AboutVM.swift in Sources */,
 				6FBCB92A26D7CBD500C050B2 /* RegisterMyInfoProfileTableViewController.swift in Sources */,
-				6FC062C226ECA3D90016B990 /* ReasonWhyError.swift in Sources */,
+				6FC062C226ECA3D90016B990 /* AlertContext.swift in Sources */,
 				6F9BE63B26D7CF0B005DD80B /* AboutViewController.swift in Sources */,
 				6FB06F3D26D67E0100E110B4 /* AppDelegate.swift in Sources */,
 				6F018B9C26DB6AEC006416D3 /* LoginScene.swift in Sources */,

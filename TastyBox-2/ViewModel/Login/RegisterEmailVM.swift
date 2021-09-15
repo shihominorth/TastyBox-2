@@ -6,10 +6,11 @@
 //  Copyright © 2021 Shihomi Kitajima. All rights reserved.
 //
 
+import Action
 import Foundation
 import Firebase
 import RxSwift
-import Action
+import SCLAlertView
 
 class RegisterEmailVM: ViewModelBase {
     
@@ -23,7 +24,7 @@ class RegisterEmailVM: ViewModelBase {
     init(apiType: RegisterAccountProtocol.Type = RegisterAccountDM.self, sceneCoordinator: SceneCoordinator) {
         self.apiType = apiType
         self.sceneCoordinator = sceneCoordinator
-
+        
     }
     
     func registerEmail(email: String?, password: String?) {
@@ -34,15 +35,15 @@ class RegisterEmailVM: ViewModelBase {
     }
     
     func aboutAction() -> CocoaAction {
-      return CocoaAction { _ in
-        
-        let viewModel = AboutViewModel(sceneCoodinator: self.sceneCoordinator, prevVC: .registerEmail, isAgreed: false)
-        let viewController = LoginScene.about(viewModel).viewController()
-        
+        return CocoaAction { _ in
+            
+            let viewModel = AboutViewModel(sceneCoodinator: self.sceneCoordinator, prevVC: .registerEmail, isAgreed: false)
+            let viewController = LoginScene.about(viewModel).viewController()
+            
             return self.sceneCoordinator
                 .transition(to: viewController, type: .push)
-              .asObservable()
-              .map { _ in }
+                .asObservable()
+                .map { _ in }
         }
         
     }
@@ -51,15 +52,50 @@ class RegisterEmailVM: ViewModelBase {
         
         return Action { email in
             
-            print(email)
-            
-            return self.apiType.sendEmailWithLink(email: email)
-                .catch { err in
-                    
-                    print(err)
-                    return .empty()
-                    
-                }.asObservable()
+            return Observable.create { observer in
+                
+                self.apiType.sendEmailWithLink(email: email)
+                    .subscribe(onCompleted: {
+                       
+                        SCLAlertView().showTitle(
+                            "Sent Email Validation", // Title of view
+                            subTitle: "Please Check your email and open the link.",
+                            timeout: .none, // String of view
+                            completeText: "OK", // Optional button value, default: ""
+                            style: .success, // Styles - see below.
+                            colorStyle: 0xA429FF,
+                            colorTextButton: 0xFFFFFF
+                        )
+                        
+                    }, onError: { err in
+                        
+                        guard let reason = err.handleAuthenticationError() else {
+                            
+                            SCLAlertView().showTitle(
+                                "Error", // Title of view
+                                subTitle: "You can't login.",
+                                timeout: .none, // String of view
+                                completeText: "Done", // Optional button value, default: ""
+                                style: .error, // Styles - see below.
+                                colorStyle: 0xA429FF,
+                                colorTextButton: 0xFFFFFF
+                            )
+                            
+                            return
+                        }
+                        
+                        SCLAlertView().showTitle(
+                            reason.reason, // Title of view
+                            subTitle: reason.solution,
+                            timeout: .none, // String of view
+                            completeText: "Done", // Optional button value, default: ""
+                            style: .error, // Styles - see below.
+                            colorStyle: 0xA429FF,
+                            colorTextButton: 0xFFFFFF
+                        )
+                    })
+                
+            }
         }
     }(self)
     
@@ -77,16 +113,16 @@ class RegisterEmailVM: ViewModelBase {
         let vc = LoginScene.setPassword(vm).viewController()
         self.sceneCoordinator.transition(to: vc, type: .push)
     }
-//    
-//    func showTermsAndConditions() -> CocoaAction {
-//        
-//        return CocoaAction { task in
-//          let registerEmailVM = RegisterEmailVM()
-//            let viewController = LoginScene.emailVerify(registerEmailVM)
-//          return self.sceneCoodinator
-//              .transition(to: viewController, type: .push)
-//            .asObservable()
-//              .map {_ in }
-//        }
-//    }
+    //
+    //    func showTermsAndConditions() -> CocoaAction {
+    //
+    //        return CocoaAction { task in
+    //          let registerEmailVM = RegisterEmailVM()
+    //            let viewController = LoginScene.emailVerify(registerEmailVM)
+    //          return self.sceneCoodinator
+    //              .transition(to: viewController, type: .push)
+    //            .asObservable()
+    //              .map {_ in }
+    //        }
+    //    }
 }

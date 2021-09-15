@@ -31,6 +31,15 @@ class ResetPasswordViewController: UIViewController, BindableType {
     
     func bindViewModel() {
 //        cancelBtn.rx.action = viewModel.cancelAction
+        
+        _ = submitBtn.rx.tap.subscribe(onNext: { _ in
+            self.view.endEditing(true)
+        })
+        
+        submitBtn.rx.tap
+            .withLatestFrom(emailTextField.rx.text.orEmpty)
+            .bind(to: viewModel.resetPasswordAction.inputs)
+            .disposed(by: viewModel.disposeBag)
     }
     
     
