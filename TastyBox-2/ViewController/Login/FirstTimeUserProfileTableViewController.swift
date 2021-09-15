@@ -12,6 +12,7 @@ import Firebase
 import FirebaseAuth
 import Photos
 import RSKImageCropper
+import RxSwift
 //import FBSDKLoginKit
 //import Crashlytics
 
@@ -22,7 +23,7 @@ class FirstTimeUserProfileTableViewController: UITableViewController, UIPickerVi
     
     typealias ViewModelType = RegisterMyInfoProfileVM
     
-        
+    
     
     @IBOutlet weak var userNameTextField: UITextField!
     
@@ -36,30 +37,26 @@ class FirstTimeUserProfileTableViewController: UITableViewController, UIPickerVi
     
     @IBOutlet weak var doneButton: UIBarButtonItem!
     
-    var userImage: UIImage?
     
- 
+    
     
     var familyPicker = UIPickerView()
-    
-    
+
     var cuisinePicker = UIPickerView()
-        
-    let uid = Auth.auth().currentUser?.uid
     
-  
+//    let uid = Auth.auth().currentUser?.uid
+    
+    
     
     override func viewDidLoad() {
         
         super.viewDidLoad()
+                
+        userNameTextField.text = viewModel.user.displayName
+        emailTextField.text = viewModel.user.email
         
-        doneButton.isEnabled = false
-        
-        userNameTextField.text = Auth.auth().currentUser?.displayName
-        emailTextField.text = Auth.auth().currentUser?.email
-        
-//        var ref: DatabaseReference!
-//        ref = Database.database().reference()
+        //        var ref: DatabaseReference!
+        //        ref = Database.database().reference()
         
         familyPicker.delegate = self
         familyPicker.dataSource = self
@@ -78,33 +75,63 @@ class FirstTimeUserProfileTableViewController: UITableViewController, UIPickerVi
         let tap = UITapGestureRecognizer(target: self, action: #selector(closeKeyboard))
         view.addGestureRecognizer(tap)
         
-//        dataManager.delegate = self
-//        dataManager.getUserImageInFirst()
-//        dataManager.getUserDetail(id: uid!)
-       
+        PickerColor()
+        
         userImageButton.imageView?.contentMode = .scaleAspectFit
         userImageButton.layer.cornerRadius = 0.5 * userImageButton.bounds.size.width
         userImageButton.clipsToBounds = true
-        userImage?.withRenderingMode(.alwaysOriginal)
-        
-        PickerColor()
+      
+        guard let data = viewModel.userImage.value, let image = UIImage(data: data) else { return }
+        image.withRenderingMode(.alwaysOriginal)
+        userImageButton.setImage(image, for: .normal)
+       
     }
     
-    override func viewWillDisappear(_ animated: Bool) {
-        if self.isMovingFromParent {
-            
-//            let fbLoginManager = LoginManager()
-//            fbLoginManager.logOut()
-//
-        }
-    }
     
     func bindViewModel() {
         
+        
+        
+        let _ = viewModel.isEnableDone.bind(to: doneButton.rx.isEnabled)
+        
+        
+        //MARK: 全てのテキストフィールドのどれか一つが変化するとき、全てのテキストフィールドが空じゃないか調べる。
+        // 全てのテキストフィールドが埋まっていたらDoneボタンを使用できるようにする
+        // https://medium.com/@dannylazarow/rxswift-reverse-observable-aka-two-way-binding-5027cbfdc6f0
+        
+        let info = Observable.combineLatest(userNameTextField.rx.text.orEmpty, emailTextField.rx.text.orEmpty, familySizeTextField.rx.text.orEmpty, cuisineTypeTextField.rx.text.orEmpty, viewModel.userImage)
+        
+            
+        _ = userNameTextField.rx.text.orEmpty.bind(to: viewModel.userName)
+        _ = emailTextField.rx.text.orEmpty.bind(to: viewModel.email)
+        _ = familySizeTextField.rx.text.orEmpty.bind(to: viewModel.familySize)
+        _ = cuisineTypeTextField.rx.text.orEmpty.bind(to: viewModel.cuisineType)
+
+        
+        let _ = Observable.combineLatest(viewModel.userName.asObservable(), viewModel.email.asObservable(), viewModel.familySize.asObservable(), viewModel.cuisineType.asObservable())
+            .subscribe { (name, email, familySize, cuisineType) in
+            
+            if name.isNotEmpty && email.isNotEmpty && familySize.isNotEmpty && cuisineType.isNotEmpty {
+                self.viewModel.isEnableDone.accept(true)
+            }
+            else {
+                self.viewModel.isEnableDone.accept(false)
+            }
+        }
+        
+     
+        
+        doneButton.rx.tap
+            .withLatestFrom(info)
+            .throttle(.milliseconds(1000), scheduler: MainScheduler.asyncInstance)
+            .bind(to: viewModel.registerUserAction.inputs)
+            .disposed(by: viewModel.disposeBag)
+        
+        
     }
     
-   
- 
+    
+    
     
     private func PickerColor(){
         
@@ -113,6 +140,7 @@ class FirstTimeUserProfileTableViewController: UITableViewController, UIPickerVi
         cuisinePicker.setValue( #colorLiteral(red: 1, green: 1, blue: 1, alpha: 1) , forKey: "backgroundColor")
         cuisinePicker.setValue(#colorLiteral(red: 0.5170344114, green: 0.3871352673, blue: 0.1388392448, alpha: 1), forKey: "textColor")
     }
+    
     @objc func closeKeyboard(){
         self.view.endEditing(true)
     }
@@ -123,20 +151,20 @@ class FirstTimeUserProfileTableViewController: UITableViewController, UIPickerVi
     
     func pickerView(_ pickerView: UIPickerView, numberOfRowsInComponent component: Int) -> Int {
         if (pickerView.tag == 10) {
-            return viewModel.familySize.count
+            return viewModel.familySizeOptions.count
         }
         else {
-            return viewModel.cuisineType.count
+            return viewModel.cuisineTypeOptions.count
         }
         
     }
     
     func pickerView(_ pickerView: UIPickerView, titleForRow row: Int, forComponent component: Int) -> String? {
         if (pickerView.tag == 10) {
-            return viewModel.familySize[row]
+            return viewModel.familySizeOptions[row]
         }
         else {
-            return viewModel.cuisineType[row]
+            return viewModel.cuisineTypeOptions[row]
         }
         
     }
@@ -145,117 +173,117 @@ class FirstTimeUserProfileTableViewController: UITableViewController, UIPickerVi
         
         if (pickerView.tag == 10) {
             let familySizeTextField = self.view?.viewWithTag(100) as? UITextField
-            familySizeTextField?.text = viewModel.familySize[row]
+            familySizeTextField?.text = viewModel.familySizeOptions[row]
         }
         else {
             let cuisineTypeTextField = self.view?.viewWithTag(200) as? UITextField
-            cuisineTypeTextField?.text = viewModel.cuisineType[row]
+            cuisineTypeTextField?.text = viewModel.cuisineTypeOptions[row]
         }
     }
     
     @IBAction func finishFirstTimeProfile(_ sender: Any) {
         if userNameTextField.text == "" || emailTextField.text == "" || familySizeTextField.text == "" || cuisineTypeTextField.text == ""{
             let alertController = UIAlertController(title: "Error", message: "Please enter simple info to have better using experience", preferredStyle: .alert)
-                
+            
             let defaultAction = UIAlertAction(title: "OK", style: .cancel, handler: nil)
             alertController.addAction(defaultAction)
-                
+            
             present(alertController, animated: true, completion: nil)
-        
+            
         } else {
-
+            
             // account image should convert from uiimage to data?
             // in order to convert it, use .jpegData() before call userRegister.
             
             viewModel.userRegister(userName: userNameTextField.text, email: emailTextField.text, familySize: familySizeTextField.text, cuisineType: cuisineTypeTextField.text, accountImage: userImageButton.imageView?.image?.defineUserImage())
-//            dataManager.userRegister(userName: userNameTextField.text ?? "", eMailAddress: emailTextField.text ?? "", familySize: Int(familySizeTextField!.text!) ?? 0, cuisineType: cuisineTypeTextField!.text ?? "", accountImage: userImage!, isVIP: isVIP)
+            //            dataManager.userRegister(userName: userNameTextField.text ?? "", eMailAddress: emailTextField.text ?? "", familySize: Int(familySizeTextField!.text!) ?? 0, cuisineType: cuisineTypeTextField!.text ?? "", accountImage: userImage!, isVIP: isVIP)
             
             
-//            if Auth.auth().currentUser?.displayName == nil {
-//                let changeRequest = Auth.auth().currentUser?.createProfileChangeRequest()
-//                changeRequest?.displayName = userNameTextField.text
-//            }
-//            
-//            let Storyboard: UIStoryboard = UIStoryboard(name: "Main", bundle: nil)
-//            let vc = Storyboard.instantiateViewController(withIdentifier: "Discovery")
-//            vc.modalTransitionStyle = .crossDissolve
-//            vc.modalPresentationStyle = .overFullScreen
-//            
-//            guard self.navigationController?.topViewController == self else { return }
-//            
-//            if Auth.auth().currentUser?.uid != nil {
-//                self.navigationController?.pushViewController(vc, animated: false)
-//                } else {
-//                
-//            }
+            //            if Auth.auth().currentUser?.displayName == nil {
+            //                let changeRequest = Auth.auth().currentUser?.createProfileChangeRequest()
+            //                changeRequest?.displayName = userNameTextField.text
+            //            }
+            //
+            //            let Storyboard: UIStoryboard = UIStoryboard(name: "Main", bundle: nil)
+            //            let vc = Storyboard.instantiateViewController(withIdentifier: "Discovery")
+            //            vc.modalTransitionStyle = .crossDissolve
+            //            vc.modalPresentationStyle = .overFullScreen
+            //
+            //            guard self.navigationController?.topViewController == self else { return }
+            //
+            //            if Auth.auth().currentUser?.uid != nil {
+            //                self.navigationController?.pushViewController(vc, animated: false)
+            //                } else {
+            //
+            //            }
             
         }
     }
     
     func selectPicture() {
-           
-           PHPhotoLibrary.requestAuthorization { status in
-               switch status {
-               case .authorized:
-                   
-                   DispatchQueue.main.async {
-                       // 写真を選ぶビュー
-                       let pickerView = UIImagePickerController()
-                       // 写真の選択元をカメラロールにする
-                       // 「.camera」にすればカメラを起動できる
-                       pickerView.sourceType = .photoLibrary
-                       // デリゲート
-                       pickerView.delegate = self
-                       // ビューに表示
-                       self.present(pickerView, animated: true)
-                   }
-                   
-                   
-               case .restricted:
-                   break
-               case .denied:
-                   DispatchQueue.main.async {
-                       // アラート表示
-                       self.showAlert()
-                   }
-                   
-               default:
-                   // place for .notDetermined - in this callback status is already determined so should never get here
-                   break
-               }
-           }
-       }
-       
-       func takeYourImage() {
-           if UIImagePickerController.isSourceTypeAvailable(.photoLibrary) {
-               // 写真を選ぶビュー
-               let pickerView = UIImagePickerController()
-               // 写真の選択元をカメラロールにする
-               // 「.camera」にすればカメラを起動できる
-               pickerView.sourceType = .camera
-               // デリゲート
-               pickerView.delegate = self
-               // ビューに表示
-               self.present(pickerView, animated: true)
-           }
-       }
-
-       
-       /// アラート表示
-       func showAlert() {
-           
-           let alert = UIAlertController(title: "Allow to access your photo library",
-                                         message: "This app need to access your photo library. In order to allow that, \ngo to Settings -> Recipe-CICCC -> Photos",
-                                         preferredStyle: .alert)
-           
-           let cancelButton = UIAlertAction(title: "OK", style: .cancel, handler: nil)
-           
-           // アラートにボタン追加
-           alert.addAction(cancelButton)
-           
-           // アラート表示
-           present(alert, animated: true, completion: nil)
-       }
+        
+        PHPhotoLibrary.requestAuthorization { status in
+            switch status {
+            case .authorized:
+                
+                DispatchQueue.main.async {
+                    // 写真を選ぶビュー
+                    let pickerView = UIImagePickerController()
+                    // 写真の選択元をカメラロールにする
+                    // 「.camera」にすればカメラを起動できる
+                    pickerView.sourceType = .photoLibrary
+                    // デリゲート
+                    pickerView.delegate = self
+                    // ビューに表示
+                    self.present(pickerView, animated: true)
+                }
+                
+                
+            case .restricted:
+                break
+            case .denied:
+                DispatchQueue.main.async {
+                    // アラート表示
+                    self.showAlert()
+                }
+                
+            default:
+                // place for .notDetermined - in this callback status is already determined so should never get here
+                break
+            }
+        }
+    }
+    
+    func takeYourImage() {
+        if UIImagePickerController.isSourceTypeAvailable(.photoLibrary) {
+            // 写真を選ぶビュー
+            let pickerView = UIImagePickerController()
+            // 写真の選択元をカメラロールにする
+            // 「.camera」にすればカメラを起動できる
+            pickerView.sourceType = .camera
+            // デリゲート
+            pickerView.delegate = self
+            // ビューに表示
+            self.present(pickerView, animated: true)
+        }
+    }
+    
+    
+    /// アラート表示
+    func showAlert() {
+        
+        let alert = UIAlertController(title: "Allow to access your photo library",
+                                      message: "This app need to access your photo library. In order to allow that, \ngo to Settings -> Recipe-CICCC -> Photos",
+                                      preferredStyle: .alert)
+        
+        let cancelButton = UIAlertAction(title: "OK", style: .cancel, handler: nil)
+        
+        // アラートにボタン追加
+        alert.addAction(cancelButton)
+        
+        // アラート表示
+        present(alert, animated: true, completion: nil)
+    }
     
     
     @IBAction func showChoice(_ sender: AnyObject) {
@@ -268,7 +296,7 @@ class FirstTimeUserProfileTableViewController: UITableViewController, UIPickerVi
         let actionSheet = UIAlertController(title: nil, message: nil, preferredStyle: alertStyle)
         
         let cameraRollAction = UIAlertAction(title: "Camera Roll", style: .default, handler: { action in
-             self.selectPicture()
+            self.selectPicture()
         })
         
         let cameraAction = UIAlertAction(title: "Camera", style: .default, handler: { action in
@@ -283,7 +311,7 @@ class FirstTimeUserProfileTableViewController: UITableViewController, UIPickerVi
         actionSheet.addAction(cameraAction)
         actionSheet.addAction(cancelAction)
         actionSheet.modalPresentationStyle = .popover
-
+        
         present(actionSheet, animated: true, completion: nil)
     }
     
@@ -335,7 +363,7 @@ extension FirstTimeUserProfileTableViewController:  RSKImageCropViewControllerDe
             
             
             UserDefaults.standard.set(pngData, forKey: "userImage")
-            userImage = png
+            viewModel.userImage.accept(pngData)
             userImageButton.setBackgroundImage(png, for: .normal)
             dismiss(animated: true, completion: nil)
         }

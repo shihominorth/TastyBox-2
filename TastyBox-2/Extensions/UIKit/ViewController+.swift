@@ -23,6 +23,7 @@ extension UIViewController {
     
     func setUpKeyboard() {
         
+        let bag = DisposeBag()
         self.navigationItem.hidesBackButton = true;
         
         let keyboardShown = NotificationCenter.default.rx.notification(UIResponder.keyboardWillShowNotification)
@@ -54,6 +55,7 @@ extension UIViewController {
                 
                 
             })
+//            .disposed(by: bag)
 
         let keyboardClosed = NotificationCenter.default.rx.notification(UIResponder.keyboardWillHideNotification)
             .observe(on: MainScheduler.asyncInstance)
@@ -79,6 +81,7 @@ extension UIViewController {
                     }
                 })
             })
+//            .disposed(by: bag)
  
     }
     

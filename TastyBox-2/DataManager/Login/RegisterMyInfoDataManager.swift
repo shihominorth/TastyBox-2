@@ -8,10 +8,10 @@
 import Foundation
 import Firebase
 import RxSwift
-
+import RxCocoa
 
 protocol RegisterMyInfoProtocol: AnyObject {
-    static func userRegister(userName: String?, email: String?, familySize: String?, cuisineType: String?, accountImage: Data?) -> Observable<Bool>
+    static func userRegister(userName: String?, email: String?, familySize: String?, cuisineType: String?, accountImage: Data?) -> Completable
 }
 
 class RegisterMyInfoDataManager: RegisterMyInfoProtocol {
@@ -22,10 +22,10 @@ class RegisterMyInfoDataManager: RegisterMyInfoProtocol {
     
     // observer or maybe are the best because the functions for firebase is nested.
     
-   static func userRegister(userName: String?, email: String?, familySize: String?, cuisineType: String?, accountImage: Data?) -> Observable<Bool>{
+   static func userRegister(userName: String?, email: String?, familySize: String?, cuisineType: String?, accountImage: Data?) -> Completable {
         
         
-        return Observable.create { observer in
+        return Completable.create { completable in
             
             guard let uid = Auth.auth().currentUser?.uid else {
                 return Disposables.create()
@@ -59,44 +59,47 @@ class RegisterMyInfoDataManager: RegisterMyInfoProtocol {
                 
             ], merge: true) { err in
                 if let err = err {
-                    observer.onError(err)
+                    completable(.error(err))
                     
                 } else {
                     
-                    if Auth.auth().currentUser?.displayName == nil {
-                        
-                        guard let changeRequest = Auth.auth().currentUser?.createProfileChangeRequest() else {
-                            return
-                        }
-                        
-                        changeRequest.displayName = userName
-                        
-                        changeRequest.commitChanges { err in
+                    let metaData = StorageMetadata()
+                    metaData.contentType = "image/jpg"
+                    
+                    Storage.storage().reference().child("user/\(uid)/usertImage").putData(myImage, metadata: metaData) { metaData, err in
+                        if let err = err {
                             
-                            if let err = err {
+                            completable(.error(err))
+                        }
+                        else if metaData != nil {
+                            
+                            guard let _ = Auth.auth().currentUser?.displayName else {
                                 
-                                observer.onError(err)
+                                guard let changeRequest = Auth.auth().currentUser?.createProfileChangeRequest() else {
+                                    return
+                                }
                                 
-                            } else {
+                                changeRequest.displayName = userName
                                 
-                                //                            guard let imgData = accountImage.jpegData(compressionQuality: 0.75) else { return }
-                                let metaData = StorageMetadata()
-                                metaData.contentType = "image/jpg"
-                                
-                                Storage.storage().reference().child("user/\(uid)/usertImage").putData(myImage, metadata: metaData) { metaData, err in
+                                changeRequest.commitChanges { err in
+                                    
                                     if let err = err {
                                         
-                                        observer.onError(err)
-                                    }
-                                    else if metaData != nil {
+                                        completable(.error(err))
+
+                                    } else {
                                         
-                                        observer.onNext(true)
+                                        completable(.completed)
+                                    
                                     }
                                 }
-                                print("Document successfully written!")
+                                return
                             }
+  
+                            completable(.completed)
                         }
                     }
+                    
                 }
                 
                 

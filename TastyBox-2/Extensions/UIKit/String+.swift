@@ -14,4 +14,8 @@ extension String {
         return result
         
     }
+    
+    var isNotEmpty: Bool {
+        return !self.isEmpty
+    }
 }
