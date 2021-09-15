@@ -50,25 +50,12 @@ class RegisterMyInfoProfileVM: ViewModelBase {
         
         return Action { (name, email, familySize, cuisineType, image)  in
             
-            return self.apiType.userRegister(userName: name, email: email, familySize: familySize, cuisineType: cuisineType, accountImage: image).asObservable().map { _ in }
+            return self.apiType.userRegister(userName: name, email: email, familySize: familySize, cuisineType: cuisineType, accountImage: image).catch { err in
+                
+                return .empty()
+            }.asObservable().map { _ in }
         }
     }(self)
     
     
-    func userRegister(userName: String?, email: String?, familySize: String?, cuisineType: String?, accountImage: Data?)  {
-        
-//        let _ = self.apiType.userRegister(userName: userName, email: email , familySize: familySize, cuisineType: cuisineType, accountImage: accountImage).subscribe(onNext: { isRegistered in
-//
-//            if isRegistered {
-//
-//            } else {
-//
-//            }
-//
-//        }, onError: { err in
-//
-//            print("Error writing document: \(err)")
-//
-//        })
-    }
 }

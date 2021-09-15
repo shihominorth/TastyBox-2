@@ -14,6 +14,7 @@ import FBSDKLoginKit
 import GoogleSignIn
 import RxSwift
 import RxRelay
+import SCLAlertView
 
 
 class LoginMainVM: ViewModelBase {
@@ -74,6 +75,18 @@ class LoginMainVM: ViewModelBase {
                     
                     self.err = err
                     
+                    guard let reason = self.err.handleAuthenticationError() else { return }
+                    
+                    SCLAlertView().showTitle(
+                        reason.reason, // Title of view
+                        subTitle: reason.solution,
+                        timeout: .none, // String of view
+                        completeText: "Done", // Optional button value, default: ""
+                        style: .error, // Styles - see below.
+                        colorStyle: 0xA429FF,
+                        colorTextButton: 0xFFFFFF
+                    )
+                    
                 case .success(let user):
                     
                     self.user = user
@@ -103,8 +116,21 @@ class LoginMainVM: ViewModelBase {
                             observer.onNext(user)
                             
                         }, onError: { err in
+                            
                             self.err = err as NSError
                             observer.onError(err)
+
+                            guard let reason = self.err.handleAuthenticationError() else { return }
+                            SCLAlertView().showTitle(
+                                reason.reason, // Title of view
+                                subTitle: reason.solution,
+                                timeout: .none, // String of view
+                                completeText: "Done", // Optional button value, default: ""
+                                style: .error, // Styles - see below.
+                                colorStyle: 0xA429FF,
+                                colorTextButton: 0xFFFFFF
+                            )
+                            
                         })
                     
                 },
@@ -133,6 +159,17 @@ class LoginMainVM: ViewModelBase {
 
                 self.err = err as NSError
                 observer.onError(err)
+                
+                guard let reason = self.err.handleAuthenticationError() else { return }
+                SCLAlertView().showTitle(
+                    reason.reason, // Title of view
+                    subTitle: reason.solution,
+                    timeout: .none, // String of view
+                    completeText: "Done", // Optional button value, default: ""
+                    style: .error, // Styles - see below.
+                    colorStyle: 0xA429FF,
+                    colorTextButton: 0xFFFFFF
+                )
 
             })
 
@@ -155,7 +192,18 @@ class LoginMainVM: ViewModelBase {
                     
                     print(user)
                 }, onFailure: { err in
-                    print(err)
+                    self.err = err as NSError
+                    
+                    guard let reason = self.err.handleAuthenticationError() else { return }
+                    SCLAlertView().showTitle(
+                        reason.reason, // Title of view
+                        subTitle: reason.solution,
+                        timeout: .none, // String of view
+                        completeText: "Done", // Optional button value, default: ""
+                        style: .error, // Styles - see below.
+                        colorStyle: 0xA429FF,
+                        colorTextButton: 0xFFFFFF
+                    )
                 }).disposed(by: this.disposeBag)
             
             return Observable.create { _ in

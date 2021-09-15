@@ -13,11 +13,9 @@ import FirebaseAuth
 import Photos
 import RSKImageCropper
 import RxSwift
-//import FBSDKLoginKit
-//import Crashlytics
 
 
-class FirstTimeUserProfileTableViewController: UITableViewController, UIPickerViewDelegate, UIPickerViewDataSource, BindableType {
+class RegisterMyInfoProfileTableViewController: UITableViewController, UIPickerViewDelegate, UIPickerViewDataSource, BindableType {
     
     var viewModel: RegisterMyInfoProfileVM!
     
@@ -43,20 +41,11 @@ class FirstTimeUserProfileTableViewController: UITableViewController, UIPickerVi
     var familyPicker = UIPickerView()
 
     var cuisinePicker = UIPickerView()
-    
-//    let uid = Auth.auth().currentUser?.uid
-    
-    
-    
-    override func viewDidLoad() {
         
-        super.viewDidLoad()
-                
+    
+    fileprivate func setUpTxtFields() {
         userNameTextField.text = viewModel.user.displayName
         emailTextField.text = viewModel.user.email
-        
-        //        var ref: DatabaseReference!
-        //        ref = Database.database().reference()
         
         familyPicker.delegate = self
         familyPicker.dataSource = self
@@ -71,33 +60,34 @@ class FirstTimeUserProfileTableViewController: UITableViewController, UIPickerVi
         
         familySizeTextField.tag = 100
         cuisineTypeTextField.tag = 200
+    }
+    
+    override func viewDidLoad() {
         
-        let tap = UITapGestureRecognizer(target: self, action: #selector(closeKeyboard))
-        view.addGestureRecognizer(tap)
+        super.viewDidLoad()
+                
+        setUpTxtFields()
+        
+        setUpKeyboard()
         
         PickerColor()
+        
+      
+      
+        guard let data = viewModel.userImage.value, let image = UIImage(data: data) else { return }
+        image.withRenderingMode(.alwaysOriginal)
         
         userImageButton.imageView?.contentMode = .scaleAspectFit
         userImageButton.layer.cornerRadius = 0.5 * userImageButton.bounds.size.width
         userImageButton.clipsToBounds = true
-      
-        guard let data = viewModel.userImage.value, let image = UIImage(data: data) else { return }
-        image.withRenderingMode(.alwaysOriginal)
-        userImageButton.setImage(image, for: .normal)
+        userImageButton.setBackgroundImage(image, for: .normal)
        
     }
     
     
     func bindViewModel() {
-        
-        
-        
+
         let _ = viewModel.isEnableDone.bind(to: doneButton.rx.isEnabled)
-        
-        
-        //MARK: 全てのテキストフィールドのどれか一つが変化するとき、全てのテキストフィールドが空じゃないか調べる。
-        // 全てのテキストフィールドが埋まっていたらDoneボタンを使用できるようにする
-        // https://medium.com/@dannylazarow/rxswift-reverse-observable-aka-two-way-binding-5027cbfdc6f0
         
         let info = Observable.combineLatest(userNameTextField.rx.text.orEmpty, emailTextField.rx.text.orEmpty, familySizeTextField.rx.text.orEmpty, cuisineTypeTextField.rx.text.orEmpty, viewModel.userImage)
         
@@ -119,7 +109,6 @@ class FirstTimeUserProfileTableViewController: UITableViewController, UIPickerVi
             }
         }
         
-     
         
         doneButton.rx.tap
             .withLatestFrom(info)
@@ -181,44 +170,6 @@ class FirstTimeUserProfileTableViewController: UITableViewController, UIPickerVi
         }
     }
     
-    @IBAction func finishFirstTimeProfile(_ sender: Any) {
-        if userNameTextField.text == "" || emailTextField.text == "" || familySizeTextField.text == "" || cuisineTypeTextField.text == ""{
-            let alertController = UIAlertController(title: "Error", message: "Please enter simple info to have better using experience", preferredStyle: .alert)
-            
-            let defaultAction = UIAlertAction(title: "OK", style: .cancel, handler: nil)
-            alertController.addAction(defaultAction)
-            
-            present(alertController, animated: true, completion: nil)
-            
-        } else {
-            
-            // account image should convert from uiimage to data?
-            // in order to convert it, use .jpegData() before call userRegister.
-            
-            viewModel.userRegister(userName: userNameTextField.text, email: emailTextField.text, familySize: familySizeTextField.text, cuisineType: cuisineTypeTextField.text, accountImage: userImageButton.imageView?.image?.defineUserImage())
-            //            dataManager.userRegister(userName: userNameTextField.text ?? "", eMailAddress: emailTextField.text ?? "", familySize: Int(familySizeTextField!.text!) ?? 0, cuisineType: cuisineTypeTextField!.text ?? "", accountImage: userImage!, isVIP: isVIP)
-            
-            
-            //            if Auth.auth().currentUser?.displayName == nil {
-            //                let changeRequest = Auth.auth().currentUser?.createProfileChangeRequest()
-            //                changeRequest?.displayName = userNameTextField.text
-            //            }
-            //
-            //            let Storyboard: UIStoryboard = UIStoryboard(name: "Main", bundle: nil)
-            //            let vc = Storyboard.instantiateViewController(withIdentifier: "Discovery")
-            //            vc.modalTransitionStyle = .crossDissolve
-            //            vc.modalPresentationStyle = .overFullScreen
-            //
-            //            guard self.navigationController?.topViewController == self else { return }
-            //
-            //            if Auth.auth().currentUser?.uid != nil {
-            //                self.navigationController?.pushViewController(vc, animated: false)
-            //                } else {
-            //
-            //            }
-            
-        }
-    }
     
     func selectPicture() {
         
@@ -317,7 +268,7 @@ class FirstTimeUserProfileTableViewController: UITableViewController, UIPickerVi
     
 }
 
-extension FirstTimeUserProfileTableViewController: UIImagePickerControllerDelegate, UINavigationControllerDelegate {
+extension RegisterMyInfoProfileTableViewController: UIImagePickerControllerDelegate, UINavigationControllerDelegate {
     //　撮影が完了時した時に呼ばれる
     func imagePickerController(_ imagePicker: UIImagePickerController,
                                didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
@@ -341,7 +292,7 @@ extension FirstTimeUserProfileTableViewController: UIImagePickerControllerDelega
     }
 }
 
-extension FirstTimeUserProfileTableViewController:  RSKImageCropViewControllerDelegate {
+extension RegisterMyInfoProfileTableViewController:  RSKImageCropViewControllerDelegate {
     
     func imageCropViewController(_ controller: RSKImageCropViewController, didCropImage croppedImage: UIImage, usingCropRect cropRect: CGRect, rotationAngle: CGFloat) {
         
@@ -376,50 +327,3 @@ extension FirstTimeUserProfileTableViewController:  RSKImageCropViewControllerDe
     
 }
 
-//extension FirstTimeUserProfileTableViewController: getUserDataDelegate {
-//    func gotUserData(user: User) {
-//        self.familySizeTextField.text = String(user.familySize!)
-//        self.cuisineTypeTextField.text = user.cuisineType
-//
-//        if let isVIP = user.isVIP {
-//            self.isVIP = isVIP
-//        }
-//
-//        if Auth.auth().currentUser?.displayName == nil {
-//            self.userNameTextField.text = user.name
-//        }
-//
-//        var rowNumberCuisineType: Int {
-//            var temp: Int?
-//
-//            cuisineType.map { if $0 == self.cuisineTypeTextField.text {
-//                temp = cuisineType.firstIndex(of: $0)
-//                }
-//            }
-//
-//            return temp ?? 0
-//        }
-//
-//        self.cuisinePicker.selectRow(rowNumberCuisineType, inComponent: 0, animated: true)
-//
-//        var rowNumberFamilySize: Int {
-//            var temp: Int?
-//
-//            familySize.map { if $0 == self.familySizeTextField.text {
-//                temp = familySize.firstIndex(of: $0)
-//                }
-//            }
-//
-//            return temp!
-//        }
-//
-//        self.familyPicker.selectRow(rowNumberFamilySize, inComponent: 0, animated: true)
-//    }
-//
-//    func assignUserImage(image: UIImage) {
-//        self.userImage = image
-//        self.userImageButton.setBackgroundImage(image, for: .normal)
-//        doneButton.isEnabled = true
-//    }
-//
-//}

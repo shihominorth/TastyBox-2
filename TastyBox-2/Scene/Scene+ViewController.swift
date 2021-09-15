@@ -48,7 +48,7 @@ extension LoginScene {
 
     case .profileRegister(let viewModel):
         
-        var vc = storyboard.instantiateViewController(withIdentifier: "FirstTimeProfile") as! FirstTimeUserProfileTableViewController
+        var vc = storyboard.instantiateViewController(withIdentifier: "FirstTimeProfile") as! RegisterMyInfoProfileTableViewController
         vc.bindViewModel(to: viewModel)
         return vc
         
