@@ -6,7 +6,11 @@ target 'TastyBox-2' do
   use_frameworks!
 
   # Pods for TastyBox-2
-
+  post_install do |installer|
+    installer.pods_project.build_configurations.each do |config|
+      config.build_settings["EXCLUDED_ARCHS[sdk=iphonesimulator*]"] = "arm64"
+    end
+  end
   #Firebase
 
 pod 'Firebase/Analytics'

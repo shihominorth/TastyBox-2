@@ -13,8 +13,8 @@ enum LoginErrors: Error {
 
 
 extension LoginErrors {
-    func handleError() -> ReasonWhyError {
+    func handleError() -> Notification {
  
-        return ReasonWhyError(reason: "Can't use this app.", solution: "Sorry, you need to wait until we fix this trouble.", isReportRequired: true)
+        return Notification(reason: "Can't use this app.", solution: "Sorry, you need to wait until we fix this trouble.", isReportRequired: true)
     }
 }

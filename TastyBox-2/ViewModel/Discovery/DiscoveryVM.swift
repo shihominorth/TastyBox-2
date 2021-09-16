@@ -8,7 +8,7 @@
 import Foundation
 import Firebase
 
-class DiscoveryViewModel {
+class DiscoveryVM {
     
 //    let apiType: RegisterMyInfoProtocol.Type
     let sceneCoodinator: SceneCoordinator

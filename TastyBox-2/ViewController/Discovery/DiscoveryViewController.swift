@@ -18,9 +18,9 @@ import FBSDKLoginKit
 class DiscoveryViewController: UIViewController, BindableType {
     
         
-    typealias ViewModelType = DiscoveryViewModel
+    typealias ViewModelType = DiscoveryVM
     
-    var viewModel: DiscoveryViewModel!
+    var viewModel: DiscoveryVM!
     
     @IBOutlet weak var PopularContainerView: UIView!
     @IBOutlet weak var collectionLayout: UICollectionViewFlowLayout! {

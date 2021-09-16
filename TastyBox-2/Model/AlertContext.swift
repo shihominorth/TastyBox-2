@@ -8,14 +8,14 @@
 import Foundation
 import SCLAlertView
 
-struct ReasonWhyError {
+struct Notification {
     var reason: String
     var solution: String
     var isReportRequired = false
 }
 
 
-extension ReasonWhyError {
+extension Notification {
     
     func generateAlert() {
         

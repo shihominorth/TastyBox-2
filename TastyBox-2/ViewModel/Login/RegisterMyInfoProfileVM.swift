@@ -55,7 +55,7 @@ class RegisterMyInfoProfileVM: ViewModelBase {
                 
                 self.apiType.userRegister(userName: name, email: email, familySize: familySize, cuisineType: cuisineType, accountImage: image)
                     .subscribe(onCompleted: {
-                        let vm = DiscoveryViewModel(sceneCoodinator: self.sceneCoodinator, user: self.user)
+                        let vm = DiscoveryVM(sceneCoodinator: self.sceneCoodinator, user: self.user)
                         let vc = MainScene.discovery(vm).viewController()
                         self.sceneCoodinator.transition(to: vc, type: .root)
                     }, onError: { err in

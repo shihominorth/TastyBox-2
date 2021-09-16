@@ -49,7 +49,7 @@ class LoginMainPageViewController: UIViewController,  BindableType{
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        //This causes ⚠️ Reentrancy anomaly was detected.
+        //MARK: This causes ⚠️ Reentrancy anomaly was detected. - solved
 
         setUpKeyboard()
         
@@ -118,14 +118,14 @@ class LoginMainPageViewController: UIViewController,  BindableType{
     }
     
     override func viewWillAppear(_ animated: Bool) {
-        
-        let firebaseAuth = Auth.auth()
-        do {
-            try firebaseAuth.signOut()
-        } catch let signOutError as NSError {
-            print("Error signing out: %@", signOutError)
-        }
-  
+//        
+//        let firebaseAuth = Auth.auth()
+//        do {
+//            try firebaseAuth.signOut()
+//        } catch let signOutError as NSError {
+//            print("Error signing out: %@", signOutError)
+//        }
+//  
     }
     
     override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {

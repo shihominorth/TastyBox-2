@@ -21,48 +21,48 @@ extension Error {
     }
     
     
-    func handleAuthenticationError() -> ReasonWhyError? {
+    func handleAuthenticationError() -> Notification? {
         
         let code = self.convertToNSError().code
 //        let authErrorCode = FirebaseAuth.AuthErrorCode.self
-        var result: ReasonWhyError?
+        var result: Notification?
         
         switch code {
        
         case rawValue(authenticationError: .networkError):
-            result = ReasonWhyError(reason: "Network Error", solution: "Please try login again when network is working.")
+            result = Notification(reason: "Network Error", solution: "Please try login again when network is working.")
             
         case rawValue(authenticationError: .userNotFound):
-            result = ReasonWhyError(reason: "User Not Found", solution: "This account could be deleted. Please try different account.")
+            result = Notification(reason: "User Not Found", solution: "This account could be deleted. Please try different account.")
             
         case rawValue(authenticationError: .userTokenExpired):
-            result = ReasonWhyError(reason: "Login again", solution: "You might change the password. Please try again.")
+            result = Notification(reason: "Login again", solution: "You might change the password. Please try again.")
             
         case rawValue(authenticationError: .tooManyRequests):
-            result = ReasonWhyError(reason: "Login again Later", solution: "You request login too many times. try again after a while.")
+            result = Notification(reason: "Login again Later", solution: "You request login too many times. try again after a while.")
             
         case rawValue(authenticationError: .invalidEmail):
-            result = ReasonWhyError(reason: "Email is not correct.", solution: "Please use correct one.")
+            result = Notification(reason: "Email is not correct.", solution: "Please use correct one.")
             
             
         case rawValue(authenticationError: .operationNotAllowed):
-            result = ReasonWhyError(reason: "Invailed email and/or password", solution: "you can't use this email and/or password.")
+            result = Notification(reason: "Invailed email and/or password", solution: "you can't use this email and/or password.")
             
         case rawValue(authenticationError: .emailAlreadyInUse):
-            result = ReasonWhyError(reason: "Already used email", solution: "try different email.")
+            result = Notification(reason: "Already used email", solution: "try different email.")
             
         case rawValue(authenticationError: .userDisabled):
-            result = ReasonWhyError(reason: "Disabled your account", solution: "Sorry, your account has disabled for some reason.")
+            result = Notification(reason: "Disabled your account", solution: "Sorry, your account has disabled for some reason.")
             
         case rawValue(authenticationError: .wrongPassword):
-            result = ReasonWhyError(reason: "Wrong password", solution: "Please try again with correct one.")
+            result = Notification(reason: "Wrong password", solution: "Please try again with correct one.")
             
         case rawValue(authenticationError: .weakPassword):
-                   result = ReasonWhyError(reason: "Weak Password", solution: "You are using weak password. To prevent any trouble related to the password, use different one.")
+                   result = Notification(reason: "Weak Password", solution: "You are using weak password. To prevent any trouble related to the password, use different one.")
         
         case rawValue(authenticationError: .invalidAPIKey), rawValue(authenticationError: .appNotAuthorized),  rawValue(authenticationError: .keychainError), rawValue(authenticationError: .internalError), rawValue(authenticationError: .invalidCredential), rawValue(authenticationError: .operationNotAllowed), rawValue(authenticationError: .invalidCustomToken), rawValue(authenticationError: .customTokenMismatch):
             
-            result = ReasonWhyError(reason: "Can't use this app.", solution: "Sorry, you need to wait until we fix this trouble.", isReportRequired: true)
+            result = Notification(reason: "Can't use this app.", solution: "Sorry, you need to wait until we fix this trouble.", isReportRequired: true)
         default:
             break
         }
@@ -73,5 +73,26 @@ extension Error {
 
     private func rawValue(firestoreErr: FirestoreErrorCode) -> Int {
         return firestoreErr.rawValue
+    }
+    
+    func handleFireStoreError() -> Notification? {
+        let code = self.convertToNSError().code
+        var result: Notification?
+        
+        switch code {
+        case rawValue(firestoreErr: .OK):
+            result = Notification(reason: "You could login", solution: "Please try login again", isReportRequired: true)
+            
+        case rawValue(firestoreErr: .cancelled):
+            result = Notification(reason: "Canceled", solution: "Please try login again", isReportRequired: false)
+        
+        case rawValue(firestoreErr: .deadlineExceeded):
+            result = Notification(reason: "Session time out", solution: "You can login again if you want", isReportRequired: false)
+        
+        default:
+            result = Notification(reason: "Unable to login", solution: "We approgise for the inconvinience. Please wait to fix the bug.", isReportRequired: true)
+        }
+
+        return result
     }
 }

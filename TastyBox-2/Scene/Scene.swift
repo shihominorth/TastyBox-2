@@ -12,5 +12,5 @@ enum LoginScene {
 }
 
 enum MainScene {
-    case discovery(DiscoveryViewModel)
+    case discovery(DiscoveryVM)
 }

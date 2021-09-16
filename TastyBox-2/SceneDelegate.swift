@@ -5,9 +5,11 @@
 //  Created by 北島　志帆美 on 2021-08-25.
 //
 
-import UIKit
-import Firebase
 import FBSDKLoginKit
+import Firebase
+import RxSwift
+import SCLAlertView
+import UIKit
 
 class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     
@@ -34,26 +36,26 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
             let vc = LoginScene.setPassword(viewModel).viewController()
             
             sceneCoordinator.transition(to: vc, type: .root)
-
+            
             //ログイン処理
-//            Auth.auth().signIn(withEmail: email, link: link) { (auth, err) in
-//                if let err = err {
-//                    print("ログイン失敗")
-//                    print(err)
-//                    return
-//                }
-//                print("ログイン成功")
-                
-                //ログイン成功時の処理 (例えば、今回は画面切り替えなどの処理)
-//                guard let scene = (scene as? UIWindowScene) else { return }
-//                let window = UIWindow(windowScene: scene)
-//                let storyboard = UIStoryboard(name: "Login", bundle: Bundle.main)
-//                let didSignInVC = storyboard.instantiateViewController(withIdentifier: "setPassword")
-//                window.rootViewController = didSignInVC
-//                self.window = window
-//                window.makeKeyAndVisible()
-            }
-//        }
+            //            Auth.auth().signIn(withEmail: email, link: link) { (auth, err) in
+            //                if let err = err {
+            //                    print("ログイン失敗")
+            //                    print(err)
+            //                    return
+            //                }
+            //                print("ログイン成功")
+            
+            //ログイン成功時の処理 (例えば、今回は画面切り替えなどの処理)
+            //                guard let scene = (scene as? UIWindowScene) else { return }
+            //                let window = UIWindow(windowScene: scene)
+            //                let storyboard = UIStoryboard(name: "Login", bundle: Bundle.main)
+            //                let didSignInVC = storyboard.instantiateViewController(withIdentifier: "setPassword")
+            //                window.rootViewController = didSignInVC
+            //                self.window = window
+            //                window.makeKeyAndVisible()
+        }
+        //        }
     }
     
     
@@ -61,14 +63,50 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         // Use this method to optionally configure and attach the UIWindow `window` to the provided UIWindowScene `scene`.
         // If using a storyboard, the `window` property will automatically be initialized and attached to the scene.
         // This delegate does not imply the connecting scene or session are new (see `application:configurationForConnectingSceneSession` instead).
-        
-        
         let sceneCoodinator = SceneCoordinator(window: window!)
-        let viewModel = LoginMainVM(sceneCoodinator: sceneCoodinator)
         
-        let firstScene = LoginScene.main(viewModel).viewController()
-        sceneCoodinator.transition(to: firstScene, type: .root)
-        
+        if let user = Auth.auth().currentUser {
+            
+            let _ = isRegisteredMyInfo(user: user).subscribe(onSuccess: { isFirst in
+                
+                if isFirst {
+                    
+                    let vm = RegisterMyInfoProfileVM(sceneCoodinator: sceneCoodinator, user: user)
+                    let vc = LoginScene.profileRegister(vm).viewController()
+                    sceneCoodinator.transition(to: vc, type: .root)
+                    
+                } else {
+                    let viewModel = DiscoveryVM(sceneCoodinator: sceneCoodinator, user: user)
+                    let vc = MainScene.discovery(viewModel).viewController()
+                    sceneCoodinator.transition(to: vc, type: .root)
+                }
+                
+            }, onFailure: { err in
+                
+                print(err as NSError)
+
+                guard let reason = err.handleAuthenticationError() else { return }
+                SCLAlertView().showTitle(
+                    reason.reason, // Title of view
+                    subTitle: reason.solution,
+                    timeout: .none, // String of view
+                    completeText: "Done", // Optional button value, default: ""
+                    style: .error, // Styles - see below.
+                    colorStyle: 0xA429FF,
+                    colorTextButton: 0xFFFFFF
+                )
+            })
+            
+          
+        }
+        else {
+            
+            let viewModel = LoginMainVM(sceneCoodinator: sceneCoodinator)
+            
+            let firstScene = LoginScene.main(viewModel).viewController()
+            sceneCoodinator.transition(to: firstScene, type: .root)
+            
+        }
         guard let _ = (scene as? UIWindowScene) else { return }
     }
     
@@ -76,7 +114,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         guard let url = URLContexts.first?.url else {
             return
         }
-
+        
         ApplicationDelegate.shared.application(
             UIApplication.shared,
             open: url,
@@ -116,3 +154,33 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     
 }
 
+extension SceneDelegate {
+    
+    func isRegisteredMyInfo(user: FirebaseAuth.User) -> Single<Bool> {
+        
+        return Single.create { single in
+            
+            Firestore.firestore().collection("users").document(user.uid).addSnapshotListener { data, err in
+                
+                if let err = err {
+                    single(.failure(err))
+                } else {
+                    
+                    guard let data = data else { return }
+                    guard let isFirst = data.get("isFirst") as? Bool else {
+                        
+                        single(.success(true))
+                        return
+                        
+                    }
+                    
+                    single(.success(isFirst))
+                    
+                }
+                
+            }
+            
+            return Disposables.create()
+        }
+    }
+}

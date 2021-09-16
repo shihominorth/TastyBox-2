@@ -97,7 +97,7 @@ class LoginMainVM: ViewModelBase {
     
     fileprivate func goToMain() {
         if let user = self.user {
-            let vm = DiscoveryViewModel(sceneCoodinator: self.sceneCoodinator, user: user)
+            let vm = DiscoveryVM(sceneCoodinator: self.sceneCoodinator, user: user)
             let vc = MainScene.discovery(vm).viewController()
             self.sceneCoodinator.transition(to: vc, type: .root)
         }
