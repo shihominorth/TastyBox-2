@@ -16,6 +16,10 @@ extension Error {
         return err
     }
     
+    private func rawValue(authenticationError: FirebaseAuth.AuthErrorCode) -> Int {
+        return authenticationError.rawValue
+    }
+    
     
     func handleAuthenticationError() -> ReasonWhyError? {
         
@@ -66,7 +70,8 @@ extension Error {
         return result
     }
   
-    private func rawValue(authenticationError: FirebaseAuth.AuthErrorCode) -> Int {
-        return authenticationError.rawValue
+
+    private func rawValue(firestoreErr: FirestoreErrorCode) -> Int {
+        return firestoreErr.rawValue
     }
 }

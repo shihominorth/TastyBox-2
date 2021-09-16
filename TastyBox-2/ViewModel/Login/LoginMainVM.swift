@@ -27,6 +27,14 @@ class LoginMainVM: ViewModelBase {
     var err = NSError()
     
     
+    init(sceneCoodinator: SceneCoordinator, apiType: LoginMainProtocol.Type = LoginMainDM.self) {
+        self.sceneCoodinator = sceneCoodinator
+        self.apiType = apiType
+        
+        
+    }
+    
+    
     //    Singleは一回のみElementかErrorを送信することが保証されているObservableです。
     //    一回イベントを送信すると、disposeされるようになってます。
     var isLogined: Observable<Bool> {
@@ -34,6 +42,9 @@ class LoginMainVM: ViewModelBase {
         return Observable.create { observable in
             
             if (Auth.auth().currentUser?.uid) != nil {
+                
+                self.user = Auth.auth().currentUser
+
                 observable.onNext(true)
                 
             } else {
@@ -45,14 +56,34 @@ class LoginMainVM: ViewModelBase {
         
     }
     
-    
-    
-    init(sceneCoodinator: SceneCoordinator, apiType: LoginMainProtocol.Type = LoginMainDM.self) {
-        self.sceneCoodinator = sceneCoodinator
-        self.apiType = apiType
+ 
+    private func isRegisteredmyInfo() {
+       
+        
+       let _ = self.apiType.isRegisterMyInfo.subscribe(onSuccess: { isFirst in
+            
+            if isFirst {
+                self.goToRegisterMyInfo()
+            } else {
+                self.goToMain()
+            }
+            
+        }, onFailure: { err in
+            
+            guard let reason = self.err.handleAuthenticationError() else { return }
+            SCLAlertView().showTitle(
+                reason.reason, // Title of view
+                subTitle: reason.solution,
+                timeout: .none, // String of view
+                completeText: "Done", // Optional button value, default: ""
+                style: .error, // Styles - see below.
+                colorStyle: 0xA429FF,
+                colorTextButton: 0xFFFFFF
+            )
+            
+        })
     }
-    
-    
+     
     
     fileprivate func goToRegisterMyInfo() {
         
@@ -63,6 +94,15 @@ class LoginMainVM: ViewModelBase {
         }
        
     }
+    
+    fileprivate func goToMain() {
+        if let user = self.user {
+            let vm = DiscoveryViewModel(sceneCoodinator: self.sceneCoodinator, user: user)
+            let vc = MainScene.discovery(vm).viewController()
+            self.sceneCoodinator.transition(to: vc, type: .root)
+        }
+    }
+    
     
     func googleLogin(presenting vc: UIViewController) -> Observable<FirebaseAuth.User> {
         
@@ -91,7 +131,7 @@ class LoginMainVM: ViewModelBase {
                     
                     self.user = user
                     
-                    self.goToRegisterMyInfo()
+                    self.isRegisteredmyInfo()
                     observable.onNext(user)
                 }
                 
@@ -111,7 +151,7 @@ class LoginMainVM: ViewModelBase {
                         .subscribe(onNext: { user in
                             
                             self.user = user
-                            self.goToRegisterMyInfo()
+                            self.isRegisteredmyInfo()
 
                             observer.onNext(user)
                             
@@ -152,7 +192,7 @@ class LoginMainVM: ViewModelBase {
             let _ = button.rx.signIn.subscribe(onNext: { user in
 
                 self.user = user
-                self.goToRegisterMyInfo()
+                self.isRegisteredmyInfo()
                 observer.onNext(user)
 
             }, onError: { err in
@@ -186,7 +226,7 @@ class LoginMainVM: ViewModelBase {
                     let user = result.user
                     if user.isEmailVerified {
                         self.user = user
-                        self.goToRegisterMyInfo()
+                        self.isRegisteredmyInfo()
 
                     }
                     
@@ -242,7 +282,7 @@ class LoginMainVM: ViewModelBase {
 //                case LoginErrors.invailedUser:
 //                    print("user instance couldn't be unwrapped. it's nil.")
 //                case LoginErrors.inVailedClientID:
-//                    print("client id ouldn't be unwrapped. it's nil.")
+//                    print("client id couldn't be unwrapped. it's nil.")
 //                default:
 //                    print("not meet any errors, but something happens.")
 //    

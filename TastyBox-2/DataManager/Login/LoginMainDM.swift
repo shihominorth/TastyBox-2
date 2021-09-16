@@ -18,15 +18,16 @@ import RxCocoa
 import Action
 
 protocol LoginMainProtocol: AnyObject {
-    static func loginWithGoogle(viewController presenting: UIViewController) -> Single<Firebase.User>
+    static var isRegisterMyInfo: Single<Bool> { get }
     static func login(email: String?, password: String?) -> Single<AuthDataResult>
-    static func startSignInWithAppleFlow(authorizationController: UIViewController) -> Observable<ASAuthorizationController> 
+    static func loginWithGoogle(viewController presenting: UIViewController) -> Single<Firebase.User>
+    static func startSignInWithAppleFlow(authorizationController: UIViewController) -> Observable<ASAuthorizationController>
 }
 
 class LoginMainDM: LoginMainProtocol {
 
     let bag = DisposeBag()
-    let uid = Auth.auth().currentUser?.uid
+    static let uid = Auth.auth().currentUser?.uid
     // Unhashed nonce.
     fileprivate static var currentNonce: String?
         
@@ -36,7 +37,7 @@ class LoginMainDM: LoginMainProtocol {
     //    一回イベントを送信すると、disposeされるようになってます。
     
     
-    var isFirstLogin: Single<Bool> {
+   static var isRegisterMyInfo: Single<Bool> {
         
         
         return Single.create { single in
@@ -46,7 +47,8 @@ class LoginMainDM: LoginMainProtocol {
                 return Disposables.create()
             }
             
-            Firestore.firestore().collection("user").document(uid).addSnapshotListener { data, err in
+            
+            Firestore.firestore().collection("users").document(uid).addSnapshotListener { data, err in
                 
                 if let err = err {
                     single(.failure(err))
@@ -54,7 +56,7 @@ class LoginMainDM: LoginMainProtocol {
                 } else {
                     
                     guard let data = data else { return }
-                    guard let isFirst = data["isFirst"] as? Bool else {
+                    guard let isFirst = data.get("isFirst") as? Bool else {
                         
                         single(.success(true))
                         return
@@ -69,6 +71,7 @@ class LoginMainDM: LoginMainProtocol {
         
     }
     
+
 //    var isEmailVerified: Observable<Bool> {
 //
 //        return Observable.create { observer in

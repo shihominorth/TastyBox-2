@@ -14,7 +14,7 @@ protocol RegisterMyInfoProtocol: AnyObject {
     static func userRegister(userName: String?, email: String?, familySize: String?, cuisineType: String?, accountImage: Data?) -> Completable
 }
 
-class RegisterMyInfoDataManager: RegisterMyInfoProtocol {
+class RegisterMyInfoDM: RegisterMyInfoProtocol {
     
     
     // account image should convert from uiimage to data?
@@ -47,7 +47,7 @@ class RegisterMyInfoDataManager: RegisterMyInfoProtocol {
                 return Disposables.create()
             }
 
-            Firestore.firestore().collection("user").document(uid).setData([
+            Firestore.firestore().collection("users").document(uid).setData([
                 
                 "id": uid,
                 "userName": userName,

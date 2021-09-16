@@ -31,7 +31,7 @@ class RegisterMyInfoProfileVM: ViewModelBase {
     let cuisineTypeOptions = ["Chinese Food", "Japanese Food", "Thai food"]
     let familySizeOptions = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15", "16", "17", "18", "19", "20"]
     
-    init(sceneCoodinator: SceneCoordinator, apiType: RegisterMyInfoProtocol.Type = RegisterMyInfoDataManager.self, user:  Firebase.User) {
+    init(sceneCoodinator: SceneCoordinator, apiType: RegisterMyInfoProtocol.Type = RegisterMyInfoDM.self, user:  Firebase.User) {
         
         self.sceneCoodinator = sceneCoodinator
         self.apiType = apiType
