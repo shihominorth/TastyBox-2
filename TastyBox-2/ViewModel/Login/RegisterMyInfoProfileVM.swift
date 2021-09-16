@@ -10,6 +10,7 @@ import Firebase
 import Foundation
 import RxSwift
 import RxRelay
+import SCLAlertView
 
 class RegisterMyInfoProfileVM: ViewModelBase {
     
@@ -25,7 +26,7 @@ class RegisterMyInfoProfileVM: ViewModelBase {
     var email = BehaviorRelay<String>(value: "")
     var familySize = BehaviorRelay<String>(value: "")
     var cuisineType = BehaviorRelay<String>(value: "")
-
+    
     
     let cuisineTypeOptions = ["Chinese Food", "Japanese Food", "Thai food"]
     let familySizeOptions = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15", "16", "17", "18", "19", "20"]
@@ -50,10 +51,30 @@ class RegisterMyInfoProfileVM: ViewModelBase {
         
         return Action { (name, email, familySize, cuisineType, image)  in
             
-            return self.apiType.userRegister(userName: name, email: email, familySize: familySize, cuisineType: cuisineType, accountImage: image).catch { err in
+            return Observable.create { observer in
                 
-                return .empty()
-            }.asObservable().map { _ in }
+                self.apiType.userRegister(userName: name, email: email, familySize: familySize, cuisineType: cuisineType, accountImage: image)
+                    .subscribe(onCompleted: {
+                        let vm = DiscoveryViewModel(sceneCoodinator: self.sceneCoodinator, user: self.user)
+                        let vc = MainScene.discovery(vm).viewController()
+                        self.sceneCoodinator.transition(to: vc, type: .root)
+                    }, onError: { err in
+                       
+                        guard let reason = err.handleAuthenticationError() else { return }
+                        SCLAlertView().showTitle(
+                            reason.reason, // Title of view
+                            subTitle: reason.solution,
+                            timeout: .none, // String of view
+                            completeText: "Done", // Optional button value, default: ""
+                            style: .error, // Styles - see below.
+                            colorStyle: 0xA429FF,
+                            colorTextButton: 0xFFFFFF
+                        )
+                        
+                    })
+                
+            }
+            
         }
     }(self)
     

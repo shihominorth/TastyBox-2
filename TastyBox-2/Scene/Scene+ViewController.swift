@@ -61,3 +61,60 @@ extension LoginScene {
     }
   }
 }
+
+
+extension MainScene {
+ 
+    func viewController() -> UIViewController {
+    let storyboard = UIStoryboard(name: "Main", bundle: nil)
+//    let aboutStoryBoard =  UIStoryboard(name: "About", bundle: nil)
+    
+    switch self {
+    
+    case .discovery(let viewModel):
+        let nc = storyboard.instantiateViewController(withIdentifier: "MainNC") as! UINavigationController
+        var vc = nc.viewControllers.first as! DiscoveryViewController
+        vc.bindViewModel(to: viewModel)
+        return nc
+
+//    case .resetPassword(let viewModel):
+//
+//        var vc = storyboard.instantiateViewController(withIdentifier: "resetPassword") as!  ResetPasswordViewController
+//        vc.bindViewModel(to: viewModel)
+//
+//        return vc
+//
+//    case .emailVerify(let viewModel):
+//
+//        var vc = storyboard.instantiateViewController(withIdentifier: "EmailRegister") as! EmailRegisterViewController
+//
+//        vc.bindViewModel(to: viewModel)
+//
+//        return vc
+//
+//    case .setPassword(let viewModel):
+//
+//        let nc = storyboard.instantiateViewController(withIdentifier: "setPassword") as! UINavigationController
+//        var vc = nc.viewControllers.first as! SetPasswordViewController
+////        var vc = storyboard.instantiateViewController(identifier: "setPassword") as! SetPasswordViewController
+//
+//        vc.bindViewModel(to: viewModel)
+//
+//        return nc
+//
+//
+//    case .profileRegister(let viewModel):
+//
+//        var vc = storyboard.instantiateViewController(withIdentifier: "FirstTimeProfile") as! RegisterMyInfoProfileTableViewController
+//        vc.bindViewModel(to: viewModel)
+//        return vc
+//
+//    case .about(let viewModel):
+//
+//        var vc =  aboutStoryBoard.instantiateViewController(withIdentifier: "about") as! AboutViewController
+//        vc.bindViewModel(to: viewModel)
+//        return vc
+        
+    }
+  }
+}

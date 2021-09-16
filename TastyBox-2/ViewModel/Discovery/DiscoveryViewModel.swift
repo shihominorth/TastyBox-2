@@ -6,7 +6,22 @@
 //
 
 import Foundation
+import Firebase
 
 class DiscoveryViewModel {
+    
+//    let apiType: RegisterMyInfoProtocol.Type
+    let sceneCoodinator: SceneCoordinator
+    let user: Firebase.User
+    
+    init(sceneCoodinator: SceneCoordinator, user:  Firebase.User) {
+        
+        self.sceneCoodinator = sceneCoodinator
+//        self.apiType = apiType
+        
+        self.user = user
+        
+       
+    }
     
 }
