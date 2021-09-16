@@ -63,6 +63,22 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         // Use this method to optionally configure and attach the UIWindow `window` to the provided UIWindowScene `scene`.
         // If using a storyboard, the `window` property will automatically be initialized and attached to the scene.
         // This delegate does not imply the connecting scene or session are new (see `application:configurationForConnectingSceneSession` instead).
+        
+        let currentVersion : String = Bundle.main.object(forInfoDictionaryKey: "CFBundleShortVersionString") as! String
+        
+        let versionOfLastRun: String? = UserDefaults.standard.object(forKey: "VersionOfLastRun") as? String
+        
+        if versionOfLastRun == nil {
+            // First start after installing the app
+            
+            // start tutorial
+        } else if  !(versionOfLastRun?.isEqual(currentVersion))! {
+            // App is updated
+        }
+        
+        UserDefaults.standard.set(currentVersion, forKey: "VersionOfLastRun")
+        UserDefaults.standard.synchronize()
+        
         let sceneCoodinator = SceneCoordinator(window: window!)
         
         if let user = Auth.auth().currentUser {
@@ -84,7 +100,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
             }, onFailure: { err in
                 
                 print(err as NSError)
-
+                
                 guard let reason = err.handleAuthenticationError() else { return }
                 SCLAlertView().showTitle(
                     reason.reason, // Title of view
@@ -97,7 +113,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
                 )
             })
             
-          
+            
         }
         else {
             

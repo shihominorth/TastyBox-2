@@ -87,6 +87,21 @@ class DiscoveryViewController: UIViewController, BindableType {
     
     func bindViewModel() {
         
+        let _ = NotificationCenter.default.rx.notification(NSNotification.Name("ShowLogout"))
+            .subscribe(onNext: { notification in
+                
+                  let firebaseAuth = Auth.auth()
+                  do {
+                      try firebaseAuth.signOut()
+                  } catch let signOutError as NSError {
+                      print("Error signing out: %@", signOutError)
+                  }
+            
+                let viewModel = LoginMainVM(sceneCoodinator:  self.viewModel.sceneCoodinator)
+                let vc = LoginScene.main(viewModel).viewController()
+                viewModel.sceneCoodinator.transition(to: vc, type: .modal)
+            })
+            .disposed(by: viewModel.disposeBag)
     }
     
     @objc func closeSideMenu() {
@@ -130,7 +145,7 @@ class DiscoveryViewController: UIViewController, BindableType {
         NotificationCenter.default.addObserver(self, selector: #selector(toggleSideMenu), name: NSNotification.Name("ToggleSideMenu"), object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(showSearch), name: NSNotification.Name("ShowSearch"), object: nil)
 //        NotificationCenter.default.addObserver(self, selector: #selector(AddRecipe), name: NSNotification.Name("AddRecipe"), object: nil)
-        NotificationCenter.default.addObserver(self, selector: #selector(showLogout), name: NSNotification.Name("ShowLogout"), object: nil)
+//        NotificationCenter.default.addObserver(self, selector: #selector(showLogout), name: NSNotification.Name("ShowLogout"), object: nil)
         
 //        pageControllView = self.children[0] as! MainPageViewController
 //        pageControllView.delegate = self
@@ -161,8 +176,6 @@ class DiscoveryViewController: UIViewController, BindableType {
             print("No!")
         }
     }
-    
-    
     
     func initialContentView(){
         
@@ -207,26 +220,26 @@ class DiscoveryViewController: UIViewController, BindableType {
         }
     }
     
-    @objc func showLogout(){
-        
-        print("show Logout")
-        if Auth.auth().currentUser != nil{
-            do{
-                try Auth.auth().signOut()
-                
-            }catch let error as NSError{
-                print(error.localizedDescription)
-            }
-            
-            guard self.navigationController?.topViewController == self else { return }
-
-            let Storyboard: UIStoryboard = UIStoryboard(name: "Login", bundle: nil)
-            let vc = Storyboard.instantiateViewController(withIdentifier: "loginPage")
-            self.navigationController?.pushViewController(vc, animated: true)
-            
-        }
-        
-    }
+//    @objc func showLogout(){
+//        
+//        print("show Logout")
+//        if Auth.auth().currentUser != nil{
+//            do{
+//                try Auth.auth().signOut()
+//                
+//            }catch let error as NSError{
+//                print(error.localizedDescription)
+//            }
+//            
+//            guard self.navigationController?.topViewController == self else { return }
+//
+//            let Storyboard: UIStoryboard = UIStoryboard(name: "Login", bundle: nil)
+//            let vc = Storyboard.instantiateViewController(withIdentifier: "loginPage")
+//            self.navigationController?.pushViewController(vc, animated: true)
+//            
+//        }
+//        
+//    }
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         guard let identifier = segue.identifier else { return }
