@@ -14,6 +14,9 @@ import UIKit
 class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     
     var window: UIWindow?
+    var sceneCoodinator: SceneCoordinator {
+        return SceneCoordinator(window: window!)
+    }
     
     func scene(_ scene: UIScene, continue userActivity: NSUserActivity) {
         //userActivityプロパティからリンクURLを取得
@@ -52,8 +55,11 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         
         if versionOfLastRun == nil {
             // First start after installing the app
+            let vm = TutorialVM(sceneCoodinator: self.sceneCoodinator)
+            let vc = LoginScene.tutorial(vm).viewController()
             
-            // start tutorial
+            self.sceneCoodinator.transition(to: vc, type: .root)
+            
         }
         //        else if  !(versionOfLastRun?.isEqual(currentVersion))! {
         //            // App is updated
@@ -118,7 +124,7 @@ extension SceneDelegate {
     
     fileprivate func goToNextVC() {
         
-        let sceneCoodinator = SceneCoordinator(window: window!)
+      
         
         // login already
         if let user = Auth.auth().currentUser {
@@ -127,15 +133,15 @@ extension SceneDelegate {
                 
                 if isFirst {
                     
-                    let viewModel = RegisterMyInfoProfileVM(sceneCoodinator: sceneCoodinator, user: user)
+                    let viewModel = RegisterMyInfoProfileVM(sceneCoodinator: self.sceneCoodinator, user: user)
                     let firstScene = LoginScene.profileRegister(viewModel).viewController()
-                    sceneCoodinator.transition(to: firstScene, type: .usePresentNC)
+                    self.sceneCoodinator.transition(to: firstScene, type: .usePresentNC)
                     
                 } else {
                     
-                    let viewModel = DiscoveryVM(sceneCoodinator: sceneCoodinator, user: user)
+                    let viewModel = DiscoveryVM(sceneCoodinator: self.sceneCoodinator, user: user)
                     let vc = MainScene.discovery(viewModel).viewController()
-                    sceneCoodinator.transition(to: vc, type: .root)
+                    self.sceneCoodinator.transition(to: vc, type: .root)
                     
                 }
                 

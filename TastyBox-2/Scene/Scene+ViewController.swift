@@ -11,6 +11,7 @@ extension LoginScene {
   func viewController() -> UIViewController {
     let storyboard = UIStoryboard(name: "Login", bundle: nil)
     let aboutStoryBoard =  UIStoryboard(name: "About", bundle: nil)
+    let tutorialStoryboard = UIStoryboard(name: "Tutorial", bundle: nil)
     
     switch self {
     
@@ -58,6 +59,10 @@ extension LoginScene {
         vc.bindViewModel(to: viewModel)
         return vc
         
+    case .tutorial(let viewModel):
+        var vc = tutorialStoryboard.instantiateViewController(withIdentifier: "tutorial") as! TutorialViewController
+        vc.bindViewModel(to: viewModel)
+        return vc
     }
   }
 }
