@@ -45,4 +45,7 @@ pod 'RSKImageCropper'
 # Alert 
 pod 'SCLAlertView'
 
+#Lottie
+pod 'lottie-ios'
+
 end

@@ -17,6 +17,9 @@
 		6F26D4EA26DFBDF60050BA84 /* DiscoveryVM.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F26D4E926DFBDF60050BA84 /* DiscoveryVM.swift */; };
 		6F2BBA8A26EDDA6B003B0D5F /* RxAppleDelegateProxy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F2BBA8926EDDA6B003B0D5F /* RxAppleDelegateProxy.swift */; };
 		6F40F82826F03375004B69DD /* AlertGenerator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F40F82726F03375004B69DD /* AlertGenerator.swift */; };
+		6F512A2226F3FA5100826657 /* Tutorial.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 6F512A2126F3FA5100826657 /* Tutorial.storyboard */; };
+		6F512A2426F4169800826657 /* LoadingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F512A2326F4169800826657 /* LoadingViewController.swift */; };
+		6F512A2926F417CD00826657 /* LoardingVM.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F512A2826F417CD00826657 /* LoardingVM.swift */; };
 		6F6D0AEE26EED71500CD27AE /* RxFaceBookLoginDelegateProxy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F6D0AED26EED71500CD27AE /* RxFaceBookLoginDelegateProxy.swift */; };
 		6F9BE63926D7CD9D005DD80B /* UserdataManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F9BE63826D7CD9D005DD80B /* UserdataManager.swift */; };
 		6F9BE63B26D7CF0B005DD80B /* AboutViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F9BE63A26D7CF0B005DD80B /* AboutViewController.swift */; };
@@ -79,6 +82,9 @@
 		6F26D4E926DFBDF60050BA84 /* DiscoveryVM.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiscoveryVM.swift; sourceTree = "<group>"; };
 		6F2BBA8926EDDA6B003B0D5F /* RxAppleDelegateProxy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RxAppleDelegateProxy.swift; sourceTree = "<group>"; };
 		6F40F82726F03375004B69DD /* AlertGenerator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlertGenerator.swift; sourceTree = "<group>"; };
+		6F512A2126F3FA5100826657 /* Tutorial.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = Tutorial.storyboard; sourceTree = "<group>"; };
+		6F512A2326F4169800826657 /* LoadingViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoadingViewController.swift; sourceTree = "<group>"; };
+		6F512A2826F417CD00826657 /* LoardingVM.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoardingVM.swift; sourceTree = "<group>"; };
 		6F6D0AED26EED71500CD27AE /* RxFaceBookLoginDelegateProxy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RxFaceBookLoginDelegateProxy.swift; sourceTree = "<group>"; };
 		6F9BE63826D7CD9D005DD80B /* UserdataManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserdataManager.swift; sourceTree = "<group>"; };
 		6F9BE63A26D7CF0B005DD80B /* AboutViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AboutViewController.swift; sourceTree = "<group>"; };
@@ -181,6 +187,30 @@
 				6F26D4E926DFBDF60050BA84 /* DiscoveryVM.swift */,
 			);
 			path = Discovery;
+			sourceTree = "<group>";
+		};
+		6F512A2626F416BD00826657 /* Tutorial */ = {
+			isa = PBXGroup;
+			children = (
+				6F512A2326F4169800826657 /* LoadingViewController.swift */,
+			);
+			path = Tutorial;
+			sourceTree = "<group>";
+		};
+		6F512A2726F4172600826657 /* About */ = {
+			isa = PBXGroup;
+			children = (
+				6F26D4E726DF9E360050BA84 /* AboutVM.swift */,
+			);
+			path = About;
+			sourceTree = "<group>";
+		};
+		6F512A2A26F417D300826657 /* Tutorial */ = {
+			isa = PBXGroup;
+			children = (
+				6F512A2826F417CD00826657 /* LoardingVM.swift */,
+			);
+			path = Tutorial;
 			sourceTree = "<group>";
 		};
 		6F6D0AEC26EED6EA00CD27AE /* DelegateProxy */ = {
@@ -336,6 +366,7 @@
 				6FB06F4226D67E0100E110B4 /* Main.storyboard */,
 				6FF66B8826D7975C0024495E /* Login.storyboard */,
 				6FF66BA726D7B13D0024495E /* About.storyboard */,
+				6F512A2126F3FA5100826657 /* Tutorial.storyboard */,
 			);
 			path = Storyboard;
 			sourceTree = "<group>";
@@ -346,6 +377,7 @@
 				6FBCB92E26D7CBE300C050B2 /* Login */,
 				6F9BE63C26D7CF14005DD80B /* About */,
 				6FEF087C26F2A3EF00C02CDD /* Discovery */,
+				6F512A2626F416BD00826657 /* Tutorial */,
 			);
 			path = ViewController;
 			sourceTree = "<group>";
@@ -368,7 +400,8 @@
 				6FF66BA026D7AF4D0024495E /* Login */,
 				6F26D4EB26DFBE010050BA84 /* Discovery */,
 				6FEA391026D8D1E4002F81A3 /* ViewModelBase.swift */,
-				6F26D4E726DF9E360050BA84 /* AboutVM.swift */,
+				6F512A2726F4172600826657 /* About */,
+				6F512A2A26F417D300826657 /* Tutorial */,
 			);
 			path = ViewModel;
 			sourceTree = "<group>";
@@ -447,6 +480,7 @@
 				6FB06F4626D67E0600E110B4 /* Assets.xcassets in Resources */,
 				6FB06F4426D67E0100E110B4 /* Main.storyboard in Resources */,
 				6FA70A9626E6594D00474FE5 /* GoogleService-Info.plist in Resources */,
+				6F512A2226F3FA5100826657 /* Tutorial.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -510,6 +544,7 @@
 				6FF66B9C26D7AF430024495E /* LoginMainVM.swift in Sources */,
 				6FF66BA526D7B0800024495E /* RegisterAccountDM.swift in Sources */,
 				6FB06F4126D67E0100E110B4 /* ViewController.swift in Sources */,
+				6F512A2426F4169800826657 /* LoadingViewController.swift in Sources */,
 				6F9BE63926D7CD9D005DD80B /* UserdataManager.swift in Sources */,
 				6FEA390C26D8BEEB002F81A3 /* String+.swift in Sources */,
 				6F9BE64026D7DC7D005DD80B /* RegisterMyInfoDM.swift in Sources */,
@@ -541,6 +576,7 @@
 				6F26D4EA26DFBDF60050BA84 /* DiscoveryVM.swift in Sources */,
 				6FF66B9F26D7AF430024495E /* ResetPasswordVM.swift in Sources */,
 				6FA70A9926E7A1FF00474FE5 /* SetPasswordViewController.swift in Sources */,
+				6F512A2926F417CD00826657 /* LoardingVM.swift in Sources */,
 				6F9BE64226D7E3F1005DD80B /* UIImage+.swift in Sources */,
 				6F018BA426DB82B7006416D3 /* SceneTransitionType.swift in Sources */,
 				6FA70A9D26E8EA5700474FE5 /* ViewController+.swift in Sources */,
@@ -700,6 +736,8 @@
 				CODE_SIGN_ENTITLEMENTS = "TastyBox-2/TastyBox-2.entitlements";
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = JXVL9HBQR6;
+				ENABLE_TESTABILITY = NO;
+				"EXCLUDED_ARCHS[sdk=iphonesimulator*]" = arm64;
 				INFOPLIST_FILE = "TastyBox-2/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -722,6 +760,7 @@
 				CODE_SIGN_ENTITLEMENTS = "TastyBox-2/TastyBox-2.entitlements";
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = JXVL9HBQR6;
+				"EXCLUDED_ARCHS[sdk=iphonesimulator*]" = arm64;
 				INFOPLIST_FILE = "TastyBox-2/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",

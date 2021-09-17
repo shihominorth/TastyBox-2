@@ -60,12 +60,34 @@ class SceneCoordinator: NSObject, SceneCoordinatorType {
       
     case .modal:
       viewController.modalPresentationStyle = .fullScreen
-        viewController.modalTransitionStyle = .coverVertical
+        viewController.modalTransitionStyle = .flipHorizontal
       currentViewController.present(viewController, animated: true) {
         subject.onCompleted()
       }
       currentViewController = SceneCoordinator.actualViewController(for: viewController)
+        
+
+    case .usePresentNC:
+        
+        guard let navigationController = currentViewController as? UINavigationController else {
+          fatalError("Can't push a view controller without a current navigation controller")
+        }
+        
+        // Challenge 3: set ourselves as the navigation controller's delegate. This needs to be done
+        // prior to `navigationController.rx.delegate` as it takes care of preserving the configured delegate
+        navigationController.delegate = self
+        
+        // one-off subscription to be notified when push complete
+        _ = navigationController.rx.delegate
+          .sentMessage(#selector(UINavigationControllerDelegate.navigationController(_:didShow:animated:)))
+          .map { _ in }
+          .bind(to: subject)
+        
+        navigationController.pushViewController(viewController, animated: true)
+        
     }
+    
+    
     return subject.asObservable()
       .take(1)
         .ignoreElements().asCompletable()

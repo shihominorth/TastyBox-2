@@ -19,8 +19,6 @@ import SCLAlertView
 
 class LoginMainVM: ViewModelBase {
     
-    private var userImage: UIImage = #imageLiteral(resourceName: "imageFile")
-    private let dataManager = LoginMainDM()
     let sceneCoodinator: SceneCoordinator
     let apiType: LoginMainProtocol.Type
     var user: FirebaseAuth.User?
@@ -99,7 +97,7 @@ class LoginMainVM: ViewModelBase {
         if let user = self.user {
             let vm = DiscoveryVM(sceneCoodinator: self.sceneCoodinator, user: user)
             let vc = MainScene.discovery(vm).viewController()
-            self.sceneCoodinator.transition(to: vc, type: .root)
+            self.sceneCoodinator.transition(to: vc, type: .modal)
         }
     }
     
@@ -320,26 +318,6 @@ class LoginMainVM: ViewModelBase {
         }
     }
     
-    
-//    lazy var registerMyProfile: Action<Void, Swift.Never> = { this in
-//        return Action { _ in
-//
-//            if let user = self.user {
-//                let registerAccountVM = RegisterMyInfoProfileVM(sceneCoodinator: self.sceneCoodinator, user: user)
-//                let viewController = LoginScene.profileRegister(registerAccountVM).viewController()
-//
-//                return this.sceneCoodinator
-//                    .transition(to: viewController, type: .push)
-//                    .asObservable()
-//            }
-//
-//            let reason = ReasonWhyError(reason: "Please Login", solution: "You can use google, facebook, email to login in")
-//
-//            return this.sceneCoodinator
-//                .transition(to: viewController, type: .push)
-//                .asObservable()
-//        }
-//    }(self)
     
 
 }

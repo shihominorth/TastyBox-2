@@ -512,6 +512,7 @@ PODS:
     - GTMSessionFetcher/Core (~> 1.5)
   - GTMSessionFetcher/Core (1.7.0)
   - leveldb-library (1.22.1)
+  - lottie-ios (3.2.3)
   - nanopb (2.30908.0):
     - nanopb/decode (= 2.30908.0)
     - nanopb/encode (= 2.30908.0)
@@ -543,6 +544,7 @@ DEPENDENCIES:
   - Firebase/Firestore
   - Firebase/Storage
   - GoogleSignIn
+  - lottie-ios
   - RSKImageCropper
   - RxBlocking
   - RxCocoa
@@ -578,6 +580,7 @@ SPEC REPOS:
     - GTMAppAuth
     - GTMSessionFetcher
     - leveldb-library
+    - lottie-ios
     - nanopb
     - PromisesObjC
     - RSKImageCropper
@@ -616,6 +619,7 @@ SPEC CHECKSUMS:
   GTMAppAuth: ad5c2b70b9a8689e1a04033c9369c4915bfcbe89
   GTMSessionFetcher: 43748f93435c2aa068b1cbe39655aaf600652e91
   leveldb-library: 50c7b45cbd7bf543c81a468fe557a16ae3db8729
+  lottie-ios: c058aeafa76daa4cf64d773554bccc8385d0150e
   nanopb: a0ba3315591a9ae0a16a309ee504766e90db0c96
   PromisesObjC: 68159ce6952d93e17b2dfe273b8c40907db5ba58
   RSKImageCropper: 1ac71e9a82e3f41eea3eedfff8eacb0d3821c9ec
@@ -627,6 +631,6 @@ SPEC CHECKSUMS:
   SCLAlertView: 6a77bb2edfc65e04dbe57725546cb4107a506b85
   TimelaneCore: 5822c4be9992c7009938babf881561ec03b63acc
 
-PODFILE CHECKSUM: f3ca16529c51367eb824cc0c3986cb31ce399a67
+PODFILE CHECKSUM: 6836438f9d6e0acb75bd1fee01784d5aa5a15ca9
 
 COCOAPODS: 1.10.2

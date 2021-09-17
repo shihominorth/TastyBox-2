@@ -222,7 +222,7 @@
         <!--Navigation Controller-->
         <scene sceneID="EJS-sD-OTq">
             <objects>
-                <navigationController id="RS2-tL-Fia" sceneMemberID="viewController">
+                <navigationController storyboardIdentifier="userProfileNC" id="RS2-tL-Fia" sceneMemberID="viewController">
                     <navigationBar key="navigationBar" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" id="Esc-yh-VsA">
                         <rect key="frame" x="0.0" y="44" width="414" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
