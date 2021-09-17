@@ -123,9 +123,7 @@ extension SceneDelegate {
     
     
     fileprivate func goToNextVC() {
-        
-      
-        
+  
         // login already
         if let user = Auth.auth().currentUser {
             
