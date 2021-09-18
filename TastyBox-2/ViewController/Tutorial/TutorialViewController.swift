@@ -53,7 +53,7 @@ class TutorialViewController: UIViewController, BindableType {
         collectionView.rx.setDelegate(self).disposed(by: viewModel.disposeBag)
         collectionView.rx.setDataSource(self).disposed(by: viewModel.disposeBag)
         
-        pageControl.numberOfPages = 5
+        pageControl.numberOfPages = 6
     }
     
     override func viewDidDisappear(_ animated: Bool) {
@@ -95,6 +95,7 @@ extension TutorialViewController: UICollectionViewDataSource, UICollectionViewDe
         
             let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "start", for: indexPath) as! StartCVCell
             cell.configureCell()
+//            cell.signUpwithAccountBtn.rx.action = viewModel.toSignUpAction()
 
             return cell
             
@@ -117,8 +118,7 @@ extension TutorialViewController: UICollectionViewDataSource, UICollectionViewDe
 }
 
 extension TutorialViewController: UICollectionViewDelegateFlowLayout {
-   
-    
+ 
     func scrollViewWillBeginDragging(_ scrollView: UIScrollView) {
         let collectionView = scrollView as! UICollectionView
         guard let flowLayout = collectionView.collectionViewLayout as? FlowLayout else {

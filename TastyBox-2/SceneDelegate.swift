@@ -52,22 +52,22 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         let currentVersion : String = Bundle.main.object(forInfoDictionaryKey: "CFBundleShortVersionString") as! String
         
         let versionOfLastRun: String? = UserDefaults.standard.object(forKey: "VersionOfLastRun") as? String
-        
-        if versionOfLastRun == nil {
-            // First start after installing the app
-            let vm = TutorialVM(sceneCoodinator: self.sceneCoodinator)
-            let vc = LoginScene.tutorial(vm).viewController()
-            
-            self.sceneCoodinator.transition(to: vc, type: .root)
-            
-        }
-        //        else if  !(versionOfLastRun?.isEqual(currentVersion))! {
-        //            // App is updated
-        //        }
-        else {
+//
+//        if versionOfLastRun == nil {
+//            // First start after installing the app
+//            let vm = TutorialVM(sceneCoodinator: self.sceneCoodinator)
+//            let vc = LoginScene.tutorial(vm).viewController()
+//
+//            self.sceneCoodinator.transition(to: vc, type: .root)
+//
+//        }
+//        //        else if  !(versionOfLastRun?.isEqual(currentVersion))! {
+//        //            // App is updated
+//        //        }
+//        else {
             goToNextVC()
 
-        }
+//        }
  
         UserDefaults.standard.set(currentVersion, forKey: "VersionOfLastRun")
         UserDefaults.standard.synchronize()
