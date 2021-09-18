@@ -253,26 +253,26 @@ class LoginMainVM: ViewModelBase {
     
 //        func login(controller: ASAuthorizationController, didCompleteWithAuthorization authorization: ASAuthorization) {
 //            let authentication = self.apiType.authorizationController(controller: controller, didCompleteWithAuthorization: authorization)
-//    
+//
 //            let _ = authentication.subscribe(onNext: { user in
-//    
+//
 //                let _ = self.dataManager.isFirstLogin.subscribe(onSuccess: { isFirstLogin in
-//    
+//
 //                    // go to main page.
-//    
+//
 //                }, onFailure:{ err in
 //                    // go to register my info detail page.
-//    
+//
 //                }).disposed(by: self.disposeBag)
-//    
+//
 //            },
 //            onError: { err in
-//    
+//
 //                print(err.localizedDescription)
 //                // error alert is needed to show.
-//    
+//
 //                switch err {
-//    
+//
 //                // tells users it's not correct password.
 //                case LoginErrors.invailedEmail:
 //                    print("email isn't valified")
@@ -283,13 +283,13 @@ class LoginMainVM: ViewModelBase {
 //                    print("client id couldn't be unwrapped. it's nil.")
 //                default:
 //                    print("not meet any errors, but something happens.")
-//    
+//
 //                }
-//    
+//
 //            })
 //            .disposed(by: self.disposeBag)
-//    
-//    
+//
+//
 //        }
     
     func resetPassword() -> CocoaAction {
