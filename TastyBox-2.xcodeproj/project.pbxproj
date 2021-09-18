@@ -13,6 +13,8 @@
 		6F018BA226DB7F18006416D3 /* Scene+ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F018BA126DB7F18006416D3 /* Scene+ViewController.swift */; };
 		6F018BA426DB82B7006416D3 /* SceneTransitionType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F018BA326DB82B7006416D3 /* SceneTransitionType.swift */; };
 		6F018BA526DB8327006416D3 /* SceneCoordinatorType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F018B9D26DB7E30006416D3 /* SceneCoordinatorType.swift */; };
+		6F06EBE326F5F28D00F2218B /* StartCVCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F06EBE226F5F28C00F2218B /* StartCVCell.swift */; };
+		6F06EBE526F5FD0100F2218B /* StartCVCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 6F06EBE426F5FD0100F2218B /* StartCVCell.xib */; };
 		6F26D4E826DF9E360050BA84 /* AboutVM.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F26D4E726DF9E360050BA84 /* AboutVM.swift */; };
 		6F26D4EA26DFBDF60050BA84 /* DiscoveryVM.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F26D4E926DFBDF60050BA84 /* DiscoveryVM.swift */; };
 		6F2BBA8A26EDDA6B003B0D5F /* RxAppleDelegateProxy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F2BBA8926EDDA6B003B0D5F /* RxAppleDelegateProxy.swift */; };
@@ -81,6 +83,8 @@
 		6F018B9F26DB7E5F006416D3 /* SceneCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneCoordinator.swift; sourceTree = "<group>"; };
 		6F018BA126DB7F18006416D3 /* Scene+ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Scene+ViewController.swift"; sourceTree = "<group>"; };
 		6F018BA326DB82B7006416D3 /* SceneTransitionType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneTransitionType.swift; sourceTree = "<group>"; };
+		6F06EBE226F5F28C00F2218B /* StartCVCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StartCVCell.swift; sourceTree = "<group>"; };
+		6F06EBE426F5FD0100F2218B /* StartCVCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = StartCVCell.xib; sourceTree = "<group>"; };
 		6F26D4E726DF9E360050BA84 /* AboutVM.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AboutVM.swift; sourceTree = "<group>"; };
 		6F26D4E926DFBDF60050BA84 /* DiscoveryVM.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiscoveryVM.swift; sourceTree = "<group>"; };
 		6F2BBA8926EDDA6B003B0D5F /* RxAppleDelegateProxy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RxAppleDelegateProxy.swift; sourceTree = "<group>"; };
@@ -341,6 +345,8 @@
 			children = (
 				6FEA390D26D8C35B002F81A3 /* CustomPickerView.swift */,
 				6F512A2F26F45BF200826657 /* TutorialCVCell.swift */,
+				6F06EBE226F5F28C00F2218B /* StartCVCell.swift */,
+				6F06EBE426F5FD0100F2218B /* StartCVCell.xib */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -490,6 +496,7 @@
 				6FB06F4426D67E0100E110B4 /* Main.storyboard in Resources */,
 				6FA70A9626E6594D00474FE5 /* GoogleService-Info.plist in Resources */,
 				6F512A2226F3FA5100826657 /* Tutorial.storyboard in Resources */,
+				6F06EBE526F5FD0100F2218B /* StartCVCell.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -544,6 +551,7 @@
 			files = (
 				6F2BBA8A26EDDA6B003B0D5F /* RxAppleDelegateProxy.swift in Sources */,
 				6F018BA526DB8327006416D3 /* SceneCoordinatorType.swift in Sources */,
+				6F06EBE326F5F28D00F2218B /* StartCVCell.swift in Sources */,
 				6FF66B9726D7AEC20024495E /* BindableType.swift in Sources */,
 				6FC062C426ECC9B00016B990 /* LoginErrors.swift in Sources */,
 				6F6D0AEE26EED71500CD27AE /* RxFaceBookLoginDelegateProxy.swift in Sources */,
