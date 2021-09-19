@@ -15,6 +15,7 @@
 		6F018BA526DB8327006416D3 /* SceneCoordinatorType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F018B9D26DB7E30006416D3 /* SceneCoordinatorType.swift */; };
 		6F06EBE326F5F28D00F2218B /* StartCVCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F06EBE226F5F28C00F2218B /* StartCVCell.swift */; };
 		6F06EBE526F5FD0100F2218B /* StartCVCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 6F06EBE426F5FD0100F2218B /* StartCVCell.xib */; };
+		6F06EBE926F6B3D100F2218B /* LoadingVM.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F06EBE826F6B3D100F2218B /* LoadingVM.swift */; };
 		6F26D4E826DF9E360050BA84 /* AboutVM.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F26D4E726DF9E360050BA84 /* AboutVM.swift */; };
 		6F26D4EA26DFBDF60050BA84 /* DiscoveryVM.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F26D4E926DFBDF60050BA84 /* DiscoveryVM.swift */; };
 		6F2BBA8A26EDDA6B003B0D5F /* RxAppleDelegateProxy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F2BBA8926EDDA6B003B0D5F /* RxAppleDelegateProxy.swift */; };
@@ -47,7 +48,7 @@
 		6FBCB92C26D7CBD500C050B2 /* EmailRegisterViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FBCB92826D7CBD500C050B2 /* EmailRegisterViewController.swift */; };
 		6FBCB92D26D7CBD500C050B2 /* LoginMainPageViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FBCB92926D7CBD500C050B2 /* LoginMainPageViewController.swift */; };
 		6FC062C026EAE4020016B990 /* Error+.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FC062BF26EAE4000016B990 /* Error+.swift */; };
-		6FC062C226ECA3D90016B990 /* AlertContext.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FC062C126ECA3D70016B990 /* AlertContext.swift */; };
+		6FC062C226ECA3D90016B990 /* Notification.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FC062C126ECA3D70016B990 /* Notification.swift */; };
 		6FC062C426ECC9B00016B990 /* LoginErrors.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FC062C326ECC9AF0016B990 /* LoginErrors.swift */; };
 		6FEA390C26D8BEEB002F81A3 /* String+.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FEA390B26D8BEEB002F81A3 /* String+.swift */; };
 		6FEA390E26D8C35B002F81A3 /* CustomPickerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FEA390D26D8C35B002F81A3 /* CustomPickerView.swift */; };
@@ -85,6 +86,7 @@
 		6F018BA326DB82B7006416D3 /* SceneTransitionType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneTransitionType.swift; sourceTree = "<group>"; };
 		6F06EBE226F5F28C00F2218B /* StartCVCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StartCVCell.swift; sourceTree = "<group>"; };
 		6F06EBE426F5FD0100F2218B /* StartCVCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = StartCVCell.xib; sourceTree = "<group>"; };
+		6F06EBE826F6B3D100F2218B /* LoadingVM.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoadingVM.swift; sourceTree = "<group>"; };
 		6F26D4E726DF9E360050BA84 /* AboutVM.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AboutVM.swift; sourceTree = "<group>"; };
 		6F26D4E926DFBDF60050BA84 /* DiscoveryVM.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiscoveryVM.swift; sourceTree = "<group>"; };
 		6F2BBA8926EDDA6B003B0D5F /* RxAppleDelegateProxy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RxAppleDelegateProxy.swift; sourceTree = "<group>"; };
@@ -120,7 +122,7 @@
 		6FBCB92826D7CBD500C050B2 /* EmailRegisterViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EmailRegisterViewController.swift; sourceTree = "<group>"; };
 		6FBCB92926D7CBD500C050B2 /* LoginMainPageViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LoginMainPageViewController.swift; sourceTree = "<group>"; };
 		6FC062BF26EAE4000016B990 /* Error+.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Error+.swift"; sourceTree = "<group>"; };
-		6FC062C126ECA3D70016B990 /* AlertContext.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlertContext.swift; sourceTree = "<group>"; };
+		6FC062C126ECA3D70016B990 /* Notification.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Notification.swift; sourceTree = "<group>"; };
 		6FC062C326ECC9AF0016B990 /* LoginErrors.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginErrors.swift; sourceTree = "<group>"; };
 		6FEA390B26D8BEEB002F81A3 /* String+.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "String+.swift"; sourceTree = "<group>"; };
 		6FEA390D26D8C35B002F81A3 /* CustomPickerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomPickerView.swift; sourceTree = "<group>"; };
@@ -220,6 +222,7 @@
 			isa = PBXGroup;
 			children = (
 				6F512A2826F417CD00826657 /* TutorialVM.swift */,
+				6F06EBE826F6B3D100F2218B /* LoadingVM.swift */,
 			);
 			path = Tutorial;
 			sourceTree = "<group>";
@@ -265,7 +268,7 @@
 			isa = PBXGroup;
 			children = (
 				6FBCB91126D7B5F200C050B2 /* User.swift */,
-				6FC062C126ECA3D70016B990 /* AlertContext.swift */,
+				6FC062C126ECA3D70016B990 /* Notification.swift */,
 				6FEF087F26F2A4B000C02CDD /* Recipe.swift */,
 			);
 			path = Model;
@@ -574,11 +577,12 @@
 				6F512A3026F45BF200826657 /* TutorialCVCell.swift in Sources */,
 				6FBCB91226D7B5F200C050B2 /* User.swift in Sources */,
 				6FBCB92D26D7CBD500C050B2 /* LoginMainPageViewController.swift in Sources */,
+				6F06EBE926F6B3D100F2218B /* LoadingVM.swift in Sources */,
 				6FF66B9E26D7AF430024495E /* RegisterEmailVM.swift in Sources */,
 				6F26D4E826DF9E360050BA84 /* AboutVM.swift in Sources */,
 				6FBCB92A26D7CBD500C050B2 /* RegisterMyInfoProfileTableViewController.swift in Sources */,
 				6FEF088726F2A8CB00C02CDD /* PopularRecipeViewController.swift in Sources */,
-				6FC062C226ECA3D90016B990 /* AlertContext.swift in Sources */,
+				6FC062C226ECA3D90016B990 /* Notification.swift in Sources */,
 				6F9BE63B26D7CF0B005DD80B /* AboutViewController.swift in Sources */,
 				6FB06F3D26D67E0100E110B4 /* AppDelegate.swift in Sources */,
 				6FEF088526F2A85A00C02CDD /* MainPageViewController.swift in Sources */,

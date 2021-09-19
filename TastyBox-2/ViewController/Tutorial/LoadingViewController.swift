@@ -6,8 +6,12 @@
 //
 
 import UIKit
+import Firebase
 
-class LoadingViewController: UIViewController {
+class LoadingViewController: UIViewController, BindableType {
+   
+    typealias ViewModelType = LoadingVM
+    var viewModel: LoadingVM!
 
     @IBOutlet weak var indicator: UIActivityIndicatorView!
     
@@ -16,21 +20,43 @@ class LoadingViewController: UIViewController {
 
         indicator.startAnimating()
         navigationController?.isNavigationBarHidden = true
+        
+        
+        let currentVersion : String = Bundle.main.object(forInfoDictionaryKey: "CFBundleShortVersionString") as! String
+        
+        let versionOfLastRun: String? = UserDefaults.standard.object(forKey: "VersionOfLastRun") as? String
+//
+//        if versionOfLastRun == nil {
+//            // First start after installing the app
+//            let vm = TutorialVM(sceneCoodinator: self.sceneCoodinator)
+//            let vc = LoginScene.tutorial(vm).viewController()
+//
+//            self.sceneCoodinator.transition(to: vc, type: .root)
+//
+//        }
+//        //        else if  !(versionOfLastRun?.isEqual(currentVersion))! {
+//        //            // App is updated
+//        //        }
+//        else {
+//        }
+ 
+        UserDefaults.standard.set(currentVersion, forKey: "VersionOfLastRun")
+        UserDefaults.standard.synchronize()
     }
     
+    override func viewDidAppear(_ animated: Bool) {
+        viewModel.goToNextVC()
+    }
 
     override func viewWillDisappear(_ animated: Bool) {
         navigationController?.isNavigationBarHidden = false
 
     }
-    /*
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Get the new view controller using segue.destination.
-        // Pass the selected object to the new view controller.
+    
+    
+    func bindViewModel() {
+        
     }
-    */
+        
 
 }

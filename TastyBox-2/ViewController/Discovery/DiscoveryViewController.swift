@@ -88,19 +88,9 @@ class DiscoveryViewController: UIViewController, BindableType {
     func bindViewModel() {
         
         let _ = NotificationCenter.default.rx.notification(NSNotification.Name("ShowLogout"))
-            .subscribe(onNext: { notification in
-                
-                  let firebaseAuth = Auth.auth()
-                  do {
-                      try firebaseAuth.signOut()
-                  } catch let signOutError as NSError {
-                      print("Error signing out: %@", signOutError)
-                  }
-            
-                let viewModel = LoginMainVM(sceneCoodinator:  self.viewModel.sceneCoodinator)
-                let vc = LoginScene.main(viewModel).viewController()
-                viewModel.sceneCoodinator.transition(to: vc, type: .modal)
-            })
+            .subscribe { notification in
+                self.viewModel.logoutAction()
+            }
             .disposed(by: viewModel.disposeBag)
     }
     

@@ -7,6 +7,10 @@
 
 import Foundation
 
+enum LoadingScene {
+    case loading(LoadingVM), tutorial(TutorialVM)
+}
+
 enum LoginScene {
     case main(LoginMainVM), resetPassword(ResetPasswordVM), emailVerify(RegisterEmailVM), setPassword(SetPasswordVM), profileRegister(RegisterMyInfoProfileVM), about(AboutViewModel), tutorial(TutorialVM)
 }

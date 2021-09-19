@@ -5,7 +5,7 @@
 //  Created by 北島　志帆美 on 2021-08-29.
 //
 
-import Foundation
+import UIKit
 
 enum SceneTransitionType {
   // you can extend this to add animated transition types,
@@ -15,4 +15,5 @@ enum SceneTransitionType {
     case push       // push view controller to navigation stack
     case modal      // present view controller modally
     case usePresentNC
+    case pushNC(UIViewController)
 }

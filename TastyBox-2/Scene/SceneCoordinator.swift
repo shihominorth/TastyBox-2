@@ -85,6 +85,17 @@ class SceneCoordinator: NSObject, SceneCoordinatorType {
         
         navigationController.pushViewController(viewController, animated: true)
         
+    case .pushNC(let parentVC):
+        
+        if let childNavigation = currentViewController as? UINavigationController {
+            
+            childNavigation.willMove(toParent: parentVC)
+            parentVC.addChild(childNavigation)
+            childNavigation.view.frame = parentVC.view.frame
+            parentVC.view.addSubview(childNavigation.view)
+            childNavigation.didMove(toParent: parentVC)
+
+        }
     }
     
     
