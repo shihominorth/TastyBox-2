@@ -37,7 +37,7 @@ class LoadingVM {
                     
                     let viewModel = DiscoveryVM(sceneCoodinator: self.sceneCoodinator, user: user)
                     let vc = MainScene.discovery(viewModel).viewController()
-                    self.sceneCoodinator.transition(to: vc, type: .root)
+                    self.sceneCoodinator.transition(to: vc, type: .push)
                     
                 }
                 
@@ -66,7 +66,7 @@ class LoadingVM {
             let viewModel = LoginMainVM(sceneCoodinator: sceneCoodinator)
             
             let firstScene = LoginScene.main(viewModel).viewController()
-            sceneCoodinator.transition(to: firstScene, type: .root)
+            sceneCoodinator.transition(to: firstScene, type: .push)
             
         }
     }
