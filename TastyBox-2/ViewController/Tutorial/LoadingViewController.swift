@@ -40,12 +40,22 @@ class LoadingViewController: UIViewController, BindableType {
 //        else {
 //        }
  
+//        let window = UIWindow(frame: UIScreen.main.bounds)
+//        let sceneCoodinator = SceneCoordinator(window: window)
+//       
+//        let vm = LoadingVM(sceneCoodinator: sceneCoodinator)
+//        let vc = LoadingScene.loading(vm).viewController()
+//        sceneCoodinator.transition(to: vc, type: .root)
+        
+      
+       
         UserDefaults.standard.set(currentVersion, forKey: "VersionOfLastRun")
         UserDefaults.standard.synchronize()
     }
     
     override func viewDidAppear(_ animated: Bool) {
         viewModel.goToNextVC()
+
     }
 
     override func viewWillDisappear(_ animated: Bool) {

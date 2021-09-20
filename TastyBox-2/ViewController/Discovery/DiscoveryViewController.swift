@@ -10,6 +10,8 @@ import Firebase
 import FirebaseAuth
 import FBSDKLoginKit
 //import Crashlytics
+import RxSwift
+import RxCocoa
 
 //protocol MenuViewControllerDelegate: class {
 //    func menuViewController(viewController: DiscoveryViewController, at index: Int)
@@ -88,9 +90,10 @@ class DiscoveryViewController: UIViewController, BindableType {
     func bindViewModel() {
         
         let _ = NotificationCenter.default.rx.notification(NSNotification.Name("ShowLogout"))
-            .subscribe { notification in
+            .takeNoCompleted(1)
+            .subscribe(onNext: { notification in
                 self.viewModel.logoutAction()
-            }
+            })
             .disposed(by: viewModel.disposeBag)
     }
     

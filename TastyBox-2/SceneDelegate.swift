@@ -14,9 +14,9 @@ import UIKit
 class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     
     var window: UIWindow?
-    var sceneCoodinator: SceneCoordinator {
-        return SceneCoordinator(window: window!)
-    }
+//    var sceneCoodinator: SceneCoordinator {
+//        return SceneCoordinator(window: window!)
+//    }
     
     func scene(_ scene: UIScene, continue userActivity: NSUserActivity) {
         //userActivityプロパティからリンクURLを取得
@@ -48,11 +48,16 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         // Use this method to optionally configure and attach the UIWindow `window` to the provided UIWindowScene `scene`.
         // If using a storyboard, the `window` property will automatically be initialized and attached to the scene.
         // This delegate does not imply the connecting scene or session are new (see `application:configurationForConnectingSceneSession` instead).
-        
-        let vm = LoadingVM(sceneCoodinator: self.sceneCoodinator)
+        let sceneCoordinator = SceneCoordinator(window: window!)
+
+        let vm = LoadingVM(sceneCoodinator: sceneCoordinator)
         let vc = LoadingScene.loading(vm).viewController()
         
-        self.sceneCoodinator.transition(to: vc, type: .root)
+        if let nc = vc as? UINavigationController {
+            sceneCoordinator.transition(to: vc, type: .root)
+        }
+        
+       
         
         guard let _ = (scene as? UIWindowScene) else { return }
     }

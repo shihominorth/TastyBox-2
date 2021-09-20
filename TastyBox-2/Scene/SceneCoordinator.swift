@@ -34,9 +34,10 @@ class SceneCoordinator: NSObject, SceneCoordinatorType {
    
     switch type {
     case .root:
-      currentViewController = SceneCoordinator.actualViewController(for: viewController)
-      window.rootViewController = viewController
-      subject.onCompleted()
+      
+        currentViewController = SceneCoordinator.actualViewController(for: viewController)
+        window.rootViewController = viewController
+        subject.onCompleted()
       
     case .push:
       guard let navigationController = currentViewController.navigationController else {
@@ -85,15 +86,13 @@ class SceneCoordinator: NSObject, SceneCoordinatorType {
         
         navigationController.pushViewController(viewController, animated: true)
         
-    case .pushNC(let parentVC):
+    case .VCAsRoot:
         
-        if let childNavigation = currentViewController as? UINavigationController {
+        if let nc = currentViewController as? UINavigationController {
             
-            childNavigation.willMove(toParent: parentVC)
-            parentVC.addChild(childNavigation)
-            childNavigation.view.frame = parentVC.view.frame
-            parentVC.view.addSubview(childNavigation.view)
-            childNavigation.didMove(toParent: parentVC)
+            currentViewController = SceneCoordinator.actualViewController(for: viewController)
+            window.rootViewController = nc
+            subject.onCompleted()
 
         }
     }

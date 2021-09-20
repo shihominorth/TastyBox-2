@@ -15,6 +15,7 @@ class DiscoveryVM: ViewModelBase {
     
     //    let apiType: RegisterMyInfoProtocol.Type
     let sceneCoodinator: SceneCoordinator
+    let lockObject: ActivityIndicator!
     let user: Firebase.User
     
     init(sceneCoodinator: SceneCoordinator, user: Firebase.User) {
@@ -23,7 +24,7 @@ class DiscoveryVM: ViewModelBase {
         //        self.apiType = apiType
         
         self.user = user
-        
+        self.lockObject = ActivityIndicator()
         
     }
     

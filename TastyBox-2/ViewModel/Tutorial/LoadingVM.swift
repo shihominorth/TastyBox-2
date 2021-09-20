@@ -18,7 +18,6 @@ class LoadingVM {
     init(sceneCoodinator: SceneCoordinator, apiType: LoginMainProtocol.Type = LoginMainDM.self) {
         self.sceneCoodinator = sceneCoodinator
         self.apiType = apiType
-        
     }
     
     func goToNextVC() {
@@ -38,7 +37,7 @@ class LoadingVM {
                     
                     let viewModel = DiscoveryVM(sceneCoodinator: self.sceneCoodinator, user: user)
                     let vc = MainScene.discovery(viewModel).viewController()
-                    self.sceneCoodinator.transition(to: vc, type: .push)
+                    self.sceneCoodinator.transition(to: vc, type: .root)
                     
                 }
                 
@@ -63,6 +62,7 @@ class LoadingVM {
         // not login yet.
         else {
             
+           
             let viewModel = LoginMainVM(sceneCoodinator: sceneCoodinator)
             
             let firstScene = LoginScene.main(viewModel).viewController()

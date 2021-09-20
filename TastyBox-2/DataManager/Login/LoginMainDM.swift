@@ -182,7 +182,9 @@ class LoginMainDM: LoginMainProtocol {
                 }
             }
             
-            return Disposables.create()
+            return Disposables.create {
+                print("dispose")
+            }
         }
     }
     

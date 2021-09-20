@@ -15,5 +15,5 @@ enum SceneTransitionType {
     case push       // push view controller to navigation stack
     case modal      // present view controller modally
     case usePresentNC
-    case pushNC(UIViewController)
+    case VCAsRoot
 }
