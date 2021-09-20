@@ -24,6 +24,17 @@ class DiscoveryVM: ViewModelBase {
         self.user = user
     }
     
+    func createRecipeAction() -> CocoaAction {
+        return CocoaAction { _ in
+        
+            let vm = CreateRecipeVM(sceneCoodinator: self.sceneCoodinator)
+            let vc = MainScene.createRecipe(vm).viewController()
+            
+            return self.sceneCoodinator.transition(to: vc, type: .push).asObservable().map { _ in }
+        }
+        
+    }
+    
     func logout() {
   
         let firebaseAuth = Auth.auth()

@@ -16,5 +16,5 @@ enum LoginScene {
 }
 
 enum MainScene {
-    case discovery(DiscoveryVM)
+    case discovery(DiscoveryVM), createRecipe(CreateRecipeVM)
 }

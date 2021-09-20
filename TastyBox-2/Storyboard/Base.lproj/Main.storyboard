@@ -12,7 +12,7 @@
         <!--Discovery View Controller-->
         <scene sceneID="rds-mD-7zg">
             <objects>
-                <viewController storyboardIdentifier="Discovery" id="0Yn-6S-9gE" customClass="DiscoveryViewController" customModule="Recipe_CICCC" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="Discovery" id="0Yn-6S-9gE" customClass="DiscoveryViewController" customModule="TastyBox_2" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="Nzd-v9-lh9">
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -30,7 +30,7 @@
                                     <inset key="sectionInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
                                 </collectionViewFlowLayout>
                                 <cells>
-                                    <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="MenuCell" id="epu-Ty-aXP" customClass="MenuCollectionViewCell" customModule="Recipe_CICCC" customModuleProvider="target">
+                                    <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="MenuCell" id="epu-Ty-aXP" customClass="MenuCollectionViewCell" customModule="TastyBox_2" customModuleProvider="target">
                                         <rect key="frame" x="0.0" y="0.0" width="300" height="50"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <collectionViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" id="1xJ-X1-SA3">
@@ -111,17 +111,14 @@
                                     <action selector="SearchBarItem" destination="0Yn-6S-9gE" id="LOw-6P-z0e"/>
                                 </connections>
                             </barButtonItem>
-                            <barButtonItem image="plus" catalog="system" id="Rz5-PK-6xw">
-                                <connections>
-                                    <action selector="AddNewRecipe:" destination="0Yn-6S-9gE" id="GVs-cq-bgL"/>
-                                </connections>
-                            </barButtonItem>
+                            <barButtonItem image="plus" catalog="system" id="Rz5-PK-6xw"/>
                         </rightBarButtonItems>
                     </navigationItem>
                     <connections>
                         <outlet property="MenuCollectionView" destination="tCU-zL-brP" id="yoR-JD-hVD"/>
                         <outlet property="PopularContainerView" destination="ZCp-Wc-cAI" id="wt3-NO-dWk"/>
                         <outlet property="SideMenuConstraint" destination="0Vn-oo-f2M" id="FWq-fS-wNe"/>
+                        <outlet property="addRecipeBtn" destination="Rz5-PK-6xw" id="ciS-Ba-cid"/>
                         <outlet property="collectionLayout" destination="eJ9-ei-LQs" id="KvM-Lc-BYU"/>
                     </connections>
                 </viewController>
@@ -132,7 +129,7 @@
         <!--Side Menu Table View Controller-->
         <scene sceneID="JdM-ZM-fJ7">
             <objects>
-                <tableViewController id="91K-d2-MOp" customClass="SideMenuTableViewController" customModule="Recipe_CICCC" customModuleProvider="target" sceneMemberID="viewController">
+                <tableViewController id="91K-d2-MOp" customClass="SideMenuTableViewController" customModule="TastyBox_2" customModuleProvider="target" sceneMemberID="viewController">
                     <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="static" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" id="mJo-8m-kGc">
                         <rect key="frame" x="0.0" y="0.0" width="230" height="808"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -439,7 +436,7 @@
                                 <rect key="frame" x="0.0" y="0.0" width="414" height="751"/>
                                 <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                                 <prototypes>
-                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="serchingCreator" rowHeight="60" id="USt-sv-QF9" customClass="SearchingCreatorTableViewCell" customModule="Recipe_CICCC" customModuleProvider="target">
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="serchingCreator" rowHeight="60" id="USt-sv-QF9" customClass="SearchingCreatorTableViewCell" customModule="TastyBox_2" customModuleProvider="target">
                                         <rect key="frame" x="0.0" y="24.5" width="414" height="60"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="USt-sv-QF9" id="lHF-YL-sOh">
@@ -506,15 +503,15 @@
                                 <rect key="frame" x="0.0" y="20" width="414" height="731"/>
                                 <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                                 <prototypes>
-                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="searcingGenre" id="dUE-zg-JoB" customClass="SearchingGenresTableViewCell" customModule="Recipe_CICCC" customModuleProvider="target">
-                                        <rect key="frame" x="0.0" y="24.5" width="414" height="43"/>
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="searcingGenre" id="dUE-zg-JoB" customClass="SearchingGenresTableViewCell" customModule="TastyBox_2" customModuleProvider="target">
+                                        <rect key="frame" x="0.0" y="24.5" width="414" height="43.5"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="dUE-zg-JoB" id="qmo-9b-xdM">
-                                            <rect key="frame" x="0.0" y="0.0" width="414" height="43"/>
+                                            <rect key="frame" x="0.0" y="0.0" width="414" height="43.5"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="jtq-wz-5uT">
-                                                    <rect key="frame" x="30" y="11" width="364" height="21"/>
+                                                    <rect key="frame" x="30" y="11" width="364" height="21.5"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                                     <nil key="textColor"/>
                                                     <nil key="highlightedColor"/>
@@ -590,10 +587,10 @@
             </objects>
             <point key="canvasLocation" x="2923" y="139"/>
         </scene>
-        <!--Creator View Controller-->
+        <!--Create Recipe View Controller-->
         <scene sceneID="XgD-lb-Izd">
             <objects>
-                <viewController id="qRb-1h-kfM" customClass="CreatorViewController" customModule="Recipe_CICCC" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="createRecipe" id="qRb-1h-kfM" customClass="CreateRecipeViewController" customModule="TastyBox_2" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="hHn-gL-I0g">
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -602,7 +599,7 @@
                                 <rect key="frame" x="0.0" y="44" width="414" height="852"/>
                                 <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                                 <prototypes>
-                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="mainPhotoCell" rowHeight="380" id="39G-ej-KDm" customClass="CreatorPhotoCell" customModule="Recipe_CICCC" customModuleProvider="target">
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="mainPhotoCell" rowHeight="380" id="39G-ej-KDm" customClass="CreatorPhotoCell" customModule="TastyBox_2" customModuleProvider="target">
                                         <rect key="frame" x="0.0" y="24.5" width="414" height="380"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="39G-ej-KDm" id="xYj-pu-0kP">
@@ -612,6 +609,9 @@
                                                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="BiQ-7e-PfN">
                                                     <rect key="frame" x="15" y="15" width="384" height="350"/>
                                                     <color key="backgroundColor" systemColor="systemBrownColor"/>
+                                                    <connections>
+                                                        <action selector="UploadPhotoAction:" destination="qRb-1h-kfM" eventType="touchUpInside" id="HOr-uX-c4l"/>
+                                                    </connections>
                                                 </button>
                                                 <button opaque="NO" tag="-1" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="D1B-ac-aBz">
                                                     <rect key="frame" x="19" y="19" width="376" height="342"/>
@@ -620,9 +620,6 @@
                                                     <state key="normal">
                                                         <color key="titleColor" white="0.33333333329999998" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                     </state>
-                                                    <connections>
-                                                        <action selector="UploadPhotoAction:" destination="qRb-1h-kfM" eventType="touchUpInside" id="oeN-8X-j1K"/>
-                                                    </connections>
                                                 </button>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Upload Main Photo " textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="CPo-AX-J3L">
                                                     <rect key="frame" x="116" y="66" width="182" height="24"/>
@@ -677,7 +674,7 @@
                                             <outlet property="Mainphoto" destination="GEe-RZ-ulT" id="FDH-0F-UFg"/>
                                         </connections>
                                     </tableViewCell>
-                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="title" rowHeight="40" id="b0c-XM-Kes" customClass="TitleCell" customModule="Recipe_CICCC" customModuleProvider="target">
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="title" rowHeight="40" id="b0c-XM-Kes" customClass="TitleCell" customModule="TastyBox_2" customModuleProvider="target">
                                         <rect key="frame" x="0.0" y="404.5" width="414" height="40"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="b0c-XM-Kes" id="Q5q-rZ-lpu">
@@ -700,9 +697,6 @@
                                                     </constraints>
                                                     <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                                     <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
-                                                    <connections>
-                                                        <outlet property="delegate" destination="qRb-1h-kfM" id="nkg-IH-lph"/>
-                                                    </connections>
                                                 </textField>
                                             </subviews>
                                             <color key="backgroundColor" red="0.99736553429999997" green="0.9914208055" blue="0.76858931779999995" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
@@ -718,7 +712,7 @@
                                             <outlet property="TitleTextField" destination="GP2-jY-iLf" id="wts-XD-6r2"/>
                                         </connections>
                                     </tableViewCell>
-                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="timeNserving" id="7jA-DC-dDp" customClass="TimeNSearvingCell" customModule="Recipe_CICCC" customModuleProvider="target">
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="timeNserving" id="7jA-DC-dDp" customClass="TimeNSearvingCell" customModule="TastyBox_2" customModuleProvider="target">
                                         <rect key="frame" x="0.0" y="444.5" width="414" height="43.5"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="7jA-DC-dDp" id="zEs-PK-4zs">
@@ -753,9 +747,6 @@
                                                     </constraints>
                                                     <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                                     <textInputTraits key="textInputTraits" keyboardType="numberPad"/>
-                                                    <connections>
-                                                        <outlet property="delegate" destination="qRb-1h-kfM" id="HoZ-0E-UEI"/>
-                                                    </connections>
                                                 </textField>
                                                 <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Minites" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="cCQ-tE-XDQ">
                                                     <rect key="frame" x="80" y="4.5" width="80" height="35"/>
@@ -765,9 +756,6 @@
                                                     </constraints>
                                                     <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                                     <textInputTraits key="textInputTraits" keyboardType="numberPad"/>
-                                                    <connections>
-                                                        <outlet property="delegate" destination="qRb-1h-kfM" id="Kbs-WY-DSi"/>
-                                                    </connections>
                                                 </textField>
                                             </subviews>
                                             <color key="backgroundColor" red="0.9975921512" green="0.97921544309999997" blue="0.79212552309999995" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
@@ -788,7 +776,7 @@
                                             <outlet property="TimeTextFieldCell" destination="cCQ-tE-XDQ" id="zav-ub-WbX"/>
                                         </connections>
                                     </tableViewCell>
-                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="ingredients" id="pMo-UX-T7t" customClass="IngredientsCell" customModule="Recipe_CICCC" customModuleProvider="target">
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="ingredients" id="pMo-UX-T7t" customClass="IngredientsCell" customModule="TastyBox_2" customModuleProvider="target">
                                         <rect key="frame" x="0.0" y="488" width="414" height="43.5"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="pMo-UX-T7t" id="Zs3-Ec-AFb">
@@ -824,7 +812,7 @@
                                                         <preferredSymbolConfiguration key="preferredSymbolConfiguration" scale="large" weight="bold"/>
                                                     </state>
                                                     <connections>
-                                                        <action selector="AddIngredients:" destination="qRb-1h-kfM" eventType="touchUpInside" id="dLX-kO-2lt"/>
+                                                        <action selector="AddIngredients:" destination="qRb-1h-kfM" eventType="touchUpInside" id="awz-dp-1Nx"/>
                                                     </connections>
                                                 </button>
                                             </subviews>
@@ -840,7 +828,7 @@
                                             </constraints>
                                         </tableViewCellContentView>
                                     </tableViewCell>
-                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="editingredients" id="OCg-IV-8DJ" customClass="EditIngredientsCell" customModule="Recipe_CICCC" customModuleProvider="target">
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="editingredients" id="OCg-IV-8DJ" customClass="EditIngredientsCell" customModule="TastyBox_2" customModuleProvider="target">
                                         <rect key="frame" x="0.0" y="531.5" width="414" height="43.5"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="OCg-IV-8DJ" id="1bw-yr-PVC">
@@ -851,9 +839,6 @@
                                                     <rect key="frame" x="20" y="5" width="239" height="34"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                                     <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
-                                                    <connections>
-                                                        <outlet property="delegate" destination="qRb-1h-kfM" id="7fH-7V-wPF"/>
-                                                    </connections>
                                                 </textField>
                                                 <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Amount" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="Z4E-zX-rLq">
                                                     <rect key="frame" x="264" y="5" width="130" height="34"/>
@@ -862,9 +847,6 @@
                                                     </constraints>
                                                     <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                                     <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
-                                                    <connections>
-                                                        <outlet property="delegate" destination="qRb-1h-kfM" id="SEn-bV-HlX"/>
-                                                    </connections>
                                                 </textField>
                                             </subviews>
                                             <color key="backgroundColor" red="0.9975921512" green="0.97921544309999997" blue="0.79212552309999995" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
@@ -882,7 +864,7 @@
                                             <outlet property="ingredientTextField" destination="nlR-Ml-Pef" id="V8R-da-eAZ"/>
                                         </connections>
                                     </tableViewCell>
-                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="instructions" id="KkJ-kg-Iwh" customClass="InstructionTitleCell" customModule="Recipe_CICCC" customModuleProvider="target">
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="instructions" id="KkJ-kg-Iwh" customClass="InstructionTitleCell" customModule="TastyBox_2" customModuleProvider="target">
                                         <rect key="frame" x="0.0" y="575" width="414" height="43.5"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="KkJ-kg-Iwh" id="a3p-eC-XXc">
@@ -918,7 +900,7 @@
                                                         <preferredSymbolConfiguration key="preferredSymbolConfiguration" scale="large" weight="bold"/>
                                                     </state>
                                                     <connections>
-                                                        <action selector="AddPreparationStep:" destination="qRb-1h-kfM" eventType="touchUpInside" id="f01-cn-uvc"/>
+                                                        <action selector="AddPreparationStep:" destination="qRb-1h-kfM" eventType="touchUpInside" id="uW0-Mo-X0R"/>
                                                     </connections>
                                                 </button>
                                                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="0MM-ud-p8n">
@@ -928,7 +910,7 @@
                                                         <preferredSymbolConfiguration key="preferredSymbolConfiguration" scale="large" weight="bold"/>
                                                     </state>
                                                     <connections>
-                                                        <action selector="EditMode:" destination="qRb-1h-kfM" eventType="touchUpInside" id="WGH-HL-go8"/>
+                                                        <action selector="EditMode:" destination="qRb-1h-kfM" eventType="touchUpInside" id="hyh-IT-uhd"/>
                                                     </connections>
                                                 </button>
                                             </subviews>
@@ -947,7 +929,7 @@
                                         </tableViewCellContentView>
                                         <color key="backgroundColor" red="0.99736517670000002" green="0.98348218200000004" blue="0.76859062909999998" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
                                     </tableViewCell>
-                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="preparation" rowHeight="120" id="QaR-bo-LXM" customClass="PreparationCell" customModule="Recipe_CICCC" customModuleProvider="target">
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="preparation" rowHeight="120" id="QaR-bo-LXM" customClass="PreparationCell" customModule="TastyBox_2" customModuleProvider="target">
                                         <rect key="frame" x="0.0" y="618.5" width="414" height="120"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="QaR-bo-LXM" id="BCx-o7-cPo">
@@ -978,9 +960,6 @@
                                                     <color key="textColor" systemColor="opaqueSeparatorColor"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                                     <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
-                                                    <connections>
-                                                        <outlet property="delegate" destination="qRb-1h-kfM" id="Ndf-sb-4ce"/>
-                                                    </connections>
                                                 </textView>
                                                 <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="wHL-YH-JNe">
                                                     <rect key="frame" x="334" y="34" width="60" height="60"/>
@@ -995,18 +974,12 @@
                                                         <constraint firstAttribute="height" constant="60" id="dFz-KD-7cE"/>
                                                         <constraint firstAttribute="width" constant="60" id="lvI-dk-sCK"/>
                                                     </constraints>
-                                                    <connections>
-                                                        <action selector="UploadPhotoAction:" destination="qRb-1h-kfM" eventType="touchUpInside" id="Gdp-XJ-ve2"/>
-                                                    </connections>
                                                 </button>
                                                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="TEH-qT-baX">
                                                     <rect key="frame" x="20" y="34" width="308" height="60"/>
                                                     <constraints>
                                                         <constraint firstAttribute="height" constant="60" id="5Tq-ao-C8a"/>
                                                     </constraints>
-                                                    <connections>
-                                                        <action selector="StepTextViewPosition:" destination="qRb-1h-kfM" eventType="touchUpInside" id="4iC-o8-I4K"/>
-                                                    </connections>
                                                 </button>
                                             </subviews>
                                             <color key="backgroundColor" red="0.9975921512" green="0.97921544309999997" blue="0.79212552309999995" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
@@ -1036,10 +1009,6 @@
                                         </connections>
                                     </tableViewCell>
                                 </prototypes>
-                                <connections>
-                                    <outlet property="dataSource" destination="qRb-1h-kfM" id="eZN-mV-z1x"/>
-                                    <outlet property="delegate" destination="qRb-1h-kfM" id="cbl-np-jcn"/>
-                                </connections>
                             </tableView>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="y0b-RH-pVG"/>
@@ -1055,31 +1024,27 @@
                         <rightBarButtonItems>
                             <barButtonItem title="Publish" id="wYm-b9-XEJ">
                                 <color key="tintColor" systemColor="systemOrangeColor"/>
-                                <connections>
-                                    <action selector="SaveData:" destination="qRb-1h-kfM" id="qYg-cO-KsA"/>
-                                </connections>
                             </barButtonItem>
                             <barButtonItem title="Next" id="jQl-M3-bPB">
                                 <connections>
-                                    <action selector="passMainPhoto:" destination="qRb-1h-kfM" id="8Tt-Gh-Kek"/>
                                     <segue destination="s12-zL-FAO" kind="show" id="74m-jf-axw"/>
                                 </connections>
                             </barButtonItem>
                         </rightBarButtonItems>
                     </navigationItem>
                     <connections>
-                        <outlet property="MainTableView" destination="bBI-He-uKZ" id="pbd-dp-bsr"/>
-                        <outlet property="saveButton" destination="wYm-b9-XEJ" id="v8H-wd-Z2N"/>
+                        <outlet property="MainTableView" destination="bBI-He-uKZ" id="2IO-7A-8Dh"/>
+                        <outlet property="saveButton" destination="wYm-b9-XEJ" id="TlO-Vn-E1T"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="TKd-28-jTt" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="2920" y="-698"/>
+            <point key="canvasLocation" x="3828.985507246377" y="-698.4375"/>
         </scene>
         <!--Meal Type Select View Controller-->
         <scene sceneID="3Wk-VV-Zui">
             <objects>
-                <viewController storyboardIdentifier="selectGenre" id="s12-zL-FAO" customClass="MealTypeSelectViewController" customModule="Recipe_CICCC" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="selectGenre" id="s12-zL-FAO" customClass="MealTypeSelectViewController" customModule="TastyBox_2" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="D5w-zV-K9V">
                         <rect key="frame" x="0.0" y="0.0" width="414" height="842"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -1094,7 +1059,7 @@
                                     <inset key="sectionInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
                                 </collectionViewFlowLayout>
                                 <cells>
-                                    <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="genreCell" id="vzF-sl-7ct" customClass="GenreCollectionViewCell" customModule="Recipe_CICCC" customModuleProvider="target">
+                                    <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="genreCell" id="vzF-sl-7ct" customClass="GenreCollectionViewCell" customModule="TastyBox_2" customModuleProvider="target">
                                         <rect key="frame" x="0.0" y="50" width="70" height="30"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <collectionViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" id="syu-KX-HFt">
@@ -1123,7 +1088,7 @@
                                         </connections>
                                     </collectionViewCell>
                                 </cells>
-                                <collectionReusableView key="sectionHeaderView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" reuseIdentifier="SectionHeader" id="feC-Cu-aip" customClass="SectionHeaderGenreSelectCollectionReusableView" customModule="Recipe_CICCC" customModuleProvider="target">
+                                <collectionReusableView key="sectionHeaderView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" reuseIdentifier="SectionHeader" id="feC-Cu-aip" customClass="SectionHeaderGenreSelectCollectionReusableView" customModule="TastyBox_2" customModuleProvider="target">
                                     <rect key="frame" x="0.0" y="0.0" width="374" height="50"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                     <subviews>
@@ -1192,12 +1157,12 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="IiU-Zu-sqj" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="3837.68115942029" y="-698.4375"/>
+            <point key="canvasLocation" x="4747.826086956522" y="-698.4375"/>
         </scene>
         <!--Searching Ingredients View Controller-->
         <scene sceneID="s4N-bh-bXq">
             <objects>
-                <viewController storyboardIdentifier="ingredientVC" id="KXJ-KC-aNU" customClass="SearchingIngredientsViewController" customModule="Recipe_CICCC" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="ingredientVC" id="KXJ-KC-aNU" customClass="SearchingIngredientsViewController" customModule="TastyBox_2" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="40h-6Q-0LG">
                         <rect key="frame" x="0.0" y="0.0" width="414" height="751"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -1206,7 +1171,7 @@
                                 <rect key="frame" x="0.0" y="20" width="414" height="731"/>
                                 <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                                 <prototypes>
-                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="searchingIngredient" id="bwV-aR-lUB" customClass="SearchingIngredientsTableViewCell" customModule="Recipe_CICCC" customModuleProvider="target">
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="searchingIngredient" id="bwV-aR-lUB" customClass="SearchingIngredientsTableViewCell" customModule="TastyBox_2" customModuleProvider="target">
                                         <rect key="frame" x="0.0" y="24.5" width="414" height="43"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="bwV-aR-lUB" id="2I9-B2-kMH">
@@ -1270,7 +1235,7 @@
                                     <inset key="sectionInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
                                 </collectionViewFlowLayout>
                                 <cells>
-                                    <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="resultRecipe" id="MWT-IW-4LE" customClass="ResultRecipeCollectionViewCell" customModule="Recipe_CICCC" customModuleProvider="target">
+                                    <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="resultRecipe" id="MWT-IW-4LE" customClass="ResultRecipeCollectionViewCell" customModule="TastyBox_2" customModuleProvider="target">
                                         <rect key="frame" x="0.0" y="0.0" width="150" height="150"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <collectionViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" id="1Nv-Qu-KKi">

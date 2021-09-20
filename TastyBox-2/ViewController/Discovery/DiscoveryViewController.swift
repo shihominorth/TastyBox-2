@@ -24,6 +24,7 @@ class DiscoveryViewController: UIViewController, BindableType {
     
     var viewModel: DiscoveryVM!
     
+    @IBOutlet weak var addRecipeBtn: UIBarButtonItem!
     @IBOutlet weak var PopularContainerView: UIView!
     @IBOutlet weak var collectionLayout: UICollectionViewFlowLayout! {
         didSet {
@@ -95,6 +96,8 @@ class DiscoveryViewController: UIViewController, BindableType {
                 self.viewModel.logout()
             })
             .disposed(by: viewModel.disposeBag)
+        
+        addRecipeBtn.rx.action = viewModel.createRecipeAction()
     }
     
     @objc func closeSideMenu() {
