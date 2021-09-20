@@ -56,9 +56,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         if let nc = vc as? UINavigationController {
             sceneCoordinator.transition(to: vc, type: .root)
         }
-        
-       
-        
+   
         guard let _ = (scene as? UIWindowScene) else { return }
     }
     
