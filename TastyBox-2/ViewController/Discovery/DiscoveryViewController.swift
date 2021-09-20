@@ -92,7 +92,7 @@ class DiscoveryViewController: UIViewController, BindableType {
         let _ = NotificationCenter.default.rx.notification(NSNotification.Name("ShowLogout"))
             .takeNoCompleted(1)
             .subscribe(onNext: { notification in
-                self.viewModel.logoutAction()
+                self.viewModel.logout()
             })
             .disposed(by: viewModel.disposeBag)
     }

@@ -16,20 +16,15 @@ class DiscoveryVM: ViewModelBase {
     
     //    let apiType: RegisterMyInfoProtocol.Type
     let sceneCoodinator: SceneCoordinator
-    let lockObject: ActivityIndicator!
     let user: Firebase.User
     
     init(sceneCoodinator: SceneCoordinator, user: Firebase.User) {
         
         self.sceneCoodinator = sceneCoodinator
-        //        self.apiType = apiType
-        
         self.user = user
-        self.lockObject = ActivityIndicator()
-        
     }
     
-    func logoutAction() {
+    func logout() {
   
         let firebaseAuth = Auth.auth()
         
@@ -48,10 +43,6 @@ class DiscoveryVM: ViewModelBase {
         
         do {
             try firebaseAuth.signOut()
-            
-//            let vm = LoginMainVM(sceneCoodinator: self.sceneCoodinator)
-//            let vc = LoginScene.main(vm).viewController()
-//            self.sceneCoodinator.transition(to: vc, type: .modal)
             
             let vm = LoadingVM(sceneCoodinator: self.sceneCoodinator)
             let vc = LoadingScene.loading(vm).viewController()
