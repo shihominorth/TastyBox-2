@@ -71,25 +71,6 @@ class LoginMainDM: LoginMainProtocol {
         
     }
     
-
-//    var isEmailVerified: Observable<Bool> {
-//
-//        return Observable.create { observer in
-//
-//            guard let result = Auth.auth().currentUser?.isEmailVerified else {
-//
-//                observer.onError(LoginErrors.invailedUser)
-//
-//                return Disposables.create()
-//            }
-//
-//            observer.onNext(result)
-//
-//            return Disposables.create()
-//        }
-//
-//    }
-    
  
    static func login(email: String?, password: String?) -> Single<AuthDataResult>{
         
@@ -116,7 +97,7 @@ class LoginMainDM: LoginMainProtocol {
                     single(.failure(err))
                 } else {
                     
-                    if let user = result?.user, let result = result {
+                    if let result = result {
 //                        self.isEmailVerified.onNext(user.isEmailVerified)
                         single(.success(result))
                     } else {
@@ -135,6 +116,12 @@ class LoginMainDM: LoginMainProtocol {
         
     }
         
+    //MARK:　problem： ローディングビューが出るのが遅い
+    
+    // - guessed solution
+    // クロージャーの中で何かをFirebaseAuth.Userの前に返し、ローディングビューをその結果の元出す
+    // FirebaseAuth.Userはこのクラスの中にObservableプロパティ（おそらくSubject)onNext()する。
+    // それをVMではSubscribeする
     
     static func loginWithGoogle(viewController presenting: UIViewController) -> Single<FirebaseAuth.User> {
         

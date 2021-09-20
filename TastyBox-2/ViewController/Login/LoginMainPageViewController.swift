@@ -55,22 +55,6 @@ class LoginMainPageViewController: UIViewController,  BindableType{
         
         emailTextField.delegate = self
         passwordTextField.delegate = self
-//        
-//        let view = UIView(frame: CGRect(x: 0, y: 0, width: self.view.frame.width, height: self.view.frame.height))
-//        view.backgroundColor = #colorLiteral(red: 0.9977325797, green: 0.9879661202, blue: 0.7689270973, alpha: 1)
-//        view.tag = 100
-//        
-//        let indicator = UIActivityIndicatorView()
-//        indicator.transform = CGAffineTransform(scaleX: 2, y: 2)
-//        
-//        indicator.color = .orange
-//        indicator.startAnimating()
-//        
-//        view.addSubview(indicator)
-//        indicator.center = self.view.center
-        
-        
-//        self.view.addSubview(view)
         
         if let user = Auth.auth().currentUser {
             
@@ -116,11 +100,7 @@ class LoginMainPageViewController: UIViewController,  BindableType{
         
         
     }
-    
-    override func viewWillAppear(_ animated: Bool) {
-//  
-    }
-    
+ 
     override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
         if let tapRecognizers = self.view.gestureRecognizers?.filter({ $0.name == "dissmiss"}) {
             
@@ -144,12 +124,12 @@ class LoginMainPageViewController: UIViewController,  BindableType{
         
         
         let info = Observable.combineLatest(emailTextField.rx.text.orEmpty.observe(on: MainScheduler.asyncInstance), passwordTextField.rx.text.orEmpty.observe(on: MainScheduler.asyncInstance))
+        
         login.rx.tap
             .throttle(.milliseconds(1000), scheduler: MainScheduler.instance)
             .withLatestFrom(info)
             .bind(to: viewModel.loginAction.inputs)
             .disposed(by: viewModel.disposeBag)
-        
         
 //        MARK: after tap password or email text fields, cant use google login button - solved.
         let _ = googleLoginBtn.rx.controlEvent(.touchUpInside)
@@ -179,7 +159,7 @@ class LoginMainPageViewController: UIViewController,  BindableType{
             }
             .subscribe(onNext: { user in
                 print(user)
-                self.showsViewDuringLogin() //ここで呼ぶのは遅い。　googleのページが閉じてから間がある。
+                self.showsViewDuringLogin()
             }, onError: { err in
                 print(err)
             })

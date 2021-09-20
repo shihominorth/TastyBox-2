@@ -28,36 +28,15 @@ class LoginMainVM: ViewModelBase {
     init(sceneCoodinator: SceneCoordinator, apiType: LoginMainProtocol.Type = LoginMainDM.self) {
         self.sceneCoodinator = sceneCoodinator
         self.apiType = apiType
-        
-        
     }
     
     
     //    Singleは一回のみElementかErrorを送信することが保証されているObservableです。
     //    一回イベントを送信すると、disposeされるようになってます。
-    var isLogined: Observable<Bool> {
-        
-        return Observable.create { observable in
-            
-            if (Auth.auth().currentUser?.uid) != nil {
-                
-                self.user = Auth.auth().currentUser
-
-                observable.onNext(true)
-                
-            } else {
-                observable.onNext(false)
-            }
-            
-            return Disposables.create()
-        }
-        
-    }
-    
  
     private func isRegisteredmyInfo() {
        
-        
+
        let _ = self.apiType.isRegisterMyInfo.subscribe(onSuccess: { isFirst in
             
             if isFirst {
@@ -94,6 +73,7 @@ class LoginMainVM: ViewModelBase {
     }
     
     fileprivate func goToMain() {
+
         if let user = self.user {
             let vm = DiscoveryVM(sceneCoodinator: self.sceneCoodinator, user: user)
             let vc = MainScene.discovery(vm).viewController()
@@ -128,9 +108,9 @@ class LoginMainVM: ViewModelBase {
                 case .success(let user):
                     
                     self.user = user
-                    
-                    self.isRegisteredmyInfo()
                     observable.onNext(user)
+
+                    self.isRegisteredmyInfo()
                 }
                 
                 
@@ -148,11 +128,12 @@ class LoginMainVM: ViewModelBase {
                     
                     let _ =  controller.rx.signIn
                         .subscribe(onNext: { user in
-                            
+
+                            observer.onNext(user)
+
                             self.user = user
                             self.isRegisteredmyInfo()
 
-                            observer.onNext(user)
                             
                         }, onError: { err in
                             
@@ -190,9 +171,9 @@ class LoginMainVM: ViewModelBase {
 
             let _ = button.rx.signIn.subscribe(onNext: { user in
 
+                observer.onNext(user)
                 self.user = user
                 self.isRegisteredmyInfo()
-                observer.onNext(user)
 
             }, onError: { err in
 
@@ -218,39 +199,41 @@ class LoginMainVM: ViewModelBase {
     
     
     lazy var loginAction: Action<(String, String), Void> = { this in
-        return Action { email, password in
-            
-            this.apiType.login(email: email, password: password)
-                .subscribe(onSuccess: { result in
-                    let user = result.user
-                    if user.isEmailVerified {
-                        self.user = user
-                        self.isRegisteredmyInfo()
+           return Action { email, password in
+               
+               this.apiType.login(email: email, password: password)
+                   .subscribe(onSuccess: { result in
+                    
+                    
+                       let user = result.user
+                       if user.isEmailVerified {
+                        
+                           self.user = user
+                           self.isRegisteredmyInfo()
 
-                    }
-                    
-                    print(user)
-                }, onFailure: { err in
-                    self.err = err as NSError
-                    
-                    guard let reason = self.err.handleAuthenticationError() else { return }
-                    SCLAlertView().showTitle(
-                        reason.reason, // Title of view
-                        subTitle: reason.solution,
-                        timeout: .none, // String of view
-                        completeText: "Done", // Optional button value, default: ""
-                        style: .error, // Styles - see below.
-                        colorStyle: 0xA429FF,
-                        colorTextButton: 0xFFFFFF
-                    )
-                }).disposed(by: this.disposeBag)
-            
-            return Observable.create { _ in
-                return Disposables.create()
-            }
-        }
-    }(self)
-    
+                       }
+                       
+                       print(user)
+                   }, onFailure: { err in
+                       self.err = err as NSError
+                       
+                       guard let reason = self.err.handleAuthenticationError() else { return }
+                       SCLAlertView().showTitle(
+                           reason.reason, // Title of view
+                           subTitle: reason.solution,
+                           timeout: .none, // String of view
+                           completeText: "Done", // Optional button value, default: ""
+                           style: .error, // Styles - see below.
+                           colorStyle: 0xA429FF,
+                           colorTextButton: 0xFFFFFF
+                       )
+                   }).disposed(by: this.disposeBag)
+               
+               return Observable.create { _ in
+                   return Disposables.create()
+               }
+           }
+       }(self)
     
 //        func login(controller: ASAuthorizationController, didCompleteWithAuthorization authorization: ASAuthorization) {
 //            let authentication = self.apiType.authorizationController(controller: controller, didCompleteWithAuthorization: authorization)
