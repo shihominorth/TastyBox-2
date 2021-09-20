@@ -35,9 +35,13 @@ class DiscoveryVM: ViewModelBase {
         do {
             try firebaseAuth.signOut()
             
-            let vm = LoginMainVM(sceneCoodinator: self.sceneCoodinator)
-            let vc = LoginScene.main(vm).viewController()
-            self.sceneCoodinator.transition(to: vc, type: .modal)
+//            let vm = LoginMainVM(sceneCoodinator: self.sceneCoodinator)
+//            let vc = LoginScene.main(vm).viewController()
+//            self.sceneCoodinator.transition(to: vc, type: .modal)
+            
+            let vm = LoadingVM(sceneCoodinator: self.sceneCoodinator)
+            let vc = LoadingScene.loading(vm).viewController()
+            self.sceneCoodinator.transition(to: vc, type: .root)
             
         } catch let signOutError as NSError {
             
