@@ -6,6 +6,7 @@
 //
 
 import Action
+import FBSDKLoginKit
 import Foundation
 import Firebase
 import RxSwift
@@ -31,6 +32,19 @@ class DiscoveryVM: ViewModelBase {
     func logoutAction() {
   
         let firebaseAuth = Auth.auth()
+        
+        if let providerData = firebaseAuth.currentUser?.providerData {
+            for userInfo in providerData {
+                switch userInfo.providerID {
+                case "facebook.com":
+                    print("Facebook Login")
+                    let loginManager = LoginManager()
+                    loginManager.logOut() // this is an instance function
+                default:
+                    print("provider is \(userInfo.providerID)")
+                }
+            }
+        }
         
         do {
             try firebaseAuth.signOut()

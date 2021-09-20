@@ -153,12 +153,14 @@ class LoginMainPageViewController: UIViewController,  BindableType{
         
 //        MARK: after tap password or email text fields, cant use google login button - solved.
         let _ = googleLoginBtn.rx.controlEvent(.touchUpInside)
+            .throttle(.milliseconds(1000), scheduler: MainScheduler.instance)
             .observe(on: MainScheduler.asyncInstance)
             .flatMap {
                 return self.viewModel.googleLogin(presenting: self)
             }
             .subscribe(onNext: { user in
                 print(user)
+                self.showsViewDuringLogin() //ここで呼ぶのは遅い。　googleのページが閉じてから間がある。
             }
             )
             .disposed(by: viewModel.disposeBag)
@@ -170,12 +172,14 @@ class LoginMainPageViewController: UIViewController,  BindableType{
         self.loginButtonStackView.addArrangedSubview(appleLoginBtn)
       
         appleLoginBtn.rx.controlEvent(.touchUpInside)
+            .throttle(.milliseconds(1000), scheduler: MainScheduler.instance)
             .observe(on: MainScheduler.asyncInstance)
             .flatMap {
                 return self.viewModel.appleLogin(presenting: self)
             }
             .subscribe(onNext: { user in
                 print(user)
+                self.showsViewDuringLogin() //ここで呼ぶのは遅い。　googleのページが閉じてから間がある。
             }, onError: { err in
                 print(err)
             })
@@ -187,12 +191,14 @@ class LoginMainPageViewController: UIViewController,  BindableType{
         self.loginButtonStackView.addArrangedSubview(facebookLoginBtn)
 
         facebookLoginBtn.rx.controlEvent(.touchUpInside)
+            .throttle(.milliseconds(1000), scheduler: MainScheduler.instance)
             .observe(on: MainScheduler.asyncInstance)
             .flatMap {
                 return self.viewModel.faceBookLogin(presenting: self, button: facebookLoginBtn)
             }
             .subscribe(onNext: { user in
                 print(user)
+                self.showsViewDuringLogin() //ここで呼ぶのは遅い。　googleのページが閉じてから間がある。
             }, onError: { err in
                 print(err)
             })
@@ -200,91 +206,17 @@ class LoginMainPageViewController: UIViewController,  BindableType{
 
     }
     
-    
-    @IBAction func unwindtoLoginMain(segue: UIStoryboardSegue) {
-        dismiss(animated: true, completion: nil)
-    }
-    
-    //MARK: Email login
-    @IBAction func loginAction(_ sender: Any) {
+    func showsViewDuringLogin() {
+        let loadingview = UIView(frame: UIScreen.main.bounds)
+        let indicator = UIActivityIndicatorView()
         
-        if self.emailTextField.text == "" || self.passwordTextField.text == "" {
-            //mention that they didn't insert the text field
-            let alertController = UIAlertController(title: "Error", message: "Please enter your email and password", preferredStyle: .alert)
-            let defaultAction = UIAlertAction(title: "OK", style: .cancel, handler: nil)
-            alertController.addAction(defaultAction)
-        } else {
-            Auth.auth().signIn(withEmail: self.emailTextField.text!, password: self.passwordTextField.text!) {
-                (user, error) in
-                
-                if let error = error {
-                    let alertController = UIAlertController(title: "Login Error", message:error.localizedDescription, preferredStyle: .alert)
-                    let okayAction = UIAlertAction(title: "OK", style: .cancel, handler: nil)
-                    alertController.addAction(okayAction)
-                    self.present(alertController, animated: true, completion: nil)
-                    return
-                }
-                
-                guard let currentUser = Auth.auth().currentUser, currentUser.isEmailVerified else {
-                    let alertController = UIAlertController(title: "Login Error", message:"You haven't confirmed your email address yet. We sent you a confirmation email when you sign up. Please click the verification link in that email. If you need us to send the confirmation email again, please tap Resend Email.", preferredStyle: .alert)
-                    let okayAction = UIAlertAction(title: "Resend email", style: .default,handler: { (action) in
-                        Auth.auth().currentUser?.sendEmailVerification(completion: nil)
-                    })
-                    let cancelAction = UIAlertAction(title: "Cancel", style: .cancel, handler: nil)
-                    alertController.addAction(okayAction)
-                    alertController.addAction(cancelAction)
-                    self.present(alertController, animated: true, completion: nil)
-                    return
-                }
-                self.view.endEditing(true)
-                self.passwordTextField.text = ""
-                
-                if  (user?.additionalUserInfo!.isNewUser)! {
-                    
-                    //                    self.vc.isFirst = true
-                    
-                    guard self.navigationController?.topViewController == self else { return }
-                    self.navigationController?.pushViewController(self.vc, animated: true)
-                    
-                } else {
-                    
-                    Firestore.firestore().collection("user").document(Auth.auth().currentUser!.uid).addSnapshotListener { data, error in
-                        if let error = error {
-                            print(error.localizedDescription)
-                        } else {
-                            
-                            if let data = data {
-                                let isFirst = data["isFirst"] as? Bool
-                                if let isFirst = isFirst {
-                                    if isFirst == true {
-                                        //                                        self.vc.isFirst = true
-                                        
-                                        guard self.navigationController?.topViewController == self else { return }
-                                        self.navigationController?.pushViewController(self.vc, animated: true)
-                                        
-                                    } else {
-                                        //                                        self.vc.isFirst = false
-                                        let Storyboard: UIStoryboard = UIStoryboard(name: "Login", bundle: nil)
-                                        let vc = Storyboard.instantiateViewController(withIdentifier: "FirstTimeProfile")
-                                        
-                                        guard self.navigationController?.topViewController == self else { return }
-                                        self.navigationController?.pushViewController(vc, animated: true)
-                                    }
-                                } else {
-                                    //                                    self.vc.isFirst = true
-                                    
-                                    guard self.navigationController?.topViewController == self else { return }
-                                    self.navigationController?.pushViewController(self.vc, animated: true)
-                                }
-                            }
-                            
-                        }
-                    }
-                    
-                    
-                }
-            }
-        }
+        loadingview.backgroundColor = #colorLiteral(red: 0.9960784314, green: 0.9960784314, blue: 0.7411764706, alpha: 1)
+        loadingview.addSubview(indicator)
+        indicator.center = loadingview.center
+        
+        self.view.addSubview(loadingview)
+        
+        indicator.startAnimating()
     }
 }
 
