@@ -18,3 +18,7 @@ enum LoginScene {
 enum MainScene {
     case discovery(DiscoveryVM)
 }
+
+enum IngredientScene {
+    case refrigerator(RefrigeratorVM), edit(EditItemRefrigeratorVM)
+}

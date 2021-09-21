@@ -24,10 +24,7 @@ struct Recipe {
     var isVIPRecipe: Bool?
 }
 
-struct Ingredient {
-    var name: String
-    var amount: String
-}
+
 
 struct Instruction {
     var index: Int

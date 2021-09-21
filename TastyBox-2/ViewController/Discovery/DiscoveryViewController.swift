@@ -95,6 +95,13 @@ class DiscoveryViewController: UIViewController, BindableType {
                 self.viewModel.logout()
             })
             .disposed(by: viewModel.disposeBag)
+        
+        let _  = NotificationCenter.default.rx.notification(NSNotification.Name("ShowRefrigerator"))
+//            .takeNoCompleted(1)
+            .subscribe(onNext: { notification in
+                self.viewModel.toRefrigerator()
+            })
+            .disposed(by: viewModel.disposeBag)
     }
     
     @objc func closeSideMenu() {

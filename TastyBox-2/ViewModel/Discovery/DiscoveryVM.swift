@@ -24,6 +24,15 @@ class DiscoveryVM: ViewModelBase {
         self.user = user
     }
     
+    func toRefrigerator() {
+        
+        let vm = RefrigeratorVM(sceneCoodinator: self.sceneCoodinator, user: self.user)
+        let vc = IngredientScene.refrigerator(vm).viewController()
+        
+        
+        self.sceneCoodinator.transition(to:vc, type: .push)
+    }
+    
     func logout() {
   
         let firebaseAuth = Auth.auth()
