@@ -57,6 +57,7 @@ class RefrigeratorDM: RefrigeratorProtocol {
         return Completable.create { completable in
             
             if edittingItem.name == name {
+                
                 db.collection("users").document(userID).collection("refrigerator").document(name).setData(
                     
                    ["amount": amount], merge: true) { err in

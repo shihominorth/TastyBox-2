@@ -24,7 +24,7 @@ class RefrigeratorVM: ViewModelBase {
     var err = NSError()
 
     var items: [RefrigeratorItem] = []
-    var observableItems: Observable<[RefrigeratorItem]>!
+    var observableItems = PublishSubject<[RefrigeratorItem]>()
     
     init(sceneCoodinator: SceneCoordinator, apiType: RefrigeratorProtocol.Type = RefrigeratorDM.self, user: FirebaseAuth.User) {
         self.sceneCoodinator = sceneCoodinator
@@ -61,6 +61,11 @@ class RefrigeratorVM: ViewModelBase {
             self.items = items
         })
         
-        observableItems = self.apiType.getRefrigeratorDetail(userID: self.user.uid).asObservable()
+        _ = self.apiType.getRefrigeratorDetail(userID: self.user.uid).subscribe(onSuccess: { items in
+            self.observableItems.onNext(items)
+        }, onFailure: { err in
+            err.handleFireStoreError()?.generateErrAlert()
+        })
+       
     }
 }

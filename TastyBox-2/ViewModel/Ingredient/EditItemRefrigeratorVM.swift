@@ -30,8 +30,10 @@ class EditItemRefrigeratorVM: ViewModelBase {
     init(sceneCoodinator: SceneCoordinator, apiType: RefrigeratorProtocol.Type = RefrigeratorDM.self, user: FirebaseAuth.User,  item: Ingredient?) {
         self.sceneCoodinator = sceneCoodinator
         self.apiType = apiType
-        self.item = item
         self.user = user
+
+        self.item = item
+ 
     }
     
     func addItem(name: String, amount: String) {

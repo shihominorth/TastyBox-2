@@ -61,8 +61,7 @@ class RefrigeratorViewController: UIViewController, BindableType {
     }
     
     override func viewWillAppear(_ animated: Bool) {
-//        guard let uid = Auth.auth().currentUser?.uid else { return }
-//        dataManager.getRefrigeratorDetail(userID: uid)
+
         viewModel.getItems(listName: .refrigerator)
     }
     
@@ -85,8 +84,10 @@ class RefrigeratorViewController: UIViewController, BindableType {
        
         tableView.rx.itemSelected
             .subscribe(onNext: { [unowned self] indexPath in
+                
                 self.tableView.deselectRow(at: indexPath, animated: true)
-                _ = self.viewModel.toEditItem(index: indexPath.row)
+                self.viewModel.toEditItem(index: indexPath.row)
+            
             })
             .disposed(by: viewModel.disposeBag)
         

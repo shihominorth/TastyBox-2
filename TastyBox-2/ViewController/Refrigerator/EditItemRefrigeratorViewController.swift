@@ -98,6 +98,7 @@ class EditItemRefrigeratorViewController: UIViewController, BindableType {
     
     func bindViewModel() {
         
+        
         _ = nameTextField.rx.text.orEmpty.bind(to: viewModel.name)
         _ = amountTextField.rx.text.orEmpty.bind(to: viewModel.amount)
         
@@ -120,7 +121,11 @@ class EditItemRefrigeratorViewController: UIViewController, BindableType {
       
         
         if let item = viewModel.item {
-           
+   
+            //このタイミングで以下をしないと上手く動かない
+            viewModel.name.accept(item.name)
+            viewModel.amount.accept(item.amount)
+            
             nameTextField.text = item.name
             amountTextField.text = item.amount
             editBtn.setTitle("Edit", for: .normal)
@@ -132,7 +137,8 @@ class EditItemRefrigeratorViewController: UIViewController, BindableType {
                 })
           
         } else {
-           
+            
+            
             _ = editBtn.rx.tap
                 .subscribe(onNext: { _ in
                     
