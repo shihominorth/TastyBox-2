@@ -30,7 +30,7 @@ class RefrigeratorDM: RefrigeratorProtocol {
     
     static func editIngredient(name: String, amount: String, userID: String) {
         
-        db.collection("user").document(userID).collection("refrigerator").document(name).setData(
+        db.collection("users").document(userID).collection("refrigerator").document(name).setData(
             [ "name": name,
               "amount": amount,], merge: true)
     }
@@ -39,7 +39,7 @@ class RefrigeratorDM: RefrigeratorProtocol {
         
         return Completable.create { completable in
             
-            self.db.collection("user").document(userID).collection("refrigerator").document(name).setData([
+            self.db.collection("users").document(userID).collection("refrigerator").document(name).setData([
                 "name": name,
                 "amount": amount,
                 

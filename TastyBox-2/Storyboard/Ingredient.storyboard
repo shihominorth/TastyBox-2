@@ -173,9 +173,7 @@
                             <constraint firstItem="shs-Hv-W3o" firstAttribute="trailing" secondItem="4b2-EP-UR6" secondAttribute="trailing" constant="20" id="zNa-e3-8v2"/>
                         </constraints>
                     </view>
-                    <navigationItem key="navigationItem" id="lW3-0J-19u">
-                        <barButtonItem key="rightBarButtonItem" systemItem="done" id="Ndw-jS-WUw"/>
-                    </navigationItem>
+                    <navigationItem key="navigationItem" id="lW3-0J-19u"/>
                     <connections>
                         <outlet property="addBtn" destination="K92-k9-N9U" id="Wry-As-hf0"/>
                         <outlet property="amountTextField" destination="IfU-gz-hhN" id="tHR-UN-dKg"/>
@@ -184,7 +182,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="3Us-yu-LHy" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="9281.1594202898559" y="871.875"/>
+            <point key="canvasLocation" x="10191.304347826088" y="871.875"/>
         </scene>
     </scenes>
     <resources>

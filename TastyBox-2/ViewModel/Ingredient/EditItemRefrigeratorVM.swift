@@ -15,42 +15,41 @@ class EditItemRefrigeratorVM: ViewModelBase {
     
     let sceneCoodinator: SceneCoordinator
     let apiType: RefrigeratorProtocol.Type
+    
     var user: FirebaseAuth.User!
     var err = NSError()
+    
     let item: Ingredient!
     
+    var name = BehaviorRelay<String>(value: "")
+    var amount = BehaviorRelay<String>(value: "")
+    
+    var isEnableDone = BehaviorRelay(value: false)
+
     
     init(sceneCoodinator: SceneCoordinator, apiType: RefrigeratorProtocol.Type = RefrigeratorDM.self, user: FirebaseAuth.User,  item: Ingredient?) {
         self.sceneCoodinator = sceneCoodinator
         self.apiType = apiType
         self.item = item
+        self.user = user
     }
     
-    lazy var addItem: Action<(String, String), Swift.Never> = { this in
+    func addItem(name: String, amount: String) {
         
         
-        return Action { name, amount in
-           
-            return Observable.create { observer in
+        self.apiType.addIngredient(name: name, amount: amount, userID: self.user.uid)
+            .catch { err in
                 
-                self.apiType.addIngredient(name: name, amount: amount, userID: self.user.uid)
-                    .subscribe(onCompleted: {
-                        
-                        print("Document successfully written!")
-                        
-//                        self.sceneCoodinator.pop(animated: true)
-                        
-                    }, onError: { err in
-                        
-                        print("Error writing document: \(err)")
-                        
-//                        guard let err
-                    })
-                    .disposed(by: self.disposeBag)
+                print("Error writing document: \(err)")
                 
-                return Disposables.create()
+                return .empty()
             }
-        }
+            .subscribe(onCompleted: {
+                print("Document successfully written!")
+            }, onDisposed: {
+                print("disposed")
+            })
+            .disposed(by: self.disposeBag)
         
-    }(self)
+    }
 }

@@ -30,10 +30,6 @@ class EditItemRefrigeratorViewController: UIViewController, BindableType {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        // Do any additional setup after loading the view.
-//        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow), name: UIResponder.keyboardWillShowNotification, object: nil)
-//        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide), name: UIResponder.keyboardWillHideNotification, object: nil)
-//
         nameTextField.delegate = self
         amountTextField.delegate = self
         
@@ -41,17 +37,88 @@ class EditItemRefrigeratorViewController: UIViewController, BindableType {
             nameTextField.text = name
             amountTextField.text = amount
         }
+        
+//        setUpKeyboard()
+        
+        NotificationCenter.default.rx.notification(UIResponder.keyboardWillShowNotification)
+            .observe(on: MainScheduler.asyncInstance)
+            .subscribe(onNext: {  [unowned self] notification in
+                
+                if let keyboardSize = (notification.userInfo?[UIResponder.keyboardFrameBeginUserInfoKey] as? NSValue)?.cgRectValue {
+                    
+                    if nameTextField.isFirstResponder {
+                        if let frame = nameTextField.superview?.convert(nameTextField.frame, to: nil) {
+                            
+                            if frame.origin.y > keyboardSize.origin.y + 10 {
+                                self.view.center.y -= 100
+                            }
+                            
+                        }
+                    }
+                    else if amountTextField.isFirstResponder {
+                        if let frame = nameTextField.superview?.convert(amountTextField.frame, to: nil) {
+                            
+                            if frame.origin.y > keyboardSize.origin.y + 10 {
+                                self.view.center.y -= 100
+                            }
+                            
+                        }
+                    }
+                    
+                }
+                
+                if let gestureRecognizers = self.view.gestureRecognizers  {
+                    
+                    if gestureRecognizers.filter({ $0.name == "dissmiss"}).isEmpty {
+                        self.view.addGestureRecognizer(tap)
+                        self.view.gestureRecognizers![0].name = "dissmiss"
+                    }
+                    
+                } else {
+                    
+                    
+                    self.view.addGestureRecognizer(tap)
+                    self.view.gestureRecognizers![0].name = "dissmiss"
+                }
+                
+            })
+            .disposed(by: viewModel.disposeBag)
+        
+        NotificationCenter.default.rx.notification(UIResponder.keyboardWillShowNotification)
+            .observe(on: MainScheduler.asyncInstance)
+            .subscribe(onNext: {  [unowned self] notification in
+                
+                if self.view.frame.origin.y != 0 {
+                    self.view.frame.origin.y = 0
+                }
+            })
+            .disposed(by: viewModel.disposeBag)
     }
     
     
     func bindViewModel() {
         
-        let info = Observable.combineLatest(nameTextField.rx.text.orEmpty, amountTextField.rx.text.orEmpty)
+        _ = nameTextField.rx.text.orEmpty.bind(to: viewModel.name)
+        _ = amountTextField.rx.text.orEmpty.bind(to: viewModel.amount)
         
-        addBtn.rx.tap
-            .withLatestFrom(info)
-            .bind(to: viewModel.addItem.inputs)
-            .disposed(by: viewModel.disposeBag)
+        let _ = viewModel.isEnableDone.bind(to: addBtn.rx.isEnabled)
+
+        
+        _ = Observable.combineLatest(nameTextField.rx.text.orEmpty, amountTextField.rx.text.orEmpty)
+            .subscribe { name, amount in
+            
+            if name.isNotEmpty && amount.isNotEmpty {
+                self.viewModel.isEnableDone.accept(true)
+            }
+            else {
+                self.viewModel.isEnableDone.accept(false)
+            }
+        }
+        
+       _ = addBtn.rx.tap
+            .subscribe(onNext: { _ in
+                self.viewModel.addItem(name: self.viewModel.name.value, amount: self.viewModel.amount.value)
+            })
     }
     
     
@@ -91,7 +158,7 @@ extension EditItemRefrigeratorViewController: UITextFieldDelegate {
         }
         return true
     }
-    
+//
     @objc func keyboardWillShow(notification: NSNotification) {
         if let keyboardSize = (notification.userInfo?[UIResponder.keyboardFrameBeginUserInfoKey] as? NSValue)?.cgRectValue {
             if self.view.frame.origin.y == 0 {
@@ -99,7 +166,7 @@ extension EditItemRefrigeratorViewController: UITextFieldDelegate {
             }
         }
     }
-    
+
     @objc func keyboardWillHide() {
         if self.view.frame.origin.y != 0 {
             self.view.frame.origin.y = 0
