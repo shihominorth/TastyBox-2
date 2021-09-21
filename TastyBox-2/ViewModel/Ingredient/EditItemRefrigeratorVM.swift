@@ -19,13 +19,13 @@ class EditItemRefrigeratorVM: ViewModelBase {
     var user: FirebaseAuth.User!
     var err = NSError()
     
-    let item: Ingredient!
+    var item: Ingredient!
     
     var name = BehaviorRelay<String>(value: "")
     var amount = BehaviorRelay<String>(value: "")
     
     var isEnableDone = BehaviorRelay(value: false)
-
+    
     
     init(sceneCoodinator: SceneCoordinator, apiType: RefrigeratorProtocol.Type = RefrigeratorDM.self, user: FirebaseAuth.User,  item: Ingredient?) {
         self.sceneCoodinator = sceneCoodinator
@@ -47,7 +47,7 @@ class EditItemRefrigeratorVM: ViewModelBase {
             }
             .subscribe(onCompleted: {
                 print("Document successfully written!")
-
+                
                 self.sceneCoodinator.pop(animated: true)
                 
             }, onDisposed: {
@@ -55,5 +55,26 @@ class EditItemRefrigeratorVM: ViewModelBase {
             })
             .disposed(by: self.disposeBag)
         
+    }
+    
+    func editItem(name: String, amount: String) {
+        
+        self.apiType.editIngredient(edittingItem: self.item, name: name, amount: amount, userID: self.user.uid)
+            .catch { err in
+                
+                print("Error writing document: \(err)")
+                err.handleFireStoreError()?.generateErrAlert()
+                
+                return .empty()
+            }
+            .subscribe(onCompleted: {
+                print("Document successfully written!")
+                
+                self.sceneCoodinator.pop(animated: true)
+                
+            }, onDisposed: {
+                print("disposed")
+            })
+            .disposed(by: disposeBag)
     }
 }

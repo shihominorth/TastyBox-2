@@ -18,7 +18,7 @@ class EditItemRefrigeratorViewController: UIViewController, BindableType {
     
     @IBOutlet weak var nameTextField: UITextField!
     @IBOutlet weak var amountTextField: UITextField!
-    @IBOutlet weak var addBtn: UIButton!
+    @IBOutlet weak var editBtn: UIButton!
     
     var name: String?
     var amount: String?
@@ -38,7 +38,6 @@ class EditItemRefrigeratorViewController: UIViewController, BindableType {
             amountTextField.text = amount
         }
         
-//        setUpKeyboard()
         
         NotificationCenter.default.rx.notification(UIResponder.keyboardWillShowNotification)
             .observe(on: MainScheduler.asyncInstance)
@@ -93,6 +92,7 @@ class EditItemRefrigeratorViewController: UIViewController, BindableType {
                 }
             })
             .disposed(by: viewModel.disposeBag)
+        
     }
     
     
@@ -101,24 +101,70 @@ class EditItemRefrigeratorViewController: UIViewController, BindableType {
         _ = nameTextField.rx.text.orEmpty.bind(to: viewModel.name)
         _ = amountTextField.rx.text.orEmpty.bind(to: viewModel.amount)
         
-        let _ = viewModel.isEnableDone.bind(to: addBtn.rx.isEnabled)
+        let _ = viewModel.isEnableDone.bind(to: editBtn.rx.isEnabled)
 
+        
+        self.viewModel.isEnableDone.subscribe(onNext: { isEnable in
+            
+            if isEnable {
+                self.editBtn.backgroundColor = #colorLiteral(red: 1, green: 0.8, blue: 0, alpha: 1)
+                self.editBtn.setTitleColor(#colorLiteral(red: 1.0, green: 1.0, blue: 1.0, alpha: 1.0), for: .normal)
+
+            } else {
+                self.editBtn.backgroundColor = #colorLiteral(red: 0.8039215803, green: 0.8039215803, blue: 0.8039215803, alpha: 1)
+                self.editBtn.setTitleColor(#colorLiteral(red: 0.2549019754, green: 0.2745098174, blue: 0.3019607961, alpha: 1), for: .normal)
+            }
+            
+        })
+        .disposed(by: viewModel.disposeBag)
+      
+        
+        if let item = viewModel.item {
+           
+            nameTextField.text = item.name
+            amountTextField.text = item.amount
+            editBtn.setTitle("Edit", for: .normal)
+            
+            _ = editBtn.rx.tap
+                .subscribe(onNext: { _ in
+                    
+                    self.viewModel.editItem(name: self.viewModel.name.value, amount: self.viewModel.amount.value)
+                })
+          
+        } else {
+           
+            _ = editBtn.rx.tap
+                .subscribe(onNext: { _ in
+                    
+                    self.viewModel.addItem(name: self.viewModel.name.value, amount: self.viewModel.amount.value)
+                })
+            
+        }
+        
         
         _ = Observable.combineLatest(nameTextField.rx.text.orEmpty, amountTextField.rx.text.orEmpty)
             .subscribe { name, amount in
             
             if name.isNotEmpty && amount.isNotEmpty {
-                self.viewModel.isEnableDone.accept(true)
+               
+                // edit
+                if let item = self.viewModel.item  {
+                    
+                    if item.name == name && item.amount == amount {
+                        self.viewModel.isEnableDone.accept(false)
+                    } else {
+                        self.viewModel.isEnableDone.accept(true)
+                    }
+                // add
+                } else {
+                    self.viewModel.isEnableDone.accept(true)
+                }
             }
             else {
                 self.viewModel.isEnableDone.accept(false)
             }
+                
         }
-        
-       _ = addBtn.rx.tap
-            .subscribe(onNext: { _ in
-                self.viewModel.addItem(name: self.viewModel.name.value, amount: self.viewModel.amount.value)
-            })
     }
     
     

@@ -13,27 +13,20 @@ import RxCocoa
 protocol RefrigeratorProtocol: AnyObject {
   
     static func addIngredient(name: String, amount: String, userID: String) -> Completable
-    static func editIngredient(name: String, amount: String, userID: String)
+    static func editIngredient(edittingItem: Ingredient, name: String, amount: String, userID: String) -> Completable
     static func getRefrigeratorDetail(userID: String) -> Single<[RefrigeratorItem]>
     static func deleteData(name: String, indexPath: IndexPath)
     static func searchIngredients(text: String)
-
+    
 }
 
 class RefrigeratorDM: RefrigeratorProtocol {
-
-   static let db = Firestore.firestore()
     
-//    var delegate: getIngredientRefrigeratorDataDelegate?
+    static let db = Firestore.firestore()
+    
+    //    var delegate: getIngredientRefrigeratorDataDelegate?
     
     var ingredients:[RefrigeratorItem] = []
-    
-    static func editIngredient(name: String, amount: String, userID: String) {
-        
-        db.collection("users").document(userID).collection("refrigerator").document(name).setData(
-            [ "name": name,
-              "amount": amount,], merge: true)
-    }
     
     static func addIngredient(name: String, amount: String, userID: String) -> Completable {
         
@@ -45,11 +38,11 @@ class RefrigeratorDM: RefrigeratorProtocol {
                 
             ], merge: true) { err in
                 if let err = err {
-            
+                    
                     completable(.error(err))
-            
+                    
                 } else {
-                   
+                    
                     completable(.completed)
                 }
                 
@@ -58,6 +51,64 @@ class RefrigeratorDM: RefrigeratorProtocol {
         }
         
     }
+    
+    static func editIngredient(edittingItem: Ingredient, name: String, amount: String, userID: String) -> Completable {
+        
+        return Completable.create { completable in
+            
+            if edittingItem.name == name {
+                db.collection("users").document(userID).collection("refrigerator").document(name).setData(
+                    
+                   ["amount": amount], merge: true) { err in
+                    
+                    if let err = err {
+                        
+                        completable(.error(err))
+                        
+                    } else {
+                        
+                        completable(.completed)
+                    }
+                    
+                }
+                
+            }
+            else {
+               
+                db.collection("users").document(userID).collection("refrigerator").document(edittingItem.name).delete { err in
+                    
+                    if let err = err {
+                        
+                        completable(.error(err))
+                        
+                    } else {
+                        
+                        db.collection("users").document(userID).collection("refrigerator").document(name).setData(
+                            
+                            [ "name": name,
+                              "amount": amount], merge: true) { err in
+                            
+                            if let err = err {
+                                
+                                completable(.error(err))
+                                
+                            } else {
+                                
+                                completable(.completed)
+                            }
+                            
+                        }
+                        
+                    }
+                    
+                }
+            }
+            
+            return Disposables.create()
+        }
+    }
+    
+
     
     static func getRefrigeratorDetail(userID: String)  -> Single<[RefrigeratorItem]> {
         

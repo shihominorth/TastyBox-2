@@ -154,7 +154,7 @@
                                         <rect key="frame" x="0.0" y="189" width="374" height="36"/>
                                         <color key="backgroundColor" red="1" green="0.80000000000000004" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                         <fontDescription key="fontDescription" type="boldSystem" pointSize="20"/>
-                                        <state key="normal" title="ADD">
+                                        <state key="normal" title="Add">
                                             <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                         </state>
                                     </button>
@@ -175,8 +175,8 @@
                     </view>
                     <navigationItem key="navigationItem" id="lW3-0J-19u"/>
                     <connections>
-                        <outlet property="addBtn" destination="K92-k9-N9U" id="Wry-As-hf0"/>
                         <outlet property="amountTextField" destination="IfU-gz-hhN" id="tHR-UN-dKg"/>
+                        <outlet property="editBtn" destination="K92-k9-N9U" id="Wry-As-hf0"/>
                         <outlet property="nameTextField" destination="AxY-rw-NaK" id="6ia-WQ-r4X"/>
                     </connections>
                 </viewController>

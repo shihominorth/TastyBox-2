@@ -51,7 +51,7 @@ class RefrigeratorViewController: UIViewController, BindableType {
 //        dataManager.getRefrigeratorDetail(userID: uid)
 //        dataManager.delegate = self
         SetUpAddBtn()
-
+        setUpTableView()
 //        addButton = UIBarButtonItem(title:  "＋", style: .plain, target: self, action: #selector(add))
         editButton = UIBarButtonItem(title:  "Edit", style: .plain, target: self, action: #selector(edit))
         deletebutton = UIBarButtonItem(title:  "Delete", style: .plain, target: self, action:
@@ -63,13 +63,14 @@ class RefrigeratorViewController: UIViewController, BindableType {
     override func viewWillAppear(_ animated: Bool) {
 //        guard let uid = Auth.auth().currentUser?.uid else { return }
 //        dataManager.getRefrigeratorDetail(userID: uid)
+        viewModel.getItems(listName: .refrigerator)
     }
     
     func bindViewModel() {
        
         viewModel.getItems(listName: .refrigerator)
         
-        viewModel.items.bind(to: tableView.rx.items(cellIdentifier: IngredientTableViewCell.identifier,
+        viewModel.observableItems.bind(to: tableView.rx.items(cellIdentifier: IngredientTableViewCell.identifier,
                                           cellType: IngredientTableViewCell.self)) { row, element, cell in
             cell.configure(item: element)
 
@@ -78,6 +79,18 @@ class RefrigeratorViewController: UIViewController, BindableType {
         
         addBtn.rx.action = viewModel.toAddItem()
 
+    }
+    
+    func setUpTableView() {
+       
+        tableView.rx.itemSelected
+            .subscribe(onNext: { [unowned self] indexPath in
+                self.tableView.deselectRow(at: indexPath, animated: true)
+                _ = self.viewModel.toEditItem(index: indexPath.row)
+            })
+            .disposed(by: viewModel.disposeBag)
+        
+       
     }
     
     
