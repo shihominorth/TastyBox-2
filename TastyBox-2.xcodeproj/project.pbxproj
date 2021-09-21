@@ -400,13 +400,21 @@
 			path = Ingredient;
 			sourceTree = "<group>";
 		};
+		6FE9EB5B26F9E7CC000AF9D4 /* StartCVCell */ = {
+			isa = PBXGroup;
+			children = (
+				6F06EBE226F5F28C00F2218B /* StartCVCell.swift */,
+				6F06EBE426F5FD0100F2218B /* StartCVCell.xib */,
+			);
+			path = StartCVCell;
+			sourceTree = "<group>";
+		};
 		6FEA390F26D8C362002F81A3 /* View */ = {
 			isa = PBXGroup;
 			children = (
 				6FEA390D26D8C35B002F81A3 /* CustomPickerView.swift */,
 				6F512A2F26F45BF200826657 /* TutorialCVCell.swift */,
-				6F06EBE226F5F28C00F2218B /* StartCVCell.swift */,
-				6F06EBE426F5FD0100F2218B /* StartCVCell.xib */,
+				6FE9EB5B26F9E7CC000AF9D4 /* StartCVCell */,
 				6FE9EB5526F9BA30000AF9D4 /* IngredientTableViewCell.swift */,
 			);
 			path = View;

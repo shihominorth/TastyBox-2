@@ -7,6 +7,8 @@
 
 import UIKit
 import Firebase
+import RxSwift
+import RxCocoa
 
 class RefrigeratorViewController: UIViewController, BindableType {
     
@@ -65,13 +67,14 @@ class RefrigeratorViewController: UIViewController, BindableType {
     
     func bindViewModel() {
        
-//        viewModel.items.bind(to: tableView.rx.items(cellIdentifier: IngredientTableViewCell.identifier,
-//                                          cellType: IngredientTableViewCell.self)) { row, element, cell in
-////            cell.configure(item: element)
-//            cell.amountLbl.text = "大さじ１"
-//            cell.nameLbl.text = "砂糖"
-//        }
-//        .disposed(by: viewModel.disposeBag)
+        viewModel.getItems(listName: .refrigerator)
+        
+        viewModel.items.bind(to: tableView.rx.items(cellIdentifier: IngredientTableViewCell.identifier,
+                                          cellType: IngredientTableViewCell.self)) { row, element, cell in
+            cell.configure(item: element)
+
+        }
+        .disposed(by: viewModel.disposeBag)
         
         addBtn.rx.action = viewModel.toAddItem()
 
@@ -154,6 +157,34 @@ class RefrigeratorViewController: UIViewController, BindableType {
     }
     
 }
+
+//final class MyDataSource: NSObject, UITableViewDataSource, RxTableViewDataSourceType {
+//
+//    typealias Element = [RefrigeratorItem]
+//    var items = [RefrigeratorItem]()
+//
+//    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+//        return items.count
+//    }
+//
+//    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+//        let cell = tableView.dequeueReusableCell(withIdentifier: IngredientTableViewCell.identifier,
+//                                                 for: indexPath) as! IngredientTableViewCell
+//        let item = items[indexPath.row]
+//        cell.configure(item: item)
+//        return cell
+//    }
+//
+//    func tableView(_ tableView: UITableView, observedEvent: Event<[RefrigeratorItem]>) {
+//        Binder(self) { dataSource, element in
+//            guard let items = element.element else { return }
+//            dataSource.items = items
+//            tableView.reloadData()
+//        }
+//        .onNext(observedEvent)
+//    }
+//}
+
 //
 //extension RefrigeratorViewController: UITableViewDataSource {
 //    

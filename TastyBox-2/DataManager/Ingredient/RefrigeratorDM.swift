@@ -14,7 +14,7 @@ protocol RefrigeratorProtocol: AnyObject {
   
     static func addIngredient(name: String, amount: String, userID: String) -> Completable
     static func editIngredient(name: String, amount: String, userID: String)
-    static func getRefrigeratorDetail(userID: String)
+    static func getRefrigeratorDetail(userID: String) -> Single<[RefrigeratorItem]>
     static func deleteData(name: String, indexPath: IndexPath)
     static func searchIngredients(text: String)
 
@@ -59,37 +59,35 @@ class RefrigeratorDM: RefrigeratorProtocol {
         
     }
     
-   static func getRefrigeratorDetail(userID: String) {
+    static func getRefrigeratorDetail(userID: String)  -> Single<[RefrigeratorItem]> {
         
-        db.collection("user").document(userID).collection("refrigerator").addSnapshotListener { querySnapshot, error in
-            if error != nil {
-                print("Error getting documents: \(String(describing: error))")
-            } else {
+        
+        return Single.create { single in
+           
+            db.collection("users").document(userID).collection("refrigerator").addSnapshotListener { querySnapshot, err in
+
+                if let err = err {
                 
-//                self.ingredients.removeAll()
-                
-                //For-loop
-                for document in querySnapshot!.documents {
-                                        
+                    single(.failure(err))
+               
+                } else {
                     
-//                    let name = data["name"] as? String
-//                    let amount = data["amount"] as? String
-//
-                    if let ingredient = RefrigeratorItem(document: document) {
-                    
-//                       self.ingredients.append(ingredient)
+                    let ingredients = querySnapshot?.documents.map { doc  -> RefrigeratorItem in
+                        
+                        if let ingredient = RefrigeratorItem(document: doc) {
+                            return ingredient
+                        }
+                        
+                        return RefrigeratorItem(name: "", amount: "", key: "")
                     }
+                    .filter { $0.name != "" && $0.amount != "" && $0.key != "" }
                     
-                }
-                
-                if querySnapshot?.documents.count == 0 {
-//                    self.delegate?.gotData(ingredients: self.ingredients)
+                    single(.success(ingredients ?? []))
+                    
                 }
                 
             }
-            
-//            self.delegate?.gotData(ingredients: self.ingredients)
-            
+            return Disposables.create()
         }
         
     }

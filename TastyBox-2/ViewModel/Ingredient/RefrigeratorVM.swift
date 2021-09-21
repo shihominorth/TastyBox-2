@@ -11,17 +11,21 @@ import RxSwift
 import RxCocoa
 import Action
 
+enum List {
+    case shopping, refrigerator
+}
+
 class RefrigeratorVM: ViewModelBase {
     
     let sceneCoodinator: SceneCoordinator
-    let apiType: LoginMainProtocol.Type
+    let apiType: RefrigeratorProtocol.Type
 
     var user: FirebaseAuth.User!
     var err = NSError()
 
     var items: Observable<[RefrigeratorItem]>!
     
-    init(sceneCoodinator: SceneCoordinator, apiType: LoginMainProtocol.Type = LoginMainDM.self, user: FirebaseAuth.User) {
+    init(sceneCoodinator: SceneCoordinator, apiType: RefrigeratorProtocol.Type = RefrigeratorDM.self, user: FirebaseAuth.User) {
         self.sceneCoodinator = sceneCoodinator
         self.apiType = apiType
         self.user = user
@@ -36,5 +40,10 @@ class RefrigeratorVM: ViewModelBase {
             
             return self.sceneCoodinator.transition(to: vc, type: .push).asObservable().map { _ in }
         }
+    }
+    
+    func getItems(listName: List) {
+       
+        items = self.apiType.getRefrigeratorDetail(userID: self.user.uid).asObservable()
     }
 }
