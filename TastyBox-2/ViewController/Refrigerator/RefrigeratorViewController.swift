@@ -79,7 +79,12 @@ class RefrigeratorViewController: UIViewController, BindableType {
         .disposed(by: viewModel.disposeBag)
         
         addBtn.rx.action = viewModel.toAddItem()
-
+        
+        viewModel.isTableViewEditable
+            .bind(to: self.addBtn.rx.isHidden).disposed(by: viewModel.disposeBag)
+        viewModel.isSelectedCells
+            .bind(to: self.deletebutton.rx.isEnabled).disposed(by: viewModel.disposeBag)
+        
         setUpEditBtn()
     }
     
@@ -87,6 +92,7 @@ class RefrigeratorViewController: UIViewController, BindableType {
 
 
         tableView.rx.itemSelected
+            .observe(on: MainScheduler.asyncInstance)
             .catch { err in
                
                 let err = err as NSError
@@ -100,7 +106,9 @@ class RefrigeratorViewController: UIViewController, BindableType {
                 if self.tableView.isEditing {
                     
                     tableView.cellForRow(at: indexPath)?.backgroundColor = .white
-                
+                   
+                    self.viewModel.isSelectedCells.accept(true)
+
                 } else {
                     
                     self.viewModel.toEditItem(index: indexPath.row)
@@ -110,8 +118,33 @@ class RefrigeratorViewController: UIViewController, BindableType {
             })
             .disposed(by: viewModel.disposeBag)
         
+        
+        
+        tableView.rx.itemDeselected
+            .observe(on: MainScheduler.asyncInstance)
+            .catch { err in
+               
+                let err = err as NSError
+                print(err)
+                
+                return .empty()
+            }
+            .subscribe(onNext: { [unowned self] event in
+                
+                if self.tableView.isEditing {
+                    
+                    guard let _ = tableView.indexPathsForSelectedRows else {
+                        self.viewModel.isSelectedCells.accept(false)
+                        return
+                    }
+                }
+                
+            })
+            .disposed(by: viewModel.disposeBag)
+        
        
         tableView.rx.itemMoved
+            .observe(on: MainScheduler.asyncInstance)
             .catch { err in
                
                 let err = err as NSError
@@ -131,9 +164,10 @@ class RefrigeratorViewController: UIViewController, BindableType {
                 
             })
             .disposed(by: viewModel.disposeBag)
-//        tableView.rx.setDelegate(self).disposed(by: viewModel.disposeBag)
+     
         
         tableView.rx.itemDeleted
+            .observe(on: MainScheduler.asyncInstance)
             .catch { err in
                
                 let err = err as NSError
@@ -149,7 +183,7 @@ class RefrigeratorViewController: UIViewController, BindableType {
             })
             .disposed(by: viewModel.disposeBag)
         
-        viewModel.isTableViewEditable.bind(to: self.addBtn.rx.isHidden).disposed(by: viewModel.disposeBag)
+      
     }
     
     
@@ -157,7 +191,7 @@ class RefrigeratorViewController: UIViewController, BindableType {
     func setUpEditBtn() {
         
         deletebutton.title = "Delete"
-        doneBtn.title = "Cancel"
+        doneBtn.title = "Done"
         tableView.allowsMultipleSelectionDuringEditing = true
 
         // make table view is editable
@@ -172,7 +206,7 @@ class RefrigeratorViewController: UIViewController, BindableType {
             }
             .subscribe(onNext: { [unowned self]  _ in
               
-                self.navigationItem.rightBarButtonItems = [deletebutton, doneBtn]
+                self.navigationItem.rightBarButtonItems = [doneBtn, deletebutton]
                 self.tableView.setEditing(true, animated: true)
                 self.viewModel.isTableViewEditable.accept(true)
             })
@@ -214,6 +248,19 @@ class RefrigeratorViewController: UIViewController, BindableType {
             })
             .disposed(by: viewModel.disposeBag)
         
+        
+        doneBtn.rx.tap
+            .catch { err in
+                print(err)
+                return .empty()
+            }
+            .subscribe(onNext: { [unowned self] element in
+
+                self.navigationItem.rightBarButtonItems = [editButton]
+                self.tableView.setEditing(false, animated: true)
+
+            })
+            .disposed(by: viewModel.disposeBag)
     }
     
     @objc func edit() {
@@ -306,19 +353,19 @@ extension RefrigeratorViewController: UITableViewDelegate {
 //        return true
 //    }
 //
-//    func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
-//
-//        if editingStyle == .delete {
-//
-//            viewModel.items.remove(at: indexPath.row)
-//            viewModel.observableItems.onNext(viewModel.items)
-//
-//            tableView.deleteRows(at: [indexPath], with: .fade)
-//
-//        } else if editingStyle == .insert {
-//            // Create a new instance of the appropriate class, insert it into the array, and add a new row to the table view.
-//        }
-//    }
+    func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
+
+        if editingStyle == .delete {
+
+            viewModel.items.remove(at: indexPath.row)
+            viewModel.observableItems.onNext(viewModel.items)
+
+            tableView.deleteRows(at: [indexPath], with: .fade)
+
+        } else if editingStyle == .insert {
+            // Create a new instance of the appropriate class, insert it into the array, and add a new row to the table view.
+        }
+    }
     
     
     

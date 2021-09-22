@@ -27,6 +27,9 @@ class RefrigeratorVM: ViewModelBase {
     var observableItems = PublishSubject<[RefrigeratorItem]>()
     
     var isTableViewEditable = BehaviorRelay<Bool>(value: false)
+    var isSelectedCells = BehaviorRelay<Bool>(value: false)
+    
+    
     
     init(sceneCoodinator: SceneCoordinator, apiType: RefrigeratorProtocol.Type = RefrigeratorDM.self, user: FirebaseAuth.User) {
         self.sceneCoodinator = sceneCoodinator
@@ -69,5 +72,33 @@ class RefrigeratorVM: ViewModelBase {
             err.handleFireStoreError()?.generateErrAlert()
         })
        
+    }
+    
+    func cancel() -> Observable<Bool> {
+        
+        let publishRelay = PublishSubject<Bool>()
+       
+        return Observable.create { [unowned self] observer in
+           
+            self.observableItems
+                .catch { err in
+
+                    print(err)
+                    
+                    observer.onNext(false)
+                    return .empty()
+                }
+                .subscribe(onNext: { [unowned self] items in
+                
+                    self.items = items
+                    self.observableItems.onNext(self.items)
+                    
+                    publishRelay.onNext(true)
+                })
+                .disposed(by: self.disposeBag)
+            
+          
+            return Disposables.create()
+        }
     }
 }
