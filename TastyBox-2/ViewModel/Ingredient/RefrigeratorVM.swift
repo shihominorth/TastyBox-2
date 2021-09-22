@@ -26,6 +26,8 @@ class RefrigeratorVM: ViewModelBase {
     var items: [RefrigeratorItem] = []
     var observableItems = PublishSubject<[RefrigeratorItem]>()
     
+    var isTableViewEditable = BehaviorRelay<Bool>(value: false)
+    
     init(sceneCoodinator: SceneCoordinator, apiType: RefrigeratorProtocol.Type = RefrigeratorDM.self, user: FirebaseAuth.User) {
         self.sceneCoodinator = sceneCoodinator
         self.apiType = apiType

@@ -30,12 +30,14 @@ class RefrigeratorViewController: UIViewController, BindableType {
     var deletebutton = UIBarButtonItem()
 //    var addButton = UIBarButtonItem()
     var editButton = UIBarButtonItem()
-        
+    var doneBtn = UIBarButtonItem()
+    
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        // Do any additional setup after loading the view.
+        self.navigationItem.rightBarButtonItem = editButton
+
 //        guard let uid = Auth.auth().currentUser?.uid else { return }
         
 //        tableView.allowsMultipleSelectionDuringEditing = true
@@ -45,19 +47,19 @@ class RefrigeratorViewController: UIViewController, BindableType {
         
         tableView.tableFooterView = UIView()
 //        tableView.allowsMultipleSelectionDuringEditing = true
-        tableView.isEditing = false
-        
+        tableView.delegate = self
+
         
 //        dataManager.getRefrigeratorDetail(userID: uid)
 //        dataManager.delegate = self
         SetUpAddBtn()
         setUpTableView()
-//        addButton = UIBarButtonItem(title:  "＋", style: .plain, target: self, action: #selector(add))
-        editButton = UIBarButtonItem(title:  "Edit", style: .plain, target: self, action: #selector(edit))
-        deletebutton = UIBarButtonItem(title:  "Delete", style: .plain, target: self, action:
-            #selector(deleteRows))
-//        self.navigationItem.rightBarButtonItems = [addButton, editButton]
+        editButton.image = UIImage(systemName: "slider.vertical.3")
+//        deletebutton = UIBarButtonItem(title:  "Delete", style: .plain, target: self, action:
+//            #selector(deleteRows))
         
+//        self.tableView.allowsMultipleSelectionDuringEditing = true
+
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -78,22 +80,141 @@ class RefrigeratorViewController: UIViewController, BindableType {
         
         addBtn.rx.action = viewModel.toAddItem()
 
+        setUpEditBtn()
     }
     
     func setUpTableView() {
-       
+
+
         tableView.rx.itemSelected
-            .subscribe(onNext: { [unowned self] indexPath in
+            .catch { err in
+               
+                let err = err as NSError
+                print(err)
                 
-                self.tableView.deselectRow(at: indexPath, animated: true)
-                self.viewModel.toEditItem(index: indexPath.row)
-            
+                return .empty()
+            }
+            .subscribe(onNext: { [unowned self] indexPath in
+
+
+                if self.tableView.isEditing {
+                    
+                    tableView.cellForRow(at: indexPath)?.backgroundColor = .white
+                
+                } else {
+                    
+                    self.viewModel.toEditItem(index: indexPath.row)
+                    self.tableView.deselectRow(at: indexPath, animated: true)
+                
+                }
             })
             .disposed(by: viewModel.disposeBag)
         
        
+        tableView.rx.itemMoved
+            .catch { err in
+               
+                let err = err as NSError
+                print(err)
+                
+                return .empty()
+            }
+            .subscribe(onNext: { [unowned self]  event in
+                
+                let movingItem = viewModel.items[event.sourceIndex.row]
+                
+                self.viewModel.items.remove(at: event.sourceIndex.row)
+                self.viewModel.items.insert(movingItem, at: event.destinationIndex.row)
+                
+                self.viewModel.observableItems.onNext(self.viewModel.items)
+                
+                
+            })
+            .disposed(by: viewModel.disposeBag)
+//        tableView.rx.setDelegate(self).disposed(by: viewModel.disposeBag)
+        
+        tableView.rx.itemDeleted
+            .catch { err in
+               
+                let err = err as NSError
+                print(err)
+                
+                return .empty()
+            }
+            .subscribe(onNext: { indexPath in
+                             
+                self.viewModel.items.remove(at: indexPath.row)
+                self.viewModel.observableItems.onNext(self.viewModel.items)
+                
+            })
+            .disposed(by: viewModel.disposeBag)
+        
+        viewModel.isTableViewEditable.bind(to: self.addBtn.rx.isHidden).disposed(by: viewModel.disposeBag)
     }
     
+    
+    
+    func setUpEditBtn() {
+        
+        deletebutton.title = "Delete"
+        doneBtn.title = "Cancel"
+        tableView.allowsMultipleSelectionDuringEditing = true
+
+        // make table view is editable
+        editButton.rx.tap
+            .observe(on: MainScheduler.asyncInstance)
+            .catch { err in
+               
+                let err = err as NSError
+                print(err)
+                
+                return .empty()
+            }
+            .subscribe(onNext: { [unowned self]  _ in
+              
+                self.navigationItem.rightBarButtonItems = [deletebutton, doneBtn]
+                self.tableView.setEditing(true, animated: true)
+                self.viewModel.isTableViewEditable.accept(true)
+            })
+            .disposed(by: viewModel.disposeBag)
+        
+       
+        // delete selected rows
+        deletebutton.rx.tap
+            .observe(on: MainScheduler.asyncInstance)
+            .catch { err in
+               
+                let err = err as NSError
+                print(err)
+                
+                return .empty()
+            }
+            .subscribe(onNext: { [unowned self]  _ in
+                
+                
+                if let indexPaths = tableView.indexPathsForSelectedRows  {
+                    //Sort the array so it doesn't cause a crash depending on your selection order.
+                    let sortedPaths = indexPaths.sorted {$0.row > $1.row}
+                    
+                    sortedPaths.forEach { indexPath in
+                        
+                        self.viewModel.items.remove(at: indexPath.row)
+                       
+                    }
+                    
+                    self.viewModel.observableItems.onNext(self.viewModel.items)
+                   
+                }
+                
+                
+                self.tableView.setEditing(false, animated: true)
+                self.navigationItem.rightBarButtonItems = [editButton]
+                self.viewModel.isTableViewEditable.accept(false)
+                
+            })
+            .disposed(by: viewModel.disposeBag)
+        
+    }
     
     @objc func edit() {
         
@@ -102,7 +223,6 @@ class RefrigeratorViewController: UIViewController, BindableType {
             setEditing(true, animated: true)
             self.tableView.isEditing = true
             editButton.title = "Done"
-//            tableView.allowsMultipleSelectionDuringEditing = true
             self.navigationItem.rightBarButtonItems =  [editButton, deletebutton]
             
             
@@ -170,6 +290,40 @@ class RefrigeratorViewController: UIViewController, BindableType {
         return true
     }
     
+}
+
+extension RefrigeratorViewController: UITableViewDelegate {
+
+//    func tableView(_ tableView: UITableView, editingStyleForRowAt indexPath: IndexPath) -> UITableViewCell.EditingStyle {
+//        return .none
+//    }
+//
+//    func tableView(_ tableView: UITableView, shouldIndentWhileEditingRowAt indexPath: IndexPath) -> Bool {
+//        return false
+//    }
+//
+//    func tableView(_ tableView: UITableView, canFocusRowAt indexPath: IndexPath) -> Bool {
+//        return true
+//    }
+//
+//    func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
+//
+//        if editingStyle == .delete {
+//
+//            viewModel.items.remove(at: indexPath.row)
+//            viewModel.observableItems.onNext(viewModel.items)
+//
+//            tableView.deleteRows(at: [indexPath], with: .fade)
+//
+//        } else if editingStyle == .insert {
+//            // Create a new instance of the appropriate class, insert it into the array, and add a new row to the table view.
+//        }
+//    }
+    
+    
+    
+//    func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
+
 }
 
 //final class MyDataSource: NSObject, UITableViewDataSource, RxTableViewDataSourceType {
@@ -266,16 +420,7 @@ class RefrigeratorViewController: UIViewController, BindableType {
 //    
 //}
 
-extension RefrigeratorViewController: UITableViewDelegate {
-    
-//    func tableView(_ tableView: UITableView, editingStyleForRowAt indexPath: IndexPath) -> UITableViewCell.EditingStyle {
-//        if tableView.isEditing {
-//            return .delete
-//        }
-//        return .none
-//    }
-//}
-}
+
 
 
 
