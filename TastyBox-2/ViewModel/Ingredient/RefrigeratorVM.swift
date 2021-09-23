@@ -31,6 +31,12 @@ class RefrigeratorVM: ViewModelBase {
     var isTableViewEditable = BehaviorRelay<Bool>(value: false)
     var isSelectedCells = BehaviorRelay<Bool>(value: false)
     
+    let dataSource = RxRefrigeratorTableViewDataSource<RefrigeratorItem, IngredientTableViewCell>(identifier: IngredientTableViewCell.identifier) { row, element, cell in
+        
+        cell.configure(item: element)
+    
+    }
+    
     
     var searchingText = BehaviorRelay<String>(value: "")
     

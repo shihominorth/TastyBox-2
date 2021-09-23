@@ -73,19 +73,14 @@ class RefrigeratorViewController: UIViewController, BindableType {
         
         tableView.tableFooterView = footerView
 
-//        tableView.rx.setDelegate(self).disposed(by: viewModel.disposeBag)
-
-        let dataSource = RxRefrigeratorTableViewDataSource<RefrigeratorItem, IngredientTableViewCell>(identifier: IngredientTableViewCell.identifier) { row, element, cell in
-            
-            cell.configure(item: element)
-        
-        }
-        
-        viewModel.observableItems.bind(to: tableView.rx.items(dataSource: dataSource))
+     
+        viewModel.observableItems.bind(to: tableView.rx.items(dataSource: viewModel.dataSource))
             .disposed(by: viewModel.disposeBag)
 
-
+     
         
+        //MARK: why is the background of cell is grey when the cell is selected?
+        // make it grey before tableview.rx.itemSelected....
         tableView.rx.itemSelected
             .observe(on: MainScheduler.asyncInstance)
             .catch { err in
@@ -99,9 +94,8 @@ class RefrigeratorViewController: UIViewController, BindableType {
 
 
                 if self.tableView.isEditing {
-                    
+
                     tableView.cellForRow(at: indexPath)?.backgroundColor = .white
-                   
                     self.viewModel.isSelectedCells.accept(true)
 
                 } else {
@@ -114,7 +108,6 @@ class RefrigeratorViewController: UIViewController, BindableType {
             .disposed(by: viewModel.disposeBag)
         
         
-        
         tableView.rx.itemDeselected
             .observe(on: MainScheduler.asyncInstance)
             .catch { err in
@@ -124,10 +117,10 @@ class RefrigeratorViewController: UIViewController, BindableType {
                 
                 return .empty()
             }
-            .subscribe(onNext: { [unowned self] event in
+            .subscribe(onNext: { [unowned self] indexPath in
                 
                 if self.tableView.isEditing {
-                    
+
                     guard let _ = tableView.indexPathsForSelectedRows else {
                         self.viewModel.isSelectedCells.accept(false)
                         return
@@ -136,8 +129,7 @@ class RefrigeratorViewController: UIViewController, BindableType {
                 
             })
             .disposed(by: viewModel.disposeBag)
-        
-       
+
         tableView.rx.itemMoved
             .observe(on: MainScheduler.asyncInstance)
             .catch { err in
@@ -153,9 +145,7 @@ class RefrigeratorViewController: UIViewController, BindableType {
                 
                 self.viewModel.items.remove(at: event.sourceIndex.row)
                 self.viewModel.items.insert(movingItem, at: event.destinationIndex.row)
-                
-                self.viewModel.observableItems.onNext(self.viewModel.items)
-                
+                                
                 
             })
             .disposed(by: viewModel.disposeBag)
