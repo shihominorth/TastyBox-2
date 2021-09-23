@@ -25,21 +25,18 @@ class RefrigeratorViewController: UIViewController, BindableType {
     var editButton = UIBarButtonItem()
     var doneBtn = UIBarButtonItem()
     
-    
     override func viewDidLoad() {
         super.viewDidLoad()
 
         self.navigationItem.titleView = searchBar
         self.navigationItem.rightBarButtonItem = editButton
 
-        tableView.tableFooterView = UIView()
-
         setUpAddBtn()
         setUpTableView()
         editButton.image = UIImage(systemName: "slider.vertical.3")
 
-        searchBar.rx.setDelegate(self).disposed(by: viewModel.disposeBag)
         searchBar.returnKeyType = .done
+        searchBar.rx.setDelegate(self).disposed(by: viewModel.disposeBag)
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -50,13 +47,6 @@ class RefrigeratorViewController: UIViewController, BindableType {
     func bindViewModel() {
        
         viewModel.getItems(listName: .refrigerator)
-        
-        viewModel.observableItems.bind(to: tableView.rx.items(cellIdentifier: IngredientTableViewCell.identifier,
-                                          cellType: IngredientTableViewCell.self)) { row, element, cell in
-            cell.configure(item: element)
-
-        }
-        .disposed(by: viewModel.disposeBag)
         
         addBtn.rx.action = viewModel.toAddItem()
         
@@ -74,8 +64,28 @@ class RefrigeratorViewController: UIViewController, BindableType {
     }
     
     func setUpTableView() {
+        
+        let tap = UITapGestureRecognizer(target: self, action: #selector(self.view.tapGesture))
+        tap.name = "dissmiss"
+        
+        let footerView = UIView()
+        footerView.addGestureRecognizer(tap)
+        
+        tableView.tableFooterView = footerView
+
+//        tableView.rx.setDelegate(self).disposed(by: viewModel.disposeBag)
+
+        let dataSource = RxRefrigeratorTableViewDataSource<RefrigeratorItem, IngredientTableViewCell>(identifier: IngredientTableViewCell.identifier) { row, element, cell in
+            
+            cell.configure(item: element)
+        
+        }
+        
+        viewModel.observableItems.bind(to: tableView.rx.items(dataSource: dataSource))
+            .disposed(by: viewModel.disposeBag)
 
 
+        
         tableView.rx.itemSelected
             .observe(on: MainScheduler.asyncInstance)
             .catch { err in
@@ -181,6 +191,8 @@ class RefrigeratorViewController: UIViewController, BindableType {
                 self.searchBar.endEditing(true)
             })
             .disposed(by: viewModel.disposeBag)
+        
+        
     }
     
     
@@ -278,9 +290,6 @@ class RefrigeratorViewController: UIViewController, BindableType {
     
     func setUpKeyboard() {
         
-        let tap = UITapGestureRecognizer(target: self, action: #selector(self.view.tapGesture))
-        tap.name = "dissmiss"
-        
         let _ = NotificationCenter.default.rx.notification(UIResponder.keyboardWillShowNotification)
             .observe(on: MainScheduler.asyncInstance)
             .subscribe ( onNext: { [unowned self] notification in
@@ -311,7 +320,34 @@ class RefrigeratorViewController: UIViewController, BindableType {
             })
     }
 }
-
+//
+//extension RefrigeratorViewController: UITableViewDelegate {
+//
+//    func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
+//
+//        let editAction = UIContextualAction(style: .normal, title: "Edit") { (action, view, completionHandler) in
+//              // 編集処理を記述
+//            self.viewModel.toEditItem(index: indexPath.row)
+//            self.tableView.deselectRow(at: indexPath, animated: true)
+//
+//            // 実行結果に関わらず記述
+//            completionHandler(true)
+//            }
+//
+//           // 削除処理
+//            let deleteAction = UIContextualAction(style: .destructive, title: "Delete") { (action, view, completionHandler) in
+//              //削除処理を記述
+//                self.viewModel.items.remove(at: indexPath.row)
+//                self.viewModel.observableItems.onNext(self.viewModel.items)
+//
+//              // 実行結果に関わらず記述
+//              completionHandler(true)
+//            }
+//
+//            // 定義したアクションをセット
+//            return UISwipeActionsConfiguration(actions: [deleteAction, editAction])
+//    }
+//}
 
 extension RefrigeratorViewController: UISearchBarDelegate {
     

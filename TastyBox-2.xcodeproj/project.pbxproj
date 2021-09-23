@@ -60,6 +60,7 @@
 		6FE9EB5626F9BA30000AF9D4 /* IngredientTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FE9EB5526F9BA30000AF9D4 /* IngredientTableViewCell.swift */; };
 		6FE9EB5826F9BEF1000AF9D4 /* EditItemRefrigeratorViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FE9EB5726F9BEF1000AF9D4 /* EditItemRefrigeratorViewController.swift */; };
 		6FE9EB5A26F9C01A000AF9D4 /* EditItemRefrigeratorVM.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FE9EB5926F9C01A000AF9D4 /* EditItemRefrigeratorVM.swift */; };
+		6FE9EB5D26FC8269000AF9D4 /* RxRefrigeratorTableViewDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FE9EB5C26FC8268000AF9D4 /* RxRefrigeratorTableViewDataSource.swift */; };
 		6FEA390C26D8BEEB002F81A3 /* String+.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FEA390B26D8BEEB002F81A3 /* String+.swift */; };
 		6FEA390E26D8C35B002F81A3 /* CustomPickerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FEA390D26D8C35B002F81A3 /* CustomPickerView.swift */; };
 		6FEA391126D8D1E4002F81A3 /* ViewModelBase.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FEA391026D8D1E4002F81A3 /* ViewModelBase.swift */; };
@@ -144,6 +145,7 @@
 		6FE9EB5526F9BA30000AF9D4 /* IngredientTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IngredientTableViewCell.swift; sourceTree = "<group>"; };
 		6FE9EB5726F9BEF1000AF9D4 /* EditItemRefrigeratorViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditItemRefrigeratorViewController.swift; sourceTree = "<group>"; };
 		6FE9EB5926F9C01A000AF9D4 /* EditItemRefrigeratorVM.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditItemRefrigeratorVM.swift; sourceTree = "<group>"; };
+		6FE9EB5C26FC8268000AF9D4 /* RxRefrigeratorTableViewDataSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RxRefrigeratorTableViewDataSource.swift; sourceTree = "<group>"; };
 		6FEA390B26D8BEEB002F81A3 /* String+.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "String+.swift"; sourceTree = "<group>"; };
 		6FEA390D26D8C35B002F81A3 /* CustomPickerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomPickerView.swift; sourceTree = "<group>"; };
 		6FEA391026D8D1E4002F81A3 /* ViewModelBase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewModelBase.swift; sourceTree = "<group>"; };
@@ -416,6 +418,7 @@
 				6F512A2F26F45BF200826657 /* TutorialCVCell.swift */,
 				6FE9EB5B26F9E7CC000AF9D4 /* StartCVCell */,
 				6FE9EB5526F9BA30000AF9D4 /* IngredientTableViewCell.swift */,
+				6FE9EB5C26FC8268000AF9D4 /* RxRefrigeratorTableViewDataSource.swift */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -669,6 +672,7 @@
 				6FEF088026F2A4B000C02CDD /* Recipe.swift in Sources */,
 				6F512A3226F467A300826657 /* FlowLayout.swift in Sources */,
 				6FEF088F26F2AD1000C02CDD /* SideMenuTableViewController.swift in Sources */,
+				6FE9EB5D26FC8269000AF9D4 /* RxRefrigeratorTableViewDataSource.swift in Sources */,
 				6F018B9C26DB6AEC006416D3 /* Scene.swift in Sources */,
 				6FEF088D26F2AA4A00C02CDD /* VIPViewController.swift in Sources */,
 				6FF66B9D26D7AF430024495E /* RegisterMyInfoProfileVM.swift in Sources */,

@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import DifferenceKit
 import Firebase
 
 class Ingredient {
@@ -70,4 +71,30 @@ class RefrigeratorItem: Ingredient {
         self.key = document.documentID
         super.init(name: name, amount: amount)
     }
+}
+
+extension RefrigeratorItem: Differentiable {
+   
+    var differenceIdentifier: String {
+        return self.key
+    }
+    
+    func isContentEqual(to source: RefrigeratorItem) -> Bool {
+        return name == source.name
+    }
+    
+  
+}
+
+extension ShoppingItem: Differentiable {
+   
+    var differenceIdentifier: String {
+        return self.key
+    }
+    
+    func isContentEqual(to source: ShoppingItem) -> Bool {
+        return name == source.name
+    }
+    
+  
 }
