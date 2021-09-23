@@ -24,12 +24,15 @@ class RefrigeratorVM: ViewModelBase {
     var err = NSError()
 
     var items: [RefrigeratorItem] = []
+    var temp:[RefrigeratorItem] = []
+    
     var observableItems = PublishSubject<[RefrigeratorItem]>()
     
     var isTableViewEditable = BehaviorRelay<Bool>(value: false)
     var isSelectedCells = BehaviorRelay<Bool>(value: false)
     
     
+    var searchingText = BehaviorRelay<String>(value: "")
     
     init(sceneCoodinator: SceneCoordinator, apiType: RefrigeratorProtocol.Type = RefrigeratorDM.self, user: FirebaseAuth.User) {
         self.sceneCoodinator = sceneCoodinator
@@ -100,5 +103,26 @@ class RefrigeratorVM: ViewModelBase {
           
             return Disposables.create()
         }
+    }
+    
+    func searchingItem() {
+      
+        searchingText.subscribe(onNext: { [unowned self] text in
+            
+            if text.isNotEmpty {
+                
+                let lowerCasedTxt = text.lowercased()
+                self.temp = items.filter { $0.name.lowercased().contains(lowerCasedTxt) }
+                
+                self.observableItems.onNext(self.temp)
+            }
+            else {
+                
+                self.observableItems.onNext(items)
+                
+            }
+                
+        })
+        .disposed(by: disposeBag)
     }
 }

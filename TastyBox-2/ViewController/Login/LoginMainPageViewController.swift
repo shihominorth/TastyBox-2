@@ -21,8 +21,9 @@ import RxCocoa
 import RxTimelane
 
 
-class LoginMainPageViewController: UIViewController,  BindableType{
+class LoginMainPageViewController: UIViewController, BindableType, KeyboardSetUpProtocol {
     
+            
     var viewModel: LoginMainVM!
     
     typealias ViewModelType = LoginMainVM

@@ -160,6 +160,8 @@ class DiscoveryViewController: UIViewController, BindableType {
            
          self.navigationController?.hidesBarsOnTap = false
         
+        self.navigationItem.backButtonTitle = ""
+
     }
     
     override func viewWillDisappear(_ animated: Bool) {

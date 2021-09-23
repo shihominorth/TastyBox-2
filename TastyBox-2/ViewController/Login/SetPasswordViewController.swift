@@ -10,7 +10,7 @@ import RxSwift
 import RxCocoa
 import Action
 
-class SetPasswordViewController: UIViewController, BindableType{
+class SetPasswordViewController: UIViewController, BindableType, KeyboardSetUpProtocol{
     var viewModel: SetPasswordVM!
     
     typealias ViewModelType = SetPasswordVM

@@ -15,7 +15,7 @@ import RSKImageCropper
 import RxSwift
 
 
-class RegisterMyInfoProfileTableViewController: UITableViewController, UIPickerViewDelegate, UIPickerViewDataSource, BindableType {
+class RegisterMyInfoProfileTableViewController: UITableViewController, UIPickerViewDelegate, UIPickerViewDataSource, BindableType, KeyboardSetUpProtocol {
     
     var viewModel: RegisterMyInfoProfileVM!
     
