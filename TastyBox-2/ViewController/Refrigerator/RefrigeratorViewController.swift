@@ -24,7 +24,7 @@ class RefrigeratorViewController: UIViewController, BindableType {
     var deletebutton = UIBarButtonItem()
     var editButton = UIBarButtonItem()
     var doneBtn = UIBarButtonItem()
-    
+        
     override func viewDidLoad() {
         super.viewDidLoad()
 
@@ -37,6 +37,8 @@ class RefrigeratorViewController: UIViewController, BindableType {
 
         searchBar.returnKeyType = .done
         searchBar.rx.setDelegate(self).disposed(by: viewModel.disposeBag)
+        tableView.rx.setDelegate(self).disposed(by: viewModel.disposeBag)
+
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -65,10 +67,12 @@ class RefrigeratorViewController: UIViewController, BindableType {
     
     func setUpTableView() {
         
-        let tap = UITapGestureRecognizer(target: self, action: #selector(self.view.tapGesture))
-        tap.name = "dissmiss"
+   
         
         let footerView = UIView()
+        let tap = UITapGestureRecognizer(target: footerView, action: #selector(tapAction))
+        tap.name = "dissmiss"
+        
         footerView.addGestureRecognizer(tap)
         
         tableView.tableFooterView = footerView
@@ -95,7 +99,7 @@ class RefrigeratorViewController: UIViewController, BindableType {
 
                 if self.tableView.isEditing {
 
-                    tableView.cellForRow(at: indexPath)?.backgroundColor = .white
+//                    tableView.cellForRow(at: indexPath)?.backgroundColor = .white
                     self.viewModel.isSelectedCells.accept(true)
 
                 } else {
@@ -146,7 +150,7 @@ class RefrigeratorViewController: UIViewController, BindableType {
                 self.viewModel.items.remove(at: event.sourceIndex.row)
                 self.viewModel.items.insert(movingItem, at: event.destinationIndex.row)
                                 
-                
+
             })
             .disposed(by: viewModel.disposeBag)
      
@@ -207,6 +211,7 @@ class RefrigeratorViewController: UIViewController, BindableType {
               
                 self.navigationItem.titleView = nil
                 self.navigationItem.rightBarButtonItems = [doneBtn, deletebutton]
+               
                 self.tableView.setEditing(true, animated: true)
                 self.viewModel.isTableViewEditable.accept(true)
             })
@@ -235,11 +240,8 @@ class RefrigeratorViewController: UIViewController, BindableType {
                         self.viewModel.items.remove(at: indexPath.row)
                        
                     }
-                    
-                    self.viewModel.observableItems.onNext(self.viewModel.items)
-                   
+                                       
                 }
-                
                 
                 self.tableView.setEditing(false, animated: true)
                
@@ -247,6 +249,9 @@ class RefrigeratorViewController: UIViewController, BindableType {
                 self.navigationItem.rightBarButtonItems = [editButton]
                 
                 self.viewModel.isTableViewEditable.accept(false)
+               
+                self.viewModel.observableItems.onNext(self.viewModel.items)
+                tableView.reloadData()
                 
             })
             .disposed(by: viewModel.disposeBag)
@@ -309,35 +314,54 @@ class RefrigeratorViewController: UIViewController, BindableType {
                 })
             })
     }
+    
+    @objc func tapAction() {
+        
+        searchBar.endEditing(true)
+       
+        self.navigationItem.setHidesBackButton(false, animated: true)
+        self.navigationItem.rightBarButtonItems = [editButton]
+        
+        searchBar.showsCancelButton = false
+        
+        UIView.animate(withDuration: 0.3, animations: {
+
+            if self.view.frame.origin.y != 0 {
+                self.view.frame.origin.y = 0
+            }
+        })
+    }
 }
-//
-//extension RefrigeratorViewController: UITableViewDelegate {
-//
-//    func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
-//
-//        let editAction = UIContextualAction(style: .normal, title: "Edit") { (action, view, completionHandler) in
-//              // 編集処理を記述
-//            self.viewModel.toEditItem(index: indexPath.row)
-//            self.tableView.deselectRow(at: indexPath, animated: true)
-//
-//            // 実行結果に関わらず記述
-//            completionHandler(true)
-//            }
-//
-//           // 削除処理
-//            let deleteAction = UIContextualAction(style: .destructive, title: "Delete") { (action, view, completionHandler) in
-//              //削除処理を記述
-//                self.viewModel.items.remove(at: indexPath.row)
-//                self.viewModel.observableItems.onNext(self.viewModel.items)
-//
-//              // 実行結果に関わらず記述
-//              completionHandler(true)
-//            }
-//
-//            // 定義したアクションをセット
-//            return UISwipeActionsConfiguration(actions: [deleteAction, editAction])
-//    }
-//}
+
+
+
+extension RefrigeratorViewController: UITableViewDelegate {
+
+    func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
+
+        let editAction = UIContextualAction(style: .normal, title: "Edit") { (action, view, completionHandler) in
+              // 編集処理を記述
+            self.viewModel.toEditItem(index: indexPath.row)
+            self.tableView.deselectRow(at: indexPath, animated: true)
+
+            // 実行結果に関わらず記述
+            completionHandler(true)
+            }
+
+           // 削除処理
+            let deleteAction = UIContextualAction(style: .destructive, title: "Delete") { (action, view, completionHandler) in
+              //削除処理を記述
+                self.viewModel.items.remove(at: indexPath.row)
+                self.viewModel.observableItems.onNext(self.viewModel.items)
+
+              // 実行結果に関わらず記述
+              completionHandler(true)
+            }
+
+            // 定義したアクションをセット
+            return UISwipeActionsConfiguration(actions: [deleteAction, editAction])
+    }
+}
 
 extension RefrigeratorViewController: UISearchBarDelegate {
     
