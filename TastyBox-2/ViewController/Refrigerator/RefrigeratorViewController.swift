@@ -49,11 +49,19 @@ class RefrigeratorViewController: UIViewController, BindableType {
     override func viewWillAppear(_ animated: Bool) {
 
         viewModel.getItems(listName: .refrigerator)
+            .subscribe(onNext: { [unowned self] isGotten in
+//                self.tableView.reloadData()
+            })
+            .disposed(by: viewModel.disposeBag)
     }
     
     func bindViewModel() {
        
-        viewModel.getItems(listName: .refrigerator)
+//        viewModel.getItems(listName: .refrigerator)
+//            .subscribe(onNext: { isGotten in
+//                
+//            })
+//            .disposed(by: viewModel.disposeBag)
         
         addBtn.rx.action = viewModel.toAddItem()
         
@@ -166,9 +174,9 @@ class RefrigeratorViewController: UIViewController, BindableType {
                 return .empty()
             }
             .subscribe(onNext: { indexPath in
-                             
-                self.viewModel.items.remove(at: indexPath.row)
-                self.viewModel.observableItems.onNext(self.viewModel.items)
+
+                
+                self.viewModel.deleteItem(index: indexPath.row)
                 
             })
             .disposed(by: viewModel.disposeBag)
@@ -238,11 +246,11 @@ class RefrigeratorViewController: UIViewController, BindableType {
                     
                     sortedPaths.forEach { indexPath in
                         
-                        self.viewModel.items.remove(at: indexPath.row)
-                       
+                        let ingredient = DeletingIngredient(index: indexPath.row, item: self.viewModel.items[indexPath.row])
+                        self.viewModel.deletingTemp.append(ingredient)
                     }
                     
-                    self.viewModel.observableItems.onNext(self.viewModel.items)
+                    self.viewModel.deleteItems()
                     tableView.reloadData()
                                        
                 }
@@ -253,7 +261,7 @@ class RefrigeratorViewController: UIViewController, BindableType {
                 self.navigationItem.rightBarButtonItems = [editButton]
                 
                 self.viewModel.isTableViewEditable.accept(false)
-               
+                self.viewModel.isSelectedCells.accept(false)
               
                 
             })
@@ -355,8 +363,9 @@ extension RefrigeratorViewController: UITableViewDelegate {
            // 削除処理
             let deleteAction = UIContextualAction(style: .destructive, title: "Delete") { (action, view, completionHandler) in
               //削除処理を記述
-                self.viewModel.items.remove(at: indexPath.row)
-                self.viewModel.observableItems.onNext(self.viewModel.items)
+
+                
+                self.viewModel.deleteItem(index: indexPath.row)
 
               // 実行結果に関わらず記述
               completionHandler(true)

@@ -24,8 +24,9 @@ class RefrigeratorVM: ViewModelBase {
     var err = NSError()
 
     var items: [RefrigeratorItem] = []
-    var temp:[RefrigeratorItem] = []
-    
+    var searchingTemp:[RefrigeratorItem] = []
+    var deletingTemp:[DeletingIngredient] = []
+
     var observableItems = PublishSubject<[RefrigeratorItem]>()
     
     var isTableViewEditable = BehaviorRelay<Bool>(value: false)
@@ -58,8 +59,6 @@ class RefrigeratorVM: ViewModelBase {
     }
     
     func toEditItem(index: Int)  {
-        
-       
             
             let vm =  EditItemRefrigeratorVM(sceneCoodinator: self.sceneCoodinator, user: self.user, item: self.items[index])
             let vc = IngredientScene.edit(vm).viewController()
@@ -68,20 +67,77 @@ class RefrigeratorVM: ViewModelBase {
         
     }
     
-    func getItems(listName: List) {
-       
-       _ = self.apiType.getRefrigeratorDetail(userID: self.user.uid).subscribe(onSuccess: { items in
-         
-            self.items = items
-        })
+    func getItems(listName: List) -> PublishRelay<Bool>{
+    
+        let relay = PublishRelay<Bool>()
         
         _ = self.apiType.getRefrigeratorDetail(userID: self.user.uid).subscribe(onSuccess: { items in
+        
+            self.items = items
             self.observableItems.onNext(items)
+            
+            relay.accept(true)
+       
         }, onFailure: { err in
             err.handleFireStoreError()?.generateErrAlert()
+            relay.accept(false)
         })
        
+        return relay
     }
+    
+    func deleteItem(index: Int) {
+        
+        let item = items[index]
+       
+        _ = self.apiType.deleteData(item: item, userID: user.uid)
+            .subscribe(onCompleted: { [unowned self] in
+                
+                print("Document successfully deleted")
+                
+                self.items.remove(at: index)
+                self.observableItems.onNext(self.items)
+                
+            }, onError: { err in
+                
+                print("Error updating document: \(err)")
+                err.handleFireStoreError()?.generateErrAlert()
+            
+            })
+   
+    }
+    
+    func deleteItems() {
+        
+        if !deletingTemp.isEmpty {
+
+            _ = self.apiType.deleteData(items: deletingTemp, userID: user.uid)
+                .subscribe(onNext: { [unowned self] (isLast, ingredient) in
+                    
+                    print("Document successfully deleted")
+                    
+                    self.items.remove(at: ingredient.index)
+                    
+                    if isLast {
+                        self.observableItems.onNext(self.items)
+                    }
+                    
+                }, onError: { err in
+                    
+                    
+                    print("Error updating document: \(err)")
+                    
+                    err.handleFireStoreError()?.generateErrAlert()
+                    self.observableItems.onNext(self.items)
+                })
+            
+            
+            deletingTemp.removeAll()
+            
+        }
+        
+    }
+    
     
     func cancel() -> Observable<Bool> {
         
@@ -118,9 +174,9 @@ class RefrigeratorVM: ViewModelBase {
             if text.isNotEmpty {
                 
                 let lowerCasedTxt = text.lowercased()
-                self.temp = items.filter { $0.name.lowercased().contains(lowerCasedTxt) }
+                self.searchingTemp = items.filter { $0.name.lowercased().contains(lowerCasedTxt) }
                 
-                self.observableItems.onNext(self.temp)
+                self.observableItems.onNext(self.searchingTemp)
             }
             else {
                 

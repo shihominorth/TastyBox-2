@@ -122,7 +122,7 @@ class EditItemRefrigeratorViewController: UIViewController, BindableType {
     
     func setUpKeyboard() {
        
-        let tap = UITapGestureRecognizer(target: self, action: #selector(self.view.tapGesture))
+        let tap = UITapGestureRecognizer(target: self, action: #selector(tapGesture))
         tap.name = "dissmiss"
         
         NotificationCenter.default.rx.notification(UIResponder.keyboardWillShowNotification)
@@ -181,26 +181,32 @@ class EditItemRefrigeratorViewController: UIViewController, BindableType {
     }
     
     
-    @IBAction func done(_ sender: Any) {
+    @objc func tapGesture() {
         
-//        if itemIsEmpty! {
-//            self.delegate?.addIngredient(controller: self, name: nameTextField.text ?? "NONE", amount: amountTextField.text ?? "NONE")
-//        } else {
-//            self.delegate?.editIngredient(controller: self,  name: nameTextField.text ?? "NONE", amount: amountTextField.text ?? "NONE")
-//        }
-//
-        navigationController?.popViewController(animated: true)
-    }
-    
-    /*
-     // MARK: - Navigation
-     
-     // In a storyboard-based application, you will often want to do a little preparation before navigation
-     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-     // Get the new view controller using segue.destination.
-     // Pass the selected object to the new view controller.
-     }
-     */
+       
+            
+        self.view.endEditing(true)
+            
+        if let tapRecognizers = self.view.gestureRecognizers?.filter({ $0.name == "dissmiss"}) {
+                
+                if !tapRecognizers.isEmpty {
+                    let _ = tapRecognizers.map {
+                        $0.cancelsTouchesInView = false
+                        self.view.removeGestureRecognizer($0)
+                    }
+                    
+                }
+                
+            }
+            
+            UIView.animate(withDuration: 0.3, animations: {
+                
+                if self.view.frame.origin.y != 0 {
+                    self.view.frame.origin.y = 0
+                }
+            })
+            
+        }
     
 }
 

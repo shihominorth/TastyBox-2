@@ -9,25 +9,40 @@ import Foundation
 import DifferenceKit
 import Firebase
 
-class Ingredient {
+class Ingredient  {
+    
+    var key: String
     var name: String
     var amount: String
     
-    init(name: String, amount: String) {
+    init(key: String, name: String, amount: String) {
+        self.key = key
         self.name = name
         self.amount = amount
     }
 }
 
+
+extension Ingredient: Hashable {
+    static func == (lhs: Ingredient, rhs: Ingredient) -> Bool {
+        //同じインスタンスを参照していれば、`==`であると定義する場合
+        return lhs === rhs
+    }
+
+    public func hash(into hasher: inout Hasher) {
+    //アドレスそのものが「等しいかどうか」の判定に使われているので、`ObjectIdentifier(self)`に対して`hash(into:)`を呼んでやる
+        ObjectIdentifier(self).hash(into: &hasher)
+    }
+}
+
 class ShoppingItem: Ingredient {
     
-    var key: String
     var isBought: Bool
  
     init(name: String, amount: String, key: String, isBought: Bool) {
-        self.key = key
+      
         self.isBought = isBought
-        super.init(name: name, amount: amount)
+        super.init(key: key, name: name, amount: amount)
     }
 
     init?(document:  QueryDocumentSnapshot) {
@@ -42,21 +57,17 @@ class ShoppingItem: Ingredient {
                 return nil
         }
         
-        self.key = document.documentID
         self.isBought = isBought
-        super.init(name: name, amount: amount)
+        super.init(key: document.documentID, name: name, amount: amount)
     }
 }
 
 class RefrigeratorItem: Ingredient {
     
-    var key: String
- 
-    init(name: String, amount: String, key: String) {
-        self.key = key
-        super.init(name: name, amount: amount)
+    override init(key: String, name: String, amount: String) {
+        super.init(key: key, name: name, amount: amount)
     }
-
+    
     init?(document:  QueryDocumentSnapshot) {
         
         let value = document.data()
@@ -68,8 +79,7 @@ class RefrigeratorItem: Ingredient {
                 return nil
         }
         
-        self.key = document.documentID
-        super.init(name: name, amount: amount)
+        super.init(key: document.documentID, name: name, amount: amount)
     }
 }
 
@@ -97,4 +107,10 @@ extension ShoppingItem: Differentiable {
     }
     
   
+}
+
+struct DeletingIngredient {
+    var index: Int
+    var item: Ingredient
+    
 }

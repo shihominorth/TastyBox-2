@@ -15,12 +15,14 @@ protocol RefrigeratorProtocol: AnyObject {
     static func addIngredient(name: String, amount: String, userID: String) -> Completable
     static func editIngredient(edittingItem: Ingredient, name: String, amount: String, userID: String) -> Completable
     static func getRefrigeratorDetail(userID: String) -> Single<[RefrigeratorItem]>
-    static func deleteData(name: String, indexPath: IndexPath)
+    static func deleteData(item: RefrigeratorItem, userID: String) -> Completable
+    static func deleteData(items: [DeletingIngredient], userID: String) -> Observable<(Bool, DeletingIngredient)>
     static func searchIngredients(text: String)
     
 }
 
 class RefrigeratorDM: RefrigeratorProtocol {
+  
     
     static let db = Firestore.firestore()
     
@@ -32,7 +34,7 @@ class RefrigeratorDM: RefrigeratorProtocol {
         
         return Completable.create { completable in
             
-            self.db.collection("users").document(userID).collection("refrigerator").document(name).setData([
+            self.db.collection("users").document(userID).collection("refrigerator").document().setData([
                 "name": name,
                 "amount": amount,
                 
@@ -76,7 +78,7 @@ class RefrigeratorDM: RefrigeratorProtocol {
             }
             else {
                
-                db.collection("users").document(userID).collection("refrigerator").document(edittingItem.name).delete { err in
+                db.collection("users").document(userID).collection("refrigerator").document(edittingItem.key).delete { err in
                     
                     if let err = err {
                         
@@ -130,7 +132,7 @@ class RefrigeratorDM: RefrigeratorProtocol {
                             return ingredient
                         }
                         
-                        return RefrigeratorItem(name: "", amount: "", key: "")
+                        return RefrigeratorItem(key: "", name: "", amount: "")
                     }
                     .filter { $0.name != "" && $0.amount != "" && $0.key != "" }
                     
@@ -144,18 +146,60 @@ class RefrigeratorDM: RefrigeratorProtocol {
         
     }
     
-   static func deleteData(name: String, indexPath: IndexPath) {
+    static func deleteData(item: RefrigeratorItem, userID: String) -> Completable {
         
-        guard let uid = Auth.auth().currentUser?.uid else { return }
-        db.collection("user").document(uid).collection("refrigerator").document(name).delete()
-            { err in
+        return Completable.create { completable in
+            
+            let key = item.key
+            
+            db.collection("users").document(userID).collection("refrigerator").document(key).delete() { err in
+                
                 if let err = err {
-                    print("Error updating document: \(err)")
+                    
+                    completable(.error(err))
+                    
                 } else {
-                    print("Document successfully updated")
+                    
+                    completable(.completed)
+                    
                 }
+            }
+            return Disposables.create()
         }
+    }
+    
+    static func deleteData(items: [DeletingIngredient], userID: String) -> Observable<(Bool, DeletingIngredient)> {
         
+       
+        return Observable.create { observer in
+            
+            items.enumerated().forEach { index, ingredient in
+                
+                db.collection("users").document(userID).collection("refrigerator").document(ingredient.item.key).delete() { err in
+                    
+                    if let err = err {
+                        
+                        print(ingredient.index, ingredient.item)
+                        observer.onError(err)
+                        
+                    } else {
+                        
+                        if index == items.count - 1 {
+                            
+                            observer.onNext((true, ingredient))
+                        
+                        }
+                        else {
+                        
+                            observer.onNext((false, ingredient))
+                        
+                        }
+                    }
+                }
+                
+            }
+            return Disposables.create()
+        }
     }
     
    static func searchIngredients(text: String) {
