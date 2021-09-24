@@ -50,18 +50,18 @@ class RefrigeratorViewController: UIViewController, BindableType {
 
         viewModel.getItems(listName: .refrigerator)
             .subscribe(onNext: { [unowned self] isGotten in
-//                self.tableView.reloadData()
+                self.tableView.reloadData()
             })
             .disposed(by: viewModel.disposeBag)
     }
+   
     
+    override func viewWillDisappear(_ animated: Bool) {
+        viewModel.moveItems()
+    }
+    
+   
     func bindViewModel() {
-       
-//        viewModel.getItems(listName: .refrigerator)
-//            .subscribe(onNext: { isGotten in
-//                
-//            })
-//            .disposed(by: viewModel.disposeBag)
         
         addBtn.rx.action = viewModel.toAddItem()
         
@@ -79,9 +79,7 @@ class RefrigeratorViewController: UIViewController, BindableType {
     }
     
     func setUpTableView() {
-        
-   
-        
+
         let footerView = UIView()
         let tap = UITapGestureRecognizer(target: footerView, action: #selector(tapAction))
         tap.name = "dissmiss"

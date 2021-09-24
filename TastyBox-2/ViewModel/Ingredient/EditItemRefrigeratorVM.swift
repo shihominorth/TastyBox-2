@@ -20,6 +20,7 @@ class EditItemRefrigeratorVM: ViewModelBase {
     var err = NSError()
     
     var item: Ingredient!
+    var lastIndex: Int!
     
     var name = BehaviorRelay<String>(value: "")
     var amount = BehaviorRelay<String>(value: "")
@@ -27,19 +28,21 @@ class EditItemRefrigeratorVM: ViewModelBase {
     var isEnableDone = BehaviorRelay(value: false)
     
     
-    init(sceneCoodinator: SceneCoordinator, apiType: RefrigeratorProtocol.Type = RefrigeratorDM.self, user: FirebaseAuth.User,  item: Ingredient?) {
+    init(sceneCoodinator: SceneCoordinator, apiType: RefrigeratorProtocol.Type = RefrigeratorDM.self, user: FirebaseAuth.User,  item: Ingredient?, lastIndex: Int) {
         self.sceneCoodinator = sceneCoodinator
         self.apiType = apiType
         self.user = user
-
+        self.lastIndex = lastIndex
+        
         self.item = item
  
     }
     
+    
     func addItem(name: String, amount: String) {
         
         
-        self.apiType.addIngredient(name: name, amount: amount, userID: self.user.uid)
+        self.apiType.addIngredient(name: name, amount: amount, userID: self.user.uid, lastIndex: self.lastIndex)
             .catch { err in
                 
                 print("Error writing document: \(err)")

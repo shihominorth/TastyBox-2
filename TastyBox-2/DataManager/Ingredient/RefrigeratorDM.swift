@@ -11,32 +11,33 @@ import RxSwift
 import RxCocoa
 
 protocol RefrigeratorProtocol: AnyObject {
-  
-    static func addIngredient(name: String, amount: String, userID: String) -> Completable
+
+    static func getIngredients(userID: String) -> Single<[RefrigeratorItem]>
+    static func addIngredient(name: String, amount: String, userID: String, lastIndex: Int) -> Completable
     static func editIngredient(edittingItem: Ingredient, name: String, amount: String, userID: String) -> Completable
-    static func getRefrigeratorDetail(userID: String) -> Single<[RefrigeratorItem]>
-    static func deleteData(item: RefrigeratorItem, userID: String) -> Completable
-    static func deleteData(items: [DeletingIngredient], userID: String) -> Observable<(Bool, DeletingIngredient)>
+    static func moveIngredient(userID: String, items: [Ingredient]) -> Observable<Bool>
+    static func deleteIngredient(item: RefrigeratorItem, userID: String) -> Completable
+    static func deleteIngredients(items: [DeletingIngredient], userID: String) -> Observable<(Bool, DeletingIngredient)>
     static func searchIngredients(text: String)
     
 }
 
 class RefrigeratorDM: RefrigeratorProtocol {
-  
+    
     
     static let db = Firestore.firestore()
+        
+//    var ingredients:[RefrigeratorItem] = []
     
-    //    var delegate: getIngredientRefrigeratorDataDelegate?
-    
-    var ingredients:[RefrigeratorItem] = []
-    
-    static func addIngredient(name: String, amount: String, userID: String) -> Completable {
+    static func addIngredient(name: String, amount: String, userID: String, lastIndex: Int) -> Completable {
         
         return Completable.create { completable in
             
             self.db.collection("users").document(userID).collection("refrigerator").document().setData([
+                
                 "name": name,
                 "amount": amount,
+                "order": lastIndex
                 
             ], merge: true) { err in
                 if let err = err {
@@ -62,7 +63,7 @@ class RefrigeratorDM: RefrigeratorProtocol {
                 
                 db.collection("users").document(userID).collection("refrigerator").document(name).setData(
                     
-                   ["amount": amount], merge: true) { err in
+                    ["amount": amount], merge: true) { err in
                     
                     if let err = err {
                         
@@ -77,7 +78,7 @@ class RefrigeratorDM: RefrigeratorProtocol {
                 
             }
             else {
-               
+                
                 db.collection("users").document(userID).collection("refrigerator").document(edittingItem.key).delete { err in
                     
                     if let err = err {
@@ -111,9 +112,50 @@ class RefrigeratorDM: RefrigeratorProtocol {
         }
     }
     
+    static func moveIngredient(userID: String, items: [Ingredient]) -> Observable<Bool> {
+        
+        
+        return Observable.create { observer in
+            
+            items.enumerated().forEach { index, item in
+                
+                if item.order != index {
+                    
+                    db.collection("users").document(userID).collection("refrigerator").document(item.key).setData([
+                        
+                        "order": index
+                        
+                    ], merge: true) { err in
+                       
+                        if let err = err {
+                            
+                            observer.onError(err)
+                            
+                        } else {
+                            
+                            if index == items.count - 1 {
+                                
+                                observer.onNext(true)
+                                
+                            }
+                            else {
+                                
+                                observer.onNext(false)
+                                
+                            }
+                        }
+                        
+                    }
+                }
+            }
+            
+            return Disposables.create()
+        }
+        
+    }
 
     
-    static func getRefrigeratorDetail(userID: String)  -> Single<[RefrigeratorItem]> {
+    static func getIngredients(userID: String)  -> Single<[RefrigeratorItem]> {
         
         
         return Single.create { single in
@@ -132,7 +174,7 @@ class RefrigeratorDM: RefrigeratorProtocol {
                             return ingredient
                         }
                         
-                        return RefrigeratorItem(key: "", name: "", amount: "")
+                        return RefrigeratorItem(key: "", name: "", amount: "", order: 0)
                     }
                     .filter { $0.name != "" && $0.amount != "" && $0.key != "" }
                     
@@ -146,7 +188,7 @@ class RefrigeratorDM: RefrigeratorProtocol {
         
     }
     
-    static func deleteData(item: RefrigeratorItem, userID: String) -> Completable {
+    static func deleteIngredient(item: RefrigeratorItem, userID: String) -> Completable {
         
         return Completable.create { completable in
             
@@ -168,7 +210,7 @@ class RefrigeratorDM: RefrigeratorProtocol {
         }
     }
     
-    static func deleteData(items: [DeletingIngredient], userID: String) -> Observable<(Bool, DeletingIngredient)> {
+    static func deleteIngredients(items: [DeletingIngredient], userID: String) -> Observable<(Bool, DeletingIngredient)> {
         
        
         return Observable.create { observer in

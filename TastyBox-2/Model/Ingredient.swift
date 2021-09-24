@@ -14,11 +14,13 @@ class Ingredient  {
     var key: String
     var name: String
     var amount: String
+    var order: Int
     
-    init(key: String, name: String, amount: String) {
+    init(key: String, name: String, amount: String, order: Int) {
         self.key = key
         self.name = name
         self.amount = amount
+        self.order = order
     }
 }
 
@@ -39,10 +41,10 @@ class ShoppingItem: Ingredient {
     
     var isBought: Bool
  
-    init(name: String, amount: String, key: String, isBought: Bool) {
+    init(name: String, amount: String, key: String, isBought: Bool, order: Int) {
       
         self.isBought = isBought
-        super.init(key: key, name: name, amount: amount)
+        super.init(key: key, name: name, amount: amount, order: order)
     }
 
     init?(document:  QueryDocumentSnapshot) {
@@ -52,20 +54,21 @@ class ShoppingItem: Ingredient {
         guard
             let name = value["name"] as? String,
             let amount = value["amount"] as? String,
-            let isBought  = value["isBought"] as? Bool
+            let isBought  = value["isBought"] as? Bool,
+            let order = value["order"] as? Int
             else {
                 return nil
         }
         
         self.isBought = isBought
-        super.init(key: document.documentID, name: name, amount: amount)
+        super.init(key: document.documentID, name: name, amount: amount, order: order)
     }
 }
 
 class RefrigeratorItem: Ingredient {
     
-    override init(key: String, name: String, amount: String) {
-        super.init(key: key, name: name, amount: amount)
+    override init(key: String, name: String, amount: String, order: Int) {
+        super.init(key: key, name: name, amount: amount, order: order)
     }
     
     init?(document:  QueryDocumentSnapshot) {
@@ -74,12 +77,13 @@ class RefrigeratorItem: Ingredient {
         
         guard
             let name = value["name"] as? String,
-            let amount = value["amount"] as? String
+            let amount = value["amount"] as? String,
+            let order = value["order"] as? Int
             else {
                 return nil
         }
         
-        super.init(key: document.documentID, name: name, amount: amount)
+        super.init(key: document.documentID, name: name, amount: amount, order: order)
     }
 }
 

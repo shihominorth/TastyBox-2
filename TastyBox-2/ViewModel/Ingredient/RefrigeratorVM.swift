@@ -51,7 +51,8 @@ class RefrigeratorVM: ViewModelBase {
         
         return CocoaAction { _ in
             
-            let vm =  EditItemRefrigeratorVM(sceneCoodinator: self.sceneCoodinator, user: self.user, item: nil)
+            let index = self.items.count == 0 ? 0 : self.items.count - 1
+            let vm =  EditItemRefrigeratorVM(sceneCoodinator: self.sceneCoodinator, user: self.user, item: nil, lastIndex: index)
             let vc = IngredientScene.edit(vm).viewController()
             
             return self.sceneCoodinator.transition(to: vc, type: .push).asObservable().map { _ in }
@@ -60,7 +61,7 @@ class RefrigeratorVM: ViewModelBase {
     
     func toEditItem(index: Int)  {
             
-            let vm =  EditItemRefrigeratorVM(sceneCoodinator: self.sceneCoodinator, user: self.user, item: self.items[index])
+        let vm =  EditItemRefrigeratorVM(sceneCoodinator: self.sceneCoodinator, user: self.user, item: self.items[index], lastIndex: index)
             let vc = IngredientScene.edit(vm).viewController()
             
             self.sceneCoodinator.transition(to: vc, type: .push)
@@ -71,10 +72,11 @@ class RefrigeratorVM: ViewModelBase {
     
         let relay = PublishRelay<Bool>()
         
-        _ = self.apiType.getRefrigeratorDetail(userID: self.user.uid).subscribe(onSuccess: { items in
+        _ = self.apiType.getIngredients(userID: self.user.uid).subscribe(onSuccess: { items in
         
-            self.items = items
-            self.observableItems.onNext(items)
+            self.items = items.sorted { $0.order < $1.order }
+            
+            self.observableItems.onNext(self.items)
             
             relay.accept(true)
        
@@ -86,11 +88,27 @@ class RefrigeratorVM: ViewModelBase {
         return relay
     }
     
+    func moveItems() {
+       
+        _ = self.apiType.moveIngredient(userID: self.user.uid, items: self.items)
+            .subscribe(onNext: { isChanged in
+                if isChanged {
+                    print("Success!")
+                }
+            }, onError: { err in
+                
+                print("Error updating document: \(err)")
+                err.handleFireStoreError()?.generateErrAlert()
+                
+            })
+            .disposed(by: disposeBag)
+    }
+    
     func deleteItem(index: Int) {
         
         let item = items[index]
        
-        _ = self.apiType.deleteData(item: item, userID: user.uid)
+        _ = self.apiType.deleteIngredient(item: item, userID: user.uid)
             .subscribe(onCompleted: { [unowned self] in
                 
                 print("Document successfully deleted")
@@ -111,7 +129,7 @@ class RefrigeratorVM: ViewModelBase {
         
         if !deletingTemp.isEmpty {
 
-            _ = self.apiType.deleteData(items: deletingTemp, userID: user.uid)
+            _ = self.apiType.deleteIngredients(items: deletingTemp, userID: user.uid)
                 .subscribe(onNext: { [unowned self] (isLast, ingredient) in
                     
                     print("Document successfully deleted")
