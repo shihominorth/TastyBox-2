@@ -81,11 +81,11 @@ class RefrigeratorViewController: UIViewController, BindableType {
     func setUpTableView() {
 
         let footerView = UIView()
-        let tap = UITapGestureRecognizer(target: footerView, action: #selector(tapAction))
+        let tap = UITapGestureRecognizer(target: self, action: #selector(tapAction))
         tap.name = "dissmiss"
-        
+
         footerView.addGestureRecognizer(tap)
-        
+
         tableView.tableFooterView = footerView
 
      
@@ -240,7 +240,7 @@ class RefrigeratorViewController: UIViewController, BindableType {
                 
                 if let indexPaths = tableView.indexPathsForSelectedRows  {
                     //Sort the array so it doesn't cause a crash depending on your selection order.
-                    let sortedPaths = indexPaths.sorted {$0.row > $1.row}
+                    let sortedPaths = indexPaths.sorted { $0.row > $1.row }
                     
                     sortedPaths.forEach { indexPath in
                         

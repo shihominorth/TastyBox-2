@@ -51,7 +51,7 @@ class RefrigeratorVM: ViewModelBase {
         
         return CocoaAction { _ in
             
-            let index = self.items.count == 0 ? 0 : self.items.count - 1
+            let index = self.items.count
             let vm =  EditItemRefrigeratorVM(sceneCoodinator: self.sceneCoodinator, user: self.user, item: nil, lastIndex: index)
             let vc = IngredientScene.edit(vm).viewController()
             
