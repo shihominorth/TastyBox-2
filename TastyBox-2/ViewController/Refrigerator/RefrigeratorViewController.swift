@@ -33,11 +33,16 @@ class RefrigeratorViewController: UIViewController, BindableType {
 
         setUpAddBtn()
         setUpTableView()
+        setUpEditBtn()
+        setUpKeyboard()
+        
         editButton.image = UIImage(systemName: "slider.vertical.3")
 
         searchBar.returnKeyType = .done
         searchBar.rx.setDelegate(self).disposed(by: viewModel.disposeBag)
         tableView.rx.setDelegate(self).disposed(by: viewModel.disposeBag)
+        
+        viewModel.searchingItem()
 
     }
     
@@ -59,10 +64,10 @@ class RefrigeratorViewController: UIViewController, BindableType {
         
         
         searchBar.rx.text.orEmpty.bind(to: viewModel.searchingText).disposed(by: viewModel.disposeBag)
-        viewModel.searchingItem()
         
-        setUpEditBtn()
-        setUpKeyboard()
+        viewModel.observableItems.bind(to: tableView.rx.items(dataSource: viewModel.dataSource))
+               .disposed(by: viewModel.disposeBag)
+    
     }
     
     func setUpTableView() {
@@ -76,10 +81,6 @@ class RefrigeratorViewController: UIViewController, BindableType {
         footerView.addGestureRecognizer(tap)
         
         tableView.tableFooterView = footerView
-
-     
-        viewModel.observableItems.bind(to: tableView.rx.items(dataSource: viewModel.dataSource))
-            .disposed(by: viewModel.disposeBag)
 
      
         
@@ -240,6 +241,9 @@ class RefrigeratorViewController: UIViewController, BindableType {
                         self.viewModel.items.remove(at: indexPath.row)
                        
                     }
+                    
+                    self.viewModel.observableItems.onNext(self.viewModel.items)
+                    tableView.reloadData()
                                        
                 }
                 
@@ -250,8 +254,7 @@ class RefrigeratorViewController: UIViewController, BindableType {
                 
                 self.viewModel.isTableViewEditable.accept(false)
                
-                self.viewModel.observableItems.onNext(self.viewModel.items)
-                tableView.reloadData()
+              
                 
             })
             .disposed(by: viewModel.disposeBag)
@@ -268,7 +271,8 @@ class RefrigeratorViewController: UIViewController, BindableType {
                 self.navigationItem.titleView = searchBar
                 self.tableView.setEditing(false, animated: true)
 
-                
+                self.viewModel.isTableViewEditable.accept(false)
+
             })
             .disposed(by: viewModel.disposeBag)
     }
