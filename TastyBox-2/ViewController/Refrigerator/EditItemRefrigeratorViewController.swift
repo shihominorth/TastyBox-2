@@ -24,7 +24,6 @@ class EditItemRefrigeratorViewController: UIViewController, BindableType {
     var amount: String?
     
     var indexPath: IndexPath?
-//    weak var delegate: AddingIngredientRefrigeratorViewControllerDelegate?
     var itemIsEmpty: Bool?
     
     override func viewDidLoad() {
@@ -32,11 +31,6 @@ class EditItemRefrigeratorViewController: UIViewController, BindableType {
         
         nameTextField.delegate = self
         amountTextField.delegate = self
-        
-        if name != nil, amount != nil {
-            nameTextField.text = name
-            amountTextField.text = amount
-        }
         
         setUpKeyboard()
         
@@ -182,9 +176,7 @@ class EditItemRefrigeratorViewController: UIViewController, BindableType {
     
     
     @objc func tapGesture() {
-        
-       
-            
+  
         self.view.endEditing(true)
             
         if let tapRecognizers = self.view.gestureRecognizers?.filter({ $0.name == "dissmiss"}) {
@@ -223,18 +215,5 @@ extension EditItemRefrigeratorViewController: UITextFieldDelegate {
         }
         return true
     }
-//
-    @objc func keyboardWillShow(notification: NSNotification) {
-        if let keyboardSize = (notification.userInfo?[UIResponder.keyboardFrameBeginUserInfoKey] as? NSValue)?.cgRectValue {
-            if self.view.frame.origin.y == 0 {
-                self.view.frame.origin.y = 0
-            }
-        }
-    }
 
-    @objc func keyboardWillHide() {
-        if self.view.frame.origin.y != 0 {
-            self.view.frame.origin.y = 0
-        }
-    }
 }

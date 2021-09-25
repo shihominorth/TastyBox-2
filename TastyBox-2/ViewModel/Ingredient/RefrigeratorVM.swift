@@ -32,7 +32,8 @@ class RefrigeratorVM: ViewModelBase {
     
     var isTableViewEditable = BehaviorRelay<Bool>(value: false)
     var isSelectedCells = BehaviorRelay<Bool>(value: false)
-    
+   
+    var searchingText = BehaviorRelay<String>(value: "")
   
     
     let dataSource = RxRefrigeratorTableViewDataSource<RefrigeratorItem, IngredientTableViewCell>(identifier: IngredientTableViewCell.identifier) { row, element, cell in
@@ -40,10 +41,7 @@ class RefrigeratorVM: ViewModelBase {
         cell.configure(item: element)
     
     }
-    
-    
-    var searchingText = BehaviorRelay<String>(value: "")
-    
+
     init(sceneCoodinator: SceneCoordinator, apiType: RefrigeratorProtocol.Type = RefrigeratorDM.self, user: FirebaseAuth.User) {
         self.sceneCoodinator = sceneCoodinator
         self.apiType = apiType
@@ -77,7 +75,7 @@ class RefrigeratorVM: ViewModelBase {
         observableItems.onNext([])
         
         _ = self.apiType.getIngredients(userID: self.user.uid)
-            .subscribe(onSuccess: { items in
+            .subscribe(onSuccess: {[unowned self]  items in
         
             self.items = items.sorted { $0.order < $1.order }
             
@@ -85,8 +83,9 @@ class RefrigeratorVM: ViewModelBase {
             
            
        
-        }, onFailure: { err in
+        }, onFailure: { [unowned self] err in
             err.handleFireStoreError()?.generateErrAlert()
+            self.observableItems.onNext(self.items)
         })
        
     }
