@@ -10,6 +10,8 @@ import Firebase
 import RxSwift
 import RxCocoa
 
+// ナビゲーションバーのバックボタンを繋げて、それに伴ってtableviewのuiを更新する
+
 class RefrigeratorViewController: UIViewController, BindableType {
     
     typealias ViewModelType = RefrigeratorVM
@@ -43,19 +45,17 @@ class RefrigeratorViewController: UIViewController, BindableType {
         tableView.rx.setDelegate(self).disposed(by: viewModel.disposeBag)
         
         viewModel.searchingItem()
+        
 
     }
     
     override func viewWillAppear(_ animated: Bool) {
-
+                
         viewModel.getItems(listName: .refrigerator)
-            .subscribe(onNext: { [unowned self] isGotten in
-                self.tableView.reloadData()
-            })
-            .disposed(by: viewModel.disposeBag)
+
     }
-   
     
+ 
     override func viewWillDisappear(_ animated: Bool) {
         viewModel.moveItems()
     }
@@ -73,23 +73,19 @@ class RefrigeratorViewController: UIViewController, BindableType {
         
         searchBar.rx.text.orEmpty.bind(to: viewModel.searchingText).disposed(by: viewModel.disposeBag)
         
-        viewModel.observableItems.bind(to: tableView.rx.items(dataSource: viewModel.dataSource))
+      
+        
+        viewModel.observableItems
+            .observe(on: MainScheduler.instance)
+            .bind(to: tableView.rx.items(dataSource: viewModel.dataSource))
                .disposed(by: viewModel.disposeBag)
-    
     }
     
     func setUpTableView() {
-
+        
         let footerView = UIView()
-        let tap = UITapGestureRecognizer(target: self, action: #selector(tapAction))
-        tap.name = "dissmiss"
-
-        footerView.addGestureRecognizer(tap)
-
         tableView.tableFooterView = footerView
 
-     
-        
         //MARK: why is the background of cell is grey when the cell is selected?
         // make it grey before tableview.rx.itemSelected....
         tableView.rx.itemSelected
@@ -324,23 +320,7 @@ class RefrigeratorViewController: UIViewController, BindableType {
                 })
             })
     }
-    
-    @objc func tapAction() {
-        
-        searchBar.endEditing(true)
-       
-        self.navigationItem.setHidesBackButton(false, animated: true)
-        self.navigationItem.rightBarButtonItems = [editButton]
-        
-        searchBar.showsCancelButton = false
-        
-        UIView.animate(withDuration: 0.3, animations: {
 
-            if self.view.frame.origin.y != 0 {
-                self.view.frame.origin.y = 0
-            }
-        })
-    }
 }
 
 

@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import DifferenceKit
 import Firebase
 import RxSwift
 import RxCocoa
@@ -31,6 +32,8 @@ class RefrigeratorVM: ViewModelBase {
     
     var isTableViewEditable = BehaviorRelay<Bool>(value: false)
     var isSelectedCells = BehaviorRelay<Bool>(value: false)
+    
+  
     
     let dataSource = RxRefrigeratorTableViewDataSource<RefrigeratorItem, IngredientTableViewCell>(identifier: IngredientTableViewCell.identifier) { row, element, cell in
         
@@ -68,24 +71,24 @@ class RefrigeratorVM: ViewModelBase {
         
     }
     
-    func getItems(listName: List) -> PublishRelay<Bool>{
-    
-        let relay = PublishRelay<Bool>()
+    func getItems(listName: List) {
         
-        _ = self.apiType.getIngredients(userID: self.user.uid).subscribe(onSuccess: { items in
+        //これがないとuiが更新されない
+        observableItems.onNext([])
+        
+        _ = self.apiType.getIngredients(userID: self.user.uid)
+            .subscribe(onSuccess: { items in
         
             self.items = items.sorted { $0.order < $1.order }
             
             self.observableItems.onNext(self.items)
             
-            relay.accept(true)
+           
        
         }, onFailure: { err in
             err.handleFireStoreError()?.generateErrAlert()
-            relay.accept(false)
         })
        
-        return relay
     }
     
     func moveItems() {

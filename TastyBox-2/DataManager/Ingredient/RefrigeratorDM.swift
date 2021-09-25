@@ -11,7 +11,7 @@ import RxSwift
 import RxCocoa
 
 protocol RefrigeratorProtocol: AnyObject {
-
+    
     static func getIngredients(userID: String) -> Single<[RefrigeratorItem]>
     static func addIngredient(name: String, amount: String, userID: String, lastIndex: Int) -> Completable
     static func editIngredient(edittingItem: Ingredient, name: String, amount: String, userID: String) -> Completable
@@ -26,8 +26,8 @@ class RefrigeratorDM: RefrigeratorProtocol {
     
     
     static let db = Firestore.firestore()
-        
-//    var ingredients:[RefrigeratorItem] = []
+    
+    //    var ingredients:[RefrigeratorItem] = []
     
     static func addIngredient(name: String, amount: String, userID: String, lastIndex: Int) -> Completable {
         
@@ -59,54 +59,22 @@ class RefrigeratorDM: RefrigeratorProtocol {
         
         return Completable.create { completable in
             
-            if edittingItem.name == name {
+            db.collection("users").document(userID).collection("refrigerator").document(edittingItem.key).setData(
                 
-                db.collection("users").document(userID).collection("refrigerator").document(name).setData(
+                [ "name": name,
+                  "amount": amount], merge: true) { err in
+                
+                if let err = err {
                     
-                    ["amount": amount], merge: true) { err in
+                    completable(.error(err))
                     
-                    if let err = err {
-                        
-                        completable(.error(err))
-                        
-                    } else {
-                        
-                        completable(.completed)
-                    }
+                } else {
                     
+                    completable(.completed)
                 }
                 
             }
-            else {
-                
-                db.collection("users").document(userID).collection("refrigerator").document(edittingItem.key).delete { err in
-                    
-                    if let err = err {
-                        
-                        completable(.error(err))
-                        
-                    } else {
-                        
-                        db.collection("users").document(userID).collection("refrigerator").document(name).setData(
-                            
-                            [ "name": name,
-                              "amount": amount], merge: true) { err in
-                            
-                            if let err = err {
-                                
-                                completable(.error(err))
-                                
-                            } else {
-                                
-                                completable(.completed)
-                            }
-                            
-                        }
-                        
-                    }
-                    
-                }
-            }
+            
             
             return Disposables.create()
         }
