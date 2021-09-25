@@ -18,11 +18,14 @@ class RxRefrigeratorTableViewDataSource<E: Differentiable, Cell: UITableViewCell
     let animation: UITableView.RowAnimation
     let configure: (Int, E, Cell) -> Void
     var values: Element = []
+    var emptyValue: E
 
-    init(identifier: String, with animation: UITableView.RowAnimation = .automatic, configure: @escaping (Int, E, Cell) -> Void) {
+    init(identifier: String, with animation: UITableView.RowAnimation = .automatic, emptyValue: E, configure: @escaping (Int, E, Cell) -> Void) {
         self.identifier = identifier
         self.animation = animation
         self.configure = configure
+        
+        self.emptyValue = emptyValue
     }
 
     func tableView(_ tableView: UITableView, observedEvent: Event<Element>) {
@@ -33,15 +36,41 @@ class RxRefrigeratorTableViewDataSource<E: Differentiable, Cell: UITableViewCell
             self.values = data
         }
     }
+    
+    func numberOfSections(in tableView: UITableView) -> Int {
+        return 2
+    }
 
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return values.count
+        
+        switch section {
+        case 0:
+            return values.count
+            
+        case 1:
+            return 1
+        default:
+            break
+        }
+
+        return 0
     }
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: identifier, for: indexPath) as! Cell
         let row = indexPath.row
-        configure(row, values[row], cell)
+        
+        switch indexPath.section {
+        case 0:
+            configure(row, values[row], cell)
+            cell.backgroundColor = .white
+        case 1:
+            configure(row, emptyValue, cell)
+            cell.backgroundColor = .clear
+        default:
+            break
+        }
+     
         return cell
     }
 

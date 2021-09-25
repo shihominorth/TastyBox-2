@@ -20,32 +20,40 @@ class RefrigeratorVM: ViewModelBase {
     
     let sceneCoodinator: SceneCoordinator
     let apiType: RefrigeratorProtocol.Type
-
+    
     var user: FirebaseAuth.User!
     var err = NSError()
-
+    
+    let empty = RefrigeratorItem(key: "___________________empty", name: "", amount: "", order: 0)
+    
+    var emptyHeight: CGFloat = 140.0
+    var hasEmptyCell = false
+    
     var items: [RefrigeratorItem] = []
     var searchingTemp:[RefrigeratorItem] = []
     var deletingTemp:[DeletingIngredient] = []
-
+    
     var observableItems = PublishSubject<[RefrigeratorItem]>()
     
     var isTableViewEditable = BehaviorRelay<Bool>(value: false)
     var isSelectedCells = BehaviorRelay<Bool>(value: false)
-   
+    
     var searchingText = BehaviorRelay<String>(value: "")
-  
     
-    let dataSource = RxRefrigeratorTableViewDataSource<RefrigeratorItem, IngredientTableViewCell>(identifier: IngredientTableViewCell.identifier) { row, element, cell in
+    lazy var dataSource: RxRefrigeratorTableViewDataSource<RefrigeratorItem, IngredientTableViewCell> = {
         
-        cell.configure(item: element)
+        return RxRefrigeratorTableViewDataSource<RefrigeratorItem, IngredientTableViewCell>(identifier: IngredientTableViewCell.identifier, emptyValue: self.empty) { row, element, cell in
+            
+            cell.configure(item: element)
+            
+        }
+    }()
     
-    }
-
     init(sceneCoodinator: SceneCoordinator, apiType: RefrigeratorProtocol.Type = RefrigeratorDM.self, user: FirebaseAuth.User) {
         self.sceneCoodinator = sceneCoodinator
         self.apiType = apiType
         self.user = user
+        
     }
     
     func toAddItem() -> CocoaAction {
@@ -61,33 +69,38 @@ class RefrigeratorVM: ViewModelBase {
     }
     
     func toEditItem(index: Int)  {
-            
+        
         let vm =  EditItemRefrigeratorVM(sceneCoodinator: self.sceneCoodinator, user: self.user, item: self.items[index], lastIndex: index)
-            let vc = IngredientScene.edit(vm).viewController()
-            
-            self.sceneCoodinator.transition(to: vc, type: .push)
+        let vc = IngredientScene.edit(vm).viewController()
+        
+        self.sceneCoodinator.transition(to: vc, type: .push)
         
     }
     
-    func getItems(listName: List) {
+    func getItems(listName: List) -> PublishRelay<Bool> {
+        
+        let relay = PublishRelay<Bool>()
         
         //これがないとuiが更新されない
         observableItems.onNext([])
         
         _ = self.apiType.getIngredients(userID: self.user.uid)
             .subscribe(onSuccess: {[unowned self]  items in
+                
+                self.items = items.sorted { $0.order < $1.order }
+                
+                self.observableItems.onNext(self.items)
+                
+                relay.accept(true)
+                
+                
+            }, onFailure: { [unowned self] err in
+                err.handleFireStoreError()?.generateErrAlert()
+                self.observableItems.onNext(self.items)
+                relay.accept(true)
+            })
         
-            self.items = items.sorted { $0.order < $1.order }
-            
-            self.observableItems.onNext(self.items)
-            
-           
-       
-        }, onFailure: { [unowned self] err in
-            err.handleFireStoreError()?.generateErrAlert()
-            self.observableItems.onNext(self.items)
-        })
-       
+        return relay
     }
     
     func moveItems() {
@@ -109,7 +122,10 @@ class RefrigeratorVM: ViewModelBase {
     func deleteItem(index: Int) {
         
         let item = items[index]
-       
+        
+        //これがないとuiが更新されない
+        observableItems.onNext([])
+        
         _ = self.apiType.deleteIngredient(item: item, userID: user.uid)
             .subscribe(onCompleted: { [unowned self] in
                 
@@ -122,7 +138,8 @@ class RefrigeratorVM: ViewModelBase {
                 
                 print("Error updating document: \(err)")
                 err.handleFireStoreError()?.generateErrAlert()
-            
+                self.observableItems.onNext(self.items)
+                
             })
    
     }

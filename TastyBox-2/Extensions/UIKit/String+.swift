@@ -19,3 +19,11 @@ extension String {
         return !self.isEmpty
     }
 }
+
+
+extension Array {
+    
+    var isNotEmpty: Bool {
+        return !self.isEmpty
+    }
+}
