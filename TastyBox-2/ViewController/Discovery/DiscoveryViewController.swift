@@ -97,9 +97,11 @@ class DiscoveryViewController: UIViewController, BindableType {
             .disposed(by: viewModel.disposeBag)
         
         let _  = NotificationCenter.default.rx.notification(NSNotification.Name("ShowRefrigerator"))
-//            .takeNoCompleted(1)
+            .concat(Observable.never())
+            .debug()
             .subscribe(onNext: { notification in
                 self.viewModel.toRefrigerator()
+                print("next")
             })
             .disposed(by: viewModel.disposeBag)
     }

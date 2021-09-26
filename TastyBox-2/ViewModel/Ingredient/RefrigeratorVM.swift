@@ -54,6 +54,23 @@ class RefrigeratorVM: ViewModelBase {
         self.apiType = apiType
         self.user = user
         
+//        for i in 16... {
+//            
+//            Firestore.firestore().collection("users").document(user.uid).collection("refrigerator").document().setData([
+//                
+//                "name": "name",
+//                "amount": "amount",
+//                "order": i
+//                
+//            ], merge: true) { err in
+//                if let err = err {
+//                    
+//                    print(err)
+//                    
+//                }
+//                
+//            }
+//        }
     }
     
     func toAddItem() -> CocoaAction {
@@ -70,7 +87,15 @@ class RefrigeratorVM: ViewModelBase {
     
     func toEditItem(index: Int)  {
         
-        let vm =  EditItemRefrigeratorVM(sceneCoodinator: self.sceneCoodinator, user: self.user, item: self.items[index], lastIndex: index)
+        var vm :EditItemRefrigeratorVM!
+        
+        if searchingTemp.isEmpty {
+            vm =  EditItemRefrigeratorVM(sceneCoodinator: self.sceneCoodinator, user: self.user, item: self.items[index], lastIndex: index)
+        }
+        else {
+            vm =  EditItemRefrigeratorVM(sceneCoodinator: self.sceneCoodinator, user: self.user, item: self.searchingTemp[index], lastIndex: index)
+        }
+        
         let vc = IngredientScene.edit(vm).viewController()
         
         self.sceneCoodinator.transition(to: vc, type: .push)
@@ -122,15 +147,27 @@ class RefrigeratorVM: ViewModelBase {
     func deleteItem(index: Int) -> PublishRelay<Bool> {
         
         let relay = PublishRelay<Bool>()
-        let item = items[index]
+        let item = searchingTemp.isEmpty ? items[index] : searchingTemp[index]
         
         _ = self.apiType.deleteIngredient(item: item, userID: user.uid)
             .subscribe(onCompleted: { [unowned self] in
                 
                 print("Document successfully deleted")
                 
-                self.items.remove(at: index)
-                self.observableItems.onNext(self.items)
+                if searchingTemp.isEmpty {
+                    self.items.remove(at: index)
+                    self.observableItems.onNext(self.items)
+                }
+                else {
+                    guard let searchedIndex = self.items.firstIndex(of: self.searchingTemp[index]) else {
+                        return
+                    }
+                    
+                    self.items.remove(at: searchedIndex)
+                    
+                }
+               
+              
                 relay.accept(true)
                 
             }, onError: { err in

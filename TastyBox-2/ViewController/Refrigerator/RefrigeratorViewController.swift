@@ -10,8 +10,6 @@ import Firebase
 import RxSwift
 import RxCocoa
 
-// ナビゲーションバーのバックボタンを繋げて、それに伴ってtableviewのuiを更新する
-
 class RefrigeratorViewController: UIViewController, BindableType {
     
     typealias ViewModelType = RefrigeratorVM
@@ -49,14 +47,13 @@ class RefrigeratorViewController: UIViewController, BindableType {
         
     }
     
+    
     override func viewWillAppear(_ animated: Bool) {
         
         viewModel.getItems(listName: .refrigerator)
             .subscribe(onNext: { [unowned self] isGottenItem in
                 
-                tableView.beginUpdates()
-                self.setHasEmptyCell()
-                tableView.endUpdates()
+                showSearchedResult()
                 
             })
             .disposed(by: viewModel.disposeBag)
@@ -115,7 +112,7 @@ class RefrigeratorViewController: UIViewController, BindableType {
                     
                     self.viewModel.toEditItem(index: indexPath.row)
                     self.tableView.deselectRow(at: indexPath, animated: true)
-                    
+                
                 }
             })
             .disposed(by: viewModel.disposeBag)
@@ -180,10 +177,7 @@ class RefrigeratorViewController: UIViewController, BindableType {
                     .subscribe(onNext: { isDeleted in
                         
                         if isDeleted {
-                            tableView.beginUpdates()
-                            self.setHasEmptyCell()
-                            tableView.endUpdates()
-                            
+                            self.showSearchedResult()
                         }
                   
                     })
@@ -258,17 +252,33 @@ class RefrigeratorViewController: UIViewController, BindableType {
                     //Sort the array so it doesn't cause a crash depending on your selection order.
                     let sortedPaths = indexPaths.sorted { $0.row > $1.row }
                     
-                    sortedPaths.forEach { indexPath in
+                    if viewModel.searchingTemp.isEmpty {
                         
-                        let ingredient = DeletingIngredient(index: indexPath.row, item: self.viewModel.items[indexPath.row])
-                        self.viewModel.deletingTemp.append(ingredient)
+                        sortedPaths.forEach { indexPath in
+                        
+                            
+                            let ingredient = DeletingIngredient(index: indexPath.row, item: self.viewModel.items[indexPath.row])
+                            self.viewModel.deletingTemp.append(ingredient)
+                        }
                     }
+                    else {
+                        
+                        sortedPaths.forEach { indexPath in
+                            
+                            guard let index = self.viewModel.items.firstIndex(of: self.viewModel.searchingTemp[indexPath.row]) else {
+                                return
+                            }
+                            
+                            let ingredient = DeletingIngredient(index: Int(index), item: self.viewModel.searchingTemp[indexPath.row])
+                            self.viewModel.deletingTemp.append(ingredient)
+                        }
+                    }
+                    
+                    
                     
                     self.viewModel.deleteItems()
                     
-                    tableView.beginUpdates()
-                    self.setHasEmptyCell()
-                    tableView.endUpdates()
+                    self.showSearchedResult()
                     
                     
                 }
@@ -373,6 +383,23 @@ class RefrigeratorViewController: UIViewController, BindableType {
         }
     }
     
+    fileprivate func showSearchedResult() {
+        searchBar.rx.text.orEmpty
+            .subscribe(onNext: { [unowned self] text in
+                
+                if text.isNotEmpty {
+                    self.viewModel.searchingText.accept(text)
+                }
+                
+                self.tableView.beginUpdates()
+                self.setHasEmptyCell()
+                self.tableView.endUpdates()
+                
+                
+            })
+            .disposed(by: viewModel.disposeBag)
+    }
+    
 }
 
 
@@ -399,10 +426,7 @@ extension RefrigeratorViewController: UITableViewDelegate {
                 .subscribe(onNext: { isDeleted in
                     
                     if isDeleted {
-                        tableView.beginUpdates()
-                        self.setHasEmptyCell()
-                        tableView.endUpdates()
-                        
+                        self.showSearchedResult()
                     }
               
                 })

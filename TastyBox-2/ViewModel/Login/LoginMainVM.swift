@@ -89,11 +89,11 @@ class LoginMainVM: ViewModelBase {
             self.apiType.loginWithGoogle(viewController: vc).subscribe { event in
                 
                 switch event {
-                case .failure(let err as NSError):
+                case .failure(let err):
                     
-                    self.err = err
+                    self.err = err as NSError
                     
-                    guard let reason = self.err.handleAuthenticationError() else { return }
+                    guard let reason = err.handleAuthenticationError() else { return }
                     
                     SCLAlertView().showTitle(
                         reason.reason, // Title of view
