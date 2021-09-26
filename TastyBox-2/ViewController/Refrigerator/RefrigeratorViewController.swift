@@ -25,11 +25,13 @@ class RefrigeratorViewController: UIViewController, BindableType {
     var editButton = UIBarButtonItem()
     var doneBtn = UIBarButtonItem()
     
+    var mapBtn = UIBarButtonItem()
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
         self.navigationItem.titleView = searchBar
-        self.navigationItem.rightBarButtonItem = editButton
+        self.navigationItem.rightBarButtonItems = [editButton, mapBtn]
         
         setUpAddBtn()
         setUpTableView()
@@ -37,6 +39,7 @@ class RefrigeratorViewController: UIViewController, BindableType {
         setUpKeyboard()
         
         editButton.image = UIImage(systemName: "slider.vertical.3")
+        mapBtn.image = UIImage(systemName: "map")
         
         searchBar.returnKeyType = .done
         searchBar.rx.setDelegate(self).disposed(by: viewModel.disposeBag)
@@ -286,14 +289,10 @@ class RefrigeratorViewController: UIViewController, BindableType {
                 self.tableView.setEditing(false, animated: true)
                 
                 self.navigationItem.titleView = searchBar
-                self.navigationItem.rightBarButtonItems = [editButton]
+                self.navigationItem.rightBarButtonItems = [editButton, mapBtn]
                 
                 self.viewModel.isTableViewEditable.accept(false)
                 self.viewModel.isSelectedCells.accept(false)
-                
-                tableView.beginUpdates()
-                self.setHasEmptyCell()
-                tableView.endUpdates()
                 
                 
             })
@@ -307,7 +306,7 @@ class RefrigeratorViewController: UIViewController, BindableType {
             }
             .subscribe(onNext: { [unowned self] element in
                 
-                self.navigationItem.rightBarButtonItems = [editButton]
+                self.navigationItem.rightBarButtonItems = [editButton, mapBtn]
                 self.navigationItem.titleView = searchBar
                 self.tableView.setEditing(false, animated: true)
                 
