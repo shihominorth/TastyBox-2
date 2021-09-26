@@ -33,6 +33,15 @@ class DiscoveryVM: ViewModelBase {
         self.sceneCoodinator.transition(to:vc, type: .push)
     }
     
+    func toShoppinglist() {
+        
+        let vm = ShoppinglistVM(sceneCoodinator: self.sceneCoodinator, user: self.user)
+        let vc = IngredientScene.shoppinglist(vm).viewController()
+        
+        
+        self.sceneCoodinator.transition(to: vc, type: .push)
+    }
+    
     func logout() {
   
         let firebaseAuth = Auth.auth()

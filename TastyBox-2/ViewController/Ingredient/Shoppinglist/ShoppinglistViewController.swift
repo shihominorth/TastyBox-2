@@ -1,20 +1,19 @@
 //
-//  RefrigeratorViewController.swift
+//  ShoppinglistViewController.swift
 //  TastyBox-2
 //
-//  Created by 北島　志帆美 on 2021-09-21.
+//  Created by 北島　志帆美 on 2021-09-26.
 //
 
 import UIKit
-import Firebase
 import RxSwift
-import RxCocoa
 
-class RefrigeratorViewController: UIViewController, BindableType {
+class ShoppinglistViewController: UIViewController, BindableType {
+
+    typealias ViewModelType = ShoppinglistVM
+    var viewModel: ShoppinglistVM!
     
-    typealias ViewModelType = RefrigeratorVM
-    var viewModel: RefrigeratorVM!
-    
+
     @IBOutlet weak var tableView: UITableView!
     @IBOutlet weak var addBtn: UIButton!
     
@@ -345,7 +344,7 @@ class RefrigeratorViewController: UIViewController, BindableType {
             .subscribe ( onNext: { [unowned self] notification in
                 
                 self.navigationItem.setHidesBackButton(false, animated: true)
-                self.navigationItem.rightBarButtonItems = [editButton]
+                self.navigationItem.rightBarButtonItems = [editButton, mapBtn]
                 
                 searchBar.showsCancelButton = false
                 
@@ -371,18 +370,19 @@ class RefrigeratorViewController: UIViewController, BindableType {
                 
                 let hasEmptyCell = addBtn.frame.origin.y <= cellRectInView.maxY
 
-                self.viewModel.hasEmptyCell = hasEmptyCell
+                self.viewModel.hasEmptyCell.accept(hasEmptyCell)
               
 
             } else {
                 
-                self.viewModel.hasEmptyCell = true
+                self.viewModel.hasEmptyCell.accept(true)
                 
             }
         }
     }
     
     fileprivate func showSearchedResult() {
+       
         searchBar.rx.text.orEmpty
             .subscribe(onNext: { [unowned self] text in
                 
@@ -403,7 +403,7 @@ class RefrigeratorViewController: UIViewController, BindableType {
 
 
 
-extension RefrigeratorViewController: UITableViewDelegate {
+extension ShoppinglistViewController: UITableViewDelegate {
     
     func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
         
@@ -448,7 +448,7 @@ extension RefrigeratorViewController: UITableViewDelegate {
         }
         else {
           
-            return viewModel.hasEmptyCell ? 140 : 0.0
+            return viewModel.hasEmptyCell.value ? 140 : 0.0
         }
 
     }
@@ -464,7 +464,7 @@ extension RefrigeratorViewController: UITableViewDelegate {
 }
 
 
-extension RefrigeratorViewController: UISearchBarDelegate {
+extension ShoppinglistViewController: UISearchBarDelegate {
     
     func searchBarCancelButtonClicked(_ searchBar: UISearchBar) {
         searchBar.endEditing(true)
@@ -477,12 +477,3 @@ extension RefrigeratorViewController: UISearchBarDelegate {
 }
 
 
-extension UIWindow {
-    static var key: UIWindow? {
-        if #available(iOS 13, *) {
-            return UIApplication.shared.windows.first { $0.isKeyWindow }
-        } else {
-            return UIApplication.shared.keyWindow
-        }
-    }
-}

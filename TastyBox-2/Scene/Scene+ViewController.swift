@@ -29,6 +29,7 @@ extension LoadingScene {
 }
 
 extension LoginScene {
+   
     func viewController() -> UIViewController {
         let storyboard = UIStoryboard(name: "Login", bundle: nil)
         let aboutStoryBoard =  UIStoryboard(name: "About", bundle: nil)
@@ -150,6 +151,7 @@ extension MainScene {
 }
 
 extension IngredientScene {
+   
     func viewController() -> UIViewController {
         let storyboard = UIStoryboard(name: "Ingredient", bundle: nil)
         //    let aboutStoryBoard =  UIStoryboard(name: "About", bundle: nil)
@@ -163,9 +165,24 @@ extension IngredientScene {
             
             return vc
             
-        case .edit(let viewModel):
+        case .editRefrigerator(let viewModel):
             
             var vc = storyboard.instantiateViewController(withIdentifier: "editItemRefrigerator") as! EditItemRefrigeratorViewController
+            
+            vc.bindViewModel(to: viewModel)
+            
+            return vc
+            
+        case .shoppinglist(let viewModel):
+            var vc = storyboard.instantiateViewController(withIdentifier: "shoppinglist") as! ShoppinglistViewController
+            
+            vc.bindViewModel(to: viewModel)
+            
+            return vc
+            
+        case .editShoppinglist(let viewModel):
+            
+            var vc = storyboard.instantiateViewController(withIdentifier: "editItemShoppinglist") as! EditShoppingListViewController
             
             vc.bindViewModel(to: viewModel)
             

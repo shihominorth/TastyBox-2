@@ -20,5 +20,5 @@ enum MainScene {
 }
 
 enum IngredientScene {
-    case refrigerator(RefrigeratorVM), edit(EditItemRefrigeratorVM)
+    case refrigerator(RefrigeratorVM), editRefrigerator(EditItemRefrigeratorVM), shoppinglist(ShoppinglistVM), editShoppinglist(EditShoppinglistVM)
 }

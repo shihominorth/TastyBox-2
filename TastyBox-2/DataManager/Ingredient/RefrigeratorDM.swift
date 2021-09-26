@@ -12,34 +12,50 @@ import RxCocoa
 
 protocol RefrigeratorProtocol: AnyObject {
     
-    static func getIngredients(userID: String) -> Single<[RefrigeratorItem]>
-    static func addIngredient(name: String, amount: String, userID: String, lastIndex: Int) -> Completable
-    static func editIngredient(edittingItem: Ingredient, name: String, amount: String, userID: String) -> Completable
-    static func moveIngredient(userID: String, items: [Ingredient]) -> Observable<Bool>
-    static func deleteIngredient(item: RefrigeratorItem, userID: String) -> Completable
-    static func deleteIngredients(items: [DeletingIngredient], userID: String) -> Observable<(Bool, DeletingIngredient)>
-    static func searchIngredients(text: String)
+    static func getIngredients(userID: String, listName: List) -> Single<[Ingredient]>
+    static func addIngredient(name: String, amount: String, userID: String, lastIndex: Int, listName: List) -> Completable
+    static func editIngredient(edittingItem: Ingredient, name: String, amount: String, userID: String, listName: List) -> Completable
+    static func moveIngredient(userID: String, items: [Ingredient], listName: List) -> Observable<Bool>
+    static func deleteIngredient(item: Ingredient, userID: String, listName: List) -> Completable
+    static func deleteIngredients(items: [DeletingIngredient], userID: String, listName: List) -> Observable<(Bool, DeletingIngredient)>
+    static func searchIngredients(text: String, userID: String, listName: List)
     
 }
 
 class RefrigeratorDM: RefrigeratorProtocol {
     
-    
     static let db = Firestore.firestore()
     
-    //    var ingredients:[RefrigeratorItem] = []
-    
-    static func addIngredient(name: String, amount: String, userID: String, lastIndex: Int) -> Completable {
+    static func addIngredient(name: String, amount: String, userID: String, lastIndex: Int, listName: List) -> Completable {
         
         return Completable.create { completable in
             
-            self.db.collection("users").document(userID).collection("refrigerator").document().setData([
+            var data:[String:Any] = [:]
+            
+            switch listName {
+            case .refrigerator:
+                data = [
+                    
+                    "name": name,
+                    "amount": amount,
+                    "order": lastIndex
+                    
+                ]
                 
-                "name": name,
-                "amount": amount,
-                "order": lastIndex
+            case .shoppinglist:
                 
-            ], merge: true) { err in
+                data = [
+                    
+                    "name": name,
+                    "amount": amount,
+                    "order": lastIndex,
+                    "isBought": false
+                ]
+            }
+            
+            print(listName.rawValue)
+            
+            self.db.collection("users").document(userID).collection(listName.rawValue).document().setData(data, merge: true) { err in
                 if let err = err {
                     
                     completable(.error(err))
@@ -55,11 +71,11 @@ class RefrigeratorDM: RefrigeratorProtocol {
         
     }
     
-    static func editIngredient(edittingItem: Ingredient, name: String, amount: String, userID: String) -> Completable {
+    static func editIngredient(edittingItem: Ingredient, name: String, amount: String, userID: String, listName: List) -> Completable {
         
         return Completable.create { completable in
             
-            db.collection("users").document(userID).collection("refrigerator").document(edittingItem.key).setData(
+            db.collection("users").document(userID).collection(listName.rawValue).document(edittingItem.key).setData(
                 
                 [ "name": name,
                   "amount": amount], merge: true) { err in
@@ -80,7 +96,7 @@ class RefrigeratorDM: RefrigeratorProtocol {
         }
     }
     
-    static func moveIngredient(userID: String, items: [Ingredient]) -> Observable<Bool> {
+    static func moveIngredient(userID: String, items: [Ingredient], listName: List) -> Observable<Bool> {
         
         
         return Observable.create { observer in
@@ -89,12 +105,12 @@ class RefrigeratorDM: RefrigeratorProtocol {
                 
                 if item.order != index {
                     
-                    db.collection("users").document(userID).collection("refrigerator").document(item.key).setData([
+                    db.collection("users").document(userID).collection(listName.rawValue).document(item.key).setData([
                         
                         "order": index
                         
                     ], merge: true) { err in
-                       
+                        
                         if let err = err {
                             
                             observer.onError(err)
@@ -121,32 +137,51 @@ class RefrigeratorDM: RefrigeratorProtocol {
         }
         
     }
-
     
-    static func getIngredients(userID: String)  -> Single<[RefrigeratorItem]> {
+    
+    static func getIngredients(userID: String, listName: List)  -> Single<[Ingredient]> {
         
         
         return Single.create { single in
-           
-            db.collection("users").document(userID).collection("refrigerator").addSnapshotListener { querySnapshot, err in
-
-                if let err = err {
+            
+            db.collection("users").document(userID).collection(listName.rawValue).addSnapshotListener { querySnapshot, err in
                 
+                if let err = err {
+                    
                     single(.failure(err))
-               
+                    
                 } else {
                     
-                    let ingredients = querySnapshot?.documents.map { doc  -> RefrigeratorItem in
+                    switch listName {
+                    case .refrigerator:
                         
-                        if let ingredient = RefrigeratorItem(document: doc) {
-                            return ingredient
+                        let ingredients = querySnapshot?.documents.map { doc  -> RefrigeratorItem in
+                            
+                            if let ingredient = RefrigeratorItem(document: doc) {
+                                return ingredient
+                            }
+                            
+                            return RefrigeratorItem(key: "", name: "", amount: "", order: 0)
                         }
+                        .filter { $0.name != "" && $0.amount != "" && $0.key != "" }
                         
-                        return RefrigeratorItem(key: "", name: "", amount: "", order: 0)
+                        single(.success(ingredients ?? []))
+                        
+                    case .shoppinglist:
+                        
+                        let ingredients = querySnapshot?.documents.map { doc  -> ShoppingItem in
+                            
+                            if let ingredient = ShoppingItem(document: doc) {
+                                return ingredient
+                            }
+                            
+                            return ShoppingItem(name: "", amount: "", key: "", isBought: false, order: 0)
+                        }
+                        .filter { $0.name != "" && $0.amount != "" && $0.key != "" }
+                        
+                        single(.success(ingredients ?? []))
+                        
                     }
-                    .filter { $0.name != "" && $0.amount != "" && $0.key != "" }
-                    
-                    single(.success(ingredients ?? []))
                     
                 }
                 
@@ -156,13 +191,13 @@ class RefrigeratorDM: RefrigeratorProtocol {
         
     }
     
-    static func deleteIngredient(item: RefrigeratorItem, userID: String) -> Completable {
+    static func deleteIngredient(item: Ingredient, userID: String, listName: List) -> Completable {
         
         return Completable.create { completable in
             
             let key = item.key
             
-            db.collection("users").document(userID).collection("refrigerator").document(key).delete() { err in
+            db.collection("users").document(userID).collection(listName.rawValue).document(key).delete() { err in
                 
                 if let err = err {
                     
@@ -178,14 +213,14 @@ class RefrigeratorDM: RefrigeratorProtocol {
         }
     }
     
-    static func deleteIngredients(items: [DeletingIngredient], userID: String) -> Observable<(Bool, DeletingIngredient)> {
+    static func deleteIngredients(items: [DeletingIngredient], userID: String, listName: List) -> Observable<(Bool, DeletingIngredient)> {
         
-       
+        
         return Observable.create { observer in
             
             items.enumerated().forEach { index, ingredient in
                 
-                db.collection("users").document(userID).collection("refrigerator").document(ingredient.item.key).delete() { err in
+                db.collection("users").document(userID).collection(listName.rawValue).document(ingredient.item.key).delete() { err in
                     
                     if let err = err {
                         
@@ -197,12 +232,12 @@ class RefrigeratorDM: RefrigeratorProtocol {
                         if index == items.count - 1 {
                             
                             observer.onNext((true, ingredient))
-                        
+                            
                         }
                         else {
-                        
+                            
                             observer.onNext((false, ingredient))
-                        
+                            
                         }
                     }
                 }
@@ -212,11 +247,9 @@ class RefrigeratorDM: RefrigeratorProtocol {
         }
     }
     
-   static func searchIngredients(text: String) {
+    static func searchIngredients(text: String, userID: String, listName: List) {
         
-        let uid = (Auth.auth().currentUser?.uid)!
-        
-        db.collection("user").document(uid).collection("refrigerator").whereField("name", isEqualTo: text).getDocuments{ (querySnapshot, err) in
+        db.collection("user").document(userID).collection(listName.rawValue).whereField("name", isEqualTo: text).getDocuments{ (querySnapshot, err) in
             //the data has returned from firebase and is valid
             
             if let err = err {
@@ -224,7 +257,7 @@ class RefrigeratorDM: RefrigeratorProtocol {
             } else {
                 print("Document successfully updated")
                 
-//                self.ingredients.removeAll()
+                //                self.ingredients.removeAll()
                 
                 if !querySnapshot!.isEmpty {
                     
@@ -235,8 +268,8 @@ class RefrigeratorDM: RefrigeratorProtocol {
                         print("data count: \(data.count)")
                         
                         if let ingredient = RefrigeratorItem.init(document: document) {
-                        
-//                            self.ingredients.append(ingredient)
+                            
+                            //                            self.ingredients.append(ingredient)
                         }
                         
                     }

@@ -104,6 +104,15 @@ class DiscoveryViewController: UIViewController, BindableType {
                 print("next")
             })
             .disposed(by: viewModel.disposeBag)
+        
+        let _  = NotificationCenter.default.rx.notification(NSNotification.Name("ShowShoppingList"))
+            .concat(Observable.never())
+            .debug()
+            .subscribe(onNext: { notification in
+                self.viewModel.toShoppinglist()
+                print("next")
+            })
+            .disposed(by: viewModel.disposeBag)
     }
     
     @objc func closeSideMenu() {

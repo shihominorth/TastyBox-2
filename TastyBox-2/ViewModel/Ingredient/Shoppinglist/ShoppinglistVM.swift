@@ -1,48 +1,43 @@
 //
-//  RefrigeratorVM.swift
+//  ShoppinglistVM.swift
 //  TastyBox-2
 //
-//  Created by 北島　志帆美 on 2021-09-21.
+//  Created by 北島　志帆美 on 2021-09-26.
 //
 
 import Foundation
-import DifferenceKit
-import Firebase
-import RxSwift
-import RxCocoa
 import Action
+import Firebase
+import RxCocoa
+import RxSwift
 
-enum List {
-    case shopping, refrigerator
-}
-
-class RefrigeratorVM: ViewModelBase {
-    
+class ShoppinglistVM: ViewModelBase {
+   
     let sceneCoodinator: SceneCoordinator
     let apiType: RefrigeratorProtocol.Type
     
     var user: FirebaseAuth.User!
     var err = NSError()
     
-    let empty = RefrigeratorItem(key: "___________________empty", name: "", amount: "", order: 0)
+    let empty = ShoppingItem(name: "___________________empty", amount: "", key: "", isBought: false, order: 0)
     
     var emptyHeight: CGFloat = 140.0
-    var hasEmptyCell = false
-    
-    var items: [RefrigeratorItem] = []
-    var searchingTemp:[RefrigeratorItem] = []
+    var hasEmptyCell: BehaviorRelay<Bool> = BehaviorRelay<Bool>(value: false)
+
+    var items: [ShoppingItem] = []
+    var searchingTemp:[ShoppingItem] = []
     var deletingTemp:[DeletingIngredient] = []
     
-    var observableItems = PublishSubject<[RefrigeratorItem]>()
+    var observableItems = PublishSubject<[ShoppingItem]>()
     
     var isTableViewEditable = BehaviorRelay<Bool>(value: false)
     var isSelectedCells = BehaviorRelay<Bool>(value: false)
     
     var searchingText = BehaviorRelay<String>(value: "")
     
-    lazy var dataSource: RxRefrigeratorTableViewDataSource<RefrigeratorItem, IngredientTableViewCell> = {
+    lazy var dataSource: RxRefrigeratorTableViewDataSource<ShoppingItem, ShoppinglistTVCell> = {
         
-        return RxRefrigeratorTableViewDataSource<RefrigeratorItem, IngredientTableViewCell>(identifier: IngredientTableViewCell.identifier, emptyValue: self.empty) { row, element, cell in
+        return RxRefrigeratorTableViewDataSource<ShoppingItem, ShoppinglistTVCell>(identifier: ShoppinglistTVCell.identifier, emptyValue: self.empty) { row, element, cell in
             
             cell.configure(item: element)
             
@@ -53,24 +48,6 @@ class RefrigeratorVM: ViewModelBase {
         self.sceneCoodinator = sceneCoodinator
         self.apiType = apiType
         self.user = user
-        
-//        for i in 16... {
-//            
-//            Firestore.firestore().collection("users").document(user.uid).collection("refrigerator").document().setData([
-//                
-//                "name": "name",
-//                "amount": "amount",
-//                "order": i
-//                
-//            ], merge: true) { err in
-//                if let err = err {
-//                    
-//                    print(err)
-//                    
-//                }
-//                
-//            }
-//        }
     }
     
     func toAddItem() -> CocoaAction {
@@ -78,8 +55,8 @@ class RefrigeratorVM: ViewModelBase {
         return CocoaAction { _ in
             
             let index = self.items.count
-            let vm =  EditItemRefrigeratorVM(sceneCoodinator: self.sceneCoodinator, user: self.user, item: nil, lastIndex: index)
-            let vc = IngredientScene.edit(vm).viewController()
+            let vm =  EditShoppinglistVM(sceneCoodinator: self.sceneCoodinator, user: self.user, item: nil, lastIndex: index)
+            let vc = IngredientScene.editShoppinglist(vm).viewController()
             
             return self.sceneCoodinator.transition(to: vc, type: .push).asObservable().map { _ in }
         }
@@ -96,7 +73,7 @@ class RefrigeratorVM: ViewModelBase {
             vm =  EditItemRefrigeratorVM(sceneCoodinator: self.sceneCoodinator, user: self.user, item: self.searchingTemp[index], lastIndex: index)
         }
         
-        let vc = IngredientScene.edit(vm).viewController()
+        let vc = IngredientScene.editRefrigerator(vm).viewController()
         
         self.sceneCoodinator.transition(to: vc, type: .push)
         
@@ -109,15 +86,18 @@ class RefrigeratorVM: ViewModelBase {
         //これがないとuiが更新されない
         observableItems.onNext([])
         
-        _ = self.apiType.getIngredients(userID: self.user.uid)
+        _ = self.apiType.getIngredients(userID: self.user.uid, listName: .shoppinglist)
             .subscribe(onSuccess: {[unowned self]  items in
                 
-                self.items = items.sorted { $0.order < $1.order }
-                
-                self.observableItems.onNext(self.items)
-                
-                relay.accept(true)
-                
+                if let shoppingItems = items as? [ShoppingItem] {
+                   
+                    self.items = shoppingItems.sorted { $0.order < $1.order }
+                    
+                    self.observableItems.onNext(self.items)
+                    
+                    relay.accept(true)
+                    
+                }
                 
             }, onFailure: { [unowned self] err in
                 err.handleFireStoreError()?.generateErrAlert()
@@ -130,7 +110,7 @@ class RefrigeratorVM: ViewModelBase {
     
     func moveItems() {
        
-        _ = self.apiType.moveIngredient(userID: self.user.uid, items: self.items)
+        _ = self.apiType.moveIngredient(userID: self.user.uid, items: self.items, listName: .shoppinglist)
             .subscribe(onNext: { isChanged in
                 if isChanged {
                     print("Success!")
@@ -149,7 +129,7 @@ class RefrigeratorVM: ViewModelBase {
         let relay = PublishRelay<Bool>()
         let item = searchingTemp.isEmpty ? items[index] : searchingTemp[index]
         
-        _ = self.apiType.deleteIngredient(item: item, userID: user.uid)
+        _ = self.apiType.deleteIngredient(item: item, userID: user.uid, listName: .shoppinglist)
             .subscribe(onCompleted: { [unowned self] in
                 
                 print("Document successfully deleted")
@@ -186,7 +166,7 @@ class RefrigeratorVM: ViewModelBase {
         
         if !deletingTemp.isEmpty {
 
-            _ = self.apiType.deleteIngredients(items: deletingTemp, userID: user.uid)
+            _ = self.apiType.deleteIngredients(items: deletingTemp, userID: user.uid, listName: .shoppinglist)
                 .subscribe(onNext: { [unowned self] (isLast, ingredient) in
                     
                     print("Document successfully deleted")
