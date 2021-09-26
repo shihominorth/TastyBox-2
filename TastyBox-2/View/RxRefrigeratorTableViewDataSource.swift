@@ -35,6 +35,8 @@ class RxRefrigeratorTableViewDataSource<E: Differentiable, Cell: UITableViewCell
         tableView.reload(using: changeset, with: animation) { data in
             self.values = data
         }
+        
+        
     }
     
     func numberOfSections(in tableView: UITableView) -> Int {
@@ -64,14 +66,28 @@ class RxRefrigeratorTableViewDataSource<E: Differentiable, Cell: UITableViewCell
         case 0:
             configure(row, values[row], cell)
             cell.backgroundColor = .white
+            cell.separatorInset =  UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 0);
         case 1:
             configure(row, emptyValue, cell)
             cell.backgroundColor = .clear
+            cell.separatorInset = UIEdgeInsets(top: 0, left: CGFloat.greatestFiniteMagnitude, bottom: 0, right: 0);
+
         default:
             break
         }
      
         return cell
     }
+    
+    func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
+       
+        if indexPath.section == 1 {
+           return false
+        }
+        
+        return true
+    }
+    
+    
 
 }

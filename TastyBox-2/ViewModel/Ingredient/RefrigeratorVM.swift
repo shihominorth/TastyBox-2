@@ -119,12 +119,10 @@ class RefrigeratorVM: ViewModelBase {
             .disposed(by: disposeBag)
     }
     
-    func deleteItem(index: Int) {
+    func deleteItem(index: Int) -> PublishRelay<Bool> {
         
+        let relay = PublishRelay<Bool>()
         let item = items[index]
-        
-        //これがないとuiが更新されない
-        observableItems.onNext([])
         
         _ = self.apiType.deleteIngredient(item: item, userID: user.uid)
             .subscribe(onCompleted: { [unowned self] in
@@ -133,14 +131,17 @@ class RefrigeratorVM: ViewModelBase {
                 
                 self.items.remove(at: index)
                 self.observableItems.onNext(self.items)
+                relay.accept(true)
                 
             }, onError: { err in
                 
                 print("Error updating document: \(err)")
                 err.handleFireStoreError()?.generateErrAlert()
                 self.observableItems.onNext(self.items)
-                
+                relay.accept(false)
             })
+        
+        return relay
    
     }
     

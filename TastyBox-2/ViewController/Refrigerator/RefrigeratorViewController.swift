@@ -53,7 +53,7 @@ class RefrigeratorViewController: UIViewController, BindableType {
         
         viewModel.getItems(listName: .refrigerator)
             .subscribe(onNext: { [unowned self] isGottenItem in
-//
+                
                 tableView.beginUpdates()
                 self.setHasEmptyCell()
                 tableView.endUpdates()
@@ -177,11 +177,19 @@ class RefrigeratorViewController: UIViewController, BindableType {
                 
                 
                 self.viewModel.deleteItem(index: indexPath.row)
+                    .subscribe(onNext: { isDeleted in
+                        
+                        if isDeleted {
+                            tableView.beginUpdates()
+                            self.setHasEmptyCell()
+                            tableView.endUpdates()
+                            
+                        }
+                  
+                    })
+                    .disposed(by: viewModel.disposeBag)
                 
-                tableView.beginUpdates()
-                self.setHasEmptyCell()
-                tableView.endUpdates()
-                
+               
 
             })
             .disposed(by: viewModel.disposeBag)
@@ -257,7 +265,6 @@ class RefrigeratorViewController: UIViewController, BindableType {
                     }
                     
                     self.viewModel.deleteItems()
-//                    tableView.reloadData()
                     
                     tableView.beginUpdates()
                     self.setHasEmptyCell()
@@ -279,7 +286,6 @@ class RefrigeratorViewController: UIViewController, BindableType {
                 tableView.endUpdates()
                 
                 
-//                setHasEmptyCell()
             })
             .disposed(by: viewModel.disposeBag)
         
@@ -354,18 +360,6 @@ class RefrigeratorViewController: UIViewController, BindableType {
             if self.tableView.frame.minY + self.tableView.verticalScrollIndicatorInsets.top <= cellRectInView.minY
                 && cellRectInView.maxY <= self.tableView.frame.maxY {
                 
-                print("収まっている")
-                
-                
-                
-//                let addBtnPosition = self.tableView.convert(self.addBtn.frame, to: self.navigationController?.view)
-
-//                let hasEmptyCell = cellRectInView.maxY + 10 < addBtnPosition.minY
-                
-//                let addBtnPosition = self.tableView.convert(self.addBtn.frame, to: self.view)
-
-
-                // 本来は一番最後のセルの下のポジションがボタンの上のポジションよりも下だったらセクション２を表示する
                 let hasEmptyCell = addBtn.frame.origin.y <= cellRectInView.maxY
 
                 self.viewModel.hasEmptyCell = hasEmptyCell
@@ -402,11 +396,19 @@ extension RefrigeratorViewController: UITableViewDelegate {
             
             
             self.viewModel.deleteItem(index: indexPath.row)
+                .subscribe(onNext: { isDeleted in
+                    
+                    if isDeleted {
+                        tableView.beginUpdates()
+                        self.setHasEmptyCell()
+                        tableView.endUpdates()
+                        
+                    }
+              
+                })
+                .disposed(by: viewModel.disposeBag)
             
-            tableView.beginUpdates()
-            self.setHasEmptyCell()
-            tableView.endUpdates()
-            
+           
             // 実行結果に関わらず記述
             completionHandler(true)
         }
@@ -414,7 +416,7 @@ extension RefrigeratorViewController: UITableViewDelegate {
         // 定義したアクションをセット
         return UISwipeActionsConfiguration(actions: [deleteAction, editAction])
     }
-    
+  
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         
         if indexPath.section == 0 {
@@ -423,12 +425,19 @@ extension RefrigeratorViewController: UITableViewDelegate {
         }
         else {
           
-//            setHasEmptyCell()
             return viewModel.hasEmptyCell ? 140 : 0.0
         }
-//        return 0.0
+
+    }
+    
+    func tableView(_ tableView: UITableView, willBeginEditingRowAt indexPath: IndexPath) {
+        self.viewModel.isTableViewEditable.accept(true)
+
     }
  
+    func tableView(_ tableView: UITableView, didEndEditingRowAt indexPath: IndexPath?) {
+        self.viewModel.isTableViewEditable.accept(false)
+    }
 }
 
 
