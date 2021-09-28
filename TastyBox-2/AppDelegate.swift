@@ -24,6 +24,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
                    application,
                    didFinishLaunchingWithOptions: launchOptions
                )
+        
+        UINavigationBar.appearance().tintColor = UIColor.systemOrange
+
 //        
 //        self.window = UIWindow(frame: UIScreen.main.bounds)
 //        let sceneCoordinator = SceneCoordinator(window: self.window!)

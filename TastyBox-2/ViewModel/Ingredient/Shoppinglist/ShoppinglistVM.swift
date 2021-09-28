@@ -41,6 +41,18 @@ class ShoppinglistVM: ViewModelBase {
             
             cell.configure(item: element)
             
+            cell.checkMarkBtn.rx.tap
+                .catch { err in
+                    print(err)
+                    return .empty()
+                }
+                .subscribe(onNext: {
+                    element.isBought = !element.isBought
+                    cell.updateCheckMark(isBought: element.isBought)
+                }, onError: { err in
+                    print(err)
+                })
+                .disposed(by: self.disposeBag)
         }
     }()
     

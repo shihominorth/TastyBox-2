@@ -1,0 +1,59 @@
+//
+//  ShoppingHeaderView.swift
+//  TastyBox-2
+//
+//  Created by 北島　志帆美 on 2021-09-27.
+//
+
+import UIKit
+
+class ShoppinglistHeaderView: UITableViewHeaderFooterView {
+
+   let btn = UIButton(frame: CGRect(x: 0, y: 0, width: 30, height: 30))
+    
+    required init?(coder: NSCoder) {
+        super.init(coder: coder)
+    }
+    
+    override init(reuseIdentifier: String?) {
+        super.init(reuseIdentifier: reuseIdentifier)
+        contentView.backgroundColor = #colorLiteral(red: 0.9647058824, green: 0.8392156863, blue: 0.6784313725, alpha: 1)
+        setUpBtn()
+    }
+
+
+    func setUpBtn() {
+        
+        let img = UIImage(systemName: "ellipsis.circle")
+
+        btn.layer.cornerRadius = btn.frame.size.width / 2
+        btn.clipsToBounds = true
+        btn.backgroundColor = #colorLiteral(red: 1, green: 1, blue: 1, alpha: 1)
+        btn.tintColor = UIColor.systemOrange
+        btn.setBackgroundImage(img, for: .normal)
+        //これがないと表示されない
+        btn.translatesAutoresizingMaskIntoConstraints = false
+        
+        contentView.addSubview(btn)
+  
+        NSLayoutConstraint.activate([
+//          btn.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 5),
+            
+           
+            btn.widthAnchor.constraint(equalToConstant: 30),
+            btn.heightAnchor.constraint(equalToConstant: 30),
+            btn.trailingAnchor.constraint(equalTo: contentView.layoutMarginsGuide.trailingAnchor),
+            btn.centerYAnchor.constraint(equalTo: contentView.centerYAnchor)
+        ])
+       
+    }
+
+    /*
+    // Only override draw() if you perform custom drawing.
+    // An empty implementation adversely affects performance during animation.
+    override func draw(_ rect: CGRect) {
+        // Drawing code
+    }
+    */
+
+}

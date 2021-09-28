@@ -198,32 +198,39 @@
                                 <color key="backgroundColor" red="0.99670392269999997" green="0.9910771478" blue="0.79392304599999997" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
                                 <prototypes>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="ShoppinglistTVCell" id="hOF-ae-XMo" customClass="ShoppinglistTVCell" customModule="TastyBox_2" customModuleProvider="target">
-                                        <rect key="frame" x="0.0" y="24.5" width="414" height="54"/>
+                                        <rect key="frame" x="0.0" y="24.5" width="414" height="43.5"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="hOF-ae-XMo" id="FVl-DI-dsI">
-                                            <rect key="frame" x="0.0" y="0.0" width="414" height="54"/>
+                                            <rect key="frame" x="0.0" y="0.0" width="414" height="43.5"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
-                                                <stackView opaque="NO" contentMode="scaleToFill" spacing="8" translatesAutoresizingMaskIntoConstraints="NO" id="Prl-aP-3RC">
-                                                    <rect key="frame" x="20" y="11.5" width="374" height="31"/>
+                                                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="ghw-Ve-29F">
+                                                    <rect key="frame" x="46" y="21.5" width="348" height="1"/>
+                                                    <color key="backgroundColor" red="0.66799789669999998" green="0.47512125970000002" blue="0.25860109930000003" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                                    <constraints>
+                                                        <constraint firstAttribute="height" relation="greaterThanOrEqual" constant="1" id="Nu6-f4-vDp"/>
+                                                        <constraint firstAttribute="height" constant="1" id="ei4-Ps-XWT"/>
+                                                    </constraints>
+                                                </view>
+                                                <stackView opaque="NO" contentMode="scaleToFill" spacing="5" translatesAutoresizingMaskIntoConstraints="NO" id="Prl-aP-3RC">
+                                                    <rect key="frame" x="20" y="11.5" width="374" height="20.5"/>
                                                     <subviews>
                                                         <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="aur-uf-Dr7">
-                                                            <rect key="frame" x="0.0" y="1" width="30.5" height="28.5"/>
+                                                            <rect key="frame" x="0.0" y="1" width="20.5" height="18"/>
                                                             <constraints>
-                                                                <constraint firstAttribute="height" constant="30.5" id="9Sc-4c-NA8"/>
-                                                                <constraint firstAttribute="width" constant="30.5" id="pdG-vS-NcH"/>
+                                                                <constraint firstAttribute="width" secondItem="aur-uf-Dr7" secondAttribute="height" multiplier="1:1" id="0kA-kI-bnr"/>
                                                             </constraints>
                                                             <color key="tintColor" red="0.66799789669999998" green="0.47512125970000002" blue="0.25860109930000003" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                             <state key="normal" backgroundImage="square" catalog="system"/>
                                                         </button>
                                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" verticalHuggingPriority="251" text="Label" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="akC-p8-B7n">
-                                                            <rect key="frame" x="38.5" y="0.0" width="227.5" height="31"/>
+                                                            <rect key="frame" x="25.5" y="0.0" width="243.5" height="20.5"/>
                                                             <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                                             <color key="textColor" name="systemBrownColor" catalog="System" colorSpace="catalog"/>
                                                             <nil key="highlightedColor"/>
                                                         </label>
                                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="GNZ-HK-cnM">
-                                                            <rect key="frame" x="274" y="0.0" width="100" height="31"/>
+                                                            <rect key="frame" x="274" y="0.0" width="100" height="20.5"/>
                                                             <constraints>
                                                                 <constraint firstAttribute="width" constant="100" id="EV6-Xd-bmG"/>
                                                             </constraints>
@@ -235,18 +242,20 @@
                                                 </stackView>
                                             </subviews>
                                             <constraints>
-                                                <constraint firstAttribute="bottomMargin" secondItem="Prl-aP-3RC" secondAttribute="bottom" constant="0.5" id="CNn-DY-13j"/>
-                                                <constraint firstItem="Prl-aP-3RC" firstAttribute="leading" secondItem="FVl-DI-dsI" secondAttribute="leadingMargin" id="JqC-1W-fOp"/>
-                                                <constraint firstItem="Prl-aP-3RC" firstAttribute="centerX" secondItem="FVl-DI-dsI" secondAttribute="centerX" id="SIQ-y7-jQq"/>
-                                                <constraint firstItem="Prl-aP-3RC" firstAttribute="centerY" secondItem="FVl-DI-dsI" secondAttribute="centerY" id="WfL-xy-sLK"/>
-                                                <constraint firstAttribute="trailingMargin" secondItem="Prl-aP-3RC" secondAttribute="trailing" id="YSR-of-Jxy"/>
-                                                <constraint firstItem="Prl-aP-3RC" firstAttribute="top" secondItem="FVl-DI-dsI" secondAttribute="topMargin" constant="0.5" id="uzP-oV-5uC"/>
+                                                <constraint firstItem="ghw-Ve-29F" firstAttribute="leading" secondItem="FVl-DI-dsI" secondAttribute="leadingMargin" constant="26" id="5Hw-LL-fyL"/>
+                                                <constraint firstItem="Prl-aP-3RC" firstAttribute="leading" secondItem="FVl-DI-dsI" secondAttribute="leadingMargin" id="Ol9-sr-ud5"/>
+                                                <constraint firstItem="Prl-aP-3RC" firstAttribute="trailing" secondItem="FVl-DI-dsI" secondAttribute="trailingMargin" id="P3q-Xo-DVS"/>
+                                                <constraint firstItem="ghw-Ve-29F" firstAttribute="centerY" secondItem="FVl-DI-dsI" secondAttribute="centerY" id="Ugn-8f-Qad"/>
+                                                <constraint firstItem="ghw-Ve-29F" firstAttribute="centerY" secondItem="FVl-DI-dsI" secondAttribute="centerY" id="g57-X8-57A"/>
+                                                <constraint firstItem="ghw-Ve-29F" firstAttribute="trailing" secondItem="FVl-DI-dsI" secondAttribute="trailingMargin" id="iPq-t1-nwc"/>
+                                                <constraint firstItem="Prl-aP-3RC" firstAttribute="centerY" secondItem="FVl-DI-dsI" secondAttribute="centerY" id="ulH-uO-Mku"/>
                                             </constraints>
                                         </tableViewCellContentView>
                                         <connections>
                                             <outlet property="amountLbl" destination="GNZ-HK-cnM" id="1w4-UE-0bR"/>
                                             <outlet property="checkMarkBtn" destination="aur-uf-Dr7" id="ntC-zd-XsM"/>
                                             <outlet property="nameLbl" destination="akC-p8-B7n" id="02S-Lz-Gnq"/>
+                                            <outlet property="strikeThroghLineView" destination="ghw-Ve-29F" id="gF0-Uu-xeU"/>
                                         </connections>
                                     </tableViewCell>
                                 </prototypes>
@@ -284,7 +293,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="DlI-M7-e2V" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="9276.8115942028999" y="1658.7053571428571"/>
+            <point key="canvasLocation" x="8366.6666666666679" y="1658.7053571428571"/>
         </scene>
         <!--Edit Shopping List View Controller-->
         <scene sceneID="Q0X-Xx-JJO">
@@ -376,7 +385,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="SUh-RR-oz6" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="11308.695652173914" y="1658.7053571428571"/>
+            <point key="canvasLocation" x="9464" y="1659"/>
         </scene>
     </scenes>
     <resources>

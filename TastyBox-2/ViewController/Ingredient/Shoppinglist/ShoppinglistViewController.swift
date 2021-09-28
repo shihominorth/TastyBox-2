@@ -37,7 +37,7 @@ class ShoppinglistViewController: UIViewController, BindableType {
         setUpEditBtn()
         setUpKeyboard()
         
-        editButton.image = UIImage(systemName: "slider.vertical.3")
+        editButton.image = UIImage(systemName: "slider.horizontal.3")
         mapBtn.image = UIImage(systemName: "map")
         
         searchBar.returnKeyType = .done
@@ -67,6 +67,10 @@ class ShoppinglistViewController: UIViewController, BindableType {
         viewModel.moveItems()
     }
     
+    override func viewDidLayoutSubviews() {
+       print(view.frame)
+    }
+    
     
     func bindViewModel() {
         
@@ -91,6 +95,7 @@ class ShoppinglistViewController: UIViewController, BindableType {
         let footerView = UIView()
         tableView.tableFooterView = footerView
         
+        tableView.register(ShoppinglistHeaderView.self, forHeaderFooterViewReuseIdentifier: "shoppingHeader")
         //MARK: why is the background of cell is grey when the cell is selected?
         // make it grey before tableview.rx.itemSelected....
         tableView.rx.itemSelected
@@ -405,6 +410,26 @@ class ShoppinglistViewController: UIViewController, BindableType {
 
 extension ShoppinglistViewController: UITableViewDelegate {
     
+    func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
+        
+        if section == 0 {
+            if let view = tableView.dequeueReusableHeaderFooterView(withIdentifier: "shoppingHeader") as? ShoppinglistHeaderView {
+                view.setUpBtn()
+//            let img = UIImage(systemName: "line.3.horizontal.circle")
+//            view.btn.setBackgroundImage(img, for: .normal)
+//            view.btn.tintColor = #colorLiteral(red: 0.6679978967, green: 0.4751212597, blue: 0.2586010993, alpha: 1)
+                view.btn.rx.tap.subscribe(onNext: {
+                    print("taped")
+                })
+                return view
+            }
+            
+            return nil
+        }
+     
+        return nil
+    }
+    
     func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
         
         let editAction = UIContextualAction(style: .normal, title: "Edit") { (action, view, completionHandler) in
@@ -452,6 +477,15 @@ extension ShoppinglistViewController: UITableViewDelegate {
         }
 
     }
+        
+    func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
+        
+        if section == 0 {
+            return 40.0
+        }
+        return 0.0
+    }
+
     
     func tableView(_ tableView: UITableView, willBeginEditingRowAt indexPath: IndexPath) {
         self.viewModel.isTableViewEditable.accept(true)
@@ -461,6 +495,8 @@ extension ShoppinglistViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, didEndEditingRowAt indexPath: IndexPath?) {
         self.viewModel.isTableViewEditable.accept(false)
     }
+    
+    
 }
 
 

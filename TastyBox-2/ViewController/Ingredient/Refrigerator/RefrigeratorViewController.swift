@@ -37,7 +37,7 @@ class RefrigeratorViewController: UIViewController, BindableType {
         setUpEditBtn()
         setUpKeyboard()
         
-        editButton.image = UIImage(systemName: "slider.vertical.3")
+        editButton.image = UIImage(systemName: "slider.horizontal.3")
         mapBtn.image = UIImage(systemName: "map")
         
         searchBar.returnKeyType = .done
