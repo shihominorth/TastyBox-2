@@ -54,7 +54,7 @@ class RefrigeratorVM: ViewModelBase {
         self.apiType = apiType
         
         self.user = user
-
+        
     }
     
     func toAddItem() -> CocoaAction {
@@ -93,15 +93,15 @@ class RefrigeratorVM: ViewModelBase {
         //これがないとuiが更新されない
         observableItems.onNext([])
         
-        _ = self.apiType.getIngredients(userID: self.user.uid, listName: .refrigerator)
+        _ = self.apiType.getRefrigeratorItems(userID: self.user.uid)
             .subscribe(onSuccess: {[unowned self]  items in
                 
                 if let refrigeratorItems = items as? [RefrigeratorItem] {
-               
+                    
                     self.items = refrigeratorItems.sorted { $0.order < $1.order }
                     self.observableItems.onNext(self.items)
                     relay.accept(true)
-                
+                    
                 }
                 
             }, onFailure: { [unowned self] err in
@@ -114,7 +114,7 @@ class RefrigeratorVM: ViewModelBase {
     }
     
     func moveItems() {
-       
+        
         _ = self.apiType.moveIngredient(userID: self.user.uid, items: self.items, listName: .refrigerator)
             .subscribe(onNext: { isChanged in
                 if isChanged {
@@ -135,26 +135,31 @@ class RefrigeratorVM: ViewModelBase {
         let item = searchingTemp.isEmpty ? items[index] : searchingTemp[index]
         
         _ = self.apiType.deleteIngredient(item: item, userID: user.uid, listName: .refrigerator)
-            .subscribe(onCompleted: { [unowned self] in
-                
+            .flatMap { isDeleted in
+                return self.apiType.moveIngredient(userID: self.user.uid, items: self.items, listName: .refrigerator)
+            }
+            .subscribe(onNext: { [unowned self] isLast in
                 print("Document successfully deleted")
                 
-                if searchingTemp.isEmpty {
-                    self.items.remove(at: index)
-                    self.observableItems.onNext(self.items)
-                }
-                else {
-                    guard let searchedIndex = self.items.firstIndex(of: self.searchingTemp[index]) else {
-                        return
+                if isLast {
+                    
+                    if self.searchingTemp.isEmpty {
+                        
+                        self.items.remove(at: index)
+                        self.observableItems.onNext(self.items)
+                    }
+                    else {
+                        guard let searchedIndex = self.items.firstIndex(of: self.searchingTemp[index]) else {
+                            return
+                        }
+                        
+                        self.items.remove(at: searchedIndex)
+                        
                     }
                     
-                    self.items.remove(at: searchedIndex)
                     
+                    relay.accept(true)
                 }
-               
-              
-                relay.accept(true)
-                
             }, onError: { err in
                 
                 print("Error updating document: \(err)")
@@ -164,13 +169,13 @@ class RefrigeratorVM: ViewModelBase {
             })
         
         return relay
-   
+        
     }
     
     func deleteItems() {
         
         if !deletingTemp.isEmpty {
-
+            
             _ = self.apiType.deleteIngredients(items: deletingTemp, userID: user.uid, listName: .refrigerator)
                 .subscribe(onNext: { [unowned self] (isLast, ingredient) in
                     
@@ -202,19 +207,19 @@ class RefrigeratorVM: ViewModelBase {
     func cancel() -> Observable<Bool> {
         
         let publishRelay = PublishSubject<Bool>()
-       
+        
         return Observable.create { [unowned self] observer in
-           
+            
             self.observableItems
                 .catch { err in
-
+                    
                     print(err)
                     
                     observer.onNext(false)
                     return .empty()
                 }
                 .subscribe(onNext: { [unowned self] items in
-                
+                    
                     self.items = items
                     self.observableItems.onNext(self.items)
                     
@@ -222,13 +227,13 @@ class RefrigeratorVM: ViewModelBase {
                 })
                 .disposed(by: self.disposeBag)
             
-          
+            
             return Disposables.create()
         }
     }
     
     func searchingItem() {
-      
+        
         searchingText.subscribe(onNext: { [unowned self] text in
             
             if text.isNotEmpty {
@@ -243,7 +248,7 @@ class RefrigeratorVM: ViewModelBase {
                 self.observableItems.onNext(items)
                 
             }
-                
+            
         })
         .disposed(by: disposeBag)
     }

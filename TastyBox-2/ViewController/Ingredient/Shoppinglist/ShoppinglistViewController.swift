@@ -52,7 +52,7 @@ class ShoppinglistViewController: UIViewController, BindableType {
     
     override func viewWillAppear(_ animated: Bool) {
         
-        viewModel.getItems(listName: .refrigerator)
+        viewModel.getItems()
             .subscribe(onNext: { [unowned self] isGottenItem in
                 
                 showSearchedResult()
@@ -61,16 +61,12 @@ class ShoppinglistViewController: UIViewController, BindableType {
             .disposed(by: viewModel.disposeBag)
         
         
+        
     }
     
     override func viewWillDisappear(_ animated: Bool) {
-        viewModel.moveItems()
+        viewModel.editShoppinglist()
     }
-    
-    override func viewDidLayoutSubviews() {
-       print(view.frame)
-    }
-    
     
     func bindViewModel() {
         
@@ -86,7 +82,45 @@ class ShoppinglistViewController: UIViewController, BindableType {
         
         viewModel.observableItems
             .observe(on: MainScheduler.instance)
-            .bind(to: tableView.rx.items(dataSource: viewModel.dataSource))
+            .bind(to: tableView.rx.items(cellIdentifier: "ShoppinglistTVCell", cellType: ShoppinglistTVCell.self)) { [unowned self] row, element, cell in
+            
+                cell.configure(item: element)
+                
+                cell.checkMarkBtn.rx.tap
+                    .catch { err in
+                        print(err)
+                        return .empty()
+                    }
+                    .flatMap { viewModel.updateBoughtStatus(index: row) }
+                    .subscribe(onNext: { isBought in
+//                        print(self.viewModel.items[0].name)
+//                        print(self.viewModel.items[0].isBought)
+//
+//                        print("-------------")
+//
+//                        print(self.viewModel.originalItems[0].name)
+//                        print(self.viewModel.originalItems[0].isBought)
+                        
+//                        element.isBought = !element.isBought
+//                        viewModel.observableItems.value[row].isBought = !viewModel.observableItems.value[row].isBought
+                        cell.updateCheckMark(isBought: isBought)
+
+//                        print(self.viewModel.items[0].name)
+//                        print(self.viewModel.items[0].isBought)
+//
+//                        print("-------------")
+//
+//                        print(self.viewModel.originalItems[0].name)
+//                        print(self.viewModel.originalItems[0].isBought)
+//                        self.viewModel.items[row].isBought = !self.viewModel.items[row].isBought
+//                        cell.updateCheckMark(isBought: self.viewModel.items[row].isBought)
+        
+                        
+                    }, onError: { err in
+                        print(err)
+                    })
+                    .disposed(by: self.viewModel.disposeBag)
+            }
             .disposed(by: viewModel.disposeBag)
     }
     
@@ -163,7 +197,6 @@ class ShoppinglistViewController: UIViewController, BindableType {
                 self.viewModel.items.remove(at: event.sourceIndex.row)
                 self.viewModel.items.insert(movingItem, at: event.destinationIndex.row)
                 
-                
             })
             .disposed(by: viewModel.disposeBag)
         
@@ -194,6 +227,7 @@ class ShoppinglistViewController: UIViewController, BindableType {
 
             })
             .disposed(by: viewModel.disposeBag)
+        
         
         tableView.rx.didScroll
             .observe(on: MainScheduler.asyncInstance)

@@ -41,6 +41,7 @@
 		6F9E04232700CAE0005DCEF4 /* ShoppinglistTVCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F9E04222700CAE0005DCEF4 /* ShoppinglistTVCell.swift */; };
 		6F9E042B27017B91005DCEF4 /* ShoppinglistHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F9E042A27017B91005DCEF4 /* ShoppinglistHeaderView.swift */; };
 		6F9E042D2701DCE8005DCEF4 /* BalloonView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F9E042C2701DCE8005DCEF4 /* BalloonView.swift */; };
+		6F9E042F270662C6005DCEF4 /* ArrayStatus.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F9E042E270662C5005DCEF4 /* ArrayStatus.swift */; };
 		6FA70A9626E6594D00474FE5 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 6FA70A9526E6594D00474FE5 /* GoogleService-Info.plist */; };
 		6FA70A9926E7A1FF00474FE5 /* SetPasswordViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FA70A9826E7A1FE00474FE5 /* SetPasswordViewController.swift */; };
 		6FA70A9B26E7A69500474FE5 /* SetPasswordVM.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FA70A9A26E7A69400474FE5 /* SetPasswordVM.swift */; };
@@ -130,6 +131,7 @@
 		6F9E04222700CAE0005DCEF4 /* ShoppinglistTVCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShoppinglistTVCell.swift; sourceTree = "<group>"; };
 		6F9E042A27017B91005DCEF4 /* ShoppinglistHeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShoppinglistHeaderView.swift; sourceTree = "<group>"; };
 		6F9E042C2701DCE8005DCEF4 /* BalloonView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BalloonView.swift; sourceTree = "<group>"; };
+		6F9E042E270662C5005DCEF4 /* ArrayStatus.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArrayStatus.swift; sourceTree = "<group>"; };
 		6FA70A9526E6594D00474FE5 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		6FA70A9726E6660000474FE5 /* TastyBox-2.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = "TastyBox-2.entitlements"; sourceTree = "<group>"; };
 		6FA70A9826E7A1FE00474FE5 /* SetPasswordViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SetPasswordViewController.swift; sourceTree = "<group>"; };
@@ -399,6 +401,7 @@
 				6F6D0AEC26EED6EA00CD27AE /* DelegateProxy */,
 				6FC062C326ECC9AF0016B990 /* LoginErrors.swift */,
 				6F512A3126F467A300826657 /* FlowLayout.swift */,
+				6F9E042E270662C5005DCEF4 /* ArrayStatus.swift */,
 			);
 			path = "TastyBox-2";
 			sourceTree = "<group>";
@@ -710,6 +713,7 @@
 				6FE9EB5326F9A9DF000AF9D4 /* RefrigeratorDM.swift in Sources */,
 				6F40F82826F03375004B69DD /* AlertGenerator.swift in Sources */,
 				6F512A3026F45BF200826657 /* TutorialCVCell.swift in Sources */,
+				6F9E042F270662C6005DCEF4 /* ArrayStatus.swift in Sources */,
 				6FBCB91226D7B5F200C050B2 /* User.swift in Sources */,
 				6FBCB92D26D7CBD500C050B2 /* LoginMainPageViewController.swift in Sources */,
 				6F06EBE926F6B3D100F2218B /* LoadingVM.swift in Sources */,

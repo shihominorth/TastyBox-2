@@ -12,40 +12,52 @@ import RxCocoa
 
 protocol RefrigeratorProtocol: AnyObject {
     
-    static func getIngredients(userID: String, listName: List) -> Single<[Ingredient]>
-    static func addIngredient(name: String, amount: String, userID: String, lastIndex: Int, listName: List) -> Completable
+    static func getRefrigeratorItems(userID: String) -> Single<[Ingredient]>
+    static func getShoppinglist(userID: String) -> Single<([ShoppingItem], [QueryDocumentSnapshot])>
+    static func addIngredient(id: String?, name: String, amount: String, userID: String, lastIndex: Int, listName: List) -> Completable
     static func editIngredient(edittingItem: Ingredient, name: String, amount: String, userID: String, listName: List) -> Completable
     static func moveIngredient(userID: String, items: [Ingredient], listName: List) -> Observable<Bool>
-    static func deleteIngredient(item: Ingredient, userID: String, listName: List) -> Completable
+    static func filterDifferencntOrder( processedItems: [ShoppingItem]) -> Observable<[ShoppingItem]>
+    static func moveIngredient(userID: String, items: [Ingredient], deletingItem: DeletingIngredient, listName: List) -> Observable<(Bool, DeletingIngredient)> 
+//    static func deleteIngredient(item: Ingredient, userID: String, listName: List) -> Completable
+    static func deleteIngredient(item: Ingredient, userID: String, listName: List) -> PublishSubject<Bool> 
     static func deleteIngredients(items: [DeletingIngredient], userID: String, listName: List) -> Observable<(Bool, DeletingIngredient)>
+    static func boughtItems(userID: String, items: [ShoppingItem]) -> Observable<Bool>
+    static func filterDifferencntBoughtStatus(docs: [QueryDocumentSnapshot], processedItems: [ShoppingItem]) -> Observable<[ShoppingItem]>
+    static func isBoughtShoppinglistItems(processedItems: [ShoppingItem], userID: String) -> Observable<(Bool, ShoppingItem)>
+    static func getRefrigeratorDocsCount(userID: String) -> PublishSubject<Int>
+//    static func boughtIngredient(userID: String, item: ShoppingItem) -> Observable<Bool>
     static func searchIngredients(text: String, userID: String, listName: List)
     
 }
 
 class RefrigeratorDM: RefrigeratorProtocol {
+ 
+    static let db = Firestore.firestore().collection("users")
     
-    static let db = Firestore.firestore()
-    
-    static func addIngredient(name: String, amount: String, userID: String, lastIndex: Int, listName: List) -> Completable {
+    static func addIngredient(id: String?, name: String, amount: String, userID: String, lastIndex: Int, listName: List) -> Completable {
         
         return Completable.create { completable in
             
             var data:[String:Any] = [:]
+            let uuid = UUID()
+            let uniqueIdString = uuid.uuidString.replacingOccurrences(of: "-", with: "")
             
             switch listName {
             case .refrigerator:
                 data = [
                     
+                    "id": id ?? uniqueIdString,
                     "name": name,
                     "amount": amount,
-                    "order": lastIndex
-                    
+                    "order": lastIndex,
                 ]
                 
             case .shoppinglist:
                 
                 data = [
                     
+                    "id": uniqueIdString,
                     "name": name,
                     "amount": amount,
                     "order": lastIndex,
@@ -55,7 +67,7 @@ class RefrigeratorDM: RefrigeratorProtocol {
             
             print(listName.rawValue)
             
-            self.db.collection("users").document(userID).collection(listName.rawValue).document().setData(data, merge: true) { err in
+            self.db.document(userID).collection(listName.rawValue).document(id ?? uniqueIdString).setData(data, merge: true) { err in
                 if let err = err {
                     
                     completable(.error(err))
@@ -75,10 +87,11 @@ class RefrigeratorDM: RefrigeratorProtocol {
         
         return Completable.create { completable in
             
-            db.collection("users").document(userID).collection(listName.rawValue).document(edittingItem.key).setData(
+            db.document(userID).collection(listName.rawValue).document(edittingItem.id).setData(
                 
-                [ "name": name,
-                  "amount": amount], merge: true) { err in
+                [
+                    "name": name,
+                    "amount": amount], merge: true) { err in
                 
                 if let err = err {
                     
@@ -101,50 +114,171 @@ class RefrigeratorDM: RefrigeratorProtocol {
         
         return Observable.create { observer in
             
-            items.enumerated().forEach { index, item in
+            let movedItems:[Ingredient] = items.enumerated().compactMap { index, item -> Ingredient? in
                 
-                if item.order != index {
+                if index != item.order {
+                    item.order = index
+                    return item
+                }
+                else {
+                    return nil
+                }
+            
+            }
+            
+            movedItems.enumerated().forEach { index, item in
+                
+                db.document(userID).collection(listName.rawValue).document(item.id).setData([
                     
-                    db.collection("users").document(userID).collection(listName.rawValue).document(item.key).setData([
+                    "order": item.order
+                    
+                ], merge: true) { err in
+                    
+                    if let err = err {
                         
-                        "order": index
+                        observer.onError(err)
                         
-                    ], merge: true) { err in
+                    } else {
                         
-                        if let err = err {
+                        if index == movedItems.count - 1 {
                             
-                            observer.onError(err)
+                            observer.onNext(true)
                             
-                        } else {
-                            
-                            if index == items.count - 1 {
-                                
-                                observer.onNext(true)
-                                
-                            }
-                            else {
-                                
-                                observer.onNext(false)
-                                
-                            }
                         }
-                        
+                        else {
+                            
+                            observer.onNext(false)
+                            
+                        }
                     }
+                    
                 }
             }
+            
+//            items.enumerated().forEach { index, item in
+//
+//                if item.order != index {
+//
+//                    db.document(userID).collection(listName.rawValue).document(item.id).setData([
+//
+//                        "order": index,
+//                        "ordered": true
+//
+//                    ], merge: true) { err in
+//
+//                        if let err = err {
+//
+//                            observer.onError(err)
+//
+//                        } else {
+//
+//                            if index == items.count - 1 {
+//
+//                                observer.onNext(true)
+//
+//                            }
+//                            else {
+//
+//                                observer.onNext(false)
+//
+//                            }
+//                        }
+//
+//                    }
+//                }
+//            }
             
             return Disposables.create()
         }
         
     }
     
+    static func removeDeletingItem(items: [ShoppingItem], deletingItem: DeletingIngredient) -> Observable<[Ingredient]> {
+
+        return Observable.create { observer in
+                
+        }
+    }
     
-    static func getIngredients(userID: String, listName: List)  -> Single<[Ingredient]> {
+    static func filterDifferencntOrder(items: [ShoppingItem]) -> Observable<[Ingredient]> {
         
+        return Observable.create { observer in
+            
+            let movedItems:[Ingredient] = items.enumerated().compactMap { index, item -> Ingredient? in
+                
+                if index != item.order {
+                    item.order = index
+                    return item
+                }
+                else {
+                    return nil
+                }
+            
+            }
+            
+            observer.onNext(movedItems)
+            
+            return Disposables.create()
+        }
+    }
+    
+    static func moveIngredient(userID: String, items: [Ingredient], deletingItem: DeletingIngredient, listName: List) -> Observable<(Bool, DeletingIngredient)> {
+        
+        return Observable.create { observer in
+            
+            let movedItems:[Ingredient] = items.enumerated().compactMap { index, item -> Ingredient? in
+                
+                if index != item.order {
+                    item.order = index
+                    return item
+                }
+                else {
+                    return nil
+                }
+            
+            }
+            
+            movedItems.enumerated().forEach { index, item in
+                
+                db.document(userID).collection(listName.rawValue).document(item.id).updateData([
+                    
+                    "order": item.order
+                    
+                ]) { err in
+                    
+                    if let err = err {
+                        
+                        observer.onError(err)
+                        
+                    } else {
+                        
+                        if index == movedItems.count - 1 {
+                            
+                            observer.onNext((true, deletingItem))
+                            
+                        }
+                        else {
+                            
+                            observer.onNext((false, deletingItem))
+                            
+                        }
+                    }
+                    
+                }
+            }
+            
+            return Disposables.create()
+        }
+    }
+    
+    // -> single<([ingredient], [querydocumentsnapshot]> でもあり
+    static func getRefrigeratorItems(userID: String)  -> Single<[Ingredient]> {
+        
+        var results:[RefrigeratorItem] = []
         
         return Single.create { single in
             
-            db.collection("users").document(userID).collection(listName.rawValue).addSnapshotListener { querySnapshot, err in
+            db.document(userID).collection("refrigerator").addSnapshotListener { querySnapshot, err in
                 
                 if let err = err {
                     
@@ -152,36 +286,139 @@ class RefrigeratorDM: RefrigeratorProtocol {
                     
                 } else {
                     
-                    switch listName {
-                    case .refrigerator:
+                    let orderedIngredients = querySnapshot?.documents.map { doc  -> RefrigeratorItem in
                         
-                        let ingredients = querySnapshot?.documents.map { doc  -> RefrigeratorItem in
+                        if let ingredient = RefrigeratorItem(document: doc) {
+                            return ingredient
+                        }
+                        
+                        return RefrigeratorItem(key: "", name: "", amount: "", order: 0)
+                    }
+                    .filter { $0.name != "" && $0.amount != "" && $0.id != "" }
+                    
+                    //                    single(.success(ingredients ?? []))
+                    
+                    if let ingredients = orderedIngredients {
+                        results.append(contentsOf: ingredients)
+                    }
+                    
+                    db.document(userID).collection("refrigerator").whereField("ordered", isEqualTo: false).addSnapshotListener { querySnapshot, err in
+                        
+                        if let err = err {
                             
-                            if let ingredient = RefrigeratorItem(document: doc) {
-                                return ingredient
+                            single(.failure(err))
+                            
+                        } else {
+                            
+                            let unorderedIngredients = querySnapshot?.documents.enumerated().map { index, doc  -> RefrigeratorItem in
+                                
+                                if let ingredient = RefrigeratorItem(document: doc, index: results.count + index + 1) {
+                                    
+                                    return ingredient
+                                }
+                                
+                                return RefrigeratorItem(key: "", name: "", amount: "", order: 0)
+                            }
+                            .filter { $0.name != "" && $0.amount != "" && $0.id != "" }
+                            
+                            if let ingredients = unorderedIngredients {
+                                results.append(contentsOf: ingredients)
                             }
                             
-                            return RefrigeratorItem(key: "", name: "", amount: "", order: 0)
+                            single(.success(results))
                         }
-                        .filter { $0.name != "" && $0.amount != "" && $0.key != "" }
+                    }
+                }
+                
+            }
+            return Disposables.create()
+        }
+        
+    }
+    
+    static func getShoppinglist(userID: String) -> Single<([ShoppingItem], [QueryDocumentSnapshot])> {
+        
+        var ingredients:[ShoppingItem] = []
+        var resultDocs:[QueryDocumentSnapshot] = []
+        
+        return Single.create { single in
+            
+            db.document(userID).collection("shoppinglist").whereField("isBought", isEqualTo: false).addSnapshotListener { querySnapshot, err in
+                
+                if let err = err {
+                    
+                    single(.failure(err))
+                    
+                } else {
+                    
+                    
+                    let shoppinglist = querySnapshot?.documents.map { doc  -> ShoppingItem in
                         
-                        single(.success(ingredients ?? []))
+                        if let ingredient = ShoppingItem(document: doc) {
+                            return ingredient
+                        }
                         
-                    case .shoppinglist:
+                        return ShoppingItem(name: "", amount: "", key: "", isBought: false, order: 0)
+                    }
+                    .filter { $0.name != "" && $0.amount != "" && $0.id != "" }
+                    
+                    if let shoppinglist = shoppinglist {
+                        ingredients.append(contentsOf: shoppinglist)
+                        ingredients = ingredients.sorted { $0.order < $1.order }
+                    }
+                    
+                    if let docs = querySnapshot?.documents {
+                        resultDocs.append(contentsOf: docs)
+                    }
+                    
+                    let calendar = Calendar.current
+                    let components = calendar.dateComponents([.year, .month, .day], from: Date())
+                    let start = calendar.date(from: components)!
+                    
+                    if let end = calendar.date(byAdding: .day, value: 7, to: start) {
                         
-                        let ingredients = querySnapshot?.documents.map { doc  -> ShoppingItem in
+                        db.document(userID).collection("shoppinglist").whereField("boughtDate", isLessThan: end).addSnapshotListener { querySnapshot, err in
                             
-                            if let ingredient = ShoppingItem(document: doc) {
-                                return ingredient
+                            if let err = err {
+                                
+                               
+                                single(.success((ingredients, resultDocs)))
+                                single(.failure(err))
+                                
+                            } else {
+                                
+                                let shoppinglist = querySnapshot?.documents.map { doc  -> ShoppingItem in
+                                    
+                                    if let ingredient = ShoppingItem(document: doc) {
+                                        return ingredient
+                                    }
+                                    
+                                    return ShoppingItem(name: "", amount: "", key: "", isBought: false, order: 0)
+                                }
+                                .filter { $0.name != "" && $0.amount != "" && $0.id != "" }
+                                .filter { $0.isBought }
+                                
+                                if let shoppinglist = shoppinglist {
+                                    ingredients.append(contentsOf: shoppinglist)
+                                    ingredients = ingredients.sorted { $0.order < $1.order }
+                                
+                                }
+                                
+                                if let docs = querySnapshot?.documents {
+                                    resultDocs.append(contentsOf: docs)
+                                }
+                               
+                                single(.success((ingredients, resultDocs)))
+                                
+                                
                             }
                             
-                            return ShoppingItem(name: "", amount: "", key: "", isBought: false, order: 0)
                         }
-                        .filter { $0.name != "" && $0.amount != "" && $0.key != "" }
                         
-                        single(.success(ingredients ?? []))
                         
                     }
+                    
+                    
                     
                 }
                 
@@ -191,26 +428,45 @@ class RefrigeratorDM: RefrigeratorProtocol {
         
     }
     
-    static func deleteIngredient(item: Ingredient, userID: String, listName: List) -> Completable {
+//    static func deleteIngredient(item: Ingredient, userID: String, listName: List) -> Completable {
+//
+//        return Completable.create { completable in
+//
+//
+//            db.document(userID).collection(listName.rawValue).document(item.id).delete() { err in
+//
+//                if let err = err {
+//
+//                    completable(.error(err))
+//
+//                } else {
+//
+//                    completable(.completed)
+//
+//                }
+//            }
+//            return Disposables.create()
+//        }
+//    }
+    
+    static func deleteIngredient(item: Ingredient, userID: String, listName: List) -> PublishSubject<Bool> {
         
-        return Completable.create { completable in
+        let subject = PublishSubject<Bool>()
+
             
-            let key = item.key
-            
-            db.collection("users").document(userID).collection(listName.rawValue).document(key).delete() { err in
+            db.document(userID).collection(listName.rawValue).document(item.id).delete() { err in
                 
                 if let err = err {
                     
-                    completable(.error(err))
+                    subject.onError(err)
                     
                 } else {
                     
-                    completable(.completed)
+                    subject.onNext(true)
                     
                 }
             }
-            return Disposables.create()
-        }
+       return subject
     }
     
     static func deleteIngredients(items: [DeletingIngredient], userID: String, listName: List) -> Observable<(Bool, DeletingIngredient)> {
@@ -220,7 +476,7 @@ class RefrigeratorDM: RefrigeratorProtocol {
             
             items.enumerated().forEach { index, ingredient in
                 
-                db.collection("users").document(userID).collection(listName.rawValue).document(ingredient.item.key).delete() { err in
+                db.document(userID).collection(listName.rawValue).document(ingredient.item.id).delete() { err in
                     
                     if let err = err {
                         
@@ -246,10 +502,213 @@ class RefrigeratorDM: RefrigeratorProtocol {
             return Disposables.create()
         }
     }
+        // when bought an item its order would be next index than an last item that is not bought
+    static func boughtItems(userID: String, items: [ShoppingItem]) -> Observable<Bool> {
+        
+        let today = Date()
+        let uuid = UUID()
+        let uniqueIdString = uuid.uuidString.replacingOccurrences(of: "-", with: "")
+        
+        return Observable.create { observer in
+            
+            
+            db.document(userID).collection("refrigerator").getDocuments { querySnapShot, err in
+                
+                if let err = err {
+                    
+                    observer.onError(err)
+               
+                }
+                else {
+                    
+                    if let docsNum = querySnapShot?.documents.count {
+                        
+                        
+                        items.enumerated().forEach { index, item in
+                            
+                            db.document(userID).collection("shoppinglist").document(item.id).updateData([
+                                
+                                "boughtDate": today,
+                                "isBought": false
+//                                "order":
+                                
+                            ]) { err in
+                                
+                                if let err = err {
+                                    
+                                    print("failed to update the data of \(item.id) in shppinglist")
+                                    print(item.id)
+                                    print(item)
+                                    observer.onError(err)
+                                
+                                }
+                                else {
+                                   
+                                    db.document(userID).collection("refrigerator").document(item.id).setData([
+                                        
+                                        "id": uniqueIdString,
+                                        "name": item.name,
+                                        "amount": item.amount,
+                                        "order": docsNum + index + 1
+                                    
+                                    ], merge: true) { err in
+                                        
+                                        if let err = err {
+                                            
+                                            print("failed to update the data of \(item.id) in refrigerator")
+                                            print(item.id)
+                                            print(item)
+                                            observer.onError(err)
+                                        
+                                        }
+                                        else {
+                                            
+                                            
+                                            if index == items.count - 1 {
+                                                observer.onNext(true)
+                                            }
+                                            
+                                        }
+                                    }
+                                    
+                                }
+                            }
+                            
+                            
+                        }
+                    }
+                }
+            }
+            
+            
+            
+            return Disposables.create()
+        }
+        
+    }
+    
+    static func filterDifferencntBoughtStatus(docs: [QueryDocumentSnapshot], processedItems: [ShoppingItem]) -> Observable<[ShoppingItem]> {
+        
+        return Observable.create { observer in
+        // documentをShoppinglistに変換
+        let originalShoppinglist: [ShoppingItem] = docs.map { doc  -> ShoppingItem in
+            
+            if let ingredient = ShoppingItem(document: doc) {
+                return ingredient
+            }
+            
+            return ShoppingItem(name: "", amount: "", key: "", isBought: false, order: 0)
+        }
+        .filter { $0.name != "" && $0.amount != "" && $0.id != "" }
+        .sorted { $0.order < $1.order }
+        
+        // isBoughtの値が変わった要素のみ取り出す。
+        // compactMapはnilで返すとその要素は新しい配列に入らない。
+        
+        let changedBoughtStatusItems = processedItems.compactMap { item -> ShoppingItem? in
+            
+            guard let compareItem: ShoppingItem = originalShoppinglist.first(where: { $0.id == item.id }) else {
+                return nil
+            }
+            
+            if compareItem.isBought != item.isBought {
+                return item
+            }
+            else {
+                return nil
+            }
+        }
+            observer.onNext(changedBoughtStatusItems)
+            
+            return Disposables.create()
+        }
+    }
+    
+    static func isBoughtShoppinglistItems(processedItems: [ShoppingItem], userID: String) -> Observable<(Bool, ShoppingItem)> {
+        
+        return Observable.create { observer in
+            
+          
+            let today = Date()
+            
+            // そのアイテムを買った場合
+//            ・shoppinglistのそのアイテムのisBoughtをtrueにし、いつ買ったかを書き込む。
+//            　・refrigeratorの中にそのアイテムの新しいドキュメントを作る
+            // そのアイテムを買っていない場合、
+//            ・shoppinglistのそのアイテムのisBoughtをfalseにする。boughtDateは削除する。
+//            ・refrigeratorの中のそのアイテムのドキュメントは削除する
+
+            processedItems.enumerated().forEach { index, item in
+
+                var data: [String : Any] = [:]
+                
+                if item.isBought {
+                    data = [
+                        
+                        "boughtDate": today,
+                        "isBought": true
+                    ]
+                }
+                else {
+                    data = [
+                        
+                        "boughtDate": FieldValue.delete(),
+                        "isBought": false
+                        
+                    ]
+                }
+                
+                db.document(userID).collection("shoppinglist").document(item.id).updateData(data) { err in
+                    
+                    if let err = err {
+                        
+                        print(item.id)
+                        print(item.name)
+                        observer.onError(err)
+                    }
+                    else {
+                        
+                        if index == processedItems.count - 1 {
+                            observer.onNext((true, item))
+                        }
+                        else {
+                            observer.onNext((false, item))
+                        }
+                    }
+                    
+                }
+            }
+            
+            return Disposables.create()
+        }
+       
+    }
+    
+    static func getRefrigeratorDocsCount(userID: String) -> PublishSubject<Int> {
+        
+        let subject = PublishSubject<Int>()
+        
+        db.document(userID).collection("refrigerator").getDocuments { querySnapShot, err in
+            
+            if let err = err {
+                subject.onError(err)
+            }
+            else {
+                
+                if let count = querySnapShot?.documents.count {
+                    subject.onNext(count)
+                }
+            }
+        }
+        
+        return subject
+    }
+    
+    
     
     static func searchIngredients(text: String, userID: String, listName: List) {
         
-        db.collection("user").document(userID).collection(listName.rawValue).whereField("name", isEqualTo: text).getDocuments{ (querySnapshot, err) in
+        db.document(userID).collection(listName.rawValue).whereField("name", isEqualTo: text).getDocuments{ (querySnapshot, err) in
             //the data has returned from firebase and is valid
             
             if let err = err {
@@ -284,5 +743,4 @@ class RefrigeratorDM: RefrigeratorProtocol {
     }
     
 }
-
 

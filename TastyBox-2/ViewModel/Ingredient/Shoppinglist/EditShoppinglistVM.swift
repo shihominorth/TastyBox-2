@@ -40,7 +40,7 @@ class EditShoppinglistVM: ViewModelBase {
     func addItem(name: String, amount: String) {
         
         
-        self.apiType.addIngredient(name: name, amount: amount, userID: self.user.uid, lastIndex: self.lastIndex, listName: .shoppinglist)
+        self.apiType.addIngredient(id: nil, name: name, amount: amount, userID: self.user.uid, lastIndex: self.lastIndex, listName: .shoppinglist)
             .catch { err in
                 
                 print("Error writing document: \(err)")

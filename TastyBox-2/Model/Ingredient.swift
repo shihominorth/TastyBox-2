@@ -11,13 +11,13 @@ import Firebase
 
 class Ingredient  {
     
-    var key: String
+    var id: String
     var name: String
     var amount: String
     var order: Int
     
     init(key: String, name: String, amount: String, order: Int) {
-        self.key = key
+        self.id = key
         self.name = name
         self.amount = amount
         self.order = order
@@ -52,6 +52,7 @@ class ShoppingItem: Ingredient {
         let value = document.data()
         
         guard
+            let id = value["id"] as? String,
             let name = value["name"] as? String,
             let amount = value["amount"] as? String,
             let isBought  = value["isBought"] as? Bool,
@@ -61,7 +62,7 @@ class ShoppingItem: Ingredient {
         }
         
         self.isBought = isBought
-        super.init(key: document.documentID, name: name, amount: amount, order: order)
+        super.init(key: id, name: name, amount: amount, order: order)
     }
 }
 
@@ -76,6 +77,7 @@ class RefrigeratorItem: Ingredient {
         let value = document.data()
         
         guard
+            let id = value["id"] as? String,
             let name = value["name"] as? String,
             let amount = value["amount"] as? String,
             let order = value["order"] as? Int
@@ -83,14 +85,29 @@ class RefrigeratorItem: Ingredient {
                 return nil
         }
         
-        super.init(key: document.documentID, name: name, amount: amount, order: order)
+        super.init(key: id, name: name, amount: amount, order: order)
+    }
+    
+    init?(document:  QueryDocumentSnapshot, index: Int) {
+        
+        let value = document.data()
+        
+        guard
+            let id = value["id"] as? String,
+            let name = value["name"] as? String,
+            let amount = value["amount"] as? String
+            else {
+                return nil
+        }
+        
+        super.init(key: id, name: name, amount: amount, order: index)
     }
 }
 
 extension RefrigeratorItem: Differentiable {
    
     var differenceIdentifier: String {
-        return self.key
+        return self.id
     }
     
     func isContentEqual(to source: RefrigeratorItem) -> Bool {
@@ -103,7 +120,7 @@ extension RefrigeratorItem: Differentiable {
 extension ShoppingItem: Differentiable {
    
     var differenceIdentifier: String {
-        return self.key
+        return self.id
     }
     
     func isContentEqual(to source: ShoppingItem) -> Bool {

@@ -42,7 +42,7 @@ class EditItemRefrigeratorVM: ViewModelBase {
     func addItem(name: String, amount: String) {
         
         
-        self.apiType.addIngredient(name: name, amount: amount, userID: self.user.uid, lastIndex: self.lastIndex, listName: .refrigerator)
+        self.apiType.addIngredient(id: nil, name: name, amount: amount, userID: self.user.uid, lastIndex: self.lastIndex, listName: .refrigerator)
             .catch { err in
                 
                 print("Error writing document: \(err)")
