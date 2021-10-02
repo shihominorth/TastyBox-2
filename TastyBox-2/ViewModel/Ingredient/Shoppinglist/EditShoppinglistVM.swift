@@ -66,11 +66,13 @@ class EditShoppinglistVM: ViewModelBase {
             .catch { err in
                 
                 print("Error writing document: \(err)")
+                
                 err.handleFireStoreError()?.generateErrAlert()
                 
                 return .empty()
             }
             .subscribe(onCompleted: {
+               
                 print("Document successfully written!")
                 
                 self.sceneCoodinator.pop(animated: true)

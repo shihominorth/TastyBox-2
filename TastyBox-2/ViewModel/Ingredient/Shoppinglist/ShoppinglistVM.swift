@@ -36,29 +36,30 @@ class ShoppinglistVM: ViewModelBase {
     
     var searchingText = BehaviorRelay<String>(value: "")
     
-    //    lazy var dataSource: RxRefrigeratorTableViewDataSource<ShoppingItem, ShoppinglistTVCell> = {
-    //
-    //        return RxRefrigeratorTableViewDataSource<ShoppingItem, ShoppinglistTVCell>(identifier: ShoppinglistTVCell.identifier, emptyValue: self.empty) { [unowned self] row, element, cell in
-    //
-    //            cell.configure(item: element)
-    //
-    //            cell.checkMarkBtn.rx.tap
-    //                .catch { err in
-    //                    print(err)
-    //                    return .empty()
-    //                }
-    //                .subscribe(onNext: {
-    //
-    //                    element.isBought = !element.isBought
-    //                    self.items[row].isBought = !self.items[row].isBought
-    //                    cell.updateCheckMark(isBought: self.items[row].isBought)
-    //
-    //                }, onError: { err in
-    //                    print(err)
-    //                })
-    //                .disposed(by: self.disposeBag)
-    //        }
-    //    }()
+        lazy var dataSource: RxRefrigeratorTableViewDataSource<ShoppingItem, ShoppinglistTVCell> = {
+    
+            return RxRefrigeratorTableViewDataSource<ShoppingItem, ShoppinglistTVCell>(identifier: ShoppinglistTVCell.identifier, emptyValue: self.empty) { [unowned self] row, element, cell in
+    
+                cell.configure(item: element)
+    
+                cell.checkMarkBtn.rx.tap
+                    .catch { err in
+                        
+                        print(err)
+                        return .empty()
+                        
+                    }
+                    .flatMap {  updateBoughtStatus(index: row) }
+                    .subscribe(onNext: { isBought in
+   
+                        cell.updateCheckMark(isBought: self.items[row].isBought)
+    
+                    }, onError: { err in
+                        print(err)
+                    })
+                    .disposed(by: self.disposeBag)
+            }
+        }()
     
     init(sceneCoodinator: SceneCoordinator, apiType: RefrigeratorProtocol.Type = RefrigeratorDM.self, user: FirebaseAuth.User) {
         self.sceneCoodinator = sceneCoodinator
@@ -82,16 +83,16 @@ class ShoppinglistVM: ViewModelBase {
     
     func toEditItem(index: Int)  {
         
-        var vm :EditItemRefrigeratorVM!
+        var vm : EditShoppinglistVM!
         
         if searchingTemp.isEmpty {
-            vm =  EditItemRefrigeratorVM(sceneCoodinator: self.sceneCoodinator, user: self.user, item: self.items[index], lastIndex: index)
+            vm = EditShoppinglistVM(sceneCoodinator: self.sceneCoodinator, user: self.user, item: self.items[index], lastIndex: index)
         }
         else {
-            vm =  EditItemRefrigeratorVM(sceneCoodinator: self.sceneCoodinator, user: self.user, item: self.searchingTemp[index], lastIndex: index)
+            vm =  EditShoppinglistVM(sceneCoodinator: self.sceneCoodinator, user: self.user, item: self.searchingTemp[index], lastIndex: index)
         }
         
-        let vc = IngredientScene.editRefrigerator(vm).viewController()
+        let vc = IngredientScene.editShoppinglist(vm).viewController()
         
         self.sceneCoodinator.transition(to: vc, type: .push)
         
@@ -106,10 +107,6 @@ class ShoppinglistVM: ViewModelBase {
         
         _ = self.apiType.getShoppinglist(userID: self.user.uid)
             .subscribe(onSuccess: {[unowned self] items, docs in
-                
-                //                self.originalItems = originalItems.sorted { $0.order < $1.order }
-                //
-                //                self.items = items.sorted { $0.order < $1.order }
                 
                 self.items = items
                 self.docs = docs
@@ -252,7 +249,7 @@ class ShoppinglistVM: ViewModelBase {
                 
                 print("Document successfully deleted")
                 
-                self.items = self.items.filter { $0.id != deletingItem.id }
+                self.items = self.items.filter { $0.id != deletingItem.id }.sorted { $0.order < $1.order }
                 
                 if let isLast = isLast {
                    
@@ -373,6 +370,7 @@ class ShoppinglistVM: ViewModelBase {
             }
             else {
                 
+                self.searchingTemp.removeAll()
                 self.observableItems.accept(items)
                 
             }

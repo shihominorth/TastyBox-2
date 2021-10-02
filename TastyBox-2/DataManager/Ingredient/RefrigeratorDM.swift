@@ -87,11 +87,13 @@ class RefrigeratorDM: RefrigeratorProtocol {
         
         return Completable.create { completable in
             
-            db.document(userID).collection(listName.rawValue).document(edittingItem.id).setData(
+            db.document(userID).collection(listName.rawValue).document(edittingItem.id).updateData(
                 
                 [
                     "name": name,
-                    "amount": amount], merge: true) { err in
+                    "amount": amount
+                    
+                ]) { err in
                 
                 if let err = err {
                     

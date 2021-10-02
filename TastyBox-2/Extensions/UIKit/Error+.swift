@@ -28,7 +28,16 @@ extension Error {
         var result: Notification?
         
         switch code {
+        case rawValue(firestoreErr: .OK):
+            
+            result = Notification(reason: "You could login", solution: "Please try login again", isReportRequired: true)
        
+        case rawValue(firestoreErr: .cancelled):
+            result = Notification(reason: "Canceled", solution: "Please try login again", isReportRequired: false)
+        
+        case rawValue(firestoreErr: .deadlineExceeded):
+            result = Notification(reason: "Session time out", solution: "You can login again if you want", isReportRequired: false)
+        
         case rawValue(authenticationError: .networkError):
             result = Notification(reason: "Network Error", solution: "Please try login again when network is working.")
             
@@ -76,21 +85,24 @@ extension Error {
     }
     
     func handleFireStoreError() -> Notification? {
+        
         let code = self.convertToNSError().code
         var result: Notification?
         
         switch code {
         case rawValue(firestoreErr: .OK):
-            result = Notification(reason: "You could login", solution: "Please try login again", isReportRequired: true)
+            
+            return nil
             
         case rawValue(firestoreErr: .cancelled):
-            result = Notification(reason: "Canceled", solution: "Please try login again", isReportRequired: false)
+            result = Notification(reason: "Canceled", solution: "You can add your data again if you want. the session was canceled.", isReportRequired: false)
         
         case rawValue(firestoreErr: .deadlineExceeded):
-            result = Notification(reason: "Session time out", solution: "You can login again if you want", isReportRequired: false)
+            result = Notification(reason: "Session time out", solution: "You can try again if you want", isReportRequired: false)
+            
         
         default:
-            result = Notification(reason: "Unable to login", solution: "We approgise for the inconvinience. Please wait to fix the bug.", isReportRequired: true)
+            result = Notification(reason: "Something happens", solution: "We approgise for the inconvinience. Please wait to fix the bug.", isReportRequired: true)
         }
 
         return result
