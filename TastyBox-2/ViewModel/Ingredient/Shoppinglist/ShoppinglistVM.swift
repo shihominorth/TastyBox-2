@@ -132,29 +132,6 @@ class ShoppinglistVM: ViewModelBase {
         return relay
     }
     
-    //    func editShoppinglist() {
-    //
-    //        boughtItems().subscribe(onNext: { [unowned self] isFinished in
-    //            self.moveItems()
-    //        })
-    //        .disposed(by: disposeBag)
-    //    }
-    //
-    //    private func moveItems() {
-    //
-    //        _ = self.apiType.moveIngredient(userID: self.user.uid, items: self.items, listName: .shoppinglist)
-    //            .subscribe(onNext: { isChanged in
-    //                if isChanged {
-    //                    print("Success to move!")
-    //                }
-    //            }, onError: { err in
-    //
-    //                print("Error updating document: \(err)")
-    //                err.handleFireStoreError()?.generateErrAlert()
-    //
-    //            })
-    //            .disposed(by: disposeBag)
-    //    }
     
     fileprivate func moveItems() {
         
@@ -240,27 +217,6 @@ class ShoppinglistVM: ViewModelBase {
             })
             .disposed(by: self.disposeBag)
         
-        //        let boughtItems = zip(originalItems, items)
-        //            .filter { $0.0.isBought != $0.1.isBought }
-        //            .map { $0.1 }
-        //
-        //        self.apiType.boughtItems(userID: user.uid, items: boughtItems).subscribe(onNext: { isFinished in
-        //
-        //            if isFinished {
-        //                print("all document updated.")
-        //                relay.accept(true)
-        //            }
-        //
-        //        }, onError: { err in
-        //
-        //            guard let reason = err.handleAuthenticationError() else { return }
-        //
-        //            print(reason)
-        //
-        //            relay.accept(false)
-        //        })
-        //        .disposed(by: disposeBag)
-        
     }
     
     func updateBoughtStatus(index: Int) -> Observable<Bool> {
@@ -279,42 +235,35 @@ class ShoppinglistVM: ViewModelBase {
     func deleteItem(index: Int) -> PublishRelay<Bool> {
         
         let relay = PublishRelay<Bool>()
-        let deleteitem = searchingTemp.isEmpty ? items[index] : searchingTemp[index]
-        let removedItems = self.items.compactMap { item -> ShoppingItem? in
-            
-            if item.id == deleteitem.id {
-                return nil
-            }
-            else {
-                return item
-            }
-        }
+        let deleteItem = searchingTemp.isEmpty ? items[index] : searchingTemp[index]
         
-        
-        _ = self.apiType.deleteIngredient(item: deleteitem, userID: user.uid, listName: .shoppinglist)
-            .flatMap { [unowned self] isDeleted -> Observable<Bool> in
+        _ = self.apiType.deleteIngredient(item: deleteItem, userID: user.uid, listName: .shoppinglist)
+            .flatMap { deletingItem in
+
+                return self.apiType.filterDifferentOrder(items: self.items, deletingItem: deletingItem)
+
+            }
+            .flatMap { [unowned self] processedItems, deletingItem in
                 
-                return self.apiType.moveIngredient(userID: self.user.uid, items: removedItems, listName: .shoppinglist)
+                return self.apiType.moveIngredient(userID: user.uid, items: processedItems, deletingItem: deletingItem, listName: .shoppinglist)
                 
             }
-            .subscribe(onNext: { [unowned self] isLast in
+            .subscribe(onNext: { [unowned self] isLast, deletingItem in
                 
                 print("Document successfully deleted")
                 
-                if searchingTemp.isEmpty {
-                    self.items.remove(at: index)
-                    self.observableItems.accept(self.items)
+                self.items = self.items.filter { $0.id != deletingItem.id }
+                
+                if let isLast = isLast {
+                   
+                    if isLast {
+                        self.observableItems.accept(self.items)
+                    }
                 }
                 else {
-                    guard let searchedIndex = self.items.firstIndex(of: self.searchingTemp[index]) else {
-                        return
-                    }
-                    
-                    self.items.remove(at: searchedIndex)
-                    
+                    self.observableItems.accept(self.items)
                 }
-                
-                
+
                 relay.accept(true)
                 
             }, onError: { err in

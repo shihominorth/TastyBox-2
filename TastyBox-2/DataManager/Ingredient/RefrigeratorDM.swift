@@ -20,7 +20,7 @@ protocol RefrigeratorProtocol: AnyObject {
     //    static func removeDeletingItem(items: [ShoppingItem], deletingItem: Ingredient) -> Observable<[Ingredient]>
     static func filterDifferentOrder(items: [Ingredient], deletingItem: Ingredient) -> Observable<([Ingredient], Ingredient)>
     static func moveIngredient(userID: String, items: [Ingredient], deletingItem: Ingredient, listName: List) -> Observable<(Bool?, Ingredient)> //    static func deleteIngredient(item: Ingredient, userID: String, listName: List) -> Completable
-    static func deleteIngredient(item: Ingredient, userID: String, listName: List) -> PublishSubject<Bool> 
+    static func deleteIngredient(item: Ingredient, userID: String, listName: List) -> PublishSubject<Ingredient>
     static func deleteIngredients(items: [DeletingIngredient], userID: String, listName: List) -> Observable<DeletingIngredient>
     static func boughtItems(userID: String, items: [ShoppingItem]) -> Observable<Bool>
     static func filterDifferencntBoughtStatus(docs: [QueryDocumentSnapshot], processedItems: [ShoppingItem]) -> Observable<[ShoppingItem]>
@@ -461,9 +461,9 @@ class RefrigeratorDM: RefrigeratorProtocol {
     //        }
     //    }
     
-    static func deleteIngredient(item: Ingredient, userID: String, listName: List) -> PublishSubject<Bool> {
+    static func deleteIngredient(item: Ingredient, userID: String, listName: List) -> PublishSubject<Ingredient> {
         
-        let subject = PublishSubject<Bool>()
+        let subject = PublishSubject<Ingredient>()
         
         
         db.document(userID).collection(listName.rawValue).document(item.id).delete() { err in
@@ -474,7 +474,7 @@ class RefrigeratorDM: RefrigeratorProtocol {
                 
             } else {
                 
-                subject.onNext(true)
+                subject.onNext(item)
                 
             }
         }
