@@ -17,22 +17,22 @@ protocol RefrigeratorProtocol: AnyObject {
     static func addIngredient(id: String?, name: String, amount: String, userID: String, lastIndex: Int, listName: List) -> Completable
     static func editIngredient(edittingItem: Ingredient, name: String, amount: String, userID: String, listName: List) -> Completable
     static func moveIngredient(userID: String, items: [Ingredient], listName: List) -> Observable<Bool>
-    static func filterDifferencntOrder( processedItems: [ShoppingItem]) -> Observable<[ShoppingItem]>
-    static func moveIngredient(userID: String, items: [Ingredient], deletingItem: DeletingIngredient, listName: List) -> Observable<(Bool, DeletingIngredient)> 
-//    static func deleteIngredient(item: Ingredient, userID: String, listName: List) -> Completable
+    //    static func removeDeletingItem(items: [ShoppingItem], deletingItem: Ingredient) -> Observable<[Ingredient]>
+    static func filterDifferentOrder(items: [Ingredient], deletingItem: Ingredient) -> Observable<([Ingredient], Ingredient)>
+    static func moveIngredient(userID: String, items: [Ingredient], deletingItem: Ingredient, listName: List) -> Observable<(Bool?, Ingredient)> //    static func deleteIngredient(item: Ingredient, userID: String, listName: List) -> Completable
     static func deleteIngredient(item: Ingredient, userID: String, listName: List) -> PublishSubject<Bool> 
-    static func deleteIngredients(items: [DeletingIngredient], userID: String, listName: List) -> Observable<(Bool, DeletingIngredient)>
+    static func deleteIngredients(items: [DeletingIngredient], userID: String, listName: List) -> Observable<DeletingIngredient>
     static func boughtItems(userID: String, items: [ShoppingItem]) -> Observable<Bool>
     static func filterDifferencntBoughtStatus(docs: [QueryDocumentSnapshot], processedItems: [ShoppingItem]) -> Observable<[ShoppingItem]>
     static func isBoughtShoppinglistItems(processedItems: [ShoppingItem], userID: String) -> Observable<(Bool, ShoppingItem)>
     static func getRefrigeratorDocsCount(userID: String) -> PublishSubject<Int>
-//    static func boughtIngredient(userID: String, item: ShoppingItem) -> Observable<Bool>
+    //    static func boughtIngredient(userID: String, item: ShoppingItem) -> Observable<Bool>
     static func searchIngredients(text: String, userID: String, listName: List)
     
 }
 
 class RefrigeratorDM: RefrigeratorProtocol {
- 
+    
     static let db = Firestore.firestore().collection("users")
     
     static func addIngredient(id: String?, name: String, amount: String, userID: String, lastIndex: Int, listName: List) -> Completable {
@@ -109,6 +109,7 @@ class RefrigeratorDM: RefrigeratorProtocol {
         }
     }
     
+    
     static func moveIngredient(userID: String, items: [Ingredient], listName: List) -> Observable<Bool> {
         
         
@@ -123,16 +124,16 @@ class RefrigeratorDM: RefrigeratorProtocol {
                 else {
                     return nil
                 }
-            
+                
             }
             
             movedItems.enumerated().forEach { index, item in
                 
-                db.document(userID).collection(listName.rawValue).document(item.id).setData([
+                db.document(userID).collection(listName.rawValue).document(item.id).updateData([
                     
                     "order": item.order
                     
-                ], merge: true) { err in
+                ]) { err in
                     
                     if let err = err {
                         
@@ -155,55 +156,76 @@ class RefrigeratorDM: RefrigeratorProtocol {
                 }
             }
             
-//            items.enumerated().forEach { index, item in
-//
-//                if item.order != index {
-//
-//                    db.document(userID).collection(listName.rawValue).document(item.id).setData([
-//
-//                        "order": index,
-//                        "ordered": true
-//
-//                    ], merge: true) { err in
-//
-//                        if let err = err {
-//
-//                            observer.onError(err)
-//
-//                        } else {
-//
-//                            if index == items.count - 1 {
-//
-//                                observer.onNext(true)
-//
-//                            }
-//                            else {
-//
-//                                observer.onNext(false)
-//
-//                            }
-//                        }
-//
-//                    }
-//                }
-//            }
+            //            items.enumerated().forEach { index, item in
+            //
+            //                if item.order != index {
+            //
+            //                    db.document(userID).collection(listName.rawValue).document(item.id).setData([
+            //
+            //                        "order": index,
+            //                        "ordered": true
+            //
+            //                    ], merge: true) { err in
+            //
+            //                        if let err = err {
+            //
+            //                            observer.onError(err)
+            //
+            //                        } else {
+            //
+            //                            if index == items.count - 1 {
+            //
+            //                                observer.onNext(true)
+            //
+            //                            }
+            //                            else {
+            //
+            //                                observer.onNext(false)
+            //
+            //                            }
+            //                        }
+            //
+            //                    }
+            //                }
+            //            }
             
             return Disposables.create()
         }
         
     }
     
-    static func removeDeletingItem(items: [ShoppingItem], deletingItem: DeletingIngredient) -> Observable<[Ingredient]> {
-
-        return Observable.create { observer in
-                
-        }
-    }
     
-    static func filterDifferencntOrder(items: [ShoppingItem]) -> Observable<[Ingredient]> {
+    static func filterDifferentOrder(items: [Ingredient], deletingItem: Ingredient) -> Observable<([Ingredient], Ingredient)> {
+        
+        print("before ordered deleting item \(deletingItem.name)")
         
         return Observable.create { observer in
             
+            let removedItems = items.filter { $0.id != deletingItem.id }
+            
+            let movedItems:[Ingredient] = removedItems.enumerated().compactMap { index, item -> Ingredient? in
+                
+                if index != item.order {
+                    item.order = index
+                    return item
+                }
+                else {
+                    return nil
+                }
+                
+            }
+            
+            observer.onNext((movedItems, deletingItem))
+            
+            return Disposables.create()
+        }
+    }
+    
+    static func moveIngredient(userID: String, items: [Ingredient], deletingItem: Ingredient, listName: List) -> Observable<(Bool?, Ingredient)> {
+        
+        return Observable.create { observer in
+            
+            print("move after delete \(deletingItem.name)")
             let movedItems:[Ingredient] = items.enumerated().compactMap { index, item -> Ingredient? in
                 
                 if index != item.order {
@@ -213,57 +235,47 @@ class RefrigeratorDM: RefrigeratorProtocol {
                 else {
                     return nil
                 }
-            
+                
             }
             
-            observer.onNext(movedItems)
+            print("------------")
+            print("count")
+            print(movedItems.count)
             
-            return Disposables.create()
-        }
-    }
-    
-    static func moveIngredient(userID: String, items: [Ingredient], deletingItem: DeletingIngredient, listName: List) -> Observable<(Bool, DeletingIngredient)> {
-        
-        return Observable.create { observer in
-            
-            let movedItems:[Ingredient] = items.enumerated().compactMap { index, item -> Ingredient? in
-                
-                if index != item.order {
-                    item.order = index
-                    return item
-                }
-                else {
-                    return nil
-                }
-            
+            if movedItems.isEmpty  {
+                print("no need to move item \(deletingItem.name)")
+                observer.onNext((nil, deletingItem))
             }
-            
-            movedItems.enumerated().forEach { index, item in
+            else  {
                 
-                db.document(userID).collection(listName.rawValue).document(item.id).updateData([
+                print("there are moving items")
+                print(deletingItem.name)
+                movedItems.enumerated().forEach { index, item in
                     
-                    "order": item.order
-                    
-                ]) { err in
-                    
-                    if let err = err {
+                    db.document(userID).collection(listName.rawValue).document(item.id).updateData([
                         
-                        observer.onError(err)
+                        "order": item.order
                         
-                    } else {
+                    ]) { err in
                         
-                        if index == movedItems.count - 1 {
+                        if let err = err {
                             
-                            observer.onNext((true, deletingItem))
+                            observer.onError(err)
                             
-                        }
-                        else {
+                        } else {
                             
-                            observer.onNext((false, deletingItem))
-                            
+                            if index == movedItems.count - 1 {
+                                
+                                observer.onNext((true, deletingItem))
+                                
+                            }
+                            else {
+                                
+                                observer.onNext((false, deletingItem))
+                                
+                            }
                         }
                     }
-                    
                 }
             }
             
@@ -381,7 +393,7 @@ class RefrigeratorDM: RefrigeratorProtocol {
                             
                             if let err = err {
                                 
-                               
+                                
                                 single(.success((ingredients, resultDocs)))
                                 single(.failure(err))
                                 
@@ -401,13 +413,13 @@ class RefrigeratorDM: RefrigeratorProtocol {
                                 if let shoppinglist = shoppinglist {
                                     ingredients.append(contentsOf: shoppinglist)
                                     ingredients = ingredients.sorted { $0.order < $1.order }
-                                
+                                    
                                 }
                                 
                                 if let docs = querySnapshot?.documents {
                                     resultDocs.append(contentsOf: docs)
                                 }
-                               
+                                
                                 single(.success((ingredients, resultDocs)))
                                 
                                 
@@ -428,48 +440,48 @@ class RefrigeratorDM: RefrigeratorProtocol {
         
     }
     
-//    static func deleteIngredient(item: Ingredient, userID: String, listName: List) -> Completable {
-//
-//        return Completable.create { completable in
-//
-//
-//            db.document(userID).collection(listName.rawValue).document(item.id).delete() { err in
-//
-//                if let err = err {
-//
-//                    completable(.error(err))
-//
-//                } else {
-//
-//                    completable(.completed)
-//
-//                }
-//            }
-//            return Disposables.create()
-//        }
-//    }
+    //    static func deleteIngredient(item: Ingredient, userID: String, listName: List) -> Completable {
+    //
+    //        return Completable.create { completable in
+    //
+    //
+    //            db.document(userID).collection(listName.rawValue).document(item.id).delete() { err in
+    //
+    //                if let err = err {
+    //
+    //                    completable(.error(err))
+    //
+    //                } else {
+    //
+    //                    completable(.completed)
+    //
+    //                }
+    //            }
+    //            return Disposables.create()
+    //        }
+    //    }
     
     static func deleteIngredient(item: Ingredient, userID: String, listName: List) -> PublishSubject<Bool> {
         
         let subject = PublishSubject<Bool>()
-
+        
+        
+        db.document(userID).collection(listName.rawValue).document(item.id).delete() { err in
             
-            db.document(userID).collection(listName.rawValue).document(item.id).delete() { err in
+            if let err = err {
                 
-                if let err = err {
-                    
-                    subject.onError(err)
-                    
-                } else {
-                    
-                    subject.onNext(true)
-                    
-                }
+                subject.onError(err)
+                
+            } else {
+                
+                subject.onNext(true)
+                
             }
-       return subject
+        }
+        return subject
     }
     
-    static func deleteIngredients(items: [DeletingIngredient], userID: String, listName: List) -> Observable<(Bool, DeletingIngredient)> {
+    static func deleteIngredients(items: [DeletingIngredient], userID: String, listName: List) -> Observable<DeletingIngredient> {
         
         
         return Observable.create { observer in
@@ -485,16 +497,12 @@ class RefrigeratorDM: RefrigeratorProtocol {
                         
                     } else {
                         
-                        if index == items.count - 1 {
+                        print("deleted \(ingredient.item.id) \(ingredient.item.name)")
+                       
                             
-                            observer.onNext((true, ingredient))
+                        observer.onNext(ingredient)
                             
-                        }
-                        else {
-                            
-                            observer.onNext((false, ingredient))
-                            
-                        }
+
                     }
                 }
                 
@@ -502,7 +510,7 @@ class RefrigeratorDM: RefrigeratorProtocol {
             return Disposables.create()
         }
     }
-        // when bought an item its order would be next index than an last item that is not bought
+    // when bought an item its order would be next index than an last item that is not bought
     static func boughtItems(userID: String, items: [ShoppingItem]) -> Observable<Bool> {
         
         let today = Date()
@@ -517,7 +525,7 @@ class RefrigeratorDM: RefrigeratorProtocol {
                 if let err = err {
                     
                     observer.onError(err)
-               
+                    
                 }
                 else {
                     
@@ -530,7 +538,7 @@ class RefrigeratorDM: RefrigeratorProtocol {
                                 
                                 "boughtDate": today,
                                 "isBought": false
-//                                "order":
+                                //                                "order":
                                 
                             ]) { err in
                                 
@@ -540,17 +548,17 @@ class RefrigeratorDM: RefrigeratorProtocol {
                                     print(item.id)
                                     print(item)
                                     observer.onError(err)
-                                
+                                    
                                 }
                                 else {
-                                   
+                                    
                                     db.document(userID).collection("refrigerator").document(item.id).setData([
                                         
                                         "id": uniqueIdString,
                                         "name": item.name,
                                         "amount": item.amount,
                                         "order": docsNum + index + 1
-                                    
+                                        
                                     ], merge: true) { err in
                                         
                                         if let err = err {
@@ -559,7 +567,7 @@ class RefrigeratorDM: RefrigeratorProtocol {
                                             print(item.id)
                                             print(item)
                                             observer.onError(err)
-                                        
+                                            
                                         }
                                         else {
                                             
@@ -590,34 +598,34 @@ class RefrigeratorDM: RefrigeratorProtocol {
     static func filterDifferencntBoughtStatus(docs: [QueryDocumentSnapshot], processedItems: [ShoppingItem]) -> Observable<[ShoppingItem]> {
         
         return Observable.create { observer in
-        // documentをShoppinglistに変換
-        let originalShoppinglist: [ShoppingItem] = docs.map { doc  -> ShoppingItem in
-            
-            if let ingredient = ShoppingItem(document: doc) {
-                return ingredient
+            // documentをShoppinglistに変換
+            let originalShoppinglist: [ShoppingItem] = docs.map { doc  -> ShoppingItem in
+                
+                if let ingredient = ShoppingItem(document: doc) {
+                    return ingredient
+                }
+                
+                return ShoppingItem(name: "", amount: "", key: "", isBought: false, order: 0)
             }
+            .filter { $0.name != "" && $0.amount != "" && $0.id != "" }
+            .sorted { $0.order < $1.order }
             
-            return ShoppingItem(name: "", amount: "", key: "", isBought: false, order: 0)
-        }
-        .filter { $0.name != "" && $0.amount != "" && $0.id != "" }
-        .sorted { $0.order < $1.order }
-        
-        // isBoughtの値が変わった要素のみ取り出す。
-        // compactMapはnilで返すとその要素は新しい配列に入らない。
-        
-        let changedBoughtStatusItems = processedItems.compactMap { item -> ShoppingItem? in
+            // isBoughtの値が変わった要素のみ取り出す。
+            // compactMapはnilで返すとその要素は新しい配列に入らない。
             
-            guard let compareItem: ShoppingItem = originalShoppinglist.first(where: { $0.id == item.id }) else {
-                return nil
+            let changedBoughtStatusItems = processedItems.compactMap { item -> ShoppingItem? in
+                
+                guard let compareItem: ShoppingItem = originalShoppinglist.first(where: { $0.id == item.id }) else {
+                    return nil
+                }
+                
+                if compareItem.isBought != item.isBought {
+                    return item
+                }
+                else {
+                    return nil
+                }
             }
-            
-            if compareItem.isBought != item.isBought {
-                return item
-            }
-            else {
-                return nil
-            }
-        }
             observer.onNext(changedBoughtStatusItems)
             
             return Disposables.create()
@@ -628,18 +636,18 @@ class RefrigeratorDM: RefrigeratorProtocol {
         
         return Observable.create { observer in
             
-          
+            
             let today = Date()
             
             // そのアイテムを買った場合
-//            ・shoppinglistのそのアイテムのisBoughtをtrueにし、いつ買ったかを書き込む。
-//            　・refrigeratorの中にそのアイテムの新しいドキュメントを作る
+            //            ・shoppinglistのそのアイテムのisBoughtをtrueにし、いつ買ったかを書き込む。
+            //            　・refrigeratorの中にそのアイテムの新しいドキュメントを作る
             // そのアイテムを買っていない場合、
-//            ・shoppinglistのそのアイテムのisBoughtをfalseにする。boughtDateは削除する。
-//            ・refrigeratorの中のそのアイテムのドキュメントは削除する
-
+            //            ・shoppinglistのそのアイテムのisBoughtをfalseにする。boughtDateは削除する。
+            //            ・refrigeratorの中のそのアイテムのドキュメントは削除する
+            
             processedItems.enumerated().forEach { index, item in
-
+                
                 var data: [String : Any] = [:]
                 
                 if item.isBought {
@@ -681,7 +689,7 @@ class RefrigeratorDM: RefrigeratorProtocol {
             
             return Disposables.create()
         }
-       
+        
     }
     
     static func getRefrigeratorDocsCount(userID: String) -> PublishSubject<Int> {

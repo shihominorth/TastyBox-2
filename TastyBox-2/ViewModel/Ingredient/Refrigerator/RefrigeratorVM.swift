@@ -177,19 +177,35 @@ class RefrigeratorVM: ViewModelBase {
         if !deletingTemp.isEmpty {
             
             _ = self.apiType.deleteIngredients(items: deletingTemp, userID: user.uid, listName: .refrigerator)
-                .subscribe(onNext: { [unowned self] (isLast, ingredient) in
+                .flatMap { deletingItem in
+
+                    return self.apiType.filterDifferentOrder(items: self.items, deletingItem: deletingItem.item)
+
+                }
+                .flatMap { [unowned self] processedItems, deletingItem in
+                   
+                    return self.apiType.moveIngredient(userID: user.uid, items: processedItems, deletingItem: deletingItem, listName: .shoppinglist)
                     
-                    print("Document successfully deleted")
+                }
+                .subscribe(onNext: { [unowned self] isLast, deletingItem in
+
+                    guard let index = self.items.firstIndex(where: { $0.id == deletingItem.id }) else {
+                        return
+                    }
                     
-                    self.items.remove(at: ingredient.index)
+                    self.items.remove(at: index)
+      
+                    guard let isLast = isLast else {
+                        return
+                    }
                     
                     if isLast {
                         self.observableItems.onNext(self.items)
                     }
                     
+                
                 }, onError: { err in
-                    
-                    
+
                     print("Error updating document: \(err)")
                     
                     err.handleFireStoreError()?.generateErrAlert()

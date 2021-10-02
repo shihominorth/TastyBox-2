@@ -36,29 +36,29 @@ class ShoppinglistVM: ViewModelBase {
     
     var searchingText = BehaviorRelay<String>(value: "")
     
-//    lazy var dataSource: RxRefrigeratorTableViewDataSource<ShoppingItem, ShoppinglistTVCell> = {
-//        
-//        return RxRefrigeratorTableViewDataSource<ShoppingItem, ShoppinglistTVCell>(identifier: ShoppinglistTVCell.identifier, emptyValue: self.empty) { [unowned self] row, element, cell in
-//            
-//            cell.configure(item: element)
-//            
-//            cell.checkMarkBtn.rx.tap
-//                .catch { err in
-//                    print(err)
-//                    return .empty()
-//                }
-//                .subscribe(onNext: {
-//                    
-//                    element.isBought = !element.isBought
-//                    self.items[row].isBought = !self.items[row].isBought
-//                    cell.updateCheckMark(isBought: self.items[row].isBought)
-//                    
-//                }, onError: { err in
-//                    print(err)
-//                })
-//                .disposed(by: self.disposeBag)
-//        }
-//    }()
+    //    lazy var dataSource: RxRefrigeratorTableViewDataSource<ShoppingItem, ShoppinglistTVCell> = {
+    //
+    //        return RxRefrigeratorTableViewDataSource<ShoppingItem, ShoppinglistTVCell>(identifier: ShoppinglistTVCell.identifier, emptyValue: self.empty) { [unowned self] row, element, cell in
+    //
+    //            cell.configure(item: element)
+    //
+    //            cell.checkMarkBtn.rx.tap
+    //                .catch { err in
+    //                    print(err)
+    //                    return .empty()
+    //                }
+    //                .subscribe(onNext: {
+    //
+    //                    element.isBought = !element.isBought
+    //                    self.items[row].isBought = !self.items[row].isBought
+    //                    cell.updateCheckMark(isBought: self.items[row].isBought)
+    //
+    //                }, onError: { err in
+    //                    print(err)
+    //                })
+    //                .disposed(by: self.disposeBag)
+    //        }
+    //    }()
     
     init(sceneCoodinator: SceneCoordinator, apiType: RefrigeratorProtocol.Type = RefrigeratorDM.self, user: FirebaseAuth.User) {
         self.sceneCoodinator = sceneCoodinator
@@ -106,16 +106,16 @@ class ShoppinglistVM: ViewModelBase {
         
         _ = self.apiType.getShoppinglist(userID: self.user.uid)
             .subscribe(onSuccess: {[unowned self] items, docs in
-
-//                self.originalItems = originalItems.sorted { $0.order < $1.order }
-//
-//                self.items = items.sorted { $0.order < $1.order }
+                
+                //                self.originalItems = originalItems.sorted { $0.order < $1.order }
+                //
+                //                self.items = items.sorted { $0.order < $1.order }
                 
                 self.items = items
                 self.docs = docs
-            
+                
                 self.observableItems.accept(self.items)
-
+                
                 relay.accept(true)
                 
             }, onFailure: { [unowned self] err in
@@ -127,34 +127,34 @@ class ShoppinglistVM: ViewModelBase {
                 relay.accept(true)
             })
         
-                        
+        
         
         return relay
     }
-
-//    func editShoppinglist() {
-//
-//        boughtItems().subscribe(onNext: { [unowned self] isFinished in
-//            self.moveItems()
-//        })
-//        .disposed(by: disposeBag)
-//    }
-//
-//    private func moveItems() {
-//
-//        _ = self.apiType.moveIngredient(userID: self.user.uid, items: self.items, listName: .shoppinglist)
-//            .subscribe(onNext: { isChanged in
-//                if isChanged {
-//                    print("Success to move!")
-//                }
-//            }, onError: { err in
-//
-//                print("Error updating document: \(err)")
-//                err.handleFireStoreError()?.generateErrAlert()
-//
-//            })
-//            .disposed(by: disposeBag)
-//    }
+    
+    //    func editShoppinglist() {
+    //
+    //        boughtItems().subscribe(onNext: { [unowned self] isFinished in
+    //            self.moveItems()
+    //        })
+    //        .disposed(by: disposeBag)
+    //    }
+    //
+    //    private func moveItems() {
+    //
+    //        _ = self.apiType.moveIngredient(userID: self.user.uid, items: self.items, listName: .shoppinglist)
+    //            .subscribe(onNext: { isChanged in
+    //                if isChanged {
+    //                    print("Success to move!")
+    //                }
+    //            }, onError: { err in
+    //
+    //                print("Error updating document: \(err)")
+    //                err.handleFireStoreError()?.generateErrAlert()
+    //
+    //            })
+    //            .disposed(by: disposeBag)
+    //    }
     
     fileprivate func moveItems() {
         
@@ -184,15 +184,15 @@ class ShoppinglistVM: ViewModelBase {
                     self.moveItems()
                 }
                 else {
-                   
+                    
                     self.apiType.isBoughtShoppinglistItems(processedItems: items, userID: self.user.uid)
                         .subscribe(onNext: { isLast, item in
-                           
+                            
                             if item.isBought {
-                               
+                                
                                 self.apiType.getRefrigeratorDocsCount(userID: self.user.uid)
                                     .subscribe(onNext: { count in
-                                       
+                                        
                                         self.apiType.addIngredient(id: item.id, name: item.name, amount: item.amount, userID: self.user.uid, lastIndex: count, listName: .refrigerator)
                                             .debug()
                                             .subscribe(onCompleted: {
@@ -210,7 +210,7 @@ class ShoppinglistVM: ViewModelBase {
                                         print(err)
                                     })
                                     .disposed(by: self.disposeBag)
-                                  
+                                
                             }
                             else {
                                 
@@ -235,42 +235,42 @@ class ShoppinglistVM: ViewModelBase {
                         .disposed(by: self.disposeBag)
                     
                 }
-              
+                
                 
             })
             .disposed(by: self.disposeBag)
-       
-//        let boughtItems = zip(originalItems, items)
-//            .filter { $0.0.isBought != $0.1.isBought }
-//            .map { $0.1 }
-//        
-//        self.apiType.boughtItems(userID: user.uid, items: boughtItems).subscribe(onNext: { isFinished in
-//            
-//            if isFinished {
-//                print("all document updated.")
-//                relay.accept(true)
-//            }
-//            
-//        }, onError: { err in
-//            
-//            guard let reason = err.handleAuthenticationError() else { return }
-//
-//            print(reason)
-//            
-//            relay.accept(false)
-//        })
-//        .disposed(by: disposeBag)
-
+        
+        //        let boughtItems = zip(originalItems, items)
+        //            .filter { $0.0.isBought != $0.1.isBought }
+        //            .map { $0.1 }
+        //
+        //        self.apiType.boughtItems(userID: user.uid, items: boughtItems).subscribe(onNext: { isFinished in
+        //
+        //            if isFinished {
+        //                print("all document updated.")
+        //                relay.accept(true)
+        //            }
+        //
+        //        }, onError: { err in
+        //
+        //            guard let reason = err.handleAuthenticationError() else { return }
+        //
+        //            print(reason)
+        //
+        //            relay.accept(false)
+        //        })
+        //        .disposed(by: disposeBag)
+        
     }
     
     func updateBoughtStatus(index: Int) -> Observable<Bool> {
         
         return Observable.create { [unowned self] observer in
-        
+            
             self.observableItems.value[index].isBought = !self.observableItems.value[index].isBought
-
+            
             observer.onNext(self.observableItems.value[index].isBought)
-        
+            
             return Disposables.create()
         }
     }
@@ -295,7 +295,7 @@ class ShoppinglistVM: ViewModelBase {
             .flatMap { [unowned self] isDeleted -> Observable<Bool> in
                 
                 return self.apiType.moveIngredient(userID: self.user.uid, items: removedItems, listName: .shoppinglist)
-              
+                
             }
             .subscribe(onNext: { [unowned self] isLast in
                 
@@ -311,7 +311,7 @@ class ShoppinglistVM: ViewModelBase {
                     }
                     
                     self.items.remove(at: searchedIndex)
-
+                    
                 }
                 
                 
@@ -323,9 +323,9 @@ class ShoppinglistVM: ViewModelBase {
                 err.handleFireStoreError()?.generateErrAlert()
                 self.observableItems.accept(self.items)
                 relay.accept(false)
-            
+                
             })
-         
+        
         
         return relay
         
@@ -337,53 +337,41 @@ class ShoppinglistVM: ViewModelBase {
         if !deletingTemp.isEmpty {
             
             _ = self.apiType.deleteIngredients(items: deletingTemp, userID: user.uid, listName: .shoppinglist)
-                .flatMap { [unowned self] isLast, deletingItem  -> Observable<(Bool, DeletingIngredient)> in
+                .flatMap { deletingItem in
+
+                    return self.apiType.filterDifferentOrder(items: self.items, deletingItem: deletingItem.item)
+
+                }
+                .flatMap { [unowned self] processedItems, deletingItem in
+                   
+                    return self.apiType.moveIngredient(userID: user.uid, items: processedItems, deletingItem: deletingItem, listName: .shoppinglist)
                     
-                    
-                    let removedItems = self.items.compactMap { item -> ShoppingItem? in
-                        
-                        if item.id == deletingItem.item.id {
-                            return nil
-                        }
-                        else {
-                            return item
-                        }
-                    }
-                    
-                    return self.apiType.moveIngredient(userID: self.user.uid, items: removedItems, deletingItem: deletingItem, listName: .shoppinglist)
                 }
                 .subscribe(onNext: { [unowned self] isLast, deletingItem in
-                    
-                    print("Document successfully deleted")
 
+                    print("deleting item is \(deletingItem.name)")
                     
-                    if searchingTemp.isEmpty {
-                        
-                        self.items.remove(at: deletingItem.index)
-                                    
+                    self.items = self.items.filter { $0.id != deletingItem.id } 
+                                        
+                    if let isLast = isLast {
+                       
+                        if isLast {
+                            self.observableItems.accept(self.items)
+                        }
                     }
                     else {
-                        guard let searchedIndex = self.items.firstIndex(of: self.searchingTemp[deletingItem.index]) else {
-                            return
-                        }
-                        
-                        self.items.remove(at: searchedIndex)
-
-                    }
-                    
-                    
-                    if isLast {
                         self.observableItems.accept(self.items)
                     }
                     
-                    
+                
                 }, onError: { err in
-                    
-                    
+
                     print("Error updating document: \(err)")
                     
                     err.handleFireStoreError()?.generateErrAlert()
                     self.observableItems.accept(self.items)
+                }, onCompleted: { 
+                    print("completed")
                 })
             
             
@@ -393,7 +381,7 @@ class ShoppinglistVM: ViewModelBase {
         
     }
     
-
+    
     
     func cancel() -> Observable<Bool> {
         
