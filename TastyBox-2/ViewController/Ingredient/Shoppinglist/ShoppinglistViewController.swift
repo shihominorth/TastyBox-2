@@ -44,7 +44,7 @@ class ShoppinglistViewController: UIViewController, BindableType {
         searchBar.rx.setDelegate(self).disposed(by: viewModel.disposeBag)
         tableView.rx.setDelegate(self).disposed(by: viewModel.disposeBag)
         
-        viewModel.searchingItem()
+//        viewModel.searchingItem()
         
         
     }
@@ -77,55 +77,22 @@ class ShoppinglistViewController: UIViewController, BindableType {
         viewModel.isSelectedCells
             .bind(to: self.deletebutton.rx.isEnabled).disposed(by: viewModel.disposeBag)
         
-        
-        searchBar.rx.text.orEmpty.bind(to: viewModel.searchingText).disposed(by: viewModel.disposeBag)
+//        searchBar.rx.text.orEmpty.bind(to: viewModel.searchingText).disposed(by: viewModel.disposeBag)
        
-        viewModel.observableItems
-            .observe(on: MainScheduler.instance)
-            .bind(to: tableView.rx.items(dataSource: viewModel.dataSource))
-            .disposed(by: viewModel.disposeBag)
-//
+        
+        let query = searchBar.rx.text.orEmpty.distinctUntilChanged()
+        
+        
+        Observable.combineLatest(viewModel.observableItems, query) { [unowned self] (allItems, query) -> [ShoppingItem] in
+            return self.viewModel.filterSearchedItems(with: allItems, query: query)
+            
+        }
+        .bind(to: tableView.rx.items(dataSource: viewModel.dataSource))
+        .disposed(by: viewModel.disposeBag)
+        
 //        viewModel.observableItems
 //            .observe(on: MainScheduler.instance)
-//            .bind(to: tableView.rx.items(cellIdentifier: "ShoppinglistTVCell", cellType: ShoppinglistTVCell.self)) { [unowned self] row, element, cell in
-//
-//                cell.configure(item: element)
-                
-//                cell.checkMarkBtn.rx.tap
-//                    .catch { err in
-//                        print(err)
-//                        return .empty()
-//                    }
-//                    .flatMap { viewModel.updateBoughtStatus(index: row) }
-//                    .subscribe(onNext: { isBought in
-//                        print(self.viewModel.items[0].name)
-//                        print(self.viewModel.items[0].isBought)
-//
-//                        print("-------------")
-//
-//                        print(self.viewModel.originalItems[0].name)
-//                        print(self.viewModel.originalItems[0].isBought)
-                        
-//                        element.isBought = !element.isBought
-//                        viewModel.observableItems.value[row].isBought = !viewModel.observableItems.value[row].isBought
-//                        cell.updateCheckMark(isBought: isBought)
-
-//                        print(self.viewModel.items[0].name)
-//                        print(self.viewModel.items[0].isBought)
-//
-//                        print("-------------")
-//
-//                        print(self.viewModel.originalItems[0].name)
-//                        print(self.viewModel.originalItems[0].isBought)
-//                        self.viewModel.items[row].isBought = !self.viewModel.items[row].isBought
-//                        cell.updateCheckMark(isBought: self.viewModel.items[row].isBought)
-        
-                        
-//                    }, onError: { err in
-//                        print(err)
-//                    })
-//                    .disposed(by: self.viewModel.disposeBag)
-//            }
+//            .bind(to: tableView.rx.items(dataSource: viewModel.dataSource))
 //            .disposed(by: viewModel.disposeBag)
     }
     
@@ -195,13 +162,14 @@ class ShoppinglistViewController: UIViewController, BindableType {
                 
                 return .empty()
             }
-            .subscribe(onNext: { [unowned self]  event in
+            .subscribe(onNext: { [unowned self] event in
                 
-                let movingItem = viewModel.items[event.sourceIndex.row]
+//                let movingItem = viewModel.items[event.sourceIndex.row]
+//
+//                self.viewModel.items.remove(at: event.sourceIndex.row)
+//                self.viewModel.items.insert(movingItem, at: event.destinationIndex.row)
                 
-                self.viewModel.items.remove(at: event.sourceIndex.row)
-                self.viewModel.items.insert(movingItem, at: event.destinationIndex.row)
-                
+                viewModel.moveItems(sourceIndex: event.sourceIndex.row, destinationIndex: event.destinationIndex.row)
             })
             .disposed(by: viewModel.disposeBag)
         
@@ -249,7 +217,7 @@ class ShoppinglistViewController: UIViewController, BindableType {
             })
             .disposed(by: viewModel.disposeBag)
         
-    
+        tableView.indexPathsForSelectedRows?.forEach { tableView.deselectRow(at: $0, animated: true)}
     }
     
     
@@ -354,6 +322,7 @@ class ShoppinglistViewController: UIViewController, BindableType {
                 self.tableView.setEditing(false, animated: true)
                 
                 self.viewModel.isTableViewEditable.accept(false)
+//                self.viewModel.observableItems.accept(self.viewModel.items)
                 
             })
             .disposed(by: viewModel.disposeBag)
@@ -429,10 +398,6 @@ class ShoppinglistViewController: UIViewController, BindableType {
        
         searchBar.rx.text.orEmpty
             .subscribe(onNext: { [unowned self] text in
-                
-                if text.isNotEmpty {
-                    self.viewModel.searchingText.accept(text)
-                }
                 
                 self.tableView.beginUpdates()
                 self.setHasEmptyCell()
@@ -546,6 +511,11 @@ extension ShoppinglistViewController: UISearchBarDelegate {
     
     func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
         searchBar.endEditing(true)
+    }
+    
+    func searchBarTextDidBeginEditing(_ searchBar: UISearchBar) {
+        
+//        viewModel.items.forEach { print($0.name) }
     }
     
 }

@@ -158,7 +158,7 @@ class RefrigeratorViewController: UIViewController, BindableType {
                 self.viewModel.items.remove(at: event.sourceIndex.row)
                 self.viewModel.items.insert(movingItem, at: event.destinationIndex.row)
                 
-                
+            
             })
             .disposed(by: viewModel.disposeBag)
         

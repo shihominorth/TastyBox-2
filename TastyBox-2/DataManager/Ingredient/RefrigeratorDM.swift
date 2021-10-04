@@ -158,39 +158,6 @@ class RefrigeratorDM: RefrigeratorProtocol {
                 }
             }
             
-            //            items.enumerated().forEach { index, item in
-            //
-            //                if item.order != index {
-            //
-            //                    db.document(userID).collection(listName.rawValue).document(item.id).setData([
-            //
-            //                        "order": index,
-            //                        "ordered": true
-            //
-            //                    ], merge: true) { err in
-            //
-            //                        if let err = err {
-            //
-            //                            observer.onError(err)
-            //
-            //                        } else {
-            //
-            //                            if index == items.count - 1 {
-            //
-            //                                observer.onNext(true)
-            //
-            //                            }
-            //                            else {
-            //
-            //                                observer.onNext(false)
-            //
-            //                            }
-            //                        }
-            //
-            //                    }
-            //                }
-            //            }
-            
             return Disposables.create()
         }
         
@@ -441,27 +408,6 @@ class RefrigeratorDM: RefrigeratorProtocol {
         }
         
     }
-    
-    //    static func deleteIngredient(item: Ingredient, userID: String, listName: List) -> Completable {
-    //
-    //        return Completable.create { completable in
-    //
-    //
-    //            db.document(userID).collection(listName.rawValue).document(item.id).delete() { err in
-    //
-    //                if let err = err {
-    //
-    //                    completable(.error(err))
-    //
-    //                } else {
-    //
-    //                    completable(.completed)
-    //
-    //                }
-    //            }
-    //            return Disposables.create()
-    //        }
-    //    }
     
     static func deleteIngredient(item: Ingredient, userID: String, listName: List) -> PublishSubject<Ingredient> {
         
