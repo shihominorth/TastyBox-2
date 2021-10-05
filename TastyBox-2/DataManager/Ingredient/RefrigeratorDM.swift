@@ -644,7 +644,7 @@ class RefrigeratorDM: RefrigeratorProtocol {
         
         let subject = PublishSubject<Int>()
         
-        db.document(userID).collection("refrigerator").getDocuments { querySnapShot, err in
+        db.document(userID).collection("refrigerator").addSnapshotListener { querySnapShot, err in
             
             if let err = err {
                 subject.onError(err)

@@ -44,9 +44,6 @@ class ShoppinglistViewController: UIViewController, BindableType {
         searchBar.rx.setDelegate(self).disposed(by: viewModel.disposeBag)
         tableView.rx.setDelegate(self).disposed(by: viewModel.disposeBag)
         
-//        viewModel.searchingItem()
-        
-        
     }
     
     
@@ -76,11 +73,9 @@ class ShoppinglistViewController: UIViewController, BindableType {
             .bind(to: self.addBtn.rx.isHidden).disposed(by: viewModel.disposeBag)
         viewModel.isSelectedCells
             .bind(to: self.deletebutton.rx.isEnabled).disposed(by: viewModel.disposeBag)
-        
-//        searchBar.rx.text.orEmpty.bind(to: viewModel.searchingText).disposed(by: viewModel.disposeBag)
-       
-        
-        let query = searchBar.rx.text.orEmpty.distinctUntilChanged()
+               
+        let query = searchBar.rx.text.orEmpty
+            .distinctUntilChanged()           
         
         
         Observable.combineLatest(viewModel.observableItems, query) { [unowned self] (allItems, query) -> [ShoppingItem] in
@@ -90,10 +85,6 @@ class ShoppinglistViewController: UIViewController, BindableType {
         .bind(to: tableView.rx.items(dataSource: viewModel.dataSource))
         .disposed(by: viewModel.disposeBag)
         
-//        viewModel.observableItems
-//            .observe(on: MainScheduler.instance)
-//            .bind(to: tableView.rx.items(dataSource: viewModel.dataSource))
-//            .disposed(by: viewModel.disposeBag)
     }
     
     func setUpTableView() {
@@ -163,11 +154,6 @@ class ShoppinglistViewController: UIViewController, BindableType {
                 return .empty()
             }
             .subscribe(onNext: { [unowned self] event in
-                
-//                let movingItem = viewModel.items[event.sourceIndex.row]
-//
-//                self.viewModel.items.remove(at: event.sourceIndex.row)
-//                self.viewModel.items.insert(movingItem, at: event.destinationIndex.row)
                 
                 viewModel.moveItems(sourceIndex: event.sourceIndex.row, destinationIndex: event.destinationIndex.row)
             })
@@ -322,7 +308,6 @@ class ShoppinglistViewController: UIViewController, BindableType {
                 self.tableView.setEditing(false, animated: true)
                 
                 self.viewModel.isTableViewEditable.accept(false)
-//                self.viewModel.observableItems.accept(self.viewModel.items)
                 
             })
             .disposed(by: viewModel.disposeBag)
@@ -418,10 +403,8 @@ extension ShoppinglistViewController: UITableViewDelegate {
         
         if section == 0 {
             if let view = tableView.dequeueReusableHeaderFooterView(withIdentifier: "shoppingHeader") as? ShoppinglistHeaderView {
+               
                 view.setUpBtn()
-//            let img = UIImage(systemName: "line.3.horizontal.circle")
-//            view.btn.setBackgroundImage(img, for: .normal)
-//            view.btn.tintColor = #colorLiteral(red: 0.6679978967, green: 0.4751212597, blue: 0.2586010993, alpha: 1)
                 view.btn.rx.tap.subscribe(onNext: {
                     print("taped")
                 })
@@ -512,12 +495,7 @@ extension ShoppinglistViewController: UISearchBarDelegate {
     func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
         searchBar.endEditing(true)
     }
-    
-    func searchBarTextDidBeginEditing(_ searchBar: UISearchBar) {
-        
-//        viewModel.items.forEach { print($0.name) }
-    }
-    
+
 }
 
 
