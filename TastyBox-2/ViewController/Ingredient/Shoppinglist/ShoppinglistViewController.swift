@@ -7,6 +7,7 @@
 
 import UIKit
 import RxSwift
+import RxCocoa
 
 class ShoppinglistViewController: UIViewController, BindableType {
 
@@ -113,10 +114,11 @@ class ShoppinglistViewController: UIViewController, BindableType {
                     self.viewModel.isSelectedCells.accept(true)
                     
                 } else {
-                    
+        
                     self.viewModel.toEditItem(index: indexPath.row)
                     self.tableView.deselectRow(at: indexPath, animated: true)
-                
+                    
+                   
                 }
             })
             .disposed(by: viewModel.disposeBag)
@@ -256,6 +258,17 @@ class ShoppinglistViewController: UIViewController, BindableType {
                         
                         sortedPaths.forEach { indexPath in
                         
+                            var deletingItem: ShoppingItem {
+                             
+                                if !viewModel.showsBoughtItemsSubject.value {
+                                    
+                                    let allItems = viewModel.items.filter { !$0.isBought }
+                                    return allItems[indexPath.row]
+                                }
+                                
+                                return self.viewModel.items[indexPath.row]
+                            }
+                            
                             
                             let ingredient = DeletingIngredient(index: indexPath.row, item: self.viewModel.items[indexPath.row])
                             self.viewModel.deletingTemp.append(ingredient)
@@ -265,11 +278,22 @@ class ShoppinglistViewController: UIViewController, BindableType {
                         
                         sortedPaths.forEach { indexPath in
                             
-                            guard let index = self.viewModel.items.firstIndex(of: self.viewModel.searchingTemp[indexPath.row]) else {
+                            var deletingItem: ShoppingItem {
+                             
+                                if !viewModel.showsBoughtItemsSubject.value {
+                                    
+                                    let allItems = viewModel.searchingTemp.filter { !$0.isBought }
+                                    return allItems[indexPath.row]
+                                }
+                                
+                                return self.viewModel.searchingTemp[indexPath.row]
+                            }
+                            
+                            guard let index = self.viewModel.items.firstIndex(where: { $0.id == deletingItem.id }) else {
                                 return
                             }
                             
-                            let ingredient = DeletingIngredient(index: Int(index), item: self.viewModel.searchingTemp[indexPath.row])
+                            let ingredient = DeletingIngredient(index: Int(index), item: deletingItem)
                             self.viewModel.deletingTemp.append(ingredient)
                         }
                     }
@@ -413,7 +437,7 @@ extension ShoppinglistViewController: UITableViewDelegate {
                         print(isShown)
                 })
                     .disposed(by: viewModel.disposeBag)
-                
+//
                 
                 return view
             }

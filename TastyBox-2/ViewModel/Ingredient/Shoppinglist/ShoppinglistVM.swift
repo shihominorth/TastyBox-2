@@ -47,8 +47,10 @@ class ShoppinglistVM: ViewModelBase {
         return RxRefrigeratorTableViewDataSource<ShoppingItem, ShoppinglistTVCell>(identifier: ShoppinglistTVCell.identifier, emptyValue: self.empty) { [unowned self] row, element, cell in
             
             cell.configure(item: element)
-            
+        
             cell.checkMarkBtn.rx.tap
+                .throttle(.milliseconds(1500), latest: false, scheduler: MainScheduler.instance)
+                .debug("tap")
                 .catch { err in
                     
                     print(err)
@@ -88,15 +90,25 @@ class ShoppinglistVM: ViewModelBase {
     }
     
     func toEditItem(index: Int)  {
-        
-        var vm : EditShoppinglistVM!
-        
-        if searchingTemp.isEmpty {
-            vm = EditShoppinglistVM(sceneCoodinator: self.sceneCoodinator, user: self.user, item: self.items[index], lastIndex: index)
+
+        var editItem: ShoppingItem {
+            
+            if !showsBoughtItemsSubject.value {
+                
+                let filteredAllitems = items.filter { !$0.isBought }
+                let filteredSearchingTemp = searchingTemp.filter { !$0.isBought }
+                
+                return searchingTemp.isEmpty ? filteredAllitems[index] : filteredSearchingTemp[index]
+                
+            }
+           
+            return searchingTemp.isEmpty ? items[index] : searchingTemp[index]
+            
         }
-        else {
-            vm = EditShoppinglistVM(sceneCoodinator: self.sceneCoodinator, user: self.user, item: self.searchingTemp[index], lastIndex: index)
-        }
+        
+        
+        let vm = EditShoppinglistVM(sceneCoodinator: self.sceneCoodinator, user: self.user, item: editItem, lastIndex: index)
+        
         
         let vc = IngredientScene.editShoppinglist(vm).viewController()
         
@@ -299,9 +311,56 @@ class ShoppinglistVM: ViewModelBase {
         
         return Observable.create { [unowned self] observer in
             
-            self.observableItems.value[index].isBought = !self.observableItems.value[index].isBought
+//            self.observableItems.value[index].isBought = !self.observableItems.value[index].isBought
+            if showsBoughtItemsSubject.value {
+                    
+                
+                let item = searchingTemp.isEmpty ? items[index] : searchingTemp[index]
+                
+                    
+                if  let indexAllItems = self.items.firstIndex(where: { $0.id == item.id }) {
+                        
+                    self.items[indexAllItems].isBought = !self.items[indexAllItems].isBought
+                    observer.onNext(self.items[indexAllItems].isBought)
+
+                }
+              
+            }
+            else {
+               
+                if searchingTemp.isEmpty {
+                    
+                    let filteredAllitems = items.filter { !$0.isBought }
+                    
+                    let item = filteredAllitems[index]
+                    
+                    if let indexAllItems = self.items.firstIndex(where: { $0.id == item.id }) {
+                       
+                        self.items[indexAllItems].isBought = !self.items[indexAllItems].isBought
+                        observer.onNext(self.items[indexAllItems].isBought)
+
+                    }
+                    
+                }
+                else {
+                    
+                    let filteredSearchingTemp = searchingTemp.filter { !$0.isBought }
+                    let item = filteredSearchingTemp[index]
+                    
+                    if let indexAllItems = self.items.firstIndex(where: { $0.id == item.id }) {
+                       
+                        self.items[indexAllItems].isBought = !self.items[indexAllItems].isBought
+                        
+                        observer.onNext(self.items[indexAllItems].isBought)
+                    }
+                 
+                }
+            }
+           
+          
             
-            observer.onNext(self.observableItems.value[index].isBought)
+            
+//            observer.onNext(self.observableItems.value[index].isBought)
             
             return Disposables.create()
         }
@@ -311,7 +370,22 @@ class ShoppinglistVM: ViewModelBase {
     func deleteItem(index: Int) -> PublishRelay<Bool> {
         
         let relay = PublishRelay<Bool>()
-        let deleteItem = searchingTemp.isEmpty ? items[index] : searchingTemp[index]
+//        let deleteItem = searchingTemp.isEmpty ? items[index] : searchingTemp[index]
+        
+        var deleteItem: ShoppingItem {
+            
+            if showsBoughtItemsSubject.value {
+                
+                let filteredAllitems = items.filter { !$0.isBought }
+                let filteredSearchingTemp = items.filter { !$0.isBought }
+                
+                return searchingTemp.isEmpty ? filteredAllitems[index] : filteredSearchingTemp[index]
+                
+            }
+           
+            return searchingTemp.isEmpty ? items[index] : searchingTemp[index]
+            
+        }
         
         _ = self.apiType.deleteIngredient(item: deleteItem, userID: user.uid, listName: .shoppinglist)
             .flatMap { deletingItem in
