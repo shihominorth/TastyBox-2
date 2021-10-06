@@ -471,7 +471,7 @@ extension ShoppinglistViewController: UITableViewDelegate {
         }
         return 0.0
     }
-
+    
     
     func tableView(_ tableView: UITableView, willBeginEditingRowAt indexPath: IndexPath) {
         self.viewModel.isTableViewEditable.accept(true)

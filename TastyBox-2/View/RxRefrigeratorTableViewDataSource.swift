@@ -88,6 +88,4 @@ class RxRefrigeratorTableViewDataSource<E: Differentiable, Cell: UITableViewCell
         return true
     }
     
-    
-
 }

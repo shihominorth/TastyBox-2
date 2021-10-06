@@ -135,11 +135,29 @@ class ShoppinglistVM: ViewModelBase {
     
     func moveItems(sourceIndex: Int, destinationIndex: Int) {
     
-        let movingItem = self.items[sourceIndex]
+        if searchingTemp.isEmpty {
+            
+             let movingItem = self.items[sourceIndex]
 
-        self.items.remove(at: sourceIndex)
-        self.items.insert(movingItem, at: destinationIndex)
+             self.items.remove(at: sourceIndex)
+             self.items.insert(movingItem, at: destinationIndex)
 
+        }
+        else {
+            
+            let movingSourceIndexItem = self.searchingTemp[sourceIndex]
+            guard let movingSourceIndex = self.items.firstIndex(where:{ movingSourceIndexItem.id == $0.id } ) else {
+                return
+            }
+            
+            let movingDestinationIndexItem = self.searchingTemp[destinationIndex]
+            guard let movingDestinationIndex = self.items.firstIndex(where:{ movingDestinationIndexItem.id == $0.id } ) else {
+                return
+            }
+            
+            self.items.swapAt(movingSourceIndex, movingDestinationIndex)
+        }
+       
     }
     
     fileprivate func moveItemsAfterDeleteItem() {
@@ -407,7 +425,8 @@ class ShoppinglistVM: ViewModelBase {
         
         guard query.isNotEmpty else {
             self.searchingTemp.removeAll()
-            return allItems }
+            return allItems
+        }
         
         let lowerCasedTxt = query.lowercased()
         self.searchingTemp = items.filter { $0.name.lowercased().contains(lowerCasedTxt) }
