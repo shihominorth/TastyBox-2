@@ -34,6 +34,11 @@ class ShoppinglistVM: ViewModelBase {
     var isTableViewEditable = BehaviorRelay<Bool>(value: false)
     var isSelectedCells = BehaviorRelay<Bool>(value: false)
     
+    let noDifferentBoughtStatusItemsSubject = PublishSubject<Bool>()
+    
+    let isBoughtItemssubject = PublishSubject<Bool>()
+    let isNotBoughtItemsSubject = PublishSubject<Bool>()
+    
     lazy var dataSource: RxRefrigeratorTableViewDataSource<ShoppingItem, ShoppinglistTVCell> = {
         
         return RxRefrigeratorTableViewDataSource<ShoppingItem, ShoppinglistTVCell>(identifier: ShoppinglistTVCell.identifier, emptyValue: self.empty) { [unowned self] row, element, cell in
@@ -50,7 +55,7 @@ class ShoppinglistVM: ViewModelBase {
                 .flatMap {  updateBoughtStatus(index: row) }
                 .subscribe(onNext: { isBought in
                     
-                    cell.updateCheckMark(isBought: self.items[row].isBought)
+                    cell.updateCheckMark(isBought: isBought)
                     
                 }, onError: { err in
                     print(err)
@@ -129,30 +134,12 @@ class ShoppinglistVM: ViewModelBase {
     
     
     func moveItems(sourceIndex: Int, destinationIndex: Int) {
-        
-        var movedItems = self.items
+    
         let movingItem = self.items[sourceIndex]
-        
-        movedItems.remove(at: sourceIndex)
-        movedItems.insert(movingItem, at: destinationIndex)
-        
-        self.apiType.moveIngredient(userID: user.uid, items: movedItems, listName: .shoppinglist)
-            .subscribe(onNext: { isLast in
-                
-                if isLast {
-                    
-                    let movingItem = self.items[sourceIndex]
-                    
-                    self.items.remove(at: sourceIndex)
-                    self.items.insert(movingItem, at: destinationIndex)
-                }
-                
-            }, onError: { err in
-                
-                err.handleFireStoreError()?.generateErrAlert()
-                
-            })
-            .disposed(by: disposeBag)
+
+        self.items.remove(at: sourceIndex)
+        self.items.insert(movingItem, at: destinationIndex)
+
     }
     
     fileprivate func moveItemsAfterDeleteItem() {
@@ -174,29 +161,21 @@ class ShoppinglistVM: ViewModelBase {
     }
     
     func editShoppinglist() {
-        
-        let isBoughtItemssubject = PublishSubject<Bool>()
-        let isNotBoughtItemsSubject = PublishSubject<Bool>()
 
         let filteredDifferentBoughtStatusItems =
             self.apiType.filterDifferencntBoughtStatus(docs: self.docs, processedItems: self.items)
-            .flatMap { self.isEmptyShoppingItems(items: $0) }
-            .do(onNext: { items in
-                
-                if items.isEmpty {
-                    isBoughtItemssubject.onNext(items.isEmpty)
-                    isNotBoughtItemsSubject.onNext(items.isEmpty)
-                }
-                
-            })
-        
+            .flatMap {
+                self.isEmptyShoppingItems(items: $0)
+            }
+
         let isBoughtItemsStream = filteredDifferentBoughtStatusItems
             .flatMap { [unowned self] in self.filterIsBought(isBought: true, items: $0) }
-            .do(onNext: { items in
+            .do(onNext: { [unowned self] items in
                 
                 if items.isEmpty {
-                    isBoughtItemssubject.onNext(items.isEmpty)
+                    self.isBoughtItemssubject.onNext(items.isEmpty)
                 }
+                
             })
             .flatMap { [unowned self] in self.apiType.isBoughtShoppinglistItems(processedItems: $0, userID: self.user.uid)}
             .flatMap { [unowned self] isLast, item -> Observable<(Int, ShoppingItem, Bool)> in
@@ -218,14 +197,15 @@ class ShoppinglistVM: ViewModelBase {
                 return self.addRefrigeratorItem(item: item, isLast: isLast, count: count)
 
             }
+           
 
         
         let isNotBoughtItemsStream = filteredDifferentBoughtStatusItems
             .flatMap { [unowned self] in self.filterIsBought(isBought: false, items: $0)}
-            .do(onNext: { items in
+            .do(onNext: { [unowned self] items in
                 
                 if items.isEmpty {
-                    isNotBoughtItemsSubject.onNext(items.isEmpty)
+                    self.isNotBoughtItemsSubject.onNext(items.isEmpty)
                 }
                 
             })
@@ -235,99 +215,49 @@ class ShoppinglistVM: ViewModelBase {
                 return self.deleteRefrigeratorItem(item: item, isLast: isLast)
 
             }
+
         
-        
+        noDifferentBoughtStatusItemsSubject.subscribe(onNext: { [unowned self] isEmpty in
+            
+            if isEmpty {
+                self.moveItemsAfterDeleteItem()
+            }
+            
+        }, onError: { err in
+            
+            print(err)
+            
+        })
+        .disposed(by: disposeBag)
     
         Observable.combineLatest(isBoughtItemsStream, isNotBoughtItemsStream)
-            .subscribe(onNext: { isLastBoughtItems, isLastNotBoughtItems in
-                
-                isBoughtItemssubject.onNext(isLastBoughtItems)
-                isNotBoughtItemsSubject.onNext(isLastNotBoughtItems)
-                
+            .debug()
+            .subscribe(onNext: { [unowned self] isLastBoughtItems, isLastNotBoughtItems in
+
+                self.isBoughtItemssubject.onNext(isLastBoughtItems)
+                self.isNotBoughtItemsSubject.onNext(isLastNotBoughtItems)
+
             }, onError: { err in
-                
+
                 print(err)
-                
+
             })
             .disposed(by: disposeBag)
         
+        
         Observable.combineLatest(isBoughtItemssubject, isNotBoughtItemsSubject)
-            .subscribe(onNext: { [unowned self] isLastBoughtItems, isLastNotBoughtItems in
+            .debug("subject")
+            .asDriver(onErrorJustReturn: (true, true))
+            .drive { [unowned self] isLastBoughtItems, isLastNotBoughtItems in
                
                 if isLastBoughtItems && isLastNotBoughtItems {
                     self.moveItemsAfterDeleteItem()
                 }
-                
-            }, onError: { err in
-            
-                print(err)
-            
-            })
+            }
             .disposed(by: disposeBag)
+           
+          
         
-//        self.apiType
-//            .filterDifferencntBoughtStatus(docs: self.docs, processedItems: self.items)
-//            .subscribe(onNext: { items in
-//
-//                if items.isEmpty {
-//                    self.moveItemsAfterDeleteItem()
-//                }
-//                else {
-//
-//                    self.apiType.isBoughtShoppinglistItems(processedItems: items, userID: self.user.uid)
-//                        .subscribe(onNext: { isLast, item in
-//
-//                            if item.isBought {
-//
-//                                self.apiType.getRefrigeratorDocsCount(userID: self.user.uid)
-//                                    .subscribe(onNext: { count in
-//
-//                                        self.apiType.addIngredient(id: item.id, name: item.name, amount: item.amount, userID: self.user.uid, lastIndex: count, listName: .refrigerator)
-//                                            .debug()
-//                                            .subscribe(onCompleted: {
-//
-//                                                if isLast {
-//                                                    self.moveItemsAfterDeleteItem()
-//                                                }
-//
-//                                            }, onError: { err in
-//                                                print(err)
-//                                            })
-//                                            .disposed(by: self.disposeBag)
-//
-//                                    }, onError: { err in
-//                                        print(err)
-//                                    })
-//                                    .disposed(by: self.disposeBag)
-//
-//                            }
-//                            else {
-//
-//                                self.apiType.deleteIngredient(item: item, userID: self.user.uid, listName: .refrigerator)
-//                                    .debug()
-//                                    .subscribe(onError: { err in
-//                                        print(err)
-//                                    }, onCompleted: {
-//
-//                                        if isLast {
-//
-//                                            self.moveItemsAfterDeleteItem()
-//
-//                                        }
-//
-//                                    })
-//                                    .disposed(by: self.disposeBag)
-//                            }
-//                        }, onError: { err in
-//                            print(err)
-//                        })
-//                        .disposed(by: self.disposeBag)
-//
-//                }
-//
-//
-//            })
-//            .disposed(by: self.disposeBag)
         
     }
     
@@ -500,9 +430,19 @@ class ShoppinglistVM: ViewModelBase {
     
     func isEmptyShoppingItems(items: [ShoppingItem]) -> Observable<[ShoppingItem]> {
         
-        return Observable.create { observer in
+        return Observable.create { [unowned self] observer in
             
-            if !items.isEmpty {
+            if items.isEmpty {
+                
+                self.noDifferentBoughtStatusItemsSubject.onNext(true)
+                self.isBoughtItemssubject.onCompleted()
+                self.isNotBoughtItemsSubject.onCompleted()
+                
+            }
+            else {
+                
+                self.noDifferentBoughtStatusItemsSubject.onCompleted()
+                
                 observer.onNext(items)
             }
             
