@@ -78,8 +78,8 @@ class ShoppinglistViewController: UIViewController, BindableType {
             .distinctUntilChanged()           
         
         
-        Observable.combineLatest(viewModel.observableItems, query) { [unowned self] (allItems, query) -> [ShoppingItem] in
-            return self.viewModel.filterSearchedItems(with: allItems, query: query)
+        Observable.combineLatest(viewModel.observableItems, viewModel.showsBoughtItemsSubject, query) { [unowned self] (allItems, isShownBoughtItems, query) -> [ShoppingItem] in
+            return self.viewModel.filterSearchedItems(with: allItems, isShownBoughtItems: isShownBoughtItems, query: query)
             
         }
         .bind(to: tableView.rx.items(dataSource: viewModel.dataSource))
@@ -405,9 +405,16 @@ extension ShoppinglistViewController: UITableViewDelegate {
             if let view = tableView.dequeueReusableHeaderFooterView(withIdentifier: "shoppingHeader") as? ShoppinglistHeaderView {
                
                 view.setUpBtn()
-                view.btn.rx.tap.subscribe(onNext: {
-                    print("taped")
+                
+                view.btn.rx.tap
+                    .flatMap { [unowned self] in self.viewModel.showsBoughtItems() }
+                    .subscribe(onNext: { isShown in
+                        print("taped")
+                        print(isShown)
                 })
+                    .disposed(by: viewModel.disposeBag)
+                
+                
                 return view
             }
             

@@ -39,6 +39,9 @@ class ShoppinglistVM: ViewModelBase {
     let isBoughtItemssubject = PublishSubject<Bool>()
     let isNotBoughtItemsSubject = PublishSubject<Bool>()
     
+    let showsBoughtItemsSubject = BehaviorRelay<Bool>(value: false)
+    
+    
     lazy var dataSource: RxRefrigeratorTableViewDataSource<ShoppingItem, ShoppinglistTVCell> = {
         
         return RxRefrigeratorTableViewDataSource<ShoppingItem, ShoppinglistTVCell>(identifier: ShoppinglistTVCell.identifier, emptyValue: self.empty) { [unowned self] row, element, cell in
@@ -130,6 +133,19 @@ class ShoppinglistVM: ViewModelBase {
         
         
         return relay
+    }
+    
+    func showsBoughtItems() -> Observable<Bool> {
+        
+        return Observable.create { [unowned self] observer in
+            
+            let newValue = !self.showsBoughtItemsSubject.value
+            showsBoughtItemsSubject.accept(newValue)
+            
+            observer.onNext(newValue)
+            
+            return Disposables.create()
+        }
     }
     
     
@@ -421,17 +437,35 @@ class ShoppinglistVM: ViewModelBase {
     }
     
     
-    func filterSearchedItems(with allItems: [ShoppingItem], query: String) -> [ShoppingItem] {
+    func filterSearchedItems(with allItems: [ShoppingItem], isShownBoughtItems isShown: Bool, query: String) -> [ShoppingItem] {
         
-        guard query.isNotEmpty else {
-            self.searchingTemp.removeAll()
-            return allItems
+        
+        if isShown {
+            
+            guard query.isNotEmpty else {
+                self.searchingTemp.removeAll()
+                return allItems
+            }
+            
+            let lowerCasedTxt = query.lowercased()
+            self.searchingTemp = items.filter { $0.name.lowercased().contains(lowerCasedTxt) }
+            
+            return self.searchingTemp
         }
-        
-        let lowerCasedTxt = query.lowercased()
-        self.searchingTemp = items.filter { $0.name.lowercased().contains(lowerCasedTxt) }
-        
-        return self.searchingTemp
+        else {
+            guard query.isNotEmpty else {
+                self.searchingTemp.removeAll()
+                return allItems.filter { !$0.isBought }
+            }
+            
+            let lowerCasedTxt = query.lowercased()
+           
+            self.searchingTemp =
+                items.filter { $0.name.lowercased().contains(lowerCasedTxt) }
+                .filter { !$0.isBought }
+            
+            return self.searchingTemp
+        }
         
     }
     
