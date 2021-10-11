@@ -45,11 +45,6 @@ class ShoppinglistViewController: UIViewController, BindableType {
         searchBar.rx.setDelegate(self).disposed(by: viewModel.disposeBag)
         tableView.rx.setDelegate(self).disposed(by: viewModel.disposeBag)
         
-    }
-    
-    
-    override func viewWillAppear(_ animated: Bool) {
-        
         viewModel.getItems()
             .subscribe(onNext: { [unowned self] isGottenItem in
                 
@@ -60,6 +55,22 @@ class ShoppinglistViewController: UIViewController, BindableType {
         
         
         
+        
+    }
+    
+    
+    override func viewWillAppear(_ animated: Bool) {
+        
+//        viewModel.getItems()
+//            .subscribe(onNext: { [unowned self] isGottenItem in
+//
+//                showSearchedResult()
+//
+//            })
+//            .disposed(by: viewModel.disposeBag)
+//
+//
+//
     }
     
     override func viewWillDisappear(_ animated: Bool) {

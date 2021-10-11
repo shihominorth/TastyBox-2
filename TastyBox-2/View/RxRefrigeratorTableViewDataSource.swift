@@ -32,10 +32,21 @@ class RxRefrigeratorTableViewDataSource<E: Differentiable, Cell: UITableViewCell
         let source = values
         let target = observedEvent.element ?? []
         let changeset = StagedChangeset(source: source, target: target)
-        tableView.reload(using: changeset, with: animation) { data in
-            self.values = data
+        
+        if changeset.isEmpty {
+            //MARK: ここでedit, addされた時のtableviewの更新をする。
+            tableView.reloadData()
+            self.values = target
+        }
+        else {
+            
+            tableView.reload(using: changeset, with: animation) { data in
+                self.values = data
+            }
+            
         }
         
+      
         
     }
     
@@ -66,11 +77,11 @@ class RxRefrigeratorTableViewDataSource<E: Differentiable, Cell: UITableViewCell
         case 0:
             configure(row, values[row], cell)
             cell.backgroundColor = .white
-            cell.separatorInset =  UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 0);
+//            cell.separatorInset =  UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 0);
         case 1:
             configure(row, emptyValue, cell)
             cell.backgroundColor = .clear
-            cell.separatorInset = UIEdgeInsets(top: 0, left: CGFloat.greatestFiniteMagnitude, bottom: 0, right: 0);
+//            cell.separatorInset = UIEdgeInsets(top: 0, left: CGFloat.greatestFiniteMagnitude, bottom: 0, right: 0);
 
         default:
             break

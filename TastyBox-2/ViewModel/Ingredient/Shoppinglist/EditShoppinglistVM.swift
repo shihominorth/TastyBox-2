@@ -25,6 +25,7 @@ class EditShoppinglistVM: ViewModelBase {
     
     var isEnableDone = BehaviorRelay(value: false)
     
+    weak var delegate: EditShoppingItemDelegate?
     
     init(sceneCoodinator: SceneCoordinator, apiType: RefrigeratorProtocol.Type = RefrigeratorDM.self, user: FirebaseAuth.User,  item: Ingredient?, lastIndex: Int) {
         self.sceneCoodinator = sceneCoodinator
@@ -48,10 +49,17 @@ class EditShoppinglistVM: ViewModelBase {
                 
                 return .empty()
             }
-            .subscribe(onCompleted: {
+            .subscribe(onNext: { [unowned self] item in
+                
                 print("Document successfully written!")
                 
-                self.sceneCoodinator.pop(animated: true)
+                if let item = item as? ShoppingItem {
+                   
+                    self.delegate?.addItemToArray(item: item)
+                    self.sceneCoodinator.pop(animated: true)
+                
+                }
+             
                 
             }, onDisposed: {
                 print("disposed")
@@ -71,12 +79,16 @@ class EditShoppinglistVM: ViewModelBase {
                 
                 return .empty()
             }
-            .subscribe(onCompleted: {
-               
+            .subscribe(onNext: { item in
+                
                 print("Document successfully written!")
                 
-                self.sceneCoodinator.pop(animated: true)
+                if let item = item as? ShoppingItem {
+                   
+                    self.delegate?.edittedItem(item: item)
+                    self.sceneCoodinator.pop(animated: true)
                 
+                }
             }, onDisposed: {
                 print("disposed")
             })

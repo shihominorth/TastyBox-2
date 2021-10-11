@@ -16,4 +16,5 @@ enum SceneTransitionType {
     case modal      // present view controller modally
     case usePresentNC
     case VCAsRoot
+    case modalHalf
 }

@@ -7,7 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		6C42AB79224F82F291E8649C /* Pods_TastyBox_2.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 31998F575D6DFD85DDEBE41B /* Pods_TastyBox_2.framework */; };
+		4DA4ABE49707D4B98A743EDF /* Pods_TastyBox_2.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 902B6525855DEC93AB33EE40 /* Pods_TastyBox_2.framework */; };
 		6F018B9C26DB6AEC006416D3 /* Scene.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F018B9B26DB6AEC006416D3 /* Scene.swift */; };
 		6F018BA026DB7E5F006416D3 /* SceneCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F018B9F26DB7E5F006416D3 /* SceneCoordinator.swift */; };
 		6F018BA226DB7F18006416D3 /* Scene+ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F018BA126DB7F18006416D3 /* Scene+ViewController.swift */; };
@@ -29,6 +29,13 @@
 		6F512A3026F45BF200826657 /* TutorialCVCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F512A2F26F45BF200826657 /* TutorialCVCell.swift */; };
 		6F512A3226F467A300826657 /* FlowLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F512A3126F467A300826657 /* FlowLayout.swift */; };
 		6F6D0AEE26EED71500CD27AE /* RxFaceBookLoginDelegateProxy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F6D0AED26EED71500CD27AE /* RxFaceBookLoginDelegateProxy.swift */; };
+		6F9A0D0B27101A6E00DABB45 /* SemiModalDismissAnimatedTransition.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F9A0D0A27101A6E00DABB45 /* SemiModalDismissAnimatedTransition.swift */; };
+		6F9A0D0E27101ACA00DABB45 /* SemiModalDismissInteractiveTransition.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F9A0D0D27101ACA00DABB45 /* SemiModalDismissInteractiveTransition.swift */; };
+		6F9A0D1027101B1400DABB45 /* SemiModalIndicatorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F9A0D0F27101B1400DABB45 /* SemiModalIndicatorView.swift */; };
+		6F9A0D1627101E7C00DABB45 /* SemiModalOverlayView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F9A0D1527101E7C00DABB45 /* SemiModalOverlayView.swift */; };
+		6F9A0D1A27101F6D00DABB45 /* SemiModalPresentationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F9A0D1927101F6D00DABB45 /* SemiModalPresentationController.swift */; };
+		6F9A0D1C27101FFA00DABB45 /* SemiModalPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F9A0D1B27101FFA00DABB45 /* SemiModalPresenter.swift */; };
+		6F9A0D1F2710B74200DABB45 /* EditShoppingItemDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F9A0D1E2710B74200DABB45 /* EditShoppingItemDelegate.swift */; };
 		6F9BE63926D7CD9D005DD80B /* UserdataManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F9BE63826D7CD9D005DD80B /* UserdataManager.swift */; };
 		6F9BE63B26D7CF0B005DD80B /* AboutViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F9BE63A26D7CF0B005DD80B /* AboutViewController.swift */; };
 		6F9BE63E26D7D63C005DD80B /* ResetPasswordDM.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F9BE63D26D7D63C005DD80B /* ResetPasswordDM.swift */; };
@@ -96,8 +103,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		31998F575D6DFD85DDEBE41B /* Pods_TastyBox_2.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_TastyBox_2.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		5EB9D5E76D189AE2537CC252 /* Pods-TastyBox-2.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-TastyBox-2.release.xcconfig"; path = "Target Support Files/Pods-TastyBox-2/Pods-TastyBox-2.release.xcconfig"; sourceTree = "<group>"; };
+		62A282630172E4A8A1447CC3 /* Pods-TastyBox-2.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-TastyBox-2.debug.xcconfig"; path = "Target Support Files/Pods-TastyBox-2/Pods-TastyBox-2.debug.xcconfig"; sourceTree = "<group>"; };
 		6F018B9B26DB6AEC006416D3 /* Scene.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Scene.swift; sourceTree = "<group>"; };
 		6F018B9D26DB7E30006416D3 /* SceneCoordinatorType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneCoordinatorType.swift; sourceTree = "<group>"; };
 		6F018B9F26DB7E5F006416D3 /* SceneCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneCoordinator.swift; sourceTree = "<group>"; };
@@ -119,6 +125,13 @@
 		6F512A2F26F45BF200826657 /* TutorialCVCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TutorialCVCell.swift; sourceTree = "<group>"; };
 		6F512A3126F467A300826657 /* FlowLayout.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FlowLayout.swift; sourceTree = "<group>"; };
 		6F6D0AED26EED71500CD27AE /* RxFaceBookLoginDelegateProxy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RxFaceBookLoginDelegateProxy.swift; sourceTree = "<group>"; };
+		6F9A0D0A27101A6E00DABB45 /* SemiModalDismissAnimatedTransition.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SemiModalDismissAnimatedTransition.swift; sourceTree = "<group>"; };
+		6F9A0D0D27101ACA00DABB45 /* SemiModalDismissInteractiveTransition.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SemiModalDismissInteractiveTransition.swift; sourceTree = "<group>"; };
+		6F9A0D0F27101B1400DABB45 /* SemiModalIndicatorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SemiModalIndicatorView.swift; sourceTree = "<group>"; };
+		6F9A0D1527101E7C00DABB45 /* SemiModalOverlayView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SemiModalOverlayView.swift; sourceTree = "<group>"; };
+		6F9A0D1927101F6D00DABB45 /* SemiModalPresentationController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SemiModalPresentationController.swift; sourceTree = "<group>"; };
+		6F9A0D1B27101FFA00DABB45 /* SemiModalPresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SemiModalPresenter.swift; sourceTree = "<group>"; };
+		6F9A0D1E2710B74200DABB45 /* EditShoppingItemDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditShoppingItemDelegate.swift; sourceTree = "<group>"; };
 		6F9BE63826D7CD9D005DD80B /* UserdataManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserdataManager.swift; sourceTree = "<group>"; };
 		6F9BE63A26D7CF0B005DD80B /* AboutViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AboutViewController.swift; sourceTree = "<group>"; };
 		6F9BE63D26D7D63C005DD80B /* ResetPasswordDM.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ResetPasswordDM.swift; sourceTree = "<group>"; };
@@ -186,7 +199,8 @@
 		6FF66BA226D7B0800024495E /* LoginMainDM.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LoginMainDM.swift; sourceTree = "<group>"; };
 		6FF66BA326D7B0800024495E /* RegisterAccountDM.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RegisterAccountDM.swift; sourceTree = "<group>"; };
 		6FF66BA726D7B13D0024495E /* About.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = About.storyboard; sourceTree = "<group>"; };
-		DA5A563E1246A4C7C506034F /* Pods-TastyBox-2.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-TastyBox-2.debug.xcconfig"; path = "Target Support Files/Pods-TastyBox-2/Pods-TastyBox-2.debug.xcconfig"; sourceTree = "<group>"; };
+		902B6525855DEC93AB33EE40 /* Pods_TastyBox_2.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_TastyBox_2.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		FA1554DD423DD220CD3AF7ED /* Pods-TastyBox-2.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-TastyBox-2.release.xcconfig"; path = "Target Support Files/Pods-TastyBox-2/Pods-TastyBox-2.release.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -194,26 +208,18 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				6C42AB79224F82F291E8649C /* Pods_TastyBox_2.framework in Frameworks */,
+				4DA4ABE49707D4B98A743EDF /* Pods_TastyBox_2.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		4264DBE177D299CC222EC2CC /* Frameworks */ = {
-			isa = PBXGroup;
-			children = (
-				31998F575D6DFD85DDEBE41B /* Pods_TastyBox_2.framework */,
-			);
-			name = Frameworks;
-			sourceTree = "<group>";
-		};
 		45ADD427D57A033E99108C72 /* Pods */ = {
 			isa = PBXGroup;
 			children = (
-				DA5A563E1246A4C7C506034F /* Pods-TastyBox-2.debug.xcconfig */,
-				5EB9D5E76D189AE2537CC252 /* Pods-TastyBox-2.release.xcconfig */,
+				62A282630172E4A8A1447CC3 /* Pods-TastyBox-2.debug.xcconfig */,
+				FA1554DD423DD220CD3AF7ED /* Pods-TastyBox-2.release.xcconfig */,
 			);
 			path = Pods;
 			sourceTree = "<group>";
@@ -227,6 +233,8 @@
 				6F018B9F26DB7E5F006416D3 /* SceneCoordinator.swift */,
 				6F018BA126DB7F18006416D3 /* Scene+ViewController.swift */,
 				6F018BA326DB82B7006416D3 /* SceneTransitionType.swift */,
+				6F9A0D0C27101A8300DABB45 /* Modal */,
+				6F9A0D1E2710B74200DABB45 /* EditShoppingItemDelegate.swift */,
 			);
 			path = Scene;
 			sourceTree = "<group>";
@@ -282,6 +290,26 @@
 				6F6D0AED26EED71500CD27AE /* RxFaceBookLoginDelegateProxy.swift */,
 			);
 			path = DelegateProxy;
+			sourceTree = "<group>";
+		};
+		6F9A0D0C27101A8300DABB45 /* Modal */ = {
+			isa = PBXGroup;
+			children = (
+				6F9A0D1927101F6D00DABB45 /* SemiModalPresentationController.swift */,
+				6F9A0D0A27101A6E00DABB45 /* SemiModalDismissAnimatedTransition.swift */,
+				6F9A0D0D27101ACA00DABB45 /* SemiModalDismissInteractiveTransition.swift */,
+				6F9A0D1B27101FFA00DABB45 /* SemiModalPresenter.swift */,
+			);
+			path = Modal;
+			sourceTree = "<group>";
+		};
+		6F9A0D1D2710208300DABB45 /* SemiModal */ = {
+			isa = PBXGroup;
+			children = (
+				6F9A0D0F27101B1400DABB45 /* SemiModalIndicatorView.swift */,
+				6F9A0D1527101E7C00DABB45 /* SemiModalOverlayView.swift */,
+			);
+			path = SemiModal;
 			sourceTree = "<group>";
 		};
 		6F9BE63C26D7CF14005DD80B /* About */ = {
@@ -365,7 +393,7 @@
 				6FB06F3B26D67E0100E110B4 /* TastyBox-2 */,
 				6FB06F3A26D67E0100E110B4 /* Products */,
 				45ADD427D57A033E99108C72 /* Pods */,
-				4264DBE177D299CC222EC2CC /* Frameworks */,
+				80A437970EF3980E8D5A9093 /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -475,6 +503,7 @@
 				6F9E04222700CAE0005DCEF4 /* ShoppinglistTVCell.swift */,
 				6F9E042A27017B91005DCEF4 /* ShoppinglistHeaderView.swift */,
 				6F9E042C2701DCE8005DCEF4 /* BalloonView.swift */,
+				6F9A0D1D2710208300DABB45 /* SemiModal */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -562,6 +591,14 @@
 			path = DataManager;
 			sourceTree = "<group>";
 		};
+		80A437970EF3980E8D5A9093 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				902B6525855DEC93AB33EE40 /* Pods_TastyBox_2.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -569,11 +606,11 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 6FB06F4D26D67E0600E110B4 /* Build configuration list for PBXNativeTarget "TastyBox-2" */;
 			buildPhases = (
-				071FC321DF8EA7940A81DCA0 /* [CP] Check Pods Manifest.lock */,
+				013980504DE79A8F5061466F /* [CP] Check Pods Manifest.lock */,
 				6FB06F3626D67E0100E110B4 /* Frameworks */,
 				6FB06F3526D67E0100E110B4 /* Sources */,
 				6FB06F3726D67E0100E110B4 /* Resources */,
-				77C62435A37559D3FAEBB34C /* [CP] Embed Pods Frameworks */,
+				BC9B51CF82095771EED094DE /* [CP] Embed Pods Frameworks */,
 			);
 			buildRules = (
 			);
@@ -595,6 +632,7 @@
 				TargetAttributes = {
 					6FB06F3826D67E0100E110B4 = {
 						CreatedOnToolsVersion = 12.5.1;
+						LastSwiftMigration = 1300;
 					};
 				};
 			};
@@ -636,7 +674,7 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
-		071FC321DF8EA7940A81DCA0 /* [CP] Check Pods Manifest.lock */ = {
+		013980504DE79A8F5061466F /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -658,7 +696,7 @@
 			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
 			showEnvVarsInLog = 0;
 		};
-		77C62435A37559D3FAEBB34C /* [CP] Embed Pods Frameworks */ = {
+		BC9B51CF82095771EED094DE /* [CP] Embed Pods Frameworks */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -713,6 +751,7 @@
 				6FE9EB5326F9A9DF000AF9D4 /* RefrigeratorDM.swift in Sources */,
 				6F40F82826F03375004B69DD /* AlertGenerator.swift in Sources */,
 				6F512A3026F45BF200826657 /* TutorialCVCell.swift in Sources */,
+				6F9A0D0B27101A6E00DABB45 /* SemiModalDismissAnimatedTransition.swift in Sources */,
 				6F9E042F270662C6005DCEF4 /* ArrayStatus.swift in Sources */,
 				6FBCB91226D7B5F200C050B2 /* User.swift in Sources */,
 				6FBCB92D26D7CBD500C050B2 /* LoginMainPageViewController.swift in Sources */,
@@ -721,6 +760,7 @@
 				6FF66B9E26D7AF430024495E /* RegisterEmailVM.swift in Sources */,
 				6F9E042D2701DCE8005DCEF4 /* BalloonView.swift in Sources */,
 				6F26D4E826DF9E360050BA84 /* AboutVM.swift in Sources */,
+				6F9A0D1C27101FFA00DABB45 /* SemiModalPresenter.swift in Sources */,
 				6F9E041F2700C169005DCEF4 /* EditShoppingListViewController.swift in Sources */,
 				6FBCB92A26D7CBD500C050B2 /* RegisterMyInfoProfileTableViewController.swift in Sources */,
 				6FEF088726F2A8CB00C02CDD /* PopularRecipeViewController.swift in Sources */,
@@ -731,6 +771,7 @@
 				6FB06F3D26D67E0100E110B4 /* AppDelegate.swift in Sources */,
 				6FEF088526F2A85A00C02CDD /* MainPageViewController.swift in Sources */,
 				6F9E04212700C3C0005DCEF4 /* EditShoppinglistVM.swift in Sources */,
+				6F9A0D1A27101F6D00DABB45 /* SemiModalPresentationController.swift in Sources */,
 				6FEF088026F2A4B000C02CDD /* Recipe.swift in Sources */,
 				6F512A3226F467A300826657 /* FlowLayout.swift in Sources */,
 				6FEF088F26F2AD1000C02CDD /* SideMenuTableViewController.swift in Sources */,
@@ -739,6 +780,7 @@
 				6FEF088D26F2AA4A00C02CDD /* VIPViewController.swift in Sources */,
 				6FF66B9D26D7AF430024495E /* RegisterMyInfoProfileVM.swift in Sources */,
 				6FEF088926F2A9B000C02CDD /* EditorChoiceViewController.swift in Sources */,
+				6F9A0D0E27101ACA00DABB45 /* SemiModalDismissInteractiveTransition.swift in Sources */,
 				6F9E042B27017B91005DCEF4 /* ShoppinglistHeaderView.swift in Sources */,
 				6FBCB92B26D7CBD500C050B2 /* ResetPasswordViewController.swift in Sources */,
 				6F018BA026DB7E5F006416D3 /* SceneCoordinator.swift in Sources */,
@@ -746,16 +788,19 @@
 				6FEF087B26F2A2DF00C02CDD /* DiscoveryViewController.swift in Sources */,
 				6F26D4EA26DFBDF60050BA84 /* DiscoveryVM.swift in Sources */,
 				6FF66B9F26D7AF430024495E /* ResetPasswordVM.swift in Sources */,
+				6F9A0D1027101B1400DABB45 /* SemiModalIndicatorView.swift in Sources */,
 				6F9E04232700CAE0005DCEF4 /* ShoppinglistTVCell.swift in Sources */,
 				6FA70A9926E7A1FF00474FE5 /* SetPasswordViewController.swift in Sources */,
 				6F512A2926F417CD00826657 /* TutorialVM.swift in Sources */,
 				6F9BE64226D7E3F1005DD80B /* UIImage+.swift in Sources */,
+				6F9A0D1F2710B74200DABB45 /* EditShoppingItemDelegate.swift in Sources */,
 				6F018BA426DB82B7006416D3 /* SceneTransitionType.swift in Sources */,
 				6FA70A9D26E8EA5700474FE5 /* ViewController+.swift in Sources */,
 				6FB06F3F26D67E0100E110B4 /* SceneDelegate.swift in Sources */,
 				6FEA391726DA98D7002F81A3 /* RxGIDSignInDelegateProxy.swift in Sources */,
 				6FC062C026EAE4020016B990 /* Error+.swift in Sources */,
 				6FEA391126D8D1E4002F81A3 /* ViewModelBase.swift in Sources */,
+				6F9A0D1627101E7C00DABB45 /* SemiModalOverlayView.swift in Sources */,
 				6FF66BA426D7B0800024495E /* LoginMainDM.swift in Sources */,
 				6FEA390E26D8C35B002F81A3 /* CustomPickerView.swift in Sources */,
 			);
@@ -901,10 +946,11 @@
 		};
 		6FB06F4E26D67E0600E110B4 /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = DA5A563E1246A4C7C506034F /* Pods-TastyBox-2.debug.xcconfig */;
+			baseConfigurationReference = 62A282630172E4A8A1447CC3 /* Pods-TastyBox-2.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = "TastyBox-2/TastyBox-2.entitlements";
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = JXVL9HBQR6;
@@ -918,6 +964,8 @@
 				ONLY_ACTIVE_ARCH = NO;
 				PRODUCT_BUNDLE_IDENTIFIER = "com.shihomikitajima.individual.TastyBox-2";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_OBJC_BRIDGING_HEADER = "";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
@@ -925,10 +973,11 @@
 		};
 		6FB06F4F26D67E0600E110B4 /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 5EB9D5E76D189AE2537CC252 /* Pods-TastyBox-2.release.xcconfig */;
+			baseConfigurationReference = FA1554DD423DD220CD3AF7ED /* Pods-TastyBox-2.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = "TastyBox-2/TastyBox-2.entitlements";
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = JXVL9HBQR6;

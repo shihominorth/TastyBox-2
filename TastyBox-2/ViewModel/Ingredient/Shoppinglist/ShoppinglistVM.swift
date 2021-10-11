@@ -8,6 +8,7 @@
 import Foundation
 import Action
 import Firebase
+import FirebaseFirestore
 import RxCocoa
 import RxSwift
 
@@ -70,11 +71,11 @@ class ShoppinglistVM: ViewModelBase {
     }()
     
     init(sceneCoodinator: SceneCoordinator, apiType: RefrigeratorProtocol.Type = RefrigeratorDM.self, user: FirebaseAuth.User) {
+        
         self.sceneCoodinator = sceneCoodinator
         self.apiType = apiType
         self.user = user
-        
-        
+    
     }
     
     func toAddItem() -> CocoaAction {
@@ -84,6 +85,8 @@ class ShoppinglistVM: ViewModelBase {
             let index = self.items.count
             let vm =  EditShoppinglistVM(sceneCoodinator: self.sceneCoodinator, user: self.user, item: nil, lastIndex: index)
             let vc = IngredientScene.editShoppinglist(vm).viewController()
+            
+            vm.delegate = self
             
             return self.sceneCoodinator.transition(to: vc, type: .push).asObservable().map { _ in }
         }
@@ -111,8 +114,11 @@ class ShoppinglistVM: ViewModelBase {
         
         
         let vc = IngredientScene.editShoppinglist(vm).viewController()
+
+        vm.delegate = self
+
         
-        self.sceneCoodinator.transition(to: vc, type: .push)
+        self.sceneCoodinator.transition(to: vc, type: .modalHalf)
         
     }
     
@@ -604,9 +610,10 @@ class ShoppinglistVM: ViewModelBase {
         return Observable.create { [unowned self] observer in
             
             self.apiType.addIngredient(id: item.id, name: item.name, amount: item.amount, userID: self.user.uid, lastIndex: count, listName: .refrigerator)
-                .subscribe(onCompleted: {
+                .subscribe(onNext: { addedItem in
                     
-                    print("add \(item.id) to refrigerator")
+                    print("add \(addedItem.id) to refrigerator")
+                    
                     
                 }, onError: { err in
                     
@@ -645,4 +652,27 @@ class ShoppinglistVM: ViewModelBase {
             return Disposables.create()
         }
     }
+}
+
+
+extension ShoppinglistVM: EditShoppingItemDelegate {
+    func addItemToArray(item: ShoppingItem){
+    
+        self.items.append(item)
+        self.observableItems.accept(self.items)
+            
+    }
+    
+   
+    func edittedItem(item: ShoppingItem) {
+
+        guard let firstIndex = self.items.firstIndex(where: { $0.id == item.id }) else { return }
+        
+        self.items.remove(at: firstIndex)
+        self.items.insert(item, at: firstIndex)
+        
+        self.observableItems.accept(self.items)
+    }
+    
+    
 }

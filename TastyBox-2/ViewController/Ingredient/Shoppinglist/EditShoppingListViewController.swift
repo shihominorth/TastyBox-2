@@ -8,6 +8,7 @@
 import UIKit
 import RxSwift
 
+
 class EditShoppingListViewController: UIViewController, BindableType {
   
     
@@ -15,6 +16,7 @@ class EditShoppingListViewController: UIViewController, BindableType {
     var viewModel: EditShoppinglistVM!
     
 
+    @IBOutlet weak var stackView: UIStackView!
     @IBOutlet weak var nameTextField: UITextField!
     @IBOutlet weak var amountTextField: UITextField!
     @IBOutlet weak var editBtn: UIButton!
@@ -31,11 +33,12 @@ class EditShoppingListViewController: UIViewController, BindableType {
         nameTextField.delegate = self
         amountTextField.delegate = self
         
+        nameTextField.becomeFirstResponder()
+        
         setUpKeyboard()
         
     }
-    
-    
+
     func bindViewModel() {
         
         
@@ -124,24 +127,13 @@ class EditShoppingListViewController: UIViewController, BindableType {
                 
                 if let keyboardSize = (notification.userInfo?[UIResponder.keyboardFrameBeginUserInfoKey] as? NSValue)?.cgRectValue {
                     
-                    if nameTextField.isFirstResponder {
-                        if let frame = nameTextField.superview?.convert(nameTextField.frame, to: nil) {
-                            
-                            if frame.origin.y > keyboardSize.origin.y + 10 {
-                                self.view.center.y -= 100
-                            }
-                            
-                        }
-                    }
-                    else if amountTextField.isFirstResponder {
-                        if let frame = nameTextField.superview?.convert(amountTextField.frame, to: nil) {
-                            
-                            if frame.origin.y > keyboardSize.origin.y + 10 {
-                                self.view.center.y -= 100
-                            }
-                            
-                        }
-                    }
+//                    if self.view.frame.origin.y == 0 {
+//                                    self.view.frame.origin.y -= keyboardSize.height
+//                                } else {
+//                                    let suggestionHeight = self.view.frame.origin.y + keyboardSize.height
+//                                    self.view.frame.origin.y -= suggestionHeight
+//                                }
+                    
                     
                 }
                 
@@ -161,16 +153,16 @@ class EditShoppingListViewController: UIViewController, BindableType {
                 
             })
             .disposed(by: viewModel.disposeBag)
-        
-        NotificationCenter.default.rx.notification(UIResponder.keyboardWillShowNotification)
-            .observe(on: MainScheduler.asyncInstance)
-            .subscribe(onNext: {  [unowned self] notification in
-                
-                if self.view.frame.origin.y != 0 {
-                    self.view.frame.origin.y = 0
-                }
-            })
-            .disposed(by: viewModel.disposeBag)
+//        
+//        NotificationCenter.default.rx.notification(UIResponder.keyboardWillHideNotification)
+//            .observe(on: MainScheduler.asyncInstance)
+//            .subscribe(onNext: {  [unowned self] notification in
+//                
+//                if self.view.frame.origin.y != 0 {
+//                    self.view.frame.origin.y = 0
+//                }
+//            })
+//            .disposed(by: viewModel.disposeBag)
     }
     
     
@@ -216,3 +208,18 @@ extension EditShoppingListViewController: UITextFieldDelegate {
     }
 
 }
+
+extension EditShoppingListViewController: SemiModalPresenterDelegate {
+    
+    var semiModalContentHeight: CGFloat {
+        
+        let screenSize: CGRect = UIScreen.main.bounds
+        let screenWidth = screenSize.width
+        let screenHeight = screenSize.height
+       
+        let frame = self.view.convert(editBtn.frame, from: stackView)
+        print(frame.origin.y)
+        return frame.origin.y + editBtn.frame.height + 20
+    }
+}
+

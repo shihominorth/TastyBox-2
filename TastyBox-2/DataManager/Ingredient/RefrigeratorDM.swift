@@ -7,6 +7,7 @@
 
 import Foundation
 import Firebase
+//import FirebaseFirestore
 import RxSwift
 import RxCocoa
 
@@ -14,8 +15,8 @@ protocol RefrigeratorProtocol: AnyObject {
     
     static func getRefrigeratorItems(userID: String) -> Single<[Ingredient]>
     static func getShoppinglist(userID: String) -> Single<([ShoppingItem], [QueryDocumentSnapshot])>
-    static func addIngredient(id: String?, name: String, amount: String, userID: String, lastIndex: Int, listName: List) -> Completable
-    static func editIngredient(edittingItem: Ingredient, name: String, amount: String, userID: String, listName: List) -> Completable
+    static func addIngredient(id: String?, name: String, amount: String, userID: String, lastIndex: Int, listName: List) -> Observable<Ingredient>
+    static func editIngredient(edittingItem: Ingredient, name: String, amount: String, userID: String, listName: List) -> Observable<Ingredient>
     static func moveIngredient(userID: String, items: [Ingredient], listName: List) -> Observable<Bool>
     //    static func removeDeletingItem(items: [ShoppingItem], deletingItem: Ingredient) -> Observable<[Ingredient]>
     static func filterDifferentOrder(items: [Ingredient], deletingItem: Ingredient) -> Observable<([Ingredient], Ingredient)>
@@ -35,9 +36,9 @@ class RefrigeratorDM: RefrigeratorProtocol {
     
     static let db = Firestore.firestore().collection("users")
     
-    static func addIngredient(id: String?, name: String, amount: String, userID: String, lastIndex: Int, listName: List) -> Completable {
+    static func addIngredient(id: String?, name: String, amount: String, userID: String, lastIndex: Int, listName: List) -> Observable<Ingredient> {
         
-        return Completable.create { completable in
+        return Observable.create { observer in
             
             var data:[String:Any] = [:]
             let uuid = UUID()
@@ -70,11 +71,31 @@ class RefrigeratorDM: RefrigeratorProtocol {
             self.db.document(userID).collection(listName.rawValue).document(id ?? uniqueIdString).setData(data, merge: true) { err in
                 if let err = err {
                     
-                    completable(.error(err))
+                    observer.onError(err)
                     
                 } else {
                     
-                    completable(.completed)
+                    var ingredient : Ingredient? {
+                        var result: Ingredient?
+                        
+                        switch listName {
+                        case .shoppinglist:
+                            
+                            result = ShoppingItem(name: name, amount: amount, key: uniqueIdString, isBought: false, order: lastIndex)
+                        
+                        case .refrigerator:
+                        
+                            result = RefrigeratorItem(key: id ?? uniqueIdString, name: name, amount: amount, order: lastIndex)
+                        }
+                        
+                        return result
+                    }
+                    
+                    if let ingredient = ingredient {
+                        
+                        observer.onNext(ingredient)
+                    
+                    }
                 }
                 
             }
@@ -83,9 +104,9 @@ class RefrigeratorDM: RefrigeratorProtocol {
         
     }
     
-    static func editIngredient(edittingItem: Ingredient, name: String, amount: String, userID: String, listName: List) -> Completable {
+    static func editIngredient(edittingItem: Ingredient, name: String, amount: String, userID: String, listName: List) -> Observable<Ingredient> {
         
-        return Completable.create { completable in
+        return Observable.create { observer in
             
             db.document(userID).collection(listName.rawValue).document(edittingItem.id).updateData(
                 
@@ -97,11 +118,14 @@ class RefrigeratorDM: RefrigeratorProtocol {
                 
                 if let err = err {
                     
-                    completable(.error(err))
+                    observer.onError(err)
                     
                 } else {
                     
-                    completable(.completed)
+                    edittingItem.name = name
+                    edittingItem.amount = amount
+                    
+                    observer.onNext(edittingItem)
                 }
                 
             }
