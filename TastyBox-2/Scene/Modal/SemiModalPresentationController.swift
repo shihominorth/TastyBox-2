@@ -44,14 +44,11 @@ final class SemiModalPresentationController: UIPresentationController {
         presentedViewFrame.origin.x = containerBounds.size.width - presentedViewFrame.size.width
         
 //        if isKeyboardShown {
-//            presentedViewFrame.origin.y = UIScreen.main.bounds.maxY - presentedViewFrame.size.height
+        presentedViewFrame.origin.y = containerBounds.size.height - presentedViewFrame.size.height
 //        }
 //        else {
-        presentedViewFrame.origin.y = containerBounds.size.height - presentedViewFrame.size.height - keyboardHeight
+//        presentedViewFrame.origin.y = containerBounds.size.height - presentedViewFrame.size.height - keyboardHeight
 //        }
-        
-
-       
 
         return presentedViewFrame
     }
@@ -79,34 +76,34 @@ final class SemiModalPresentationController: UIPresentationController {
             .observe(on: MainScheduler.asyncInstance)
             .subscribe(onNext: { [unowned self] notification in
                 
-                if let keyboardSize = (notification.userInfo?[UIResponder.keyboardFrameBeginUserInfoKey] as? NSValue)?.cgRectValue, let duration = notification.userInfo?[UIResponder.keyboardAnimationDurationUserInfoKey] as? TimeInterval, let curveNumber = notification.userInfo?[UIResponder.keyboardAnimationCurveUserInfoKey] as? NSNumber
-                {
+//                if let keyboardSize = (notification.userInfo?[UIResponder.keyboardFrameBeginUserInfoKey] as? NSValue)?.cgRectValue, let duration = notification.userInfo?[UIResponder.keyboardAnimationDurationUserInfoKey] as? TimeInterval, let curveNumber = notification.userInfo?[UIResponder.keyboardAnimationCurveUserInfoKey] as? NSNumber
+//                {
                     
-                    let curve: UIView.AnimationOptions = UIView.AnimationOptions(rawValue: UInt(truncating: curveNumber))
+//                    let curve: UIView.AnimationOptions = UIView.AnimationOptions(rawValue: UInt(truncating: curveNumber))
+//
+//                    guard let presentedView = presentedView else {
+//                        return
+//                    }
                     
-                    guard let presentedView = presentedView else {
-                        return
-                    }
+//                    self.keyboardHeight = keyboardSize.height
+//                    let frame = frameOfPresentedViewInContainerView
                     
-                    self.keyboardHeight = keyboardSize.height
-                    let frame = frameOfPresentedViewInContainerView
+//                    UIView.animate(
+//                        withDuration: duration,
+//                        delay: 0.0,
+//                        options: [.beginFromCurrentState, .allowUserInteraction, curve],
+//                        animations: {
+//                            presentedView.frame = frame
+//                            presentedView.layoutIfNeeded()
+//                        })
+//                    { [unowned self] isCompleted in
+//
+//                        if isCompleted {
+//                            self.isKeyboardShown = true
+//                        }
+//                    }
                     
-                    UIView.animate(
-                        withDuration: duration,
-                        delay: 0.0,
-                        options: [.beginFromCurrentState, .allowUserInteraction, curve],
-                        animations: {
-                            presentedView.frame = frame
-                            presentedView.layoutIfNeeded()
-                        })
-                    { [unowned self] isCompleted in
-                        
-                        if isCompleted {
-                            self.isKeyboardShown = true
-                        }
-                    }
-                    
-                }
+//                }
             })
             .disposed(by: self.disposeBag)
         
@@ -116,33 +113,33 @@ final class SemiModalPresentationController: UIPresentationController {
             .subscribe(onNext: {  [unowned self] notification in
                 
                 
-                if  let keyboardSize = (notification.userInfo?[UIResponder.keyboardFrameBeginUserInfoKey] as? NSValue)?.cgRectValue, let duration = notification.userInfo?[UIResponder.keyboardAnimationDurationUserInfoKey] as? TimeInterval, let curveNumber = notification.userInfo?[UIResponder.keyboardAnimationCurveUserInfoKey] as? NSNumber
-                {
-
-                    let curve: UIView.AnimationOptions = UIView.AnimationOptions(rawValue: UInt(truncating: curveNumber))
-                    guard let presentedView = presentedView else {
-                        return
-                    }
-
-                    self.keyboardHeight = 0.0
-                    let frame = frameOfPresentedViewInContainerView
-
-
-                    UIView.animate(
-                        withDuration: duration,
-                        delay: 0.0,
-                        options: [.beginFromCurrentState, .allowUserInteraction, curve],
-                        animations: {
-                            presentedView.frame = frame
-                            presentedView.layoutIfNeeded()
-                        })  { [unowned self] isCompleted in
-
-                            if isCompleted {
-                                self.isKeyboardShown = false
-                            }
-                        }
-
-                }
+//                if  let keyboardSize = (notification.userInfo?[UIResponder.keyboardFrameBeginUserInfoKey] as? NSValue)?.cgRectValue, let duration = notification.userInfo?[UIResponder.keyboardAnimationDurationUserInfoKey] as? TimeInterval, let curveNumber = notification.userInfo?[UIResponder.keyboardAnimationCurveUserInfoKey] as? NSNumber
+//                {
+//
+//                    let curve: UIView.AnimationOptions = UIView.AnimationOptions(rawValue: UInt(truncating: curveNumber))
+//                    guard let presentedView = presentedView else {
+//                        return
+//                    }
+//
+//                    self.keyboardHeight = 0.0
+//                    let frame = frameOfPresentedViewInContainerView
+//
+//
+//                    UIView.animate(
+//                        withDuration: duration,
+//                        delay: 0.0,
+//                        options: [.beginFromCurrentState, .allowUserInteraction, curve],
+//                        animations: {
+//                            presentedView.frame = frame
+//                            presentedView.layoutIfNeeded()
+//                        })  { [unowned self] isCompleted in
+//
+//                            if isCompleted {
+//                                self.isKeyboardShown = false
+//                            }
+//                        }
+//
+//                }
                 
             })
             .disposed(by: self.disposeBag)
@@ -158,6 +155,7 @@ final class SemiModalPresentationController: UIPresentationController {
         // delegateで高さが指定されていれば、そちらを優先する
         if let delegate = presentedViewController as? SemiModalPresenterDelegate {
             return CGSize(width: parentSize.width, height: delegate.semiModalContentHeight)
+//            return CGSize(width: parentSize.width, height: parentSize.height * delegate.percentOrigin)
         }
         // 上記でなければ、高さは比率で計算する
         return CGSize(width: parentSize.width, height: parentSize.height * self.presentedViewControllerHeightRatio)
@@ -190,6 +188,7 @@ final class SemiModalPresentationController: UIPresentationController {
             indicator.widthAnchor.constraint(equalToConstant: indicator.frame.width),
             indicator.heightAnchor.constraint(equalToConstant: indicator.frame.height)
         ])
+        
     }
     
     /// presentation transition 開始

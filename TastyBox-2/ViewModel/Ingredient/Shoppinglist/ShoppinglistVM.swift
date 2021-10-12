@@ -118,7 +118,7 @@ class ShoppinglistVM: ViewModelBase {
         vm.delegate = self
 
         
-        self.sceneCoodinator.transition(to: vc, type: .modalHalf)
+        self.sceneCoodinator.transition(to: vc, type: .push)
         
     }
     

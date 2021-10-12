@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="18122" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="19162" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
     <device id="retina6_1" orientation="portrait" appearance="light"/>
     <dependencies>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="18093"/>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="19144"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="System colors in document resources" minToolsVersion="11.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
@@ -247,7 +248,7 @@
                             <tableViewSection id="PrS-Te-ypU">
                                 <cells>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" selectionStyle="none" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" rowHeight="200" id="AYI-y2-Ng6">
-                                        <rect key="frame" x="0.0" y="24.5" width="414" height="200"/>
+                                        <rect key="frame" x="0.0" y="44.5" width="414" height="200"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="AYI-y2-Ng6" id="IVV-Aw-kad">
                                             <rect key="frame" x="0.0" y="0.0" width="414" height="200"/>
@@ -285,7 +286,7 @@
                                         <gestureRecognizers/>
                                     </tableViewCell>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" selectionStyle="none" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" rowHeight="88" id="x7y-Op-8c5">
-                                        <rect key="frame" x="0.0" y="224.5" width="414" height="88"/>
+                                        <rect key="frame" x="0.0" y="244.5" width="414" height="88"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="x7y-Op-8c5" id="Ija-aE-a38">
                                             <rect key="frame" x="0.0" y="0.0" width="414" height="88"/>
@@ -317,7 +318,7 @@
                                         <color key="backgroundColor" red="0.99670392269999997" green="0.9910771478" blue="0.79392304599999997" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
                                     </tableViewCell>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" selectionStyle="none" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" rowHeight="88" id="tQ9-Qf-yZM">
-                                        <rect key="frame" x="0.0" y="312.5" width="414" height="88"/>
+                                        <rect key="frame" x="0.0" y="332.5" width="414" height="88"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="tQ9-Qf-yZM" id="fgE-Pz-64e">
                                             <rect key="frame" x="0.0" y="0.0" width="414" height="88"/>
@@ -349,7 +350,7 @@
                                         <color key="backgroundColor" red="0.99670392269999997" green="0.9910771478" blue="0.79392304599999997" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
                                     </tableViewCell>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" selectionStyle="none" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" rowHeight="88" id="4Sf-Hp-sk2">
-                                        <rect key="frame" x="0.0" y="400.5" width="414" height="88"/>
+                                        <rect key="frame" x="0.0" y="420.5" width="414" height="88"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="4Sf-Hp-sk2" id="1Zc-Fk-roW">
                                             <rect key="frame" x="0.0" y="0.0" width="414" height="88"/>
@@ -381,7 +382,7 @@
                                         <color key="backgroundColor" red="0.99670392269999997" green="0.9910771478" blue="0.79392304599999997" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
                                     </tableViewCell>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" selectionStyle="none" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" rowHeight="88" id="Iok-cp-ZLP">
-                                        <rect key="frame" x="0.0" y="488.5" width="414" height="88"/>
+                                        <rect key="frame" x="0.0" y="508.5" width="414" height="88"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="Iok-cp-ZLP" id="1Q3-D7-IRQ">
                                             <rect key="frame" x="0.0" y="0.0" width="414" height="88"/>
@@ -413,7 +414,7 @@
                                         <color key="backgroundColor" red="0.99670392269999997" green="0.9910771478" blue="0.79392304599999997" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
                                     </tableViewCell>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" selectionStyle="none" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" rowHeight="128" id="c4L-Kh-ltl">
-                                        <rect key="frame" x="0.0" y="576.5" width="414" height="128"/>
+                                        <rect key="frame" x="0.0" y="596.5" width="414" height="128"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="c4L-Kh-ltl" id="b7H-ef-vFV">
                                             <rect key="frame" x="0.0" y="0.0" width="414" height="128"/>

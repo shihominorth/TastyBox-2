@@ -7,6 +7,7 @@
 
 import UIKit
 import RxSwift
+import Lottie
 
 
 class EditShoppingListViewController: UIViewController, BindableType {
@@ -16,6 +17,7 @@ class EditShoppingListViewController: UIViewController, BindableType {
     var viewModel: EditShoppinglistVM!
     
 
+    @IBOutlet weak var scrollView: UIScrollView!
     @IBOutlet weak var stackView: UIStackView!
     @IBOutlet weak var nameTextField: UITextField!
     @IBOutlet weak var amountTextField: UITextField!
@@ -34,9 +36,11 @@ class EditShoppingListViewController: UIViewController, BindableType {
         amountTextField.delegate = self
         
         nameTextField.becomeFirstResponder()
-        
+
+        scrollView.isScrollEnabled = false
+
         setUpKeyboard()
-        
+    
     }
 
     func bindViewModel() {
@@ -117,6 +121,7 @@ class EditShoppingListViewController: UIViewController, BindableType {
     }
     
     func setUpKeyboard() {
+        
        
         let tap = UITapGestureRecognizer(target: self, action: #selector(tapGesture))
         tap.name = "dissmiss"
@@ -125,44 +130,66 @@ class EditShoppingListViewController: UIViewController, BindableType {
             .observe(on: MainScheduler.asyncInstance)
             .subscribe(onNext: {  [unowned self] notification in
                 
-                if let keyboardSize = (notification.userInfo?[UIResponder.keyboardFrameBeginUserInfoKey] as? NSValue)?.cgRectValue {
-                    
-//                    if self.view.frame.origin.y == 0 {
-//                                    self.view.frame.origin.y -= keyboardSize.height
-//                                } else {
-//                                    let suggestionHeight = self.view.frame.origin.y + keyboardSize.height
-//                                    self.view.frame.origin.y -= suggestionHeight
-//                                }
-                    
-                    
-                }
+                scrollView.isScrollEnabled = true
                 
+//                if let keyboardSize = (notification.userInfo?[UIResponder.keyboardFrameBeginUserInfoKey] as? NSValue)?.cgRectValue {
+//
+//
+//                    let visibleViewFrameHeight = self.view.frame.height - keyboardSize.height
+//
+//
+//                    if nameTextField.isFirstResponder {
+//
+//                    }
+//                    else if amountTextField.isFirstResponder {
+//
+//                        let amountTxtFieldPosition = self.view.convert(amountTextField.frame, to: nil)
+//
+//                        if self.view.frame.maxY - keyboardSize.height >= amountTxtFieldPosition.origin.y + amountTextField.frame.height {
+//
+//                            let keyboardHiddenHeight = keyboardSize.origin.y - amountTxtFieldPosition.origin.y
+//                            let bringUpheight = keyboardHiddenHeight
+//
+//                            self.view.frame.origin.y -= bringUpheight
+//                        }
+//                    }
+//
+//                }
+
                 if let gestureRecognizers = self.view.gestureRecognizers  {
-                    
+
                     if gestureRecognizers.filter({ $0.name == "dissmiss"}).isEmpty {
                         self.view.addGestureRecognizer(tap)
                         self.view.gestureRecognizers![0].name = "dissmiss"
                     }
-                    
+
                 } else {
-                    
-                    
+
+
                     self.view.addGestureRecognizer(tap)
                     self.view.gestureRecognizers![0].name = "dissmiss"
                 }
-                
+
             })
             .disposed(by: viewModel.disposeBag)
-//        
-//        NotificationCenter.default.rx.notification(UIResponder.keyboardWillHideNotification)
-//            .observe(on: MainScheduler.asyncInstance)
-//            .subscribe(onNext: {  [unowned self] notification in
-//                
-//                if self.view.frame.origin.y != 0 {
-//                    self.view.frame.origin.y = 0
-//                }
-//            })
-//            .disposed(by: viewModel.disposeBag)
+        
+        NotificationCenter.default.rx.notification(UIResponder.keyboardWillHideNotification)
+            .observe(on: MainScheduler.asyncInstance)
+            .subscribe(onNext: {  [unowned self] notification in
+                
+                scrollView.isScrollEnabled = false
+                
+                let offset = CGPoint(
+                    x: -scrollView.adjustedContentInset.left,
+                    y: -scrollView.adjustedContentInset.top)
+
+                scrollView.setContentOffset(offset, animated: true)
+
+                if self.view.frame.origin.y != 0 {
+                    self.view.frame.origin.y = 0
+                }
+            })
+            .disposed(by: viewModel.disposeBag)
     }
     
     
@@ -198,7 +225,6 @@ extension EditShoppingListViewController: UITextFieldDelegate {
         switch textField.tag {
         case 0:
             nameTextField.resignFirstResponder()
-            amountTextField.becomeFirstResponder()
         case 1:
             amountTextField.resignFirstResponder()
         default:
@@ -206,20 +232,27 @@ extension EditShoppingListViewController: UITextFieldDelegate {
         }
         return true
     }
-
-}
-
-extension EditShoppingListViewController: SemiModalPresenterDelegate {
     
-    var semiModalContentHeight: CGFloat {
+    func textFieldDidBeginEditing(_ textField: UITextField) {
         
-        let screenSize: CGRect = UIScreen.main.bounds
-        let screenWidth = screenSize.width
-        let screenHeight = screenSize.height
-       
-        let frame = self.view.convert(editBtn.frame, from: stackView)
-        print(frame.origin.y)
-        return frame.origin.y + editBtn.frame.height + 20
+        let offset = CGPoint(
+            x: -scrollView.adjustedContentInset.left,
+            y: -scrollView.adjustedContentInset.top)
+
+        if UIDevice.current.orientation.isLandscape {
+            
+            if textField == amountTextField {
+                scrollView.setContentOffset(CGPoint(x: textField.frame.minX, y: textField.frame.minY - 10), animated: true)
+            }
+            else {
+                scrollView.setContentOffset(CGPoint(x: textField.frame.minX, y: 0), animated: true)
+            }
+            
+        }
+        else {
+            scrollView.setContentOffset(offset, animated: true)
+        }
+        
     }
 }
 

@@ -12,6 +12,7 @@ public protocol SemiModalPresenterDelegate: AnyObject {
 
     /// ViewControllerからモーダルの高さを決定させる場合に使用する
     var semiModalContentHeight: CGFloat { get }
+//    var percentOrigin: Double { get }
 }
 
 public protocol dismissModalDelegate: AnyObject {
