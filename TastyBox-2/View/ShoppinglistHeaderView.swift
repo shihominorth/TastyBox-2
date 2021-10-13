@@ -6,10 +6,12 @@
 //
 
 import UIKit
+import RxCocoa
 
 class ShoppinglistHeaderView: UITableViewHeaderFooterView {
 
-   let btn = UIButton(frame: CGRect(x: 0, y: 0, width: 30, height: 30))
+    let btn = UIButton(frame: CGRect(x: 0, y: 0, width: 30, height: 30))
+    var img = UIImage(systemName: "checkmark.circle")
     
     required init?(coder: NSCoder) {
         super.init(coder: coder)
@@ -24,8 +26,6 @@ class ShoppinglistHeaderView: UITableViewHeaderFooterView {
 
     func setUpBtn() {
         
-        let img = UIImage(systemName: "ellipsis.circle")
-
         btn.layer.cornerRadius = btn.frame.size.width / 2
         btn.clipsToBounds = true
         btn.backgroundColor = #colorLiteral(red: 1, green: 1, blue: 1, alpha: 1)
@@ -37,9 +37,6 @@ class ShoppinglistHeaderView: UITableViewHeaderFooterView {
         contentView.addSubview(btn)
   
         NSLayoutConstraint.activate([
-//          btn.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 5),
-            
-           
             btn.widthAnchor.constraint(equalToConstant: 30),
             btn.heightAnchor.constraint(equalToConstant: 30),
             btn.trailingAnchor.constraint(equalTo: contentView.layoutMarginsGuide.trailingAnchor),
@@ -48,12 +45,9 @@ class ShoppinglistHeaderView: UITableViewHeaderFooterView {
        
     }
 
-    /*
-    // Only override draw() if you perform custom drawing.
-    // An empty implementation adversely affects performance during animation.
-    override func draw(_ rect: CGRect) {
-        // Drawing code
+    func isShowBoughtItems(isShown: Bool) {
+        img = isShown ? UIImage(systemName: "checkmark.circle.fill") : UIImage(systemName: "checkmark.circle")
+        btn.setBackgroundImage(img, for: .normal)
     }
-    */
 
 }

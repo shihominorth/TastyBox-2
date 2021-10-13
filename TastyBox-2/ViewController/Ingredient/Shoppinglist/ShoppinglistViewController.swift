@@ -8,13 +8,15 @@
 import UIKit
 import RxSwift
 import RxCocoa
+import RxTimelane
+
 
 class ShoppinglistViewController: UIViewController, BindableType {
-
+    
     typealias ViewModelType = ShoppinglistVM
     var viewModel: ShoppinglistVM!
     
-
+    
     @IBOutlet weak var tableView: UITableView!
     @IBOutlet weak var addBtn: UIButton!
     
@@ -61,16 +63,16 @@ class ShoppinglistViewController: UIViewController, BindableType {
     
     override func viewWillAppear(_ animated: Bool) {
         
-//        viewModel.getItems()
-//            .subscribe(onNext: { [unowned self] isGottenItem in
-//
-//                showSearchedResult()
-//
-//            })
-//            .disposed(by: viewModel.disposeBag)
-//
-//
-//
+        //        viewModel.getItems()
+        //            .subscribe(onNext: { [unowned self] isGottenItem in
+        //
+        //                showSearchedResult()
+        //
+        //            })
+        //            .disposed(by: viewModel.disposeBag)
+        //
+        //
+        //
     }
     
     override func viewWillDisappear(_ animated: Bool) {
@@ -85,9 +87,9 @@ class ShoppinglistViewController: UIViewController, BindableType {
             .bind(to: self.addBtn.rx.isHidden).disposed(by: viewModel.disposeBag)
         viewModel.isSelectedCells
             .bind(to: self.deletebutton.rx.isEnabled).disposed(by: viewModel.disposeBag)
-               
+        
         let query = searchBar.rx.text.orEmpty
-            .distinctUntilChanged()           
+            .distinctUntilChanged()
         
         
         Observable.combineLatest(viewModel.observableItems, viewModel.showsBoughtItemsSubject, query) { [unowned self] (allItems, isShownBoughtItems, query) -> [ShoppingItem] in
@@ -125,11 +127,11 @@ class ShoppinglistViewController: UIViewController, BindableType {
                     self.viewModel.isSelectedCells.accept(true)
                     
                 } else {
-        
+                    
                     self.viewModel.toEditItem(index: indexPath.row)
                     self.tableView.deselectRow(at: indexPath, animated: true)
                     
-                   
+                    
                 }
             })
             .disposed(by: viewModel.disposeBag)
@@ -191,12 +193,12 @@ class ShoppinglistViewController: UIViewController, BindableType {
                         if isDeleted {
                             self.showSearchedResult()
                         }
-                  
+                        
                     })
                     .disposed(by: viewModel.disposeBag)
                 
-               
-
+                
+                
             })
             .disposed(by: viewModel.disposeBag)
         
@@ -212,7 +214,7 @@ class ShoppinglistViewController: UIViewController, BindableType {
             }
             .subscribe(onNext: { _ in
                 self.searchBar.endEditing(true)
-
+                
             })
             .disposed(by: viewModel.disposeBag)
         
@@ -268,9 +270,9 @@ class ShoppinglistViewController: UIViewController, BindableType {
                     if viewModel.searchingTemp.isEmpty {
                         
                         sortedPaths.forEach { indexPath in
-                        
+                            
                             var deletingItem: ShoppingItem {
-                             
+                                
                                 if !viewModel.showsBoughtItemsSubject.value {
                                     
                                     let allItems = viewModel.items.filter { !$0.isBought }
@@ -290,7 +292,7 @@ class ShoppinglistViewController: UIViewController, BindableType {
                         sortedPaths.forEach { indexPath in
                             
                             var deletingItem: ShoppingItem {
-                             
+                                
                                 if !viewModel.showsBoughtItemsSubject.value {
                                     
                                     let allItems = viewModel.searchingTemp.filter { !$0.isBought }
@@ -391,7 +393,7 @@ class ShoppinglistViewController: UIViewController, BindableType {
     }
     
     fileprivate func setHasEmptyCell() {
-       
+        
         if !self.viewModel.items.isEmpty {
             
             let lastIndexPath = IndexPath(row: self.viewModel.items.count - 1, section: 0)
@@ -402,10 +404,10 @@ class ShoppinglistViewController: UIViewController, BindableType {
                 && cellRectInView.maxY <= self.tableView.frame.maxY {
                 
                 let hasEmptyCell = addBtn.frame.origin.y <= cellRectInView.maxY
-
+                
                 self.viewModel.hasEmptyCell.accept(hasEmptyCell)
-              
-
+                
+                
             } else {
                 
                 self.viewModel.hasEmptyCell.accept(true)
@@ -415,7 +417,7 @@ class ShoppinglistViewController: UIViewController, BindableType {
     }
     
     fileprivate func showSearchedResult() {
-       
+        
         searchBar.rx.text.orEmpty
             .subscribe(onNext: { [unowned self] text in
                 
@@ -436,27 +438,26 @@ extension ShoppinglistViewController: UITableViewDelegate {
     
     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
         
-        if section == 0 {
-            if let view = tableView.dequeueReusableHeaderFooterView(withIdentifier: "shoppingHeader") as? ShoppinglistHeaderView {
-               
-                view.setUpBtn()
-                
-                view.btn.rx.tap
-                    .flatMap { [unowned self] in self.viewModel.showsBoughtItems() }
-                    .subscribe(onNext: { isShown in
-                        print("taped")
-                        print(isShown)
-                })
-                    .disposed(by: viewModel.disposeBag)
-//
-                
-                return view
-            }
-            
-            return nil
-        }
-     
-        return nil
+        guard section == 0 else { return nil }
+        guard let view = tableView.dequeueReusableHeaderFooterView(withIdentifier: "shoppingHeader") as? ShoppinglistHeaderView else { return nil }
+        
+        view.btn.rx.tap
+            .lane("ChekcMark Btn Tap")
+            .debounce(.milliseconds(1000), scheduler: MainScheduler.instance)
+            .takeNoCompleted(1)
+            .lane("after debounce")
+            .flatMap { [unowned self] in self.viewModel.showsBoughtItems() }
+            .subscribe(onNext: { isShown in
+                view.isShowBoughtItems(isShown: isShown)
+                print("----------------------------")
+            })
+            .disposed(by: viewModel.disposeBag)
+        
+        
+        
+        return view
+        
+        
     }
     
     func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
@@ -480,11 +481,11 @@ extension ShoppinglistViewController: UITableViewDelegate {
                     if isDeleted {
                         self.showSearchedResult()
                     }
-              
+                    
                 })
                 .disposed(by: viewModel.disposeBag)
             
-           
+            
             // 実行結果に関わらず記述
             completionHandler(true)
         }
@@ -492,7 +493,7 @@ extension ShoppinglistViewController: UITableViewDelegate {
         // 定義したアクションをセット
         return UISwipeActionsConfiguration(actions: [deleteAction, editAction])
     }
-  
+    
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         
         if indexPath.section == 0 {
@@ -500,12 +501,12 @@ extension ShoppinglistViewController: UITableViewDelegate {
             return UITableView.automaticDimension
         }
         else {
-          
+            
             return viewModel.hasEmptyCell.value ? 140 : 0.0
         }
-
-    }
         
+    }
+    
     func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
         
         if section == 0 {
@@ -517,9 +518,9 @@ extension ShoppinglistViewController: UITableViewDelegate {
     
     func tableView(_ tableView: UITableView, willBeginEditingRowAt indexPath: IndexPath) {
         self.viewModel.isTableViewEditable.accept(true)
-
+        
     }
- 
+    
     func tableView(_ tableView: UITableView, didEndEditingRowAt indexPath: IndexPath?) {
         self.viewModel.isTableViewEditable.accept(false)
     }
@@ -537,7 +538,7 @@ extension ShoppinglistViewController: UISearchBarDelegate {
     func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
         searchBar.endEditing(true)
     }
-
+    
 }
 
 

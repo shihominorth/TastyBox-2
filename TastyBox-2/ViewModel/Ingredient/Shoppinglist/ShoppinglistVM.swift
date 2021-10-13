@@ -45,20 +45,21 @@ class ShoppinglistVM: ViewModelBase {
     
     lazy var dataSource: RxRefrigeratorTableViewDataSource<ShoppingItem, ShoppinglistTVCell> = {
         
-        return RxRefrigeratorTableViewDataSource<ShoppingItem, ShoppinglistTVCell>(identifier: ShoppinglistTVCell.identifier, emptyValue: self.empty) { [unowned self] row, element, cell in
+        return RxRefrigeratorTableViewDataSource<ShoppingItem, ShoppinglistTVCell>(identifier: ShoppinglistTVCell.identifier, emptyValue: self.empty) { [unowned self] section, row, element, cell in
             
-            cell.configure(item: element)
-        
+            if section == 0 {
+                cell.configure(item: element)
+            }
+
             cell.checkMarkBtn.rx.tap
                 .throttle(.milliseconds(1500), latest: false, scheduler: MainScheduler.instance)
-                .debug("tap")
                 .catch { err in
                     
                     print(err)
                     return .empty()
                     
                 }
-                .flatMap {  updateBoughtStatus(index: row) }
+                .flatMap { updateBoughtStatus(index: row) }
                 .subscribe(onNext: { isBought in
                     
                     cell.updateCheckMark(isBought: isBought)
@@ -153,18 +154,28 @@ class ShoppinglistVM: ViewModelBase {
         return relay
     }
     
-    func showsBoughtItems() -> Observable<Bool> {
-        
-        return Observable.create { [unowned self] observer in
-            
+//    func showsBoughtItems() -> Observable<Bool> {
+//
+//        return Observable.create { [unowned self] observer in
+//
+//            let newValue = !self.showsBoughtItemsSubject.value
+//            showsBoughtItemsSubject.accept(newValue)
+//
+//            observer.onNext(newValue)
+//
+//            return Disposables.create()
+//        }
+//    }
+    
+    func showsBoughtItems() {
+
             let newValue = !self.showsBoughtItemsSubject.value
             showsBoughtItemsSubject.accept(newValue)
-            
-            observer.onNext(newValue)
-            
-            return Disposables.create()
-        }
+                    
+        
     }
+    
+
     
     
     func moveItems(sourceIndex: Int, destinationIndex: Int) {

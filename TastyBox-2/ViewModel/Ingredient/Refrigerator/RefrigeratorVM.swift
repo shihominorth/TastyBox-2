@@ -42,9 +42,12 @@ class RefrigeratorVM: ViewModelBase {
     
     lazy var dataSource: RxRefrigeratorTableViewDataSource<RefrigeratorItem, RefrigeratorTVCell> = {
         
-        return RxRefrigeratorTableViewDataSource<RefrigeratorItem, RefrigeratorTVCell>(identifier: RefrigeratorTVCell.identifier, emptyValue: self.empty) { row, element, cell in
+        return RxRefrigeratorTableViewDataSource<RefrigeratorItem, RefrigeratorTVCell>(identifier: RefrigeratorTVCell.identifier, emptyValue: self.empty) { section, row, element, cell in
             
-            cell.configure(item: element)
+            if section == 0 {
+                cell.configure(item: element)
+                
+            }
             
         }
     }()

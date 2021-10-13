@@ -16,11 +16,11 @@ class RxRefrigeratorTableViewDataSource<E: Differentiable, Cell: UITableViewCell
     
     let identifier: String
     let animation: UITableView.RowAnimation
-    let configure: (Int, E, Cell) -> Void
+    let configure: (Int, Int, E, Cell) -> Void
     var values: Element = []
     var emptyValue: E
 
-    init(identifier: String, with animation: UITableView.RowAnimation = .automatic, emptyValue: E, configure: @escaping (Int, E, Cell) -> Void) {
+    init(identifier: String, with animation: UITableView.RowAnimation = .automatic, emptyValue: E, configure: @escaping (Int, Int, E, Cell) -> Void) {
         self.identifier = identifier
         self.animation = animation
         self.configure = configure
@@ -71,18 +71,17 @@ class RxRefrigeratorTableViewDataSource<E: Differentiable, Cell: UITableViewCell
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: identifier, for: indexPath) as! Cell
-        let row = indexPath.row
         
         switch indexPath.section {
         case 0:
-            configure(row, values[row], cell)
+            configure(indexPath.section, indexPath.row, values[indexPath.row], cell)
             cell.backgroundColor = .white
 //            cell.separatorInset =  UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 0);
         case 1:
-            configure(row, emptyValue, cell)
+//            configure(indexPath.section, indexPath.row, emptyValue, cell)
             cell.backgroundColor = .clear
 //            cell.separatorInset = UIEdgeInsets(top: 0, left: CGFloat.greatestFiniteMagnitude, bottom: 0, right: 0);
-
+            cell.isSelected = false
         default:
             break
         }

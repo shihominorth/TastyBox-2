@@ -25,6 +25,8 @@ pod 'Firebase/Core'
 pod 'RxSwift'
 pod 'RxCocoa'
 pod 'Action'
+pod 'RxTimelane'
+
 pod 'DifferenceKit'
 
 # RxTest and RxBlocking make the most sense in the context of unit/integration tests
