@@ -154,25 +154,19 @@ class ShoppinglistVM: ViewModelBase {
         return relay
     }
     
-//    func showsBoughtItems() -> Observable<Bool> {
-//
-//        return Observable.create { [unowned self] observer in
-//
-//            let newValue = !self.showsBoughtItemsSubject.value
-//            showsBoughtItemsSubject.accept(newValue)
-//
-//            observer.onNext(newValue)
-//
-//            return Disposables.create()
-//        }
-//    }
     
-    func showsBoughtItems() {
+    func showsBoughtItems() -> Observable<Bool> {
 
+        return Observable.create { [unowned self] observer in
+            
             let newValue = !self.showsBoughtItemsSubject.value
-            showsBoughtItemsSubject.accept(newValue)
-                    
-        
+            self.showsBoughtItemsSubject.accept(newValue)
+            
+            observer.onNext(newValue)
+            
+            return Disposables.create()
+        }
+                
     }
     
 

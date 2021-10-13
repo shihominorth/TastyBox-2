@@ -5,9 +5,10 @@
 //  Created by 北島　志帆美 on 2021-09-26.
 //
 
+
 import UIKit
-import RxSwift
 import RxCocoa
+import RxSwift
 import RxTimelane
 
 
@@ -28,6 +29,8 @@ class ShoppinglistViewController: UIViewController, BindableType {
     var doneBtn = UIBarButtonItem()
     
     var mapBtn = UIBarButtonItem()
+    
+    
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -87,6 +90,7 @@ class ShoppinglistViewController: UIViewController, BindableType {
             .bind(to: self.addBtn.rx.isHidden).disposed(by: viewModel.disposeBag)
         viewModel.isSelectedCells
             .bind(to: self.deletebutton.rx.isEnabled).disposed(by: viewModel.disposeBag)
+        
         
         let query = searchBar.rx.text.orEmpty
             .distinctUntilChanged()
@@ -439,13 +443,17 @@ extension ShoppinglistViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
         
         guard section == 0 else { return nil }
-        guard let view = tableView.dequeueReusableHeaderFooterView(withIdentifier: "shoppingHeader") as? ShoppinglistHeaderView else { return nil }
+        
+        guard let view = tableView.dequeueReusableHeaderFooterView(withIdentifier: "shoppingHeader") as? ShoppinglistHeaderView  else { return nil }
         
         view.btn.rx.tap
-            .lane("ChekcMark Btn Tap")
-            .debounce(.milliseconds(1000), scheduler: MainScheduler.instance)
-            .takeNoCompleted(1)
-            .lane("after debounce")
+            .lane("before debounce")
+            .debounce(.microseconds(1000), scheduler: MainScheduler.instance)
+            .single()
+            .catch { err in
+                return Observable.never()
+            }
+            .lane("should emit one event")
             .flatMap { [unowned self] in self.viewModel.showsBoughtItems() }
             .subscribe(onNext: { isShown in
                 view.isShowBoughtItems(isShown: isShown)
@@ -453,10 +461,7 @@ extension ShoppinglistViewController: UITableViewDelegate {
             })
             .disposed(by: viewModel.disposeBag)
         
-        
-        
         return view
-        
         
     }
     

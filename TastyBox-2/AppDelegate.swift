@@ -66,8 +66,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     }
     
     func applicationDidBecomeActive(_ application: UIApplication) {
-        AppEvents.singleton.activateApp()
-
+        AppEvents.shared.activateApp()
     }
 }
 

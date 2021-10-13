@@ -7,7 +7,6 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		4DA4ABE49707D4B98A743EDF /* Pods_TastyBox_2.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 902B6525855DEC93AB33EE40 /* Pods_TastyBox_2.framework */; };
 		6F018B9C26DB6AEC006416D3 /* Scene.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F018B9B26DB6AEC006416D3 /* Scene.swift */; };
 		6F018BA026DB7E5F006416D3 /* SceneCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F018B9F26DB7E5F006416D3 /* SceneCoordinator.swift */; };
 		6F018BA226DB7F18006416D3 /* Scene+ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F018BA126DB7F18006416D3 /* Scene+ViewController.swift */; };
@@ -100,10 +99,10 @@
 		6FF66BA426D7B0800024495E /* LoginMainDM.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FF66BA226D7B0800024495E /* LoginMainDM.swift */; };
 		6FF66BA526D7B0800024495E /* RegisterAccountDM.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FF66BA326D7B0800024495E /* RegisterAccountDM.swift */; };
 		6FF66BA826D7B13D0024495E /* About.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 6FF66BA726D7B13D0024495E /* About.storyboard */; };
+		9FD30420A68A42E5C137A384 /* Pods_TastyBox_2.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EC72849050D566381E68383D /* Pods_TastyBox_2.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		62A282630172E4A8A1447CC3 /* Pods-TastyBox-2.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-TastyBox-2.debug.xcconfig"; path = "Target Support Files/Pods-TastyBox-2/Pods-TastyBox-2.debug.xcconfig"; sourceTree = "<group>"; };
 		6F018B9B26DB6AEC006416D3 /* Scene.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Scene.swift; sourceTree = "<group>"; };
 		6F018B9D26DB7E30006416D3 /* SceneCoordinatorType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneCoordinatorType.swift; sourceTree = "<group>"; };
 		6F018B9F26DB7E5F006416D3 /* SceneCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneCoordinator.swift; sourceTree = "<group>"; };
@@ -199,8 +198,9 @@
 		6FF66BA226D7B0800024495E /* LoginMainDM.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LoginMainDM.swift; sourceTree = "<group>"; };
 		6FF66BA326D7B0800024495E /* RegisterAccountDM.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RegisterAccountDM.swift; sourceTree = "<group>"; };
 		6FF66BA726D7B13D0024495E /* About.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = About.storyboard; sourceTree = "<group>"; };
-		902B6525855DEC93AB33EE40 /* Pods_TastyBox_2.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_TastyBox_2.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		FA1554DD423DD220CD3AF7ED /* Pods-TastyBox-2.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-TastyBox-2.release.xcconfig"; path = "Target Support Files/Pods-TastyBox-2/Pods-TastyBox-2.release.xcconfig"; sourceTree = "<group>"; };
+		88215A69A98B71B520397205 /* Pods-TastyBox-2.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-TastyBox-2.release.xcconfig"; path = "Target Support Files/Pods-TastyBox-2/Pods-TastyBox-2.release.xcconfig"; sourceTree = "<group>"; };
+		9E754EFCBC108A62A6ECCCC2 /* Pods-TastyBox-2.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-TastyBox-2.debug.xcconfig"; path = "Target Support Files/Pods-TastyBox-2/Pods-TastyBox-2.debug.xcconfig"; sourceTree = "<group>"; };
+		EC72849050D566381E68383D /* Pods_TastyBox_2.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_TastyBox_2.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -208,7 +208,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				4DA4ABE49707D4B98A743EDF /* Pods_TastyBox_2.framework in Frameworks */,
+				9FD30420A68A42E5C137A384 /* Pods_TastyBox_2.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -218,8 +218,8 @@
 		45ADD427D57A033E99108C72 /* Pods */ = {
 			isa = PBXGroup;
 			children = (
-				62A282630172E4A8A1447CC3 /* Pods-TastyBox-2.debug.xcconfig */,
-				FA1554DD423DD220CD3AF7ED /* Pods-TastyBox-2.release.xcconfig */,
+				9E754EFCBC108A62A6ECCCC2 /* Pods-TastyBox-2.debug.xcconfig */,
+				88215A69A98B71B520397205 /* Pods-TastyBox-2.release.xcconfig */,
 			);
 			path = Pods;
 			sourceTree = "<group>";
@@ -393,7 +393,7 @@
 				6FB06F3B26D67E0100E110B4 /* TastyBox-2 */,
 				6FB06F3A26D67E0100E110B4 /* Products */,
 				45ADD427D57A033E99108C72 /* Pods */,
-				80A437970EF3980E8D5A9093 /* Frameworks */,
+				B0F7728AA13D35F4FBB7D8E6 /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -591,10 +591,10 @@
 			path = DataManager;
 			sourceTree = "<group>";
 		};
-		80A437970EF3980E8D5A9093 /* Frameworks */ = {
+		B0F7728AA13D35F4FBB7D8E6 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				902B6525855DEC93AB33EE40 /* Pods_TastyBox_2.framework */,
+				EC72849050D566381E68383D /* Pods_TastyBox_2.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -606,11 +606,11 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 6FB06F4D26D67E0600E110B4 /* Build configuration list for PBXNativeTarget "TastyBox-2" */;
 			buildPhases = (
-				013980504DE79A8F5061466F /* [CP] Check Pods Manifest.lock */,
+				945004B6DC714858D4A196F2 /* [CP] Check Pods Manifest.lock */,
 				6FB06F3626D67E0100E110B4 /* Frameworks */,
 				6FB06F3526D67E0100E110B4 /* Sources */,
 				6FB06F3726D67E0100E110B4 /* Resources */,
-				BC9B51CF82095771EED094DE /* [CP] Embed Pods Frameworks */,
+				5E81A006DB99BD1708F65240 /* [CP] Embed Pods Frameworks */,
 			);
 			buildRules = (
 			);
@@ -674,7 +674,24 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
-		013980504DE79A8F5061466F /* [CP] Check Pods Manifest.lock */ = {
+		5E81A006DB99BD1708F65240 /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-TastyBox-2/Pods-TastyBox-2-frameworks-${CONFIGURATION}-input-files.xcfilelist",
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-TastyBox-2/Pods-TastyBox-2-frameworks-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-TastyBox-2/Pods-TastyBox-2-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		945004B6DC714858D4A196F2 /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -694,23 +711,6 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
-			showEnvVarsInLog = 0;
-		};
-		BC9B51CF82095771EED094DE /* [CP] Embed Pods Frameworks */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-TastyBox-2/Pods-TastyBox-2-frameworks-${CONFIGURATION}-input-files.xcfilelist",
-			);
-			name = "[CP] Embed Pods Frameworks";
-			outputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-TastyBox-2/Pods-TastyBox-2-frameworks-${CONFIGURATION}-output-files.xcfilelist",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-TastyBox-2/Pods-TastyBox-2-frameworks.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
 /* End PBXShellScriptBuildPhase section */
@@ -946,7 +946,7 @@
 		};
 		6FB06F4E26D67E0600E110B4 /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 62A282630172E4A8A1447CC3 /* Pods-TastyBox-2.debug.xcconfig */;
+			baseConfigurationReference = 9E754EFCBC108A62A6ECCCC2 /* Pods-TastyBox-2.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
@@ -973,7 +973,7 @@
 		};
 		6FB06F4F26D67E0600E110B4 /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = FA1554DD423DD220CD3AF7ED /* Pods-TastyBox-2.release.xcconfig */;
+			baseConfigurationReference = 88215A69A98B71B520397205 /* Pods-TastyBox-2.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
