@@ -14,17 +14,50 @@ import RxCocoa
 
 class DiscoveryVM: ViewModelBase {
     
-    //    let apiType: RegisterMyInfoProtocol.Type
+    let presenter = DiscoveryPresenter()
     let sceneCoodinator: SceneCoordinator
     let user: Firebase.User
     
-    
+   
     var isMenuBarOpenedRelay = BehaviorRelay<Bool>(value: false)
     
     init(sceneCoodinator: SceneCoordinator, user: Firebase.User) {
         
         self.sceneCoodinator = sceneCoodinator
         self.user = user
+            
+    }
+    
+    
+    func sideMenuTapped() {
+        
+        presenter.sideMenuVC?.tableView.rx.itemSelected
+            .debug("item selected")
+            .subscribe(onNext: { [unowned self] indexPath in
+                
+                presenter.sideMenuVC?.tableView.deselectRow(at: indexPath, animated: true)
+               
+                switch indexPath.row {
+                
+                case 2:
+                    self.toRefrigerator()
+                    
+                case 3:
+                    self.toShoppinglist()
+                    
+                case 6:
+                    self.logout()
+                    
+                default:
+                    break
+                    
+                }
+                
+                
+            }, onError: { err in
+                print(err)
+            })
+            .disposed(by: self.disposeBag)
     }
     
     func setIsMenuBarOpenedRelay() -> Observable<Bool> {

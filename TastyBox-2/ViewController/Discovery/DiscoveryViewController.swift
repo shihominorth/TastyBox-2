@@ -27,6 +27,8 @@ class DiscoveryViewController: UIViewController, BindableType {
     
     @IBOutlet weak var menuNavBtn: UIBarButtonItem!
     @IBOutlet weak var PopularContainerView: UIView!
+    @IBOutlet weak var sideMenuContainerView: UIView!
+    
     @IBOutlet weak var collectionLayout: UICollectionViewFlowLayout! {
         didSet {
             collectionLayout.estimatedItemSize = UICollectionViewFlowLayout.automaticSize
@@ -57,10 +59,9 @@ class DiscoveryViewController: UIViewController, BindableType {
     var sideMenuOpen = false
     var lockObject = ActivityIndicator()
     
+    //    weak var delegate: MenuViewControllerDelegate?
+    
     @IBOutlet weak var SideMenuConstraint: NSLayoutConstraint!
-    
-    
-    
     @IBOutlet weak var MenuCollectionView: UICollectionView!
     
     override func viewDidLoad() {
@@ -72,6 +73,8 @@ class DiscoveryViewController: UIViewController, BindableType {
         CreateMenuLabel()
         
         initialContentView()
+        
+        viewModel.sideMenuTapped()
         
         //        NotificationCenter.default.addObserver(self, selector: #selector(toggleSideMenu), name: NSNotification.Name("ToggleSideMenu"), object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(showSearch), name: NSNotification.Name("ShowSearch"), object: nil)
@@ -102,37 +105,6 @@ class DiscoveryViewController: UIViewController, BindableType {
     
     
     func bindViewModel() {
-        
-        let _ = NotificationCenter.default.rx.notification(NSNotification.Name("ShowLogout"))
-            .takeNoCompleted(1)
-            .subscribe(onNext: { notification in
-                self.viewModel.logout()
-            })
-            .disposed(by: viewModel.disposeBag)
-        
-        let _  = NotificationCenter.default.rx.notification(NSNotification.Name("ShowRefrigerator"))
-            .lane("posted refrigerator")
-            .debounce(.microseconds(1500), scheduler: MainScheduler.instance)
-            .take(1)
-            .lane("limited refrigearator")
-            .subscribe(onNext: { notification in
-                self.viewModel.toRefrigerator()
-                print("next")
-            })
-            .disposed(by: viewModel.disposeBag)
-        
-        let _  = NotificationCenter.default.rx.notification(NSNotification.Name("ShowShoppingList"))
-            .lane("posted shoppinglist")
-            .debounce(.microseconds(1500), scheduler: MainScheduler.instance)
-            .take(1)
-            .lane("limited shoppinglist")
-            .subscribe(onNext: { notification in
-                self.viewModel.toShoppinglist()
-                
-                print("next")
-            })
-            .disposed(by: viewModel.disposeBag)
-        
         
         self.menuNavBtn.rx.tap
             .debounce(.microseconds(1000), scheduler: MainScheduler.instance)
@@ -186,9 +158,6 @@ class DiscoveryViewController: UIViewController, BindableType {
         print("Tab Add Button")
         NotificationCenter.default.post(name: NSNotification.Name("AddRecipe"), object: nil)
     }
-    
-    
-    //    weak var delegate: MenuViewControllerDelegate?
     
     
     func initialContentView(){
@@ -284,6 +253,7 @@ class DiscoveryViewController: UIViewController, BindableType {
 
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+       
         guard let identifier = segue.identifier else { return }
         
         if identifier == "addRecipe" {
@@ -299,6 +269,10 @@ class DiscoveryViewController: UIViewController, BindableType {
             
             self.view.bringSubviewToFront(indicator)
             
+        }
+        else if identifier == "toSideMenu" {
+            
+            viewModel.presenter.sideMenuVC = segue.destination as? SideMenuTableViewController
         }
         
     }
@@ -331,8 +305,6 @@ class DiscoveryViewController: UIViewController, BindableType {
         }
         
         
-        
-        //        NotificationCenter.default.post(name: NSNotification.Name("ToggleSideMenu"), object: nil)
     }
     
 }

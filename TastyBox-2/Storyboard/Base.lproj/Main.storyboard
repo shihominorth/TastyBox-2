@@ -80,7 +80,7 @@
                                     <constraint firstAttribute="width" constant="230" id="znL-yY-TwC"/>
                                 </constraints>
                                 <connections>
-                                    <segue destination="91K-d2-MOp" kind="embed" id="dvb-uD-W19"/>
+                                    <segue destination="91K-d2-MOp" kind="embed" identifier="toSideMenu" id="dvb-uD-W19"/>
                                 </connections>
                             </containerView>
                         </subviews>
@@ -124,16 +124,17 @@
                         <outlet property="SideMenuConstraint" destination="0Vn-oo-f2M" id="FWq-fS-wNe"/>
                         <outlet property="collectionLayout" destination="eJ9-ei-LQs" id="KvM-Lc-BYU"/>
                         <outlet property="menuNavBtn" destination="G39-xU-fFo" id="bDu-F9-vFW"/>
+                        <outlet property="sideMenuContainerView" destination="0BJ-W3-msO" id="ehK-wD-4jN"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="sZa-A9-hdq" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1957.9710144927537" y="114.50892857142857"/>
+            <point key="canvasLocation" x="2001" y="115"/>
         </scene>
         <!--Side Menu Table View Controller-->
         <scene sceneID="JdM-ZM-fJ7">
             <objects>
-                <tableViewController id="91K-d2-MOp" customClass="SideMenuTableViewController" customModule="TastyBox_2" customModuleProvider="target" sceneMemberID="viewController">
+                <tableViewController storyboardIdentifier="sideMenu" id="91K-d2-MOp" customClass="SideMenuTableViewController" customModule="TastyBox_2" customModuleProvider="target" sceneMemberID="viewController">
                     <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="static" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" id="mJo-8m-kGc">
                         <rect key="frame" x="0.0" y="0.0" width="230" height="808"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -508,14 +509,14 @@
                                 <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                                 <prototypes>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="searcingGenre" id="dUE-zg-JoB" customClass="SearchingGenresTableViewCell" customModule="TastyBox_2" customModuleProvider="target">
-                                        <rect key="frame" x="0.0" y="44.5" width="414" height="43"/>
+                                        <rect key="frame" x="0.0" y="44.5" width="414" height="43.5"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="dUE-zg-JoB" id="qmo-9b-xdM">
-                                            <rect key="frame" x="0.0" y="0.0" width="414" height="43"/>
+                                            <rect key="frame" x="0.0" y="0.0" width="414" height="43.5"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="jtq-wz-5uT">
-                                                    <rect key="frame" x="30" y="11" width="364" height="21"/>
+                                                    <rect key="frame" x="30" y="11" width="364" height="21.5"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                                     <nil key="textColor"/>
                                                     <nil key="highlightedColor"/>

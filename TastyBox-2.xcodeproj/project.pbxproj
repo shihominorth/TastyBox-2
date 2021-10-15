@@ -28,6 +28,7 @@
 		6F512A3026F45BF200826657 /* TutorialCVCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F512A2F26F45BF200826657 /* TutorialCVCell.swift */; };
 		6F512A3226F467A300826657 /* FlowLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F512A3126F467A300826657 /* FlowLayout.swift */; };
 		6F6D0AEE26EED71500CD27AE /* RxFaceBookLoginDelegateProxy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F6D0AED26EED71500CD27AE /* RxFaceBookLoginDelegateProxy.swift */; };
+		6F74C4252719BAB9007BB9E6 /* DiscoveryPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F74C4242719BAB8007BB9E6 /* DiscoveryPresenter.swift */; };
 		6F9A0D0B27101A6E00DABB45 /* SemiModalDismissAnimatedTransition.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F9A0D0A27101A6E00DABB45 /* SemiModalDismissAnimatedTransition.swift */; };
 		6F9A0D0E27101ACA00DABB45 /* SemiModalDismissInteractiveTransition.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F9A0D0D27101ACA00DABB45 /* SemiModalDismissInteractiveTransition.swift */; };
 		6F9A0D1027101B1400DABB45 /* SemiModalIndicatorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F9A0D0F27101B1400DABB45 /* SemiModalIndicatorView.swift */; };
@@ -124,6 +125,7 @@
 		6F512A2F26F45BF200826657 /* TutorialCVCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TutorialCVCell.swift; sourceTree = "<group>"; };
 		6F512A3126F467A300826657 /* FlowLayout.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FlowLayout.swift; sourceTree = "<group>"; };
 		6F6D0AED26EED71500CD27AE /* RxFaceBookLoginDelegateProxy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RxFaceBookLoginDelegateProxy.swift; sourceTree = "<group>"; };
+		6F74C4242719BAB8007BB9E6 /* DiscoveryPresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiscoveryPresenter.swift; sourceTree = "<group>"; };
 		6F9A0D0A27101A6E00DABB45 /* SemiModalDismissAnimatedTransition.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SemiModalDismissAnimatedTransition.swift; sourceTree = "<group>"; };
 		6F9A0D0D27101ACA00DABB45 /* SemiModalDismissInteractiveTransition.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SemiModalDismissInteractiveTransition.swift; sourceTree = "<group>"; };
 		6F9A0D0F27101B1400DABB45 /* SemiModalIndicatorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SemiModalIndicatorView.swift; sourceTree = "<group>"; };
@@ -235,6 +237,7 @@
 				6F018BA326DB82B7006416D3 /* SceneTransitionType.swift */,
 				6F9A0D0C27101A8300DABB45 /* Modal */,
 				6F9A0D1E2710B74200DABB45 /* EditShoppingItemDelegate.swift */,
+				6F74C4242719BAB8007BB9E6 /* DiscoveryPresenter.swift */,
 			);
 			path = Scene;
 			sourceTree = "<group>";
@@ -801,6 +804,7 @@
 				6F9A0D0E27101ACA00DABB45 /* SemiModalDismissInteractiveTransition.swift in Sources */,
 				6F9E042B27017B91005DCEF4 /* ShoppinglistHeaderView.swift in Sources */,
 				6FBCB92B26D7CBD500C050B2 /* ResetPasswordViewController.swift in Sources */,
+				6F74C4252719BAB9007BB9E6 /* DiscoveryPresenter.swift in Sources */,
 				6F018BA026DB7E5F006416D3 /* SceneCoordinator.swift in Sources */,
 				6FBCB92C26D7CBD500C050B2 /* EmailRegisterViewController.swift in Sources */,
 				6FEF087B26F2A2DF00C02CDD /* DiscoveryViewController.swift in Sources */,
