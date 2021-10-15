@@ -131,30 +131,6 @@ class EditShoppingListViewController: UIViewController, BindableType {
             .subscribe(onNext: {  [unowned self] notification in
                 
                 scrollView.isScrollEnabled = true
-                
-//                if let keyboardSize = (notification.userInfo?[UIResponder.keyboardFrameBeginUserInfoKey] as? NSValue)?.cgRectValue {
-//
-//
-//                    let visibleViewFrameHeight = self.view.frame.height - keyboardSize.height
-//
-//
-//                    if nameTextField.isFirstResponder {
-//
-//                    }
-//                    else if amountTextField.isFirstResponder {
-//
-//                        let amountTxtFieldPosition = self.view.convert(amountTextField.frame, to: nil)
-//
-//                        if self.view.frame.maxY - keyboardSize.height >= amountTxtFieldPosition.origin.y + amountTextField.frame.height {
-//
-//                            let keyboardHiddenHeight = keyboardSize.origin.y - amountTxtFieldPosition.origin.y
-//                            let bringUpheight = keyboardHiddenHeight
-//
-//                            self.view.frame.origin.y -= bringUpheight
-//                        }
-//                    }
-//
-//                }
 
                 if let gestureRecognizers = self.view.gestureRecognizers  {
 
