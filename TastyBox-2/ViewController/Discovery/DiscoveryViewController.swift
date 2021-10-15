@@ -97,7 +97,9 @@ class DiscoveryViewController: UIViewController, BindableType {
             .disposed(by: viewModel.disposeBag)
         
         let _  = NotificationCenter.default.rx.notification(NSNotification.Name("ShowRefrigerator"))
-            .concat(Observable.never())
+            .debounce(.microseconds(1000), scheduler: MainScheduler.instance)
+            .single()
+            .catch { _ in Observable.never() }
             .debug()
             .subscribe(onNext: { notification in
                 self.viewModel.toRefrigerator()
@@ -106,7 +108,9 @@ class DiscoveryViewController: UIViewController, BindableType {
             .disposed(by: viewModel.disposeBag)
         
         let _  = NotificationCenter.default.rx.notification(NSNotification.Name("ShowShoppingList"))
-            .concat(Observable.never())
+            .debounce(.microseconds(1000), scheduler: MainScheduler.instance)
+            .single()
+            .catch { _ in Observable.never() }
             .debug()
             .subscribe(onNext: { notification in
                 self.viewModel.toShoppinglist()
