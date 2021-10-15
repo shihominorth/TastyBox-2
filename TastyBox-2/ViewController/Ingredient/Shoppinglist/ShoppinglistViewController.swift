@@ -446,6 +446,8 @@ extension ShoppinglistViewController: UITableViewDelegate {
         
         guard let view = tableView.dequeueReusableHeaderFooterView(withIdentifier: "shoppingHeader") as? ShoppinglistHeaderView  else { return nil }
         
+        viewModel.isTableViewEditable.bind(to: view.btn.rx.isHidden).disposed(by: view.bag)
+        
         view.btn.rx.tap
             .debounce(.microseconds(1000), scheduler: MainScheduler.instance)
             .asDriver(onErrorJustReturn: ())
