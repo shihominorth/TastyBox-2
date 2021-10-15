@@ -611,6 +611,7 @@
 				6FB06F3526D67E0100E110B4 /* Sources */,
 				6FB06F3726D67E0100E110B4 /* Resources */,
 				5E81A006DB99BD1708F65240 /* [CP] Embed Pods Frameworks */,
+				6F06D6BA2717DF1400D4277A /* ShellScript */,
 			);
 			buildRules = (
 			);
@@ -690,6 +691,23 @@
 			shellPath = /bin/sh;
 			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-TastyBox-2/Pods-TastyBox-2-frameworks.sh\"\n";
 			showEnvVarsInLog = 0;
+		};
+		6F06D6BA2717DF1400D4277A /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+			);
+			outputFileListPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "# Type a script or drag a script file from your workspace to insert its path.\nafplay /System/Library/Sounds/Submarine.aiff\n";
 		};
 		945004B6DC714858D4A196F2 /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;

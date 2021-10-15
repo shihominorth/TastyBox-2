@@ -96,7 +96,7 @@ class ShoppinglistViewController: UIViewController, BindableType {
             .distinctUntilChanged()
         
         
-        Observable.combineLatest(viewModel.observableItems, viewModel.showsBoughtItemsSubject, query) { [unowned self] (allItems, isShownBoughtItems, query) -> [ShoppingItem] in
+        Observable.combineLatest(viewModel.observableItems, viewModel.isShownBoughtItemsRelay, query) { [unowned self] (allItems, isShownBoughtItems, query) -> [ShoppingItem] in
             return self.viewModel.filterSearchedItems(with: allItems, isShownBoughtItems: isShownBoughtItems, query: query)
             
         }
@@ -277,7 +277,7 @@ class ShoppinglistViewController: UIViewController, BindableType {
                             
                             var deletingItem: ShoppingItem {
                                 
-                                if !viewModel.showsBoughtItemsSubject.value {
+                                if !viewModel.isShownBoughtItemsRelay.value {
                                     
                                     let allItems = viewModel.items.filter { !$0.isBought }
                                     return allItems[indexPath.row]
@@ -297,7 +297,7 @@ class ShoppinglistViewController: UIViewController, BindableType {
                             
                             var deletingItem: ShoppingItem {
                                 
-                                if !viewModel.showsBoughtItemsSubject.value {
+                                if !viewModel.isShownBoughtItemsRelay.value {
                                     
                                     let allItems = viewModel.searchingTemp.filter { !$0.isBought }
                                     return allItems[indexPath.row]
@@ -447,19 +447,16 @@ extension ShoppinglistViewController: UITableViewDelegate {
         guard let view = tableView.dequeueReusableHeaderFooterView(withIdentifier: "shoppingHeader") as? ShoppinglistHeaderView  else { return nil }
         
         view.btn.rx.tap
-            .lane("before debounce")
             .debounce(.microseconds(1000), scheduler: MainScheduler.instance)
-            .single()
-            .catch { err in
-                return Observable.never()
-            }
-            .lane("should emit one event")
+            .asDriver(onErrorJustReturn: ())
+            .asObservable()
             .flatMap { [unowned self] in self.viewModel.showsBoughtItems() }
             .subscribe(onNext: { isShown in
+                
                 view.isShowBoughtItems(isShown: isShown)
-                print("----------------------------")
+
             })
-            .disposed(by: viewModel.disposeBag)
+            .disposed(by: view.bag)
         
         return view
         

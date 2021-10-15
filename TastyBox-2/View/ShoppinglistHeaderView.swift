@@ -14,6 +14,13 @@ class ShoppinglistHeaderView: UITableViewHeaderFooterView {
     let btn = UIButton(frame: CGRect(x: 0, y: 0, width: 30, height: 30))
     var img = UIImage(systemName: "checkmark.circle")
     
+    var bag = DisposeBag()
+    
+    override func prepareForReuse() {
+        super.prepareForReuse()
+        bag = DisposeBag()
+    }
+    
     required init?(coder: NSCoder) {
         super.init(coder: coder)
     }

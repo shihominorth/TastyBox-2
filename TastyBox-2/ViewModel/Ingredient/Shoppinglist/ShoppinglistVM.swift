@@ -11,6 +11,7 @@ import Firebase
 import FirebaseFirestore
 import RxCocoa
 import RxSwift
+import RxTimelane
 
 class ShoppinglistVM: ViewModelBase {
     
@@ -40,7 +41,7 @@ class ShoppinglistVM: ViewModelBase {
     let isBoughtItemssubject = PublishSubject<Bool>()
     let isNotBoughtItemsSubject = PublishSubject<Bool>()
     
-    let showsBoughtItemsSubject = BehaviorRelay<Bool>(value: false)
+    let isShownBoughtItemsRelay = BehaviorRelay<Bool>(value: false)
     
     
     lazy var dataSource: RxRefrigeratorTableViewDataSource<ShoppingItem, ShoppinglistTVCell> = {
@@ -52,22 +53,40 @@ class ShoppinglistVM: ViewModelBase {
             }
 
             cell.checkMarkBtn.rx.tap
-                .throttle(.milliseconds(1500), latest: false, scheduler: MainScheduler.instance)
+                .lane("before debounce")
+                .debounce(.microseconds(1500), scheduler: MainScheduler.instance)
+                .single()
                 .catch { err in
-                    
-                    print(err)
-                    return .empty()
-                    
+
+                    return Observable.never()
+
                 }
-                .flatMap { updateBoughtStatus(index: row) }
-                .subscribe(onNext: { isBought in
-                    
+                .lane("after debounce")
+                .do(onNext: {_ in
+                    print(element.name)
+                })
+                .flatMap {
+                    // rowがおかしい
+//                    updateBoughtStatus(index: row)
+                    updateBoughtStatus(item: element)
+                }
+                .lane("cold")
+                .subscribe(onNext: { [unowned self] isBought in
+                   
                     cell.updateCheckMark(isBought: isBought)
+                    
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+
+                        if !isShownBoughtItemsRelay.value  {
+                            self.observableItems.accept(self.items)
+                        }
+  
+                    }
                     
                 }, onError: { err in
                     print(err)
                 })
-                .disposed(by: self.disposeBag)
+                .disposed(by: cell.bag)
         }
     }()
     
@@ -97,7 +116,7 @@ class ShoppinglistVM: ViewModelBase {
 
         var editItem: ShoppingItem {
             
-            if !showsBoughtItemsSubject.value {
+            if !isShownBoughtItemsRelay.value {
                 
                 let filteredAllitems = items.filter { !$0.isBought }
                 let filteredSearchingTemp = searchingTemp.filter { !$0.isBought }
@@ -159,8 +178,8 @@ class ShoppinglistVM: ViewModelBase {
 
         return Observable.create { [unowned self] observer in
             
-            let newValue = !self.showsBoughtItemsSubject.value
-            self.showsBoughtItemsSubject.accept(newValue)
+            let newValue = !self.isShownBoughtItemsRelay.value
+            self.isShownBoughtItemsRelay.accept(newValue)
             
             observer.onNext(newValue)
             
@@ -288,7 +307,6 @@ class ShoppinglistVM: ViewModelBase {
         .disposed(by: disposeBag)
     
         Observable.combineLatest(isBoughtItemsStream, isNotBoughtItemsStream)
-            .debug()
             .subscribe(onNext: { [unowned self] isLastBoughtItems, isLastNotBoughtItems in
 
                 self.isBoughtItemssubject.onNext(isLastBoughtItems)
@@ -318,15 +336,16 @@ class ShoppinglistVM: ViewModelBase {
         
     }
     
-    func updateBoughtStatus(index: Int) -> Observable<Bool> {
+//    func updateBoughtStatus(index: Int) -> Observable<Bool> {
+    func updateBoughtStatus(item: ShoppingItem) -> Observable<Bool> {
         
         return Observable.create { [unowned self] observer in
             
 //            self.observableItems.value[index].isBought = !self.observableItems.value[index].isBought
-            if showsBoughtItemsSubject.value {
+            if isShownBoughtItemsRelay.value {
                     
                 
-                let item = searchingTemp.isEmpty ? items[index] : searchingTemp[index]
+//                let item = searchingTemp.isEmpty ? items[index] : searchingTemp[index]
                 
                     
                 if  let indexAllItems = self.items.firstIndex(where: { $0.id == item.id }) {
@@ -343,7 +362,7 @@ class ShoppinglistVM: ViewModelBase {
                     
                     let filteredAllitems = items.filter { !$0.isBought }
                     
-                    let item = filteredAllitems[index]
+//                    let item = filteredAllitems[index]
                     
                     if let indexAllItems = self.items.firstIndex(where: { $0.id == item.id }) {
                        
@@ -356,7 +375,7 @@ class ShoppinglistVM: ViewModelBase {
                 else {
                     
                     let filteredSearchingTemp = searchingTemp.filter { !$0.isBought }
-                    let item = filteredSearchingTemp[index]
+//                    let item = filteredSearchingTemp[index]
                     
                     if let indexAllItems = self.items.firstIndex(where: { $0.id == item.id }) {
                        
@@ -385,7 +404,7 @@ class ShoppinglistVM: ViewModelBase {
         
         var deleteItem: ShoppingItem {
             
-            if showsBoughtItemsSubject.value {
+            if isShownBoughtItemsRelay.value {
                 
                 let filteredAllitems = items.filter { !$0.isBought }
                 let filteredSearchingTemp = items.filter { !$0.isBought }
@@ -661,6 +680,7 @@ class ShoppinglistVM: ViewModelBase {
 
 
 extension ShoppinglistVM: EditShoppingItemDelegate {
+    
     func addItemToArray(item: ShoppingItem){
     
         self.items.append(item)

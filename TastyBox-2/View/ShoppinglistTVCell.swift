@@ -17,7 +17,14 @@ class ShoppinglistTVCell: UITableViewCell {
     @IBOutlet weak var strikeThroghLineView: UIView!
     
     static var identifier: String { String(describing: self) }
-
+    
+    var bag = DisposeBag()
+    
+    override func prepareForReuse() {
+        super.prepareForReuse()
+        bag = DisposeBag()
+    }
+    
     
     func configure(item: ShoppingItem) {
        
@@ -29,11 +36,14 @@ class ShoppinglistTVCell: UITableViewCell {
     }
 
     func updateCheckMark(isBought: Bool) {
-        let image = isBought ? UIImage(systemName: "checkmark.square") : UIImage(systemName: "square")
+
+            let image = isBought ? UIImage(systemName: "checkmark.square") : UIImage(systemName: "square")
+            
+            self.checkMarkBtn.setBackgroundImage(image, for: .normal)
+            
+            self.strikeThroghLineView.isHidden = !isBought
         
-        checkMarkBtn.setBackgroundImage(image, for: .normal)
         
-        strikeThroghLineView.isHidden = !isBought
     }
   
     

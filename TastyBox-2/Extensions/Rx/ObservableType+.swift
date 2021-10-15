@@ -28,4 +28,6 @@ extension ObservableType {
            // 略さず書くとこんな感じ
            // return Observable.concat(self.take(count), Observable.never())
        }
+
 }
+
