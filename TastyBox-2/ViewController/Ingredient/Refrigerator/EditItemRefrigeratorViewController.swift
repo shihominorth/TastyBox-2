@@ -19,6 +19,7 @@ class EditItemRefrigeratorViewController: UIViewController, BindableType {
     @IBOutlet weak var nameTextField: UITextField!
     @IBOutlet weak var amountTextField: UITextField!
     @IBOutlet weak var editBtn: UIButton!
+    @IBOutlet weak var scrollView: UIScrollView!
     
     var name: String?
     var amount: String?
@@ -32,6 +33,10 @@ class EditItemRefrigeratorViewController: UIViewController, BindableType {
         nameTextField.delegate = self
         amountTextField.delegate = self
         
+        nameTextField.becomeFirstResponder()
+
+        scrollView.isScrollEnabled = false
+
         setUpKeyboard()
         
     }
@@ -167,6 +172,14 @@ class EditItemRefrigeratorViewController: UIViewController, BindableType {
             .observe(on: MainScheduler.asyncInstance)
             .subscribe(onNext: {  [unowned self] notification in
                 
+                scrollView.isScrollEnabled = false
+                
+                let offset = CGPoint(
+                    x: -scrollView.adjustedContentInset.left,
+                    y: -scrollView.adjustedContentInset.top)
+
+                scrollView.setContentOffset(offset, animated: true)
+                
                 if self.view.frame.origin.y != 0 {
                     self.view.frame.origin.y = 0
                 }
@@ -203,11 +216,11 @@ class EditItemRefrigeratorViewController: UIViewController, BindableType {
 }
 
 extension EditItemRefrigeratorViewController: UITextFieldDelegate {
+   
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
         switch textField.tag {
         case 0:
             nameTextField.resignFirstResponder()
-            amountTextField.becomeFirstResponder()
         case 1:
             amountTextField.resignFirstResponder()
         default:
@@ -216,4 +229,24 @@ extension EditItemRefrigeratorViewController: UITextFieldDelegate {
         return true
     }
 
+    func textFieldDidBeginEditing(_ textField: UITextField) {
+       
+        let offset = CGPoint(
+            x: -scrollView.adjustedContentInset.left,
+            y: -scrollView.adjustedContentInset.top)
+
+        if UIDevice.current.orientation.isLandscape {
+            
+            if textField == amountTextField {
+                scrollView.setContentOffset(CGPoint(x: textField.frame.minX, y: textField.frame.minY - 10), animated: true)
+            }
+            else {
+                scrollView.setContentOffset(CGPoint(x: textField.frame.minX, y: 0), animated: true)
+            }
+            
+        }
+        else {
+            scrollView.setContentOffset(offset, animated: true)
+        }
+    }
 }
