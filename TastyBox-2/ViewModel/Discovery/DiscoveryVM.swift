@@ -18,11 +18,29 @@ class DiscoveryVM: ViewModelBase {
     let sceneCoodinator: SceneCoordinator
     let user: Firebase.User
     
+    
+    var isMenuBarOpenedRelay = BehaviorRelay<Bool>(value: false)
+    
     init(sceneCoodinator: SceneCoordinator, user: Firebase.User) {
         
         self.sceneCoodinator = sceneCoodinator
         self.user = user
     }
+    
+    func setIsMenuBarOpenedRelay() -> Observable<Bool> {
+        
+        return Observable.create {[unowned self] observer in
+            
+            self.isMenuBarOpenedRelay.accept(!isMenuBarOpenedRelay.value)
+            
+            observer.onNext(isMenuBarOpenedRelay.value)
+            
+            return Disposables.create()
+        }
+    }
+    
+    
+    
     
     func toRefrigerator() {
         

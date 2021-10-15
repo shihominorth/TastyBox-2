@@ -12,6 +12,7 @@ import FBSDKLoginKit
 //import Crashlytics
 import RxSwift
 import RxCocoa
+import RxTimelane
 
 //protocol MenuViewControllerDelegate: class {
 //    func menuViewController(viewController: DiscoveryViewController, at index: Int)
@@ -19,11 +20,12 @@ import RxCocoa
 
 class DiscoveryViewController: UIViewController, BindableType {
     
-        
+    
     typealias ViewModelType = DiscoveryVM
     
     var viewModel: DiscoveryVM!
     
+    @IBOutlet weak var menuNavBtn: UIBarButtonItem!
     @IBOutlet weak var PopularContainerView: UIView!
     @IBOutlet weak var collectionLayout: UICollectionViewFlowLayout! {
         didSet {
@@ -31,59 +33,71 @@ class DiscoveryViewController: UIViewController, BindableType {
         }
     }
     
-//    var pageControllView = MainPageViewController()
+    //    var pageControllView = MainPageViewController()
     var cellUserTappedbefore: UICollectionViewCell?
     
     // 現在選択されている位置を状態として記憶しておくためのプロパティを作る
     var selectedIndex: Int = 3
     
-//
-//    let FollowingVC = UIStoryboard(name: "followingRecipe", bundle: nil).instantiateViewController(identifier: "followingRecipe") as! FollowingRecipeViewController
-//    let ingredientVC = UIStoryboard(name: "ingredientRecipe", bundle: nil).instantiateViewController(identifier: "ingredientRecipe") as! IngredientsViewController
-//    let poppularVC = UIStoryboard(name: "popularPage", bundle: nil).instantiateViewController(identifier: "popularPage") as! PopularRecipeViewController
-//    let editorChoiceVC = UIStoryboard(name: "EditorChoice", bundle: nil).instantiateViewController(identifier: "EditorChoice") as EditorChoiceViewController
-//    let monthlyVC = UIStoryboard(name: "Monthly", bundle: nil).instantiateViewController(identifier: "Monthly") as! CuisineViewController
-//    let VIPVC = UIStoryboard(name: "VIP_page", bundle: nil).instantiateViewController(identifier: "VIP_page") as! VIPViewController
-//
+    //
+    //    let FollowingVC = UIStoryboard(name: "followingRecipe", bundle: nil).instantiateViewController(identifier: "followingRecipe") as! FollowingRecipeViewController
+    //    let ingredientVC = UIStoryboard(name: "ingredientRecipe", bundle: nil).instantiateViewController(identifier: "ingredientRecipe") as! IngredientsViewController
+    //    let poppularVC = UIStoryboard(name: "popularPage", bundle: nil).instantiateViewController(identifier: "popularPage") as! PopularRecipeViewController
+    //    let editorChoiceVC = UIStoryboard(name: "EditorChoice", bundle: nil).instantiateViewController(identifier: "EditorChoice") as EditorChoiceViewController
+    //    let monthlyVC = UIStoryboard(name: "Monthly", bundle: nil).instantiateViewController(identifier: "Monthly") as! CuisineViewController
+    //    let VIPVC = UIStoryboard(name: "VIP_page", bundle: nil).instantiateViewController(identifier: "VIP_page") as! VIPViewController
+    //
     var indexPathUserselectedBefore: IndexPath?
     var indexPageCurledInContainer: Int?
     var PreviousIndexPageCurledInContainer: Int?
     
     var menuOpend = false
     
-
+    var arrayMenu = [String]()
+    var sideMenuOpen = false
+    var lockObject = ActivityIndicator()
+    
+    @IBOutlet weak var SideMenuConstraint: NSLayoutConstraint!
+    
+    
     
     @IBOutlet weak var MenuCollectionView: UICollectionView!
-    @IBAction func SideMenuTapped(){
-        print("Toggle side Menu")
+    
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        
+        self.title = "TastyBox"
+        self.navigationController?.navigationBar.titleTextAttributes = [NSAttributedString.Key.foregroundColor: UIColor.orange ]
+        
+        CreateMenuLabel()
+        
+        initialContentView()
+        
+        //        NotificationCenter.default.addObserver(self, selector: #selector(toggleSideMenu), name: NSNotification.Name("ToggleSideMenu"), object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(showSearch), name: NSNotification.Name("ShowSearch"), object: nil)
+        //        NotificationCenter.default.addObserver(self, selector: #selector(AddRecipe), name: NSNotification.Name("AddRecipe"), object: nil)
+        //        NotificationCenter.default.addObserver(self, selector: #selector(showLogout), name: NSNotification.Name("ShowLogout"), object: nil)
+        
+        //        pageControllView = self.children[0] as! MainPageViewController
+        //        pageControllView.delegate = self
+        self.MenuCollectionView.showsHorizontalScrollIndicator = false
         
         
-        if sideMenuOpen == false {
-            // Init a UIVisualEffectView which going to do the blur for us
-            let blurView = UIVisualEffectView()
-            // Make its frame equal the main view frame so that every pixel is under blurred
-            blurView.frame = view.frame
-            // Choose the style of the blur effect to regular.
-            // You can choose dark, light, or extraLight if you wants
-            blurView.effect = UIBlurEffect(style: .dark)
-            // Now add the blur view to the main view
-            blurView.tag = 100
-            
-            let tapRecognizer = UITapGestureRecognizer(target: self, action: #selector(closeSideMenu))
-            blurView.addGestureRecognizer(tapRecognizer)
-            
-            self.view.insertSubview(blurView, at: 2)
-        } else {
-            if let viewWithTag = self.view.viewWithTag(100) {
-                viewWithTag.removeFromSuperview()
-            }else{
-                print("No!")
-            }
-        }
+        //        FollowingVC.delegate = self
         
+        self.MenuCollectionView.reloadData()
+        self.MenuCollectionView.layoutIfNeeded()
+        self.MenuCollectionView.scrollToItem(at: NSIndexPath(item: selectedIndex, section: 0) as IndexPath, at: .centeredHorizontally, animated: true)
         
+        self.navigationController?.hidesBarsOnTap = false
         
-        NotificationCenter.default.post(name: NSNotification.Name("ToggleSideMenu"), object: nil)
+        self.navigationItem.backButtonTitle = ""
+        
+    }
+    
+    override func viewWillDisappear(_ animated: Bool) {
+        
+        disappearSideMenu()
     }
     
     
@@ -97,10 +111,10 @@ class DiscoveryViewController: UIViewController, BindableType {
             .disposed(by: viewModel.disposeBag)
         
         let _  = NotificationCenter.default.rx.notification(NSNotification.Name("ShowRefrigerator"))
-            .debounce(.microseconds(1000), scheduler: MainScheduler.instance)
-            .single()
-            .catch { _ in Observable.never() }
-            .debug()
+            .lane("posted refrigerator")
+            .debounce(.microseconds(1500), scheduler: MainScheduler.instance)
+            .take(1)
+            .lane("limited refrigearator")
             .subscribe(onNext: { notification in
                 self.viewModel.toRefrigerator()
                 print("next")
@@ -108,31 +122,60 @@ class DiscoveryViewController: UIViewController, BindableType {
             .disposed(by: viewModel.disposeBag)
         
         let _  = NotificationCenter.default.rx.notification(NSNotification.Name("ShowShoppingList"))
-            .debounce(.microseconds(1000), scheduler: MainScheduler.instance)
-            .single()
-            .catch { _ in Observable.never() }
-            .debug()
+            .lane("posted shoppinglist")
+            .debounce(.microseconds(1500), scheduler: MainScheduler.instance)
+            .take(1)
+            .lane("limited shoppinglist")
             .subscribe(onNext: { notification in
                 self.viewModel.toShoppinglist()
+                
                 print("next")
             })
             .disposed(by: viewModel.disposeBag)
+        
+        
+        self.menuNavBtn.rx.tap
+            .debounce(.microseconds(1000), scheduler: MainScheduler.instance)
+            .asDriver { err in
+                return Driver.never()
+            }
+            .asObservable()
+            .flatMap { [unowned self] in self.viewModel.setIsMenuBarOpenedRelay() }
+            .subscribe(onNext: { [unowned self] isOpened in
+                
+                self.toggleSideMenu(isOpend: isOpened)
+                
+                if isOpened {
+                    self.insertblurView()
+                }
+                else {
+                    self.removeBlurView()
+                }
+                
+            }, onError: { err in
+                print(err)
+            })
+            .disposed(by: viewModel.disposeBag)
+        
     }
     
-    @objc func closeSideMenu() {
+    
+    fileprivate func disappearSideMenu() {
+       
         if let viewWithTag = self.view.viewWithTag(100) {
+            
             viewWithTag.removeFromSuperview()
-            sideMenuOpen = false
+            //            sideMenuOpen = false
+            viewModel.isMenuBarOpenedRelay.accept(false)
+            
             SideMenuConstraint.constant = -230 //-160
+            
             UIView.animate(withDuration: 0.3) {
                 self.view.layoutIfNeeded()
             }
-        }else{
-            print("No!")
         }
+        
     }
-    
-    @IBOutlet weak var SideMenuConstraint: NSLayoutConstraint!
     
     @IBAction func SearchBarItem() {
         print("Tab search Button")
@@ -144,54 +187,9 @@ class DiscoveryViewController: UIViewController, BindableType {
         NotificationCenter.default.post(name: NSNotification.Name("AddRecipe"), object: nil)
     }
     
-    var arrayMenu = [String]()
-    var sideMenuOpen = false
+    
     //    weak var delegate: MenuViewControllerDelegate?
     
-    override func viewDidLoad() {
-        super.viewDidLoad()
-
-        self.title = "TastyBox"
-        self.navigationController?.navigationBar.titleTextAttributes = [NSAttributedString.Key.foregroundColor: UIColor.orange ]
-        CreateMenuLabel()
-
-        initialContentView()
-        
-        NotificationCenter.default.addObserver(self, selector: #selector(toggleSideMenu), name: NSNotification.Name("ToggleSideMenu"), object: nil)
-        NotificationCenter.default.addObserver(self, selector: #selector(showSearch), name: NSNotification.Name("ShowSearch"), object: nil)
-//        NotificationCenter.default.addObserver(self, selector: #selector(AddRecipe), name: NSNotification.Name("AddRecipe"), object: nil)
-//        NotificationCenter.default.addObserver(self, selector: #selector(showLogout), name: NSNotification.Name("ShowLogout"), object: nil)
-        
-//        pageControllView = self.children[0] as! MainPageViewController
-//        pageControllView.delegate = self
-        self.MenuCollectionView.showsHorizontalScrollIndicator = false
-        
-        
-//        FollowingVC.delegate = self
-        
-        self.MenuCollectionView.reloadData()
-        self.MenuCollectionView.layoutIfNeeded()
-        self.MenuCollectionView.scrollToItem(at: NSIndexPath(item: selectedIndex, section: 0) as IndexPath, at: .centeredHorizontally, animated: true)
-           
-         self.navigationController?.hidesBarsOnTap = false
-        
-        self.navigationItem.backButtonTitle = ""
-
-    }
-    
-    override func viewWillDisappear(_ animated: Bool) {
-        
-        if let viewWithTag = self.view.viewWithTag(100) {
-            viewWithTag.removeFromSuperview()
-            sideMenuOpen = false
-            SideMenuConstraint.constant = -230 //-160
-            UIView.animate(withDuration: 0.3) {
-                self.view.layoutIfNeeded()
-            }
-        }else{
-            print("No!")
-        }
-    }
     
     func initialContentView(){
         
@@ -214,17 +212,65 @@ class DiscoveryViewController: UIViewController, BindableType {
         arrayMenu.append(label6)
     }
     
-    @objc func toggleSideMenu() {
-        if sideMenuOpen{
-            sideMenuOpen = false
-            SideMenuConstraint.constant = -230//-160
-        }else{
-            sideMenuOpen = true
-            SideMenuConstraint.constant = 0
-            
-        }
+    
+    func toggleSideMenu(isOpend: Bool) {
+        
+        SideMenuConstraint.constant = isOpend ? 0 : -230
+        
         UIView.animate(withDuration: 0.3) {
             self.view.layoutIfNeeded()
+        }
+        
+    }
+    
+    func insertblurView()  {
+        
+        
+        // Init a UIVisualEffectView which going to do the blur for us
+        let blurView = UIVisualEffectView()
+        // Make its frame equal the main view frame so that every pixel is under blurred
+        blurView.frame = view.frame
+        // Choose the style of the blur effect to regular.
+        // You can choose dark, light, or extraLight if you wants
+        blurView.effect = UIBlurEffect(style: .dark)
+        
+        blurView.alpha = 0.3
+        
+        // Now add the blur view to the main view
+        blurView.tag = 100
+        
+        let tapRecognizer = UITapGestureRecognizer(target: self, action: #selector(closeSideMenu))
+        blurView.addGestureRecognizer(tapRecognizer)
+        
+        self.view.insertSubview(blurView, at: 2)
+        
+        
+        
+    }
+    
+    
+    func removeBlurView() {
+        
+        if let viewWithTag = self.view.viewWithTag(100) {
+            
+            viewWithTag.removeFromSuperview()
+            
+        }
+    }
+    
+    
+    
+    @objc func closeSideMenu() {
+        
+        if let viewWithTag = self.view.viewWithTag(100) {
+            
+            viewWithTag.removeFromSuperview()
+            
+            SideMenuConstraint.constant = -230 //-160
+            
+            UIView.animate(withDuration: 0.3) {
+                self.view.layoutIfNeeded()
+            }
         }
     }
     
@@ -235,27 +281,7 @@ class DiscoveryViewController: UIViewController, BindableType {
             self.performSegue(withIdentifier: "searchPage", sender: nil)
         }
     }
-    
-//    @objc func showLogout(){
-//        
-//        print("show Logout")
-//        if Auth.auth().currentUser != nil{
-//            do{
-//                try Auth.auth().signOut()
-//                
-//            }catch let error as NSError{
-//                print(error.localizedDescription)
-//            }
-//            
-//            guard self.navigationController?.topViewController == self else { return }
-//
-//            let Storyboard: UIStoryboard = UIStoryboard(name: "Login", bundle: nil)
-//            let vc = Storyboard.instantiateViewController(withIdentifier: "loginPage")
-//            self.navigationController?.pushViewController(vc, animated: true)
-//            
-//        }
-//        
-//    }
+
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         guard let identifier = segue.identifier else { return }
@@ -276,6 +302,39 @@ class DiscoveryViewController: UIViewController, BindableType {
         }
         
     }
+    
+    @IBAction func SideMenuTapped(){
+        print("Toggle side Menu")
+        
+        
+        if sideMenuOpen == false {
+            // Init a UIVisualEffectView which going to do the blur for us
+            let blurView = UIVisualEffectView()
+            // Make its frame equal the main view frame so that every pixel is under blurred
+            blurView.frame = view.frame
+            // Choose the style of the blur effect to regular.
+            // You can choose dark, light, or extraLight if you wants
+            blurView.effect = UIBlurEffect(style: .dark)
+            // Now add the blur view to the main view
+            blurView.tag = 100
+            
+            let tapRecognizer = UITapGestureRecognizer(target: self, action: #selector(closeSideMenu))
+            blurView.addGestureRecognizer(tapRecognizer)
+            
+            self.view.insertSubview(blurView, at: 2)
+        } else {
+            
+            if let viewWithTag = self.view.viewWithTag(100) {
+                viewWithTag.removeFromSuperview()
+            }
+            
+        }
+        
+        
+        
+        //        NotificationCenter.default.post(name: NSNotification.Name("ToggleSideMenu"), object: nil)
+    }
+    
 }
 
 
@@ -307,68 +366,68 @@ extension DiscoveryViewController: UICollectionViewDelegate, UICollectionViewDat
         
         focusCell(indexPath: indexPath)
         
-//        menuViewController(viewController: self.children[0] as! MainPageViewController, at: indexPath.row)
+        //        menuViewController(viewController: self.children[0] as! MainPageViewController, at: indexPath.row)
         
         self.navigationController?.setNavigationBarHidden(false, animated: true)
-
+        
     }
     //MARK:- MenuViewControllerDelegate
-//    func menuViewController(viewController: MainPageViewController, at index: Int) {
-//
-//        // 現在表示されているViewControllerを取得する
-//        var currentIndex: Int = 0
-//        //        //現在表示しているContentViewControllerを取得
-//        var vc: UIViewController?
-//
-//        let FollowingVC = UIStoryboard(name: "followingRecipe", bundle: nil).instantiateViewController(identifier: "followingRecipe") as! FollowingRecipeViewController
-//        let ingredientVC = UIStoryboard(name: "ingredientRecipe", bundle: nil).instantiateViewController(identifier: "ingredientRecipe") as! IngredientsViewController
-//        let popularVC = UIStoryboard(name: "popularPage", bundle: nil).instantiateViewController(identifier: "popularPage") as! PopularRecipeViewController
-//        let editorChoiceVC = UIStoryboard(name: "EditorChoice", bundle: nil).instantiateViewController(identifier: "EditorChoice") as EditorChoiceViewController
-//        let monthlyVC = UIStoryboard(name: "Monthly", bundle: nil).instantiateViewController(identifier: "Monthly") as! CuisineViewController
-//        let VIPVC = UIStoryboard(name: "VIP_page", bundle: nil).instantiateViewController(identifier: "VIP_page") as! VIPViewController
-//
-//        let Vcs = [FollowingVC, ingredientVC, popularVC, editorChoiceVC, monthlyVC, VIPVC]
-//        vc = Vcs[index]
-//
-//        if viewController.viewControllers?.first is FollowingViewController {
-//            currentIndex = 0
-//
-//        }
-//        else if viewController.viewControllers?.first is IngredientsViewController {
-//            currentIndex = 1
-//
-//        }
-//        else if viewController.viewControllers?.first is PopularRecipeViewController {
-//            currentIndex = 2
-//
-//        }
-//        else if viewController.viewControllers?.first is EditorChoiceViewController {
-//            currentIndex = 3
-//
-//        }
-//        else if viewController.viewControllers?.first is CuisineViewController {
-//            currentIndex = 4
-//
-//        }
-//        else if viewController.viewControllers?.first is VIPViewController {
-//            currentIndex = 5
-//
-//        }
-//
-//        // 選択したindexが表示しているコンテンツと同じなら処理を止める
-//        guard currentIndex != index else { return }
-//
-//        // 選択したindexと現在表示されているindexを比較して、ページングの方法を決める
-//        let direction : UIPageViewController.NavigationDirection = currentIndex < index ? .forward : .reverse
-//
-//        // 新しくViewControllerを設定する　※　下のスワイプと組み合わせる時はanimatedはfalseに設定しておいたほうが無難
-//        viewController.setViewControllers([vc!], direction: direction, animated: true)
-//
-//    }
-//
-//    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-//        return CGSize(width: (self.view.frame.size.width - 5) / 5, height: MenuCollectionView.frame.size.height)
-//    }
+    //    func menuViewController(viewController: MainPageViewController, at index: Int) {
+    //
+    //        // 現在表示されているViewControllerを取得する
+    //        var currentIndex: Int = 0
+    //        //        //現在表示しているContentViewControllerを取得
+    //        var vc: UIViewController?
+    //
+    //        let FollowingVC = UIStoryboard(name: "followingRecipe", bundle: nil).instantiateViewController(identifier: "followingRecipe") as! FollowingRecipeViewController
+    //        let ingredientVC = UIStoryboard(name: "ingredientRecipe", bundle: nil).instantiateViewController(identifier: "ingredientRecipe") as! IngredientsViewController
+    //        let popularVC = UIStoryboard(name: "popularPage", bundle: nil).instantiateViewController(identifier: "popularPage") as! PopularRecipeViewController
+    //        let editorChoiceVC = UIStoryboard(name: "EditorChoice", bundle: nil).instantiateViewController(identifier: "EditorChoice") as EditorChoiceViewController
+    //        let monthlyVC = UIStoryboard(name: "Monthly", bundle: nil).instantiateViewController(identifier: "Monthly") as! CuisineViewController
+    //        let VIPVC = UIStoryboard(name: "VIP_page", bundle: nil).instantiateViewController(identifier: "VIP_page") as! VIPViewController
+    //
+    //        let Vcs = [FollowingVC, ingredientVC, popularVC, editorChoiceVC, monthlyVC, VIPVC]
+    //        vc = Vcs[index]
+    //
+    //        if viewController.viewControllers?.first is FollowingViewController {
+    //            currentIndex = 0
+    //
+    //        }
+    //        else if viewController.viewControllers?.first is IngredientsViewController {
+    //            currentIndex = 1
+    //
+    //        }
+    //        else if viewController.viewControllers?.first is PopularRecipeViewController {
+    //            currentIndex = 2
+    //
+    //        }
+    //        else if viewController.viewControllers?.first is EditorChoiceViewController {
+    //            currentIndex = 3
+    //
+    //        }
+    //        else if viewController.viewControllers?.first is CuisineViewController {
+    //            currentIndex = 4
+    //
+    //        }
+    //        else if viewController.viewControllers?.first is VIPViewController {
+    //            currentIndex = 5
+    //
+    //        }
+    //
+    //        // 選択したindexが表示しているコンテンツと同じなら処理を止める
+    //        guard currentIndex != index else { return }
+    //
+    //        // 選択したindexと現在表示されているindexを比較して、ページングの方法を決める
+    //        let direction : UIPageViewController.NavigationDirection = currentIndex < index ? .forward : .reverse
+    //
+    //        // 新しくViewControllerを設定する　※　下のスワイプと組み合わせる時はanimatedはfalseに設定しておいたほうが無難
+    //        viewController.setViewControllers([vc!], direction: direction, animated: true)
+    //
+    //    }
+    //
+    //    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
+    //        return CGSize(width: (self.view.frame.size.width - 5) / 5, height: MenuCollectionView.frame.size.height)
+    //    }
     
     // 指定したindexPathのセルを選択状態にして移動させる。(collectionViewなので表示されていないセルは存在しない)
     func focusCell(indexPath: IndexPath) {

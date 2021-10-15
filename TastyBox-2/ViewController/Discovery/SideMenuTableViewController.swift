@@ -16,7 +16,7 @@ class SideMenuTableViewController: UITableViewController {
         self.tableView.separatorColor = UIColor.clear
         self.tableView.allowsSelection = true
 //        self.tableView.delegate = self
-        NotificationCenter.default.post(name: NSNotification.Name("ToggleSideMenu"), object: nil)
+//        NotificationCenter.default.post(name: NSNotification.Name("ToggleSideMenu"), object: nil)
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -26,9 +26,9 @@ class SideMenuTableViewController: UITableViewController {
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         print(indexPath.row)
-//        NotificationCenter.default.post(name: NSNotification.Name("ToggleSideMenu"), object: nil)
         
         tableView.deselectRow(at: indexPath, animated: true)
+        
         switch indexPath.row {
         case 0:
             NotificationCenter.default.post(name: NSNotification.Name("ShowProfile"), object: nil)
