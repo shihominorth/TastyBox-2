@@ -76,7 +76,7 @@ final class SemiModalPresentationController: UIPresentationController {
             .observe(on: MainScheduler.asyncInstance)
             .subscribe(onNext: { [unowned self] notification in
                 
-//                if let keyboardSize = (notification.userInfo?[UIResponder.keyboardFrameBeginUserInfoKey] as? NSValue)?.cgRectValue, let duration = notification.userInfo?[UIResponder.keyboardAnimationDurationUserInfoKey] as? TimeInterval, let curveNumber = notification.userInfo?[UIResponder.keyboardAnimationCurveUserInfoKey] as? NSNumber
+//                if let keyboardSize = (notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue)?.cgRectValue, let duration = notification.userInfo?[UIResponder.keyboardAnimationDurationUserInfoKey] as? TimeInterval, let curveNumber = notification.userInfo?[UIResponder.keyboardAnimationCurveUserInfoKey] as? NSNumber
 //                {
                     
 //                    let curve: UIView.AnimationOptions = UIView.AnimationOptions(rawValue: UInt(truncating: curveNumber))
@@ -113,7 +113,7 @@ final class SemiModalPresentationController: UIPresentationController {
             .subscribe(onNext: {  [unowned self] notification in
                 
                 
-//                if  let keyboardSize = (notification.userInfo?[UIResponder.keyboardFrameBeginUserInfoKey] as? NSValue)?.cgRectValue, let duration = notification.userInfo?[UIResponder.keyboardAnimationDurationUserInfoKey] as? TimeInterval, let curveNumber = notification.userInfo?[UIResponder.keyboardAnimationCurveUserInfoKey] as? NSNumber
+//                if  let keyboardSize = (notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue)?.cgRectValue, let duration = notification.userInfo?[UIResponder.keyboardAnimationDurationUserInfoKey] as? TimeInterval, let curveNumber = notification.userInfo?[UIResponder.keyboardAnimationCurveUserInfoKey] as? NSNumber
 //                {
 //
 //                    let curve: UIView.AnimationOptions = UIView.AnimationOptions(rawValue: UInt(truncating: curveNumber))
