@@ -176,11 +176,11 @@ extension CreateRecipeViewController: UITableViewDelegate, UITableViewDataSource
                     .debounce(.microseconds(1000), scheduler: MainScheduler.instance)
                     .asDriver(onErrorJustReturn: ())
                     .asObservable()
-                    .flatMap { [unowned self] in self.viewModel.setIsEditIngredientsRelay() }
+                    .flatMap { [unowned self] in self.viewModel.setIsEditableTableViewRelay() }
                     .subscribe(onNext: { element in
                     
                         
-                        if self.viewModel.isEditIngredientsRelay.value {
+                        if self.viewModel.isEditableTableViewRelay.value {
                             tableView.setEditing(true, animated: true)
                         }
                         else {
@@ -243,10 +243,10 @@ extension CreateRecipeViewController: UITableViewDelegate, UITableViewDataSource
                     .debounce(.microseconds(1000), scheduler: MainScheduler.instance)
                     .asDriver(onErrorJustReturn: ())
                     .asObservable()
-                    .flatMap { [unowned self] in self.viewModel.setiIsEditInstructionsRelay() }
+                    .flatMap { [unowned self] in self.viewModel.setIsEditableTableViewRelay() }
                     .subscribe(onNext: { element in
                         
-                        if self.viewModel.isEditInstructionsRelay.value {
+                        if self.viewModel.isEditableTableViewRelay.value {
                             tableView.setEditing(true, animated: true)
                         }
                         else {
@@ -337,12 +337,18 @@ extension CreateRecipeViewController: UITableViewDelegate, UITableViewDataSource
     
     func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
         
-        if indexPath.section == 4 && self.viewModel.isEditIngredientsRelay.value {
-            return true
+        switch indexPath.section {
+            
+        case 4, 6:
+            
+            if self.viewModel.isEditableTableViewRelay.value {
+                return true
+            }
+            
+        default:
+            return false
         }
-        else if indexPath.section == 6 && self.viewModel.isEditInstructionsRelay.value {
-            return true
-        }
+       
         
         return false
     }
