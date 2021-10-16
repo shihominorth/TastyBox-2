@@ -22,11 +22,68 @@ class CreateRecipeVM: ViewModelBase {
     var isUserScrollingRelay = BehaviorRelay<Bool>(value: true)
     
     
+    var ingredients = [Ingredient]()
+    var instructions = [Instruction]()
+    
+    
     init(sceneCoodinator: SceneCoordinator, user: Firebase.User) {
         
         self.sceneCoodinator = sceneCoodinator
         self.user = user
+        
+        super.init()
+        
+     
             
+    }
+ 
+    func isAppendNewIngredient() -> Observable<Bool> {
+       
+        return Observable.create { [unowned self] observer in
+            
+            appendNewIngredient()
+            
+            observer.onNext(true)
+            
+            return Disposables.create()
+        }
+      
+        
+    }
+    
+    func isAppendNewInstructions() -> Observable<Bool> {
+       
+        return Observable.create { [unowned self] observer in
+            
+            appendNewInstructions()
+            
+            observer.onNext(true)
+            
+            return Disposables.create()
+        }
+      
+        
+    }
+    
+    
+    func appendNewIngredient() {
+        
+        let uuid = UUID()
+        let uniqueIdString = uuid.uuidString.replacingOccurrences(of: "-", with: "")
+        
+        let indredient = Ingredient(key: uniqueIdString, name: "", amount: "", order: self.ingredients.count)
+        
+        self.ingredients.append(indredient)
+    }
+    
+    func appendNewInstructions() {
+        
+        let uuid = UUID()
+        let uniqueIdString = uuid.uuidString.replacingOccurrences(of: "-", with: "")
+        
+        let instruction = Instruction(index: self.instructions.count, imageUrl: "", text: "")
+        
+        self.instructions.append(instruction)
     }
     
     

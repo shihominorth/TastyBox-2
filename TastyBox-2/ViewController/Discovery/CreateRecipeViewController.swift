@@ -24,6 +24,8 @@ class CreateRecipeViewController: UIViewController, BindableType {
         tableView.delegate = self
         tableView.dataSource = self
 
+        self.viewModel.appendNewIngredient()
+        self.viewModel.appendNewInstructions()
     }
     
     
@@ -65,6 +67,19 @@ extension CreateRecipeViewController: UITableViewDelegate, UITableViewDataSource
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+       
+        switch section {
+       
+        case 4:
+            return viewModel.ingredients.count
+
+        case 6:
+            return viewModel.instructions.count
+            
+        default:
+            break
+        }
+        
         return 1
     }
     
@@ -133,6 +148,20 @@ extension CreateRecipeViewController: UITableViewDelegate, UITableViewDataSource
             
             if let cell = tableView.dequeueReusableCell(withIdentifier: "editHeaderIngredients", for: indexPath) as? EditIngredientsHeaderCell {
                 
+                cell.addBtn.rx.tap
+                    .debounce(.microseconds(1000), scheduler: MainScheduler.instance)
+                    .asDriver(onErrorJustReturn: ())
+                    .asObservable()
+                    .flatMap { [unowned self] in self.viewModel.isAppendNewIngredient() }
+                    .subscribe(onNext: { [unowned self] isAppended in
+                        
+                        tableView.insertRows(at: [IndexPath(row: self.viewModel.ingredients.count - 1, section: 4)], with: .automatic)
+                        
+                    }, onError: { err in
+                        print(err)
+                    })
+                    .disposed(by: cell.disposeBag)
+                    
                 
                 return cell
             }
@@ -166,6 +195,19 @@ extension CreateRecipeViewController: UITableViewDelegate, UITableViewDataSource
             
             if let cell = tableView.dequeueReusableCell(withIdentifier: "editHeaderInstructions", for: indexPath) as? EditInstructionHeaderTVCell {
                 
+                cell.addBtn.rx.tap
+                    .debounce(.microseconds(1000), scheduler: MainScheduler.instance)
+                    .asDriver(onErrorJustReturn: ())
+                    .asObservable()
+                    .flatMap { [unowned self] in self.viewModel.isAppendNewInstructions() }
+                    .subscribe(onNext: { [unowned self] isAppended in
+                        
+                        tableView.insertRows(at: [IndexPath(row: self.viewModel.instructions.count - 1, section: 6)], with: .automatic)
+                        
+                    }, onError: { err in
+                        print(err)
+                    })
+                    .disposed(by: cell.disposeBag)
                 
                 return cell
             }

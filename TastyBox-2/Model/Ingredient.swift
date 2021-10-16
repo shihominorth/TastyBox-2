@@ -22,6 +22,7 @@ class Ingredient  {
         self.amount = amount
         self.order = order
     }
+    
 }
 
 
