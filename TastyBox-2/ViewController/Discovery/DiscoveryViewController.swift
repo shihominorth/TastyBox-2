@@ -26,6 +26,8 @@ class DiscoveryViewController: UIViewController, BindableType {
     var viewModel: DiscoveryVM!
     
     @IBOutlet weak var menuNavBtn: UIBarButtonItem!
+    @IBOutlet weak var addRecipeNavBtn: UIBarButtonItem!
+    
     @IBOutlet weak var PopularContainerView: UIView!
     @IBOutlet weak var sideMenuContainerView: UIView!
     
@@ -105,6 +107,11 @@ class DiscoveryViewController: UIViewController, BindableType {
     
     
     func bindViewModel() {
+        
+        self.addRecipeNavBtn.rx.tap
+            .debounce(.microseconds(1000), scheduler: MainScheduler.instance)
+            .subscribe(onNext: { [unowned self] in self.viewModel.toCreateRecipeVC() })
+            .disposed(by: viewModel.disposeBag)
         
         self.menuNavBtn.rx.tap
             .debounce(.microseconds(1000), scheduler: MainScheduler.instance)

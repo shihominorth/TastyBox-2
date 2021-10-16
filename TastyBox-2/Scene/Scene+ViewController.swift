@@ -190,3 +190,22 @@ extension IngredientScene {
         }
     }
 }
+
+
+extension CreateRecipeScene {
+    
+    func viewController() -> UIViewController {
+
+        let storyboard = UIStoryboard(name: "CreateRecipe", bundle: nil)
+        
+        switch self {
+        case .createRecipe(let viewModel):
+
+            var vc = storyboard.instantiateViewController(withIdentifier: "createRecipe") as! CreateRecipeViewController
+            
+            vc.bindViewModel(to: viewModel)
+            
+            return vc
+        }
+    }
+}

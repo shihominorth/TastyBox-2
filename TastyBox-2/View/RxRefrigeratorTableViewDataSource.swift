@@ -39,7 +39,6 @@ class RxRefrigeratorTableViewDataSource<E: Differentiable, Cell: UITableViewCell
             self.values = target
         }
         else {
-            
             tableView.reload(using: changeset, with: animation) { data in
                 self.values = data
             }

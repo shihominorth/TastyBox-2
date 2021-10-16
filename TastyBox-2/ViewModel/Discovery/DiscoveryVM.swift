@@ -73,6 +73,13 @@ class DiscoveryVM: ViewModelBase {
     }
     
     
+    func toCreateRecipeVC() {
+        
+        let vm = CreateRecipeVM(sceneCoodinator: self.sceneCoodinator, user: self.user)
+        let vc = CreateRecipeScene.createRecipe(vm).viewController()
+        
+        self.sceneCoodinator.transition(to: vc, type: .push)
+    }
     
     
     func toRefrigerator() {

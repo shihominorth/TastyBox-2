@@ -22,3 +22,8 @@ enum MainScene {
 enum IngredientScene {
     case refrigerator(RefrigeratorVM), editRefrigerator(EditItemRefrigeratorVM), shoppinglist(ShoppinglistVM), editShoppinglist(EditShoppinglistVM)
 }
+
+
+enum CreateRecipeScene {
+    case createRecipe(CreateRecipeVM)
+}

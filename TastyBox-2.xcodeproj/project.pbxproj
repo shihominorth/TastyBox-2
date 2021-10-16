@@ -29,6 +29,9 @@
 		6F512A3226F467A300826657 /* FlowLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F512A3126F467A300826657 /* FlowLayout.swift */; };
 		6F6D0AEE26EED71500CD27AE /* RxFaceBookLoginDelegateProxy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F6D0AED26EED71500CD27AE /* RxFaceBookLoginDelegateProxy.swift */; };
 		6F74C4252719BAB9007BB9E6 /* DiscoveryPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F74C4242719BAB8007BB9E6 /* DiscoveryPresenter.swift */; };
+		6F74C4292719DC61007BB9E6 /* CreateRecipeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F74C4282719DC61007BB9E6 /* CreateRecipeViewController.swift */; };
+		6F74C42B2719DEE7007BB9E6 /* CreateRecipeVM.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F74C42A2719DEE7007BB9E6 /* CreateRecipeVM.swift */; };
+		6F74C42E2719E4D5007BB9E6 /* CreateRecipe.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 6F74C42C2719E20A007BB9E6 /* CreateRecipe.storyboard */; };
 		6F9A0D0B27101A6E00DABB45 /* SemiModalDismissAnimatedTransition.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F9A0D0A27101A6E00DABB45 /* SemiModalDismissAnimatedTransition.swift */; };
 		6F9A0D0E27101ACA00DABB45 /* SemiModalDismissInteractiveTransition.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F9A0D0D27101ACA00DABB45 /* SemiModalDismissInteractiveTransition.swift */; };
 		6F9A0D1027101B1400DABB45 /* SemiModalIndicatorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F9A0D0F27101B1400DABB45 /* SemiModalIndicatorView.swift */; };
@@ -126,6 +129,9 @@
 		6F512A3126F467A300826657 /* FlowLayout.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FlowLayout.swift; sourceTree = "<group>"; };
 		6F6D0AED26EED71500CD27AE /* RxFaceBookLoginDelegateProxy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RxFaceBookLoginDelegateProxy.swift; sourceTree = "<group>"; };
 		6F74C4242719BAB8007BB9E6 /* DiscoveryPresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiscoveryPresenter.swift; sourceTree = "<group>"; };
+		6F74C4282719DC61007BB9E6 /* CreateRecipeViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateRecipeViewController.swift; sourceTree = "<group>"; };
+		6F74C42A2719DEE7007BB9E6 /* CreateRecipeVM.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateRecipeVM.swift; sourceTree = "<group>"; };
+		6F74C42C2719E20A007BB9E6 /* CreateRecipe.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = CreateRecipe.storyboard; sourceTree = "<group>"; };
 		6F9A0D0A27101A6E00DABB45 /* SemiModalDismissAnimatedTransition.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SemiModalDismissAnimatedTransition.swift; sourceTree = "<group>"; };
 		6F9A0D0D27101ACA00DABB45 /* SemiModalDismissInteractiveTransition.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SemiModalDismissInteractiveTransition.swift; sourceTree = "<group>"; };
 		6F9A0D0F27101B1400DABB45 /* SemiModalIndicatorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SemiModalIndicatorView.swift; sourceTree = "<group>"; };
@@ -517,6 +523,7 @@
 				6FEF087A26F2A2DF00C02CDD /* DiscoveryViewController.swift */,
 				6FEF088426F2A85A00C02CDD /* MainPageViewController.swift */,
 				6FEF088E26F2AD1000C02CDD /* SideMenuTableViewController.swift */,
+				6F74C4282719DC61007BB9E6 /* CreateRecipeViewController.swift */,
 				6FEF088126F2A72400C02CDD /* MainPages */,
 			);
 			path = Discovery;
@@ -543,6 +550,7 @@
 				6FF66BA726D7B13D0024495E /* About.storyboard */,
 				6F512A2126F3FA5100826657 /* Tutorial.storyboard */,
 				6FE9EB4826F98A05000AF9D4 /* Ingredient.storyboard */,
+				6F74C42C2719E20A007BB9E6 /* CreateRecipe.storyboard */,
 			);
 			path = Storyboard;
 			sourceTree = "<group>";
@@ -580,6 +588,7 @@
 				6F512A2726F4172600826657 /* About */,
 				6F512A2A26F417D300826657 /* Tutorial */,
 				6FE9EB5126F9A6E8000AF9D4 /* Ingredient */,
+				6F74C42A2719DEE7007BB9E6 /* CreateRecipeVM.swift */,
 			);
 			path = ViewModel;
 			sourceTree = "<group>";
@@ -663,6 +672,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				6F74C42E2719E4D5007BB9E6 /* CreateRecipe.storyboard in Resources */,
 				6FF66B8926D7975C0024495E /* Login.storyboard in Resources */,
 				6FF66BA826D7B13D0024495E /* About.storyboard in Resources */,
 				6FB06F4926D67E0600E110B4 /* LaunchScreen.storyboard in Resources */,
@@ -741,7 +751,9 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				6F74C4292719DC61007BB9E6 /* CreateRecipeViewController.swift in Sources */,
 				6F2BBA8A26EDDA6B003B0D5F /* RxAppleDelegateProxy.swift in Sources */,
+				6F74C42B2719DEE7007BB9E6 /* CreateRecipeVM.swift in Sources */,
 				6F06EBEB26F824ED00F2218B /* ObservableType+.swift in Sources */,
 				6FE9EB5A26F9C01A000AF9D4 /* EditItemRefrigeratorVM.swift in Sources */,
 				6F018BA526DB8327006416D3 /* SceneCoordinatorType.swift in Sources */,
