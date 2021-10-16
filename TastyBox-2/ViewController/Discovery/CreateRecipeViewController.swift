@@ -26,29 +26,15 @@ class CreateRecipeViewController: UIViewController, BindableType {
 
         self.viewModel.appendNewIngredient()
         self.viewModel.appendNewInstructions()
+        
+        setUpTableView()
     }
     
     
     func bindViewModel() {
         
         
-        tableView.rx.didScroll
-            .observe(on: MainScheduler.asyncInstance)
-            .catch { err in
-
-                let err = err as NSError
-                print(err)
-
-                return .empty()
-            }
-            .subscribe(onNext: { [unowned self] _ in
-                          
-                if tableView.isTracking {
-                    self.tableView.endEditing(true)
-                }
-               
-            })
-            .disposed(by: viewModel.disposeBag)
+        setUpTableView()
         
         viewModel.keyboardClose
             .subscribe(onNext: { notificatoin in
@@ -56,6 +42,29 @@ class CreateRecipeViewController: UIViewController, BindableType {
             })
             .disposed(by: viewModel.disposeBag)
           
+    }
+    
+    fileprivate func setUpTableView() {
+        
+        self.tableView.allowsSelectionDuringEditing = true
+        
+        tableView.rx.didScroll
+            .observe(on: MainScheduler.asyncInstance)
+            .catch { err in
+                
+                let err = err as NSError
+                print(err)
+                
+                return .empty()
+            }
+            .subscribe(onNext: { [unowned self] _ in
+                
+                if tableView.isTracking {
+                    self.tableView.endEditing(true)
+                }
+                
+            })
+            .disposed(by: viewModel.disposeBag)
     }
 
 }
@@ -161,6 +170,27 @@ extension CreateRecipeViewController: UITableViewDelegate, UITableViewDataSource
                         print(err)
                     })
                     .disposed(by: cell.disposeBag)
+                
+                
+                cell.editbtn.rx.tap
+                    .debounce(.microseconds(1000), scheduler: MainScheduler.instance)
+                    .asDriver(onErrorJustReturn: ())
+                    .asObservable()
+                    .flatMap { [unowned self] in self.viewModel.setIsEditIngredientsRelay() }
+                    .subscribe(onNext: { element in
+                    
+                        
+                        if self.viewModel.isEditIngredientsRelay.value {
+                            tableView.setEditing(true, animated: true)
+                        }
+                        else {
+                            tableView.setEditing(false, animated: true)
+                        }
+    
+                    }, onError: { err in
+                        print(err)
+                    })
+                    .disposed(by: cell.disposeBag)
                     
                 
                 return cell
@@ -204,6 +234,25 @@ extension CreateRecipeViewController: UITableViewDelegate, UITableViewDataSource
                         
                         tableView.insertRows(at: [IndexPath(row: self.viewModel.instructions.count - 1, section: 6)], with: .automatic)
                         
+                    }, onError: { err in
+                        print(err)
+                    })
+                    .disposed(by: cell.disposeBag)
+                
+                cell.editBtn.rx.tap
+                    .debounce(.microseconds(1000), scheduler: MainScheduler.instance)
+                    .asDriver(onErrorJustReturn: ())
+                    .asObservable()
+                    .flatMap { [unowned self] in self.viewModel.setiIsEditInstructionsRelay() }
+                    .subscribe(onNext: { element in
+                        
+                        if self.viewModel.isEditInstructionsRelay.value {
+                            tableView.setEditing(true, animated: true)
+                        }
+                        else {
+                            tableView.setEditing(false, animated: true)
+                        }
+    
                     }, onError: { err in
                         print(err)
                     })
@@ -283,6 +332,19 @@ extension CreateRecipeViewController: UITableViewDelegate, UITableViewDataSource
        
         return UITableView.automaticDimension
         
+    }
+    
+    
+    func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
+        
+        if indexPath.section == 4 && self.viewModel.isEditIngredientsRelay.value {
+            return true
+        }
+        else if indexPath.section == 6 && self.viewModel.isEditInstructionsRelay.value {
+            return true
+        }
+        
+        return false
     }
 }
 

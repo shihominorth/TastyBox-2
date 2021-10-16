@@ -21,6 +21,9 @@ class CreateRecipeVM: ViewModelBase {
     
     var isUserScrollingRelay = BehaviorRelay<Bool>(value: true)
     
+    var isEditIngredientsRelay = BehaviorRelay<Bool>(value: false)
+    var isEditInstructionsRelay = BehaviorRelay<Bool>(value: false)
+
     
     var ingredients = [Ingredient]()
     var instructions = [Instruction]()
@@ -86,5 +89,30 @@ class CreateRecipeVM: ViewModelBase {
         self.instructions.append(instruction)
     }
     
+    
+    func setIsEditIngredientsRelay() -> Observable<Bool> {
+        
+        return Observable.create { observer in
+            
+            self.isEditIngredientsRelay.accept(!self.isEditIngredientsRelay.value)
+            
+            observer.onNext(true)
+            
+            return Disposables.create()
+        }
+    }
+    
+    func setiIsEditInstructionsRelay() -> Observable<Bool> {
+        
+        return Observable.create { observer in
+            
+            self.isEditInstructionsRelay.accept(!self.isEditInstructionsRelay.value)
+            
+            observer.onNext(true)
+
+            
+            return Disposables.create()
+        }
+    }
     
 }
