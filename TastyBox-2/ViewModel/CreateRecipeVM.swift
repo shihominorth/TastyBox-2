@@ -9,6 +9,7 @@ import Foundation
 import Firebase
 import RxSwift
 import RxCocoa
+//import UIKit
 
 class CreateRecipeVM: ViewModelBase {
     
@@ -23,8 +24,12 @@ class CreateRecipeVM: ViewModelBase {
     
     var isEditableIngredientsRelay = BehaviorRelay<Bool>(value: false)
     var isEditInstructionsRelay = BehaviorRelay<Bool>(value: false)
-
     
+    let photoPicker = ImagePickScene.photo.viewController()
+    let videoPicker = ImagePickScene.video.viewController()
+    
+    var mainImgData = Data()
+     
     var ingredients = [Ingredient]()
     var instructions = [Instruction]()
     
@@ -33,10 +38,6 @@ class CreateRecipeVM: ViewModelBase {
         
         self.sceneCoodinator = sceneCoodinator
         self.user = user
-        
-        super.init()
-        
-     
             
     }
  
@@ -112,6 +113,24 @@ class CreateRecipeVM: ViewModelBase {
             
             return Disposables.create()
         }
+    }
+    
+    
+    func toImagePicker() {
+        
+//        photoPicker.rx.sentMessage(#selector(viewWillDisappear(_:)))
+//            .subscribe(onNext: { in
+//                
+//            }, onError: <#T##((Error) -> Void)?#>, onCompleted: <#T##(() -> Void)?#>, onDisposed: <#T##(() -> Void)?#>)
+        
+        self.sceneCoodinator.transition(to: photoPicker, type: .imagePick)
+        
+    }
+    
+    func toVideoPicker() {
+ 
+        self.sceneCoodinator.transition(to: photoPicker, type: .imagePick)
+        
     }
     
 }

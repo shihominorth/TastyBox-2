@@ -17,4 +17,5 @@ enum SceneTransitionType {
     case usePresentNC
     case VCAsRoot
     case modalHalf
+    case imagePick
 }

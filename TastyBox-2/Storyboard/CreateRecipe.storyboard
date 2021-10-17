@@ -188,7 +188,7 @@
                                                     </connections>
                                                 </textField>
                                             </subviews>
-                                            <color key="backgroundColor" red="0.9975921512" green="0.97921544309999997" blue="0.79212552309999995" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+                                            <color key="backgroundColor" red="0.99607843137254903" green="0.98039215686274506" blue="0.792156862745098" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
                                             <constraints>
                                                 <constraint firstItem="TZR-l0-OKM" firstAttribute="leading" secondItem="cCQ-tE-XDQ" secondAttribute="trailing" constant="20" id="Aab-Lj-MIQ"/>
                                                 <constraint firstItem="atV-xz-npm" firstAttribute="leading" secondItem="TZR-l0-OKM" secondAttribute="trailing" constant="5" id="RFB-LZ-l2g"/>
@@ -215,7 +215,7 @@
                                             <subviews>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Hun-3X-Wzj">
                                                     <rect key="frame" x="0.0" y="4.5" width="414" height="35"/>
-                                                    <color key="backgroundColor" systemColor="systemBrownColor"/>
+                                                    <color key="backgroundColor" red="0.63529411764705879" green="0.51764705882352946" blue="0.36862745098039218" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                     <constraints>
                                                         <constraint firstAttribute="height" constant="35" id="KqW-Sm-2az"/>
                                                     </constraints>
@@ -400,7 +400,7 @@
                                                                 <constraint firstAttribute="height" constant="3" id="ZvC-VY-gip"/>
                                                             </constraints>
                                                         </view>
-                                                        <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" text="Please press [return] after the last character to finish editing." textAlignment="natural" translatesAutoresizingMaskIntoConstraints="NO" id="Vlx-by-ro7">
+                                                        <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" textAlignment="natural" translatesAutoresizingMaskIntoConstraints="NO" id="Vlx-by-ro7">
                                                             <rect key="frame" x="0.0" y="23.5" width="262" height="76.5"/>
                                                             <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                                                             <constraints>

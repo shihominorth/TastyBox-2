@@ -6,14 +6,49 @@
 //
 
 import UIKit
+import RxSwift
+import RxCocoa
+import Lottie
 
 class EditMainImageTVCell: UITableViewCell {
 
     @IBOutlet weak var collectionView: UICollectionView!
+//
+//    var tappedPhotoCell = Observable<IndexPath>()
+//    var tappedVideoCell = Observable<IndexPath>()
+   
+    var mainImage = UIImage(named: "PhotoUpload") {
+        didSet {
+            collectionView.reloadItems(at: [IndexPath(row: 0, section: 0)])
+        }
+    }
+    var thumbnailImg = UIImage(named: "VideoUpload") {
+        didSet {
+            collectionView.reloadItems(at: [IndexPath(row: 1, section: 0)])
+        }
+    }
+    
+    var disposeBag = DisposeBag()
     
     override func awakeFromNib() {
         super.awakeFromNib()
         // Initialization code
+        
+        // Do any additional setup after loading the view, typically from a nib.
+        let layout: UICollectionViewFlowLayout = UICollectionViewFlowLayout()
+        layout.sectionInset = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 0)
+        layout.itemSize =  CGSize(width: self.contentView.frame.width, height: self.contentView.frame.width)
+        layout.minimumInteritemSpacing = 0
+        layout.minimumLineSpacing = 0
+        layout.scrollDirection = .horizontal
+        collectionView.collectionViewLayout = layout
+        
+        collectionView.backgroundColor = hexStringToUIColor(hex: "#FEFACA")
+
+//        tappedPhotoCell = collectionView.rx.itemSelected.filter { $0.row == 0 }
+//        tappedVideoCell = collectionView.rx.itemSelected.filter { $0.row == 1 }
+        
+        disposeBag = DisposeBag()
     }
 
     override func setSelected(_ selected: Bool, animated: Bool) {
@@ -21,9 +56,30 @@ class EditMainImageTVCell: UITableViewCell {
 
         // Configure the view for the selected state
         collectionView.dataSource = self
-        
+
     }
 
+    func hexStringToUIColor(hex: String) -> UIColor {
+        var cString:String = hex.trimmingCharacters(in: .whitespacesAndNewlines).uppercased()
+
+        if (cString.hasPrefix("#")) {
+            cString.remove(at: cString.startIndex)
+        }
+
+        if ((cString.count) != 6) {
+            return UIColor.gray
+        }
+
+        var rgbValue:UInt64 = 0
+        Scanner(string: cString).scanHexInt64(&rgbValue)
+
+        return UIColor(
+            red: CGFloat((rgbValue & 0xFF0000) >> 16) / 255.0,
+            green: CGFloat((rgbValue & 0x00FF00) >> 8) / 255.0,
+            blue: CGFloat(rgbValue & 0x0000FF) / 255.0,
+            alpha: CGFloat(1.0)
+        )
+    }
 }
 
 extension EditMainImageTVCell: UICollectionViewDataSource {
@@ -34,18 +90,23 @@ extension EditMainImageTVCell: UICollectionViewDataSource {
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         
-        if indexPath.section == 0 {
-          let cell =  collectionView.dequeueReusableCell(withReuseIdentifier: "editMainImageCVCell", for: indexPath) as! EditMainImageCVCell
+        if indexPath.row == 0 {
+          
+            let cell =  collectionView.dequeueReusableCell(withReuseIdentifier: "editMainImageCVCell", for: indexPath) as! EditMainImageCVCell
+            
+            cell.imgView.image = mainImage
             
             return cell
         }
         else {
             
-            let cell =  collectionView.dequeueReusableCell(withReuseIdentifier: "editMainVideoCVCell", for: indexPath) as! EditMainVideoCVCell
+            let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "editMainVideoCVCell", for: indexPath) as! EditMainVideoCVCell
+           
+            cell.imgView.image = thumbnailImg
               
             return cell
         }
     }
+    
 }
-
 

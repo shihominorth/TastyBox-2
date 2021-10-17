@@ -6,6 +6,8 @@
 //
 
 import UIKit
+import Photos
+import PhotosUI
 import RxSwift
 import RxCocoa
 
@@ -15,7 +17,6 @@ class SceneCoordinator: NSObject, SceneCoordinatorType {
     private var window: UIWindow
     private var currentViewController: UIViewController
     private var semiModalPresenter = SemiModalPresenter()
-
     
     required init(window: UIWindow) {
         self.window = window
@@ -120,10 +121,20 @@ class SceneCoordinator: NSObject, SceneCoordinatorType {
                     self.semiModalPresenter.dissmissDelegate = self
                     subject.onCompleted()
                 }
-                
-               
-//            }
+
+        case .imagePick:
             
+            if viewController is PHPickerViewController {
+
+                viewController.modalPresentationStyle = .automatic
+                viewController.modalTransitionStyle = .coverVertical
+                
+                currentViewController.present(viewController, animated: true) {
+                    subject.onCompleted()
+                }
+                
+            }
+          
         }
         
         
@@ -169,7 +180,7 @@ class SceneCoordinator: NSObject, SceneCoordinatorType {
     
 }
 
-// challenge 3: navigation controller delegate
+
 extension SceneCoordinator: UINavigationControllerDelegate {
     func navigationController(_ navigationController: UINavigationController, willShow viewController: UIViewController, animated: Bool) {
         currentViewController = viewController

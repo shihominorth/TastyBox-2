@@ -6,6 +6,8 @@
 //
 
 import UIKit
+import Photos
+import PhotosUI
 
 extension LoadingScene {
     func viewController() -> UIViewController {
@@ -206,6 +208,46 @@ extension CreateRecipeScene {
             vc.bindViewModel(to: viewModel)
             
             return vc
+        }
+    }
+}
+
+extension ImagePickScene {
+    
+    func viewController() -> PHPickerViewController {
+        
+        switch self {
+        case .photo:
+            
+            var photoConfigPHPickerConfiguration: PHPickerConfiguration {
+
+                var config = PHPickerConfiguration(photoLibrary: .shared())
+                config.selectionLimit = 1
+                config.filter = PHPickerFilter.any(of: [.images, .livePhotos])
+                
+                
+                return config
+            }
+            
+            let vc = PHPickerViewController(configuration: photoConfigPHPickerConfiguration)
+            
+            return vc
+            
+        case .video:
+            
+            var videoConfigPHPickerConfiguration: PHPickerConfiguration {
+
+               var config = PHPickerConfiguration(photoLibrary: .shared())
+               config.selectionLimit = 1
+               config.filter = .videos
+               
+               return config
+           }
+            
+            let vc = PHPickerViewController(configuration: videoConfigPHPickerConfiguration)
+            
+            return vc
+            
         }
     }
 }

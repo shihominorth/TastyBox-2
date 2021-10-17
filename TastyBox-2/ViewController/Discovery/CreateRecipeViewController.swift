@@ -6,6 +6,8 @@
 //
 
 import UIKit
+import Photos
+import PhotosUI
 import RxCocoa
 import RxSwift
 
@@ -17,6 +19,8 @@ class CreateRecipeViewController: UIViewController, BindableType {
     var viewModel: CreateRecipeVM!
   
     @IBOutlet weak var tableView: UITableView!
+    
+   
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -33,14 +37,8 @@ class CreateRecipeViewController: UIViewController, BindableType {
     
     func bindViewModel() {
         
-        
-        setUpTableView()
-        
-        viewModel.keyboardClose
-            .subscribe(onNext: { notificatoin in
-                print(self.view.frame)
-            })
-            .disposed(by: viewModel.disposeBag)
+        viewModel.photoPicker.delegate = self
+        viewModel.videoPicker.delegate = self
           
     }
     
@@ -98,6 +96,15 @@ extension CreateRecipeViewController: UITableViewDelegate, UITableViewDataSource
         case 0:
             
             if let cell = tableView.dequeueReusableCell(withIdentifier: "editMainImage", for: indexPath) as? EditMainImageTVCell {
+                    
+                cell.collectionView.rx.itemSelected
+                    .filter { $0.row == 0 }
+                    .subscribe(onNext: { [unowned self] _ in
+                        
+                        self.viewModel.toImagePicker()
+                        
+                    })
+                    .disposed(by: cell.disposeBag)
                 
                 return cell
             }
@@ -138,6 +145,7 @@ extension CreateRecipeViewController: UITableViewDelegate, UITableViewDataSource
                         if let keyboardSize = (notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue)?.cgRectValue, let viewHeight =  self?.view.frame.height {
                            
                             if cell.timeTxtField.isFirstResponder || cell.servingTxtField.isFirstResponder {
+                               
                                 let cellRect = tableView.rectForRow(at: indexPath)
                                 let cellRectInView = tableView.convert(cellRect, to: self?.navigationController?.view)
                                 
@@ -371,34 +379,38 @@ extension CreateRecipeViewController: UITableViewDelegate, UITableViewDataSource
             return true
         }
         
-//        switch indexPath.section {
-//
-//        case 4:
-//
-//            if self.viewModel.isEditableTableViewRelay.value {
-//                return true
-//            }
-//
-//        case 6:
-//
-//            if self.viewModel.isEditInstructionsRelay.value {
-//                return true
-//            }
-            
-//        case 4, 6:
-//            
-//            if self.viewModel.isEditableTableViewRelay.value {
-//                return true
-//            }
-//
-//        default:
-//            return false
-//        }
-//
-        
         return false
     }
 }
 
-
+extension CreateRecipeViewController: PHPickerViewControllerDelegate {
+    
+    func picker(_ picker: PHPickerViewController, didFinishPicking results: [PHPickerResult]) {
+        
+        picker.dismiss(animated: true, completion: nil)
+        
+        results.forEach { result in
+            
+            result.itemProvider.loadObject(ofClass: UIImage.self) { [unowned self] image, err in
+                
+                if let err = err {
+                
+                    print(err)
+                
+                }
+                else if let image = image as? UIImage, let data = image.convertToData() {
+                    
+                    self.viewModel.mainImgData = data
+                    
+                    guard let cellForImage = tableView.cellForRow(at: IndexPath(row: 0, section: 0)) as? EditMainImageTVCell else {
+                        return
+                    }
+                    
+                    cellForImage.mainImage = image
+                }
+                
+            }
+        }
+    }
+}
 

@@ -27,3 +27,7 @@ enum IngredientScene {
 enum CreateRecipeScene {
     case createRecipe(CreateRecipeVM)
 }
+
+enum ImagePickScene {
+    case photo, video
+}
