@@ -106,6 +106,15 @@ extension CreateRecipeViewController: UITableViewDelegate, UITableViewDataSource
                     })
                     .disposed(by: cell.disposeBag)
                 
+               
+                viewModel.mainImgData
+                    .bind(to: cell.mainImgDataSubject)
+                    .disposed(by: cell.disposeBag)
+                
+                viewModel.thumbnailImgData
+                    .bind(to: cell.thumbnailDataSubject)
+                    .disposed(by: cell.disposeBag)
+                
                 return cell
             }
             
@@ -400,13 +409,8 @@ extension CreateRecipeViewController: PHPickerViewControllerDelegate {
                 }
                 else if let image = image as? UIImage, let data = image.convertToData() {
                     
-                    self.viewModel.mainImgData = data
+                    self.viewModel.mainImgData.onNext(data)
                     
-                    guard let cellForImage = tableView.cellForRow(at: IndexPath(row: 0, section: 0)) as? EditMainImageTVCell else {
-                        return
-                    }
-                    
-                    cellForImage.mainImage = image
                 }
                 
             }

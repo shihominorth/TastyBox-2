@@ -28,11 +28,13 @@ class CreateRecipeVM: ViewModelBase {
     let photoPicker = ImagePickScene.photo.viewController()
     let videoPicker = ImagePickScene.video.viewController()
     
-    var mainImgData = Data()
-     
+    var mainImgData = PublishSubject<Data>()
+    var thumbnailImgData = PublishSubject<Data>()
+
     var ingredients = [Ingredient]()
     var instructions = [Instruction]()
     
+//    public init() {}
     
     init(sceneCoodinator: SceneCoordinator, user: Firebase.User) {
         

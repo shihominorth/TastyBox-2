@@ -13,18 +13,22 @@ import Lottie
 class EditMainImageTVCell: UITableViewCell {
 
     @IBOutlet weak var collectionView: UICollectionView!
-//
-//    var tappedPhotoCell = Observable<IndexPath>()
-//    var tappedVideoCell = Observable<IndexPath>()
+    
+    var mainImgDataSubject = PublishSubject<Data>()
+    var thumbnailDataSubject = PublishSubject<Data>()
    
     var mainImage = UIImage(named: "PhotoUpload") {
         didSet {
-            collectionView.reloadItems(at: [IndexPath(row: 0, section: 0)])
+            DispatchQueue.main.async {
+                self.collectionView.reloadItems(at: [IndexPath(row: 0, section: 0)])
+            }
         }
     }
     var thumbnailImg = UIImage(named: "VideoUpload") {
         didSet {
-            collectionView.reloadItems(at: [IndexPath(row: 1, section: 0)])
+            DispatchQueue.main.async {
+                self.collectionView.reloadItems(at: [IndexPath(row: 1, section: 0)])
+            }
         }
     }
     
@@ -44,9 +48,6 @@ class EditMainImageTVCell: UITableViewCell {
         collectionView.collectionViewLayout = layout
         
         collectionView.backgroundColor = hexStringToUIColor(hex: "#FEFACA")
-
-//        tappedPhotoCell = collectionView.rx.itemSelected.filter { $0.row == 0 }
-//        tappedVideoCell = collectionView.rx.itemSelected.filter { $0.row == 1 }
         
         disposeBag = DisposeBag()
     }
@@ -56,6 +57,32 @@ class EditMainImageTVCell: UITableViewCell {
 
         // Configure the view for the selected state
         collectionView.dataSource = self
+        
+        mainImgDataSubject
+            .subscribe(onNext: { [unowned self] data in
+                
+                self.mainImage = UIImage(data: data)
+                
+                
+            }, onError: { err in
+                
+                print(err)
+                
+            })
+            .disposed(by: disposeBag)
+        
+        thumbnailDataSubject
+            .subscribe(onNext: { [unowned self] data in
+                
+                self.mainImage = UIImage(data: data)
+                
+                
+            }, onError: { err in
+                
+                print(err)
+                
+            })
+            .disposed(by: disposeBag)
 
     }
 
@@ -80,6 +107,8 @@ class EditMainImageTVCell: UITableViewCell {
             alpha: CGFloat(1.0)
         )
     }
+    
+
 }
 
 extension EditMainImageTVCell: UICollectionViewDataSource {
