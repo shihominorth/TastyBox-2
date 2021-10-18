@@ -31,3 +31,7 @@ enum CreateRecipeScene {
 enum ImagePickScene {
     case photo, video
 }
+
+enum VideoScene {
+    case player(UploadingVideoVM)
+}

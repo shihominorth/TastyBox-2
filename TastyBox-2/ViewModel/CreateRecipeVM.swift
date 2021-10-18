@@ -28,6 +28,9 @@ class CreateRecipeVM: ViewModelBase {
     let photoPicker = ImagePickScene.photo.viewController()
     let videoPicker = ImagePickScene.video.viewController()
     
+    let videoPlaySubject = PublishSubject<URL>()
+
+    
     var mainImgData = PublishSubject<Data>()
     var thumbnailImgData = PublishSubject<Data>()
 
@@ -120,19 +123,38 @@ class CreateRecipeVM: ViewModelBase {
     
     func toImagePicker() {
         
-//        photoPicker.rx.sentMessage(#selector(viewWillDisappear(_:)))
-//            .subscribe(onNext: { in
-//                
-//            }, onError: <#T##((Error) -> Void)?#>, onCompleted: <#T##(() -> Void)?#>, onDisposed: <#T##(() -> Void)?#>)
-        
         self.sceneCoodinator.transition(to: photoPicker, type: .imagePick)
         
     }
     
     func toVideoPicker() {
  
-        self.sceneCoodinator.transition(to: photoPicker, type: .imagePick)
+        self.sceneCoodinator.transition(to: videoPicker, type: .imagePick)
         
+    }
+    
+    func playVideo() {
+        
+        
+        videoPlaySubject
+            .observe(on: MainScheduler.instance)
+            .catch { err in
+                
+                print(err)
+                
+                return .empty()
+            }
+            .subscribe(onNext: { url in
+                
+                let vm = UploadingVideoVM(sceneCoodinator: self.sceneCoodinator, user: self.user, url: url)
+                let vc = VideoScene.player(vm).viewController()
+                
+                self.sceneCoodinator.transition(to: vc, type: .modalHalf)
+                
+                
+            })
+            .disposed(by: disposeBag)
+ 
     }
     
 }

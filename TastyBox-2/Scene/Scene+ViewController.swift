@@ -237,9 +237,10 @@ extension ImagePickScene {
             
             var videoConfigPHPickerConfiguration: PHPickerConfiguration {
 
-               var config = PHPickerConfiguration(photoLibrary: .shared())
-               config.selectionLimit = 1
-               config.filter = .videos
+                var config = PHPickerConfiguration(photoLibrary: .shared())
+                config.selectionLimit = 1
+                config.filter = .videos
+                config.preferredAssetRepresentationMode = .current
                
                return config
            }
@@ -249,5 +250,28 @@ extension ImagePickScene {
             return vc
             
         }
+    }
+}
+
+extension VideoScene {
+    
+    func viewController() -> UIViewController {
+        
+        let storyboard = UIStoryboard(name: "VideoPlayer", bundle: nil)
+        
+        switch self {
+        case .player(let viewModel):
+            
+//            let player = AVPlayer(url: url)
+//            let playerVC = AVPlayerViewController()
+//            playerVC.player = player
+            
+            var vc = storyboard.instantiateViewController(withIdentifier: "uploadingVideoVC") as! UploadingVideoViewController
+            vc.bindViewModel(to: viewModel)
+            
+            return vc
+    
+        }
+        
     }
 }

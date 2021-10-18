@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import AVFoundation
 import Photos
 import PhotosUI
 import RxSwift
@@ -63,9 +64,11 @@ class SceneCoordinator: NSObject, SceneCoordinatorType {
         // Challenge 3: we don't need this line anymore
         // currentViewController = SceneCoordinator.actualViewController(for: viewController)
         
-        case .modal:
-            viewController.modalPresentationStyle = .fullScreen
-            viewController.modalTransitionStyle = .flipHorizontal
+        case .modal(let presentationStyle, let transitionStyle):
+
+            viewController.modalPresentationStyle = presentationStyle ?? .fullScreen
+            viewController.modalTransitionStyle =  transitionStyle ?? .flipHorizontal
+            
             currentViewController.present(viewController, animated: true) {
                 subject.onCompleted()
             }
@@ -134,6 +137,8 @@ class SceneCoordinator: NSObject, SceneCoordinatorType {
                 }
                 
             }
+      
+            
           
         }
         

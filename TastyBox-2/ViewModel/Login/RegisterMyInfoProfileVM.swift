@@ -57,7 +57,7 @@ class RegisterMyInfoProfileVM: ViewModelBase {
                     .subscribe(onCompleted: {
                         let vm = DiscoveryVM(sceneCoodinator: self.sceneCoodinator, user: self.user)
                         let vc = MainScene.discovery(vm).viewController()
-                        self.sceneCoodinator.transition(to: vc, type: .modal)
+                        self.sceneCoodinator.transition(to: vc, type: .modal(nil, nil))
                     }, onError: { err in
                        
                         guard let reason = err.handleAuthenticationError() else { return }

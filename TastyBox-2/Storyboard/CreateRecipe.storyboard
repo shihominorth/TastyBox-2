@@ -40,7 +40,7 @@
                                                     </collectionViewFlowLayout>
                                                     <cells>
                                                         <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="editMainImageCVCell" id="KJ6-kk-LHe" customClass="EditMainImageCVCell" customModule="TastyBox_2" customModuleProvider="target">
-                                                            <rect key="frame" x="424" y="0.0" width="414" height="414"/>
+                                                            <rect key="frame" x="0.0" y="0.0" width="414" height="414"/>
                                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                             <collectionViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" id="gAg-SZ-Sia">
                                                                 <rect key="frame" x="0.0" y="0.0" width="414" height="414"/>
@@ -58,7 +58,7 @@
                                                             </connections>
                                                         </collectionViewCell>
                                                         <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" reuseIdentifier="editMainVideoCVCell" id="Gee-Dd-iSq" customClass="EditMainVideoCVCell" customModule="TastyBox_2" customModuleProvider="target">
-                                                            <rect key="frame" x="0.0" y="0.0" width="414" height="414"/>
+                                                            <rect key="frame" x="424" y="0.0" width="414" height="414"/>
                                                             <autoresizingMask key="autoresizingMask"/>
                                                             <collectionViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" id="ztL-GC-TeI">
                                                                 <rect key="frame" x="0.0" y="0.0" width="414" height="414"/>

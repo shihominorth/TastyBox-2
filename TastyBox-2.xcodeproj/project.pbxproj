@@ -17,6 +17,10 @@
 		6F06EBE926F6B3D100F2218B /* LoadingVM.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F06EBE826F6B3D100F2218B /* LoadingVM.swift */; };
 		6F06EBEB26F824ED00F2218B /* ObservableType+.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F06EBEA26F824EC00F2218B /* ObservableType+.swift */; };
 		6F06EBEE26F825F700F2218B /* ActivityIndicator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F06EBED26F825F700F2218B /* ActivityIndicator.swift */; };
+		6F114E01271C8A7900B3BE63 /* UploadingVideoVM.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F114E00271C8A7900B3BE63 /* UploadingVideoVM.swift */; };
+		6F114E0D271D71F800B3BE63 /* UIView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F114E0C271D71F800B3BE63 /* UIView.swift */; };
+		6F194CBA271C77A40084F829 /* VideoPlayer.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 6F194CB9271C77A40084F829 /* VideoPlayer.storyboard */; };
+		6F194CBC271C7F190084F829 /* UploadingVideoViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F194CBB271C7F190084F829 /* UploadingVideoViewController.swift */; };
 		6F26D4E826DF9E360050BA84 /* AboutVM.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F26D4E726DF9E360050BA84 /* AboutVM.swift */; };
 		6F26D4EA26DFBDF60050BA84 /* DiscoveryVM.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F26D4E926DFBDF60050BA84 /* DiscoveryVM.swift */; };
 		6F2BBA8A26EDDA6B003B0D5F /* RxAppleDelegateProxy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F2BBA8926EDDA6B003B0D5F /* RxAppleDelegateProxy.swift */; };
@@ -120,6 +124,10 @@
 		6F06EBE826F6B3D100F2218B /* LoadingVM.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoadingVM.swift; sourceTree = "<group>"; };
 		6F06EBEA26F824EC00F2218B /* ObservableType+.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ObservableType+.swift"; sourceTree = "<group>"; };
 		6F06EBED26F825F700F2218B /* ActivityIndicator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActivityIndicator.swift; sourceTree = "<group>"; };
+		6F114E00271C8A7900B3BE63 /* UploadingVideoVM.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UploadingVideoVM.swift; sourceTree = "<group>"; };
+		6F114E0C271D71F800B3BE63 /* UIView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIView.swift; sourceTree = "<group>"; };
+		6F194CB9271C77A40084F829 /* VideoPlayer.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = VideoPlayer.storyboard; sourceTree = "<group>"; };
+		6F194CBB271C7F190084F829 /* UploadingVideoViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UploadingVideoViewController.swift; sourceTree = "<group>"; };
 		6F26D4E726DF9E360050BA84 /* AboutVM.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AboutVM.swift; sourceTree = "<group>"; };
 		6F26D4E926DFBDF60050BA84 /* DiscoveryVM.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiscoveryVM.swift; sourceTree = "<group>"; };
 		6F2BBA8926EDDA6B003B0D5F /* RxAppleDelegateProxy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RxAppleDelegateProxy.swift; sourceTree = "<group>"; };
@@ -263,6 +271,14 @@
 			path = Rx;
 			sourceTree = "<group>";
 		};
+		6F194CBD271C7F200084F829 /* Video */ = {
+			isa = PBXGroup;
+			children = (
+				6F194CBB271C7F190084F829 /* UploadingVideoViewController.swift */,
+			);
+			path = Video;
+			sourceTree = "<group>";
+		};
 		6F26D4EB26DFBE010050BA84 /* Discovery */ = {
 			isa = PBXGroup;
 			children = (
@@ -351,6 +367,7 @@
 				6FEA390B26D8BEEB002F81A3 /* String+.swift */,
 				6FA70A9C26E8EA5600474FE5 /* ViewController+.swift */,
 				6FC062BF26EAE4000016B990 /* Error+.swift */,
+				6F114E0C271D71F800B3BE63 /* UIView.swift */,
 			);
 			path = UIKit;
 			sourceTree = "<group>";
@@ -568,6 +585,7 @@
 				6F512A2126F3FA5100826657 /* Tutorial.storyboard */,
 				6FE9EB4826F98A05000AF9D4 /* Ingredient.storyboard */,
 				6F74C42C2719E20A007BB9E6 /* CreateRecipe.storyboard */,
+				6F194CB9271C77A40084F829 /* VideoPlayer.storyboard */,
 			);
 			path = Storyboard;
 			sourceTree = "<group>";
@@ -580,6 +598,7 @@
 				6FEF087C26F2A3EF00C02CDD /* Discovery */,
 				6F512A2626F416BD00826657 /* Tutorial */,
 				6F9E04162700A0F9005DCEF4 /* Ingredient */,
+				6F194CBD271C7F200084F829 /* Video */,
 			);
 			path = ViewController;
 			sourceTree = "<group>";
@@ -606,6 +625,7 @@
 				6F512A2A26F417D300826657 /* Tutorial */,
 				6FE9EB5126F9A6E8000AF9D4 /* Ingredient */,
 				6F74C42A2719DEE7007BB9E6 /* CreateRecipeVM.swift */,
+				6F114E00271C8A7900B3BE63 /* UploadingVideoVM.swift */,
 			);
 			path = ViewModel;
 			sourceTree = "<group>";
@@ -696,6 +716,7 @@
 				6FB06F4626D67E0600E110B4 /* Assets.xcassets in Resources */,
 				6FB06F4426D67E0100E110B4 /* Main.storyboard in Resources */,
 				6FA70A9626E6594D00474FE5 /* GoogleService-Info.plist in Resources */,
+				6F194CBA271C77A40084F829 /* VideoPlayer.storyboard in Resources */,
 				6F512A2226F3FA5100826657 /* Tutorial.storyboard in Resources */,
 				6FE9EB4926F98A05000AF9D4 /* Ingredient.storyboard in Resources */,
 				6F06EBE526F5FD0100F2218B /* StartCVCell.xib in Resources */,
@@ -824,6 +845,7 @@
 				6FEF088526F2A85A00C02CDD /* MainPageViewController.swift in Sources */,
 				6F9E04212700C3C0005DCEF4 /* EditShoppinglistVM.swift in Sources */,
 				6F9A0D1A27101F6D00DABB45 /* SemiModalPresentationController.swift in Sources */,
+				6F194CBC271C7F190084F829 /* UploadingVideoViewController.swift in Sources */,
 				6FEF088026F2A4B000C02CDD /* Recipe.swift in Sources */,
 				6F512A3226F467A300826657 /* FlowLayout.swift in Sources */,
 				6FEF088F26F2AD1000C02CDD /* SideMenuTableViewController.swift in Sources */,
@@ -840,10 +862,12 @@
 				6FE15ED5271AB7B20047D3D8 /* EditMainImageCVCell.swift in Sources */,
 				6FBCB92C26D7CBD500C050B2 /* EmailRegisterViewController.swift in Sources */,
 				6FEF087B26F2A2DF00C02CDD /* DiscoveryViewController.swift in Sources */,
+				6F114E01271C8A7900B3BE63 /* UploadingVideoVM.swift in Sources */,
 				6F26D4EA26DFBDF60050BA84 /* DiscoveryVM.swift in Sources */,
 				6FF66B9F26D7AF430024495E /* ResetPasswordVM.swift in Sources */,
 				6F9A0D1027101B1400DABB45 /* SemiModalIndicatorView.swift in Sources */,
 				6F9E04232700CAE0005DCEF4 /* ShoppinglistTVCell.swift in Sources */,
+				6F114E0D271D71F800B3BE63 /* UIView.swift in Sources */,
 				6FA70A9926E7A1FF00474FE5 /* SetPasswordViewController.swift in Sources */,
 				6F512A2926F417CD00826657 /* TutorialVM.swift in Sources */,
 				6F9BE64226D7E3F1005DD80B /* UIImage+.swift in Sources */,
