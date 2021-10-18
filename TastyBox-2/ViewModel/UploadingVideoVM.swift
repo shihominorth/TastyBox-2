@@ -11,16 +11,33 @@ import RxSwift
 
 class UploadingVideoVM: ViewModelBase {
     
-    var urlSubject = PublishSubject<URL>()
+    var url: URL!
+    var urlSubject: Observable<URL>!
     
     let sceneCoodinator: SceneCoordinator
     let user: Firebase.User
     
+
     init(sceneCoodinator: SceneCoordinator, user: Firebase.User, url: URL) {
         
         self.sceneCoodinator = sceneCoodinator
         self.user = user
         
-        self.urlSubject.onNext(url)
+        super.init()
+        
+        self.url = url
+        self.urlSubject = observeUrl(url: url)
+        
+    }
+    
+    func observeUrl(url: URL) -> Observable<URL> {
+        
+        return Observable.create { observer in
+            
+            observer.onNext(url)
+            
+            return Disposables.create()
+            
+        }
     }
 }

@@ -65,7 +65,7 @@
                     </view>
                     <connections>
                         <outlet property="addBtn" destination="uES-Xg-QgG" id="Rv5-hL-Jnq"/>
-                        <outlet property="playBtnView" destination="wef-Qt-442" id="Op0-5l-Px0"/>
+                        <outlet property="playBtnView" destination="wef-Qt-442" id="dq4-41-apv"/>
                         <outlet property="slider" destination="Q6B-iZ-Sg1" id="Ko8-Ju-Eg2"/>
                     </connections>
                 </viewController>
