@@ -12,14 +12,11 @@ import RxRelay
 
 
 class UploadingVideoVM: ViewModelBase {
-    
-//    var url: URL!
-    
+        
     let sceneCoodinator: SceneCoordinator
     let user: Firebase.User
     
     var urlSubject: Observable<URL>!
-    var isPlayingRelay = PublishSubject<PlayViewStatus>()
     var isHiddenPlayingViewRelay = PublishRelay<Bool>()
     var isHiddenSliderRelay = PublishRelay<Bool>()
     
@@ -53,19 +50,6 @@ class UploadingVideoVM: ViewModelBase {
             
             return Disposables.create()
             
-        }
-    }
-    
-    func setIsPlaying(status: PlayViewStatus) -> Observable<PlayViewStatus> {
-        
-        return Observable.create { [unowned self] observer in
-        
-            let changedStatus = PlayViewStatus.changeStatus(status: status)
-            
-            self.isPlayingRelay.onNext(changedStatus)
-            observer.onNext(changedStatus)
-        
-            return Disposables.create()
         }
     }
     

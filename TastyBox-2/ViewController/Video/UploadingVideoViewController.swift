@@ -42,27 +42,23 @@ class UploadingVideoViewController: UIViewController, BindableType {
     }
     
     func bindViewModel() {
-        
+
+        self.playView.playImgView.isHidden = true
+        self.playView.playBtnView.isHidden = true
         
         viewModel.isHiddenPlayingViewRelay
             .bind(to: self.playView.playBtnView.rx.isHidden).disposed(by: viewModel.disposeBag)
-        
-        viewModel.isHiddenPlayingViewRelay
-            .bind(to: self.playView.playImgView.rx.isHidden).disposed(by: viewModel.disposeBag)
         
         viewModel.isHiddenPlayingViewRelay
             .bind(to: self.playView.addBtn.rx.isHidden).disposed(by: viewModel.disposeBag)
         
         viewModel.isHiddenPlayingViewRelay
             .bind(to: self.playView.backBtn.rx.isHidden).disposed(by: viewModel.disposeBag)
-        
-        
-        
-        viewModel.isHiddenSliderRelay
+        viewModel.isHiddenPlayingViewRelay
             .bind(to: self.playView.slider.rx.isHidden).disposed(by: viewModel.disposeBag)
         
-        self.viewModel.isHiddenSliderRelay.accept(true)
-        self.viewModel.isHiddenPlayingViewRelay.accept(true)
+
+        self.viewModel.isHiddenPlayingViewRelay.accept(false)
     }
     
     
@@ -88,41 +84,11 @@ class UploadingVideoViewController: UIViewController, BindableType {
                 return Driver.empty()
             }
             .asObservable()
-            .withLatestFrom(viewModel.isPlayingRelay)
-            .flatMap { [unowned self] in self.viewModel.setIsPlaying(status: $0) }
-            .subscribe(onNext: { [unowned self] playStatus in
-                
-                
-                switch playStatus {
-                    
-                case .hide:
-                    
-                    self.viewModel.isHiddenSliderRelay.accept(true)
-                    self.viewModel.isHiddenPlayingViewRelay.accept(true)
-                    
-                    self.player.play()
-                    
-                case .show:
-                    
-                    self.viewModel.isHiddenPlayingViewRelay.accept(false)
-                    self.viewModel.isHiddenSliderRelay.accept(false)
-                    
-                    self.playView.playImgView.image =  UIImage(systemName: "pause.fill")
-                    
-                    
-                case  .pause:
-                    
-                    self.player.pause()
-                    self.playView.playImgView.image = UIImage(systemName: "play.fill")
-                }
-                
-                
-                
-                
-                
+            .withLatestFrom(viewModel.isHiddenPlayingViewRelay)
+            .subscribe(onNext: { isHiddden in
+                self.viewModel.isHiddenPlayingViewRelay.accept(!isHiddden)
             })
             .disposed(by: viewModel.disposeBag)
-        
         
         
         self.playView.addGestureRecognizer(tap)
@@ -158,7 +124,6 @@ class UploadingVideoViewController: UIViewController, BindableType {
         self.playView.playBtnView.layer.borderColor = UIColor.systemOrange.cgColor
         self.playView.playBtnView.backgroundColor = .clear
         
-        //        self.playView.playImgView.isHidden = true
     }
     
     
@@ -210,51 +175,8 @@ class UploadingVideoViewController: UIViewController, BindableType {
                 
             })
             .disposed(by: viewModel.disposeBag)
-        
-        
-        self.playView.slider.addTarget(self, action: #selector(onSliderValChanged(slider:event:)), for: .valueChanged)
-        
-        
-        
     }
     
-    @objc func onSliderValChanged(slider: UISlider, event: UIEvent) {
-        
-        let subject = PublishSubject<PlayViewStatus>()
-        
-        if let touchEvent = event.allTouches?.first {
-            switch touchEvent.phase {
-            case .began:
-                
-                subject
-                    .subscribe(onNext: { [unowned self] status in
-                        
-                        self.viewModel.isHiddenSliderRelay.accept(false)
-                    })
-                    .disposed(by: viewModel.disposeBag)
-                
-            case .ended:
-                
-                subject
-                    .withLatestFrom(viewModel.isPlayingRelay)
-                    .subscribe(onNext: { [unowned self] status in
-                        
-                        switch status {
-                        case .hide:
-                            self.viewModel.isHiddenSliderRelay.accept(true)
-                        default:
-                            break
-                        }
-                        
-                    })
-                    .disposed(by: viewModel.disposeBag)
-                
-            default:
-                break
-            }
-            
-        }
-    }
     
     func playVideo() {
         
@@ -314,9 +236,6 @@ class UploadingVideoViewController: UIViewController, BindableType {
         if keyPath == "currentItem.loadedTimeRanges" {
             
             playView.indicator.stopAnimating()
-            //            self.viewModel.isHiddenPlayingViewRelay.accept(true)
-            
-            self.viewModel.isPlayingRelay.onNext(.hide)
             
         }
     }
