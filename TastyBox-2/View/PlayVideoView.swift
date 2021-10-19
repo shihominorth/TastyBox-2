@@ -7,6 +7,27 @@
 
 import UIKit
 
+enum PlayViewStatus {
+     case hide, show, pause
+    
+    static func changeStatus(status: PlayViewStatus) -> PlayViewStatus {
+        
+        switch status {
+            
+        case .hide:
+            return .show
+       
+        case .show:
+            return .pause
+            
+        case .pause:
+            return .hide
+      
+        }
+    }
+ }
+ 
+
 class PlayVideoView: UIView {
 
     let indicator: UIActivityIndicatorView = {

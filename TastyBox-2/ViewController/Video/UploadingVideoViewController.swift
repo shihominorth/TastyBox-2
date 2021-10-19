@@ -23,6 +23,7 @@ class UploadingVideoViewController: UIViewController, BindableType {
     var layerPlayer: AVPlayerLayer!
     
     
+    var tap: UITapGestureRecognizer!
     var playView: PlayVideoView!
     
     override func viewDidLoad() {
@@ -43,6 +44,25 @@ class UploadingVideoViewController: UIViewController, BindableType {
     func bindViewModel() {
         
         
+        viewModel.isHiddenPlayingViewRelay
+            .bind(to: self.playView.playBtnView.rx.isHidden).disposed(by: viewModel.disposeBag)
+        
+        viewModel.isHiddenPlayingViewRelay
+            .bind(to: self.playView.playImgView.rx.isHidden).disposed(by: viewModel.disposeBag)
+        
+        viewModel.isHiddenPlayingViewRelay
+            .bind(to: self.playView.addBtn.rx.isHidden).disposed(by: viewModel.disposeBag)
+        
+        viewModel.isHiddenPlayingViewRelay
+            .bind(to: self.playView.backBtn.rx.isHidden).disposed(by: viewModel.disposeBag)
+        
+        
+        
+        viewModel.isHiddenSliderRelay
+            .bind(to: self.playView.slider.rx.isHidden).disposed(by: viewModel.disposeBag)
+        
+        self.viewModel.isHiddenSliderRelay.accept(true)
+        self.viewModel.isHiddenPlayingViewRelay.accept(true)
     }
     
     
@@ -57,7 +77,7 @@ class UploadingVideoViewController: UIViewController, BindableType {
         setUpSlider()
         
         
-        let tap = UITapGestureRecognizer()
+        tap = UITapGestureRecognizer()
         
         tap.rx.event
             .debounce(.microseconds(1000), scheduler: MainScheduler.instance)
@@ -69,17 +89,36 @@ class UploadingVideoViewController: UIViewController, BindableType {
             }
             .asObservable()
             .withLatestFrom(viewModel.isPlayingRelay)
-            .flatMap { [unowned self] isPlaying in self.viewModel.setIsPlaying(isPlaying: isPlaying) }
-            .subscribe(onNext: { [unowned self] isPlaying in
+            .flatMap { [unowned self] in self.viewModel.setIsPlaying(status: $0) }
+            .subscribe(onNext: { [unowned self] playStatus in
                 
-                if isPlaying {
+                
+                switch playStatus {
+                    
+                case .hide:
+                    
+                    self.viewModel.isHiddenSliderRelay.accept(true)
+                    self.viewModel.isHiddenPlayingViewRelay.accept(true)
+                    
                     self.player.play()
-                }
-                else {
+                    
+                case .show:
+                    
+                    self.viewModel.isHiddenPlayingViewRelay.accept(false)
+                    self.viewModel.isHiddenSliderRelay.accept(false)
+                    
+                    self.playView.playImgView.image =  UIImage(systemName: "pause.fill")
+                    
+                    
+                case  .pause:
+                    
                     self.player.pause()
+                    self.playView.playImgView.image = UIImage(systemName: "play.fill")
                 }
                 
-                self.playView.playImgView.image = isPlaying ? UIImage(systemName: "pause.fill") : UIImage(systemName: "play.fill")
+                
+                
+                
                 
             })
             .disposed(by: viewModel.disposeBag)
@@ -89,6 +128,7 @@ class UploadingVideoViewController: UIViewController, BindableType {
         self.playView.addGestureRecognizer(tap)
         
         view.addSubview(self.playView)
+        
     }
     
     
@@ -171,9 +211,50 @@ class UploadingVideoViewController: UIViewController, BindableType {
             })
             .disposed(by: viewModel.disposeBag)
         
+        
+        self.playView.slider.addTarget(self, action: #selector(onSliderValChanged(slider:event:)), for: .valueChanged)
+        
+        
+        
     }
     
-    
+    @objc func onSliderValChanged(slider: UISlider, event: UIEvent) {
+        
+        let subject = PublishSubject<PlayViewStatus>()
+        
+        if let touchEvent = event.allTouches?.first {
+            switch touchEvent.phase {
+            case .began:
+                
+                subject
+                    .subscribe(onNext: { [unowned self] status in
+                        
+                        self.viewModel.isHiddenSliderRelay.accept(false)
+                    })
+                    .disposed(by: viewModel.disposeBag)
+                
+            case .ended:
+                
+                subject
+                    .withLatestFrom(viewModel.isPlayingRelay)
+                    .subscribe(onNext: { [unowned self] status in
+                        
+                        switch status {
+                        case .hide:
+                            self.viewModel.isHiddenSliderRelay.accept(true)
+                        default:
+                            break
+                        }
+                        
+                    })
+                    .disposed(by: viewModel.disposeBag)
+                
+            default:
+                break
+            }
+            
+        }
+    }
     
     func playVideo() {
         
@@ -208,10 +289,6 @@ class UploadingVideoViewController: UIViewController, BindableType {
                     }
                 }
                 
-                //                self.viewModel.isPlayingRelay.onNext(true)
-                
-                //                self.playView.playBtnView.isHidden = true
-                
             }, onError: { err in
                 
                 print(err)
@@ -237,14 +314,11 @@ class UploadingVideoViewController: UIViewController, BindableType {
         if keyPath == "currentItem.loadedTimeRanges" {
             
             playView.indicator.stopAnimating()
-            self.viewModel.isPlayingRelay.onNext(true)
+            //            self.viewModel.isHiddenPlayingViewRelay.accept(true)
+            
+            self.viewModel.isPlayingRelay.onNext(.hide)
             
         }
-//        else if keyPath == "actionAtItemEnd"{
-//            if let playerItem = object as? AVPlayerItem {
-//                playerItem.seek(to: CMTime.zero, completionHandler: nil)
-//            }
-//        }
     }
     
 }
