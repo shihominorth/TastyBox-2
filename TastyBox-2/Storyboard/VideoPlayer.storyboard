@@ -16,58 +16,9 @@
                     <view key="view" contentMode="scaleToFill" id="5EZ-qb-Rvc">
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                        <subviews>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="uES-Xg-QgG">
-                                <rect key="frame" x="314" y="692" width="80" height="40"/>
-                                <constraints>
-                                    <constraint firstAttribute="width" constant="80" id="ECJ-2z-fYg"/>
-                                    <constraint firstAttribute="height" constant="40" id="Ega-uD-CbU"/>
-                                </constraints>
-                                <state key="normal" title="Button"/>
-                                <buttonConfiguration key="configuration" style="plain" title="Add "/>
-                            </button>
-                            <slider opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" value="0.5" minValue="0.0" maxValue="1" translatesAutoresizingMaskIntoConstraints="NO" id="Q6B-iZ-Sg1">
-                                <rect key="frame" x="18" y="772" width="378" height="31"/>
-                                <color key="minimumTrackTintColor" systemColor="systemOrangeColor"/>
-                            </slider>
-                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="wef-Qt-442">
-                                <rect key="frame" x="157" y="398" width="100" height="100"/>
-                                <subviews>
-                                    <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="play.fill" catalog="system" translatesAutoresizingMaskIntoConstraints="NO" id="Tab-tJ-AU0">
-                                        <rect key="frame" x="20" y="21.5" width="60" height="56.5"/>
-                                        <color key="tintColor" systemColor="systemOrangeColor"/>
-                                        <constraints>
-                                            <constraint firstAttribute="width" constant="60" id="cao-s6-5q0"/>
-                                            <constraint firstAttribute="height" constant="60" id="eR1-Hv-aPx"/>
-                                        </constraints>
-                                    </imageView>
-                                </subviews>
-                                <color key="backgroundColor" systemColor="systemBackgroundColor"/>
-                                <constraints>
-                                    <constraint firstAttribute="width" constant="100" id="8Xh-TI-xhx"/>
-                                    <constraint firstItem="Tab-tJ-AU0" firstAttribute="centerX" secondItem="wef-Qt-442" secondAttribute="centerX" id="P8X-8r-puD"/>
-                                    <constraint firstAttribute="height" constant="100" id="Saz-Uu-XLx"/>
-                                    <constraint firstItem="Tab-tJ-AU0" firstAttribute="centerY" secondItem="wef-Qt-442" secondAttribute="centerY" id="pdQ-yc-vjW"/>
-                                </constraints>
-                            </view>
-                        </subviews>
                         <viewLayoutGuide key="safeArea" id="vDu-zF-Fre"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
-                        <constraints>
-                            <constraint firstItem="Q6B-iZ-Sg1" firstAttribute="leading" secondItem="vDu-zF-Fre" secondAttribute="leading" constant="20" id="Ezw-eh-ckw"/>
-                            <constraint firstItem="vDu-zF-Fre" firstAttribute="trailing" secondItem="uES-Xg-QgG" secondAttribute="trailing" constant="20" id="TXA-po-wGg"/>
-                            <constraint firstItem="vDu-zF-Fre" firstAttribute="bottom" secondItem="Q6B-iZ-Sg1" secondAttribute="bottom" constant="60" id="Ydl-8h-V71"/>
-                            <constraint firstItem="wef-Qt-442" firstAttribute="centerY" secondItem="5EZ-qb-Rvc" secondAttribute="centerY" id="cbC-Tp-Ipd"/>
-                            <constraint firstItem="vDu-zF-Fre" firstAttribute="trailing" secondItem="Q6B-iZ-Sg1" secondAttribute="trailing" constant="20" id="r9x-ND-h0R"/>
-                            <constraint firstItem="Q6B-iZ-Sg1" firstAttribute="top" secondItem="uES-Xg-QgG" secondAttribute="bottom" constant="40" id="rh7-r4-0s2"/>
-                            <constraint firstItem="wef-Qt-442" firstAttribute="centerX" secondItem="5EZ-qb-Rvc" secondAttribute="centerX" id="wh9-qG-XX2"/>
-                        </constraints>
                     </view>
-                    <connections>
-                        <outlet property="addBtn" destination="uES-Xg-QgG" id="Rv5-hL-Jnq"/>
-                        <outlet property="playBtnView" destination="wef-Qt-442" id="dq4-41-apv"/>
-                        <outlet property="slider" destination="Q6B-iZ-Sg1" id="Ko8-Ju-Eg2"/>
-                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Ief-a0-LHa" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
@@ -75,12 +26,8 @@
         </scene>
     </scenes>
     <resources>
-        <image name="play.fill" catalog="system" width="116" height="128"/>
         <systemColor name="systemBackgroundColor">
             <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-        </systemColor>
-        <systemColor name="systemOrangeColor">
-            <color red="1" green="0.58431372549019611" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </systemColor>
     </resources>
 </document>

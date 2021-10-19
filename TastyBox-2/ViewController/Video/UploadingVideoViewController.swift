@@ -7,6 +7,9 @@
 
 import UIKit
 import AVFoundation
+import RxSwift
+import RxCocoa
+import Lottie
 
 class UploadingVideoViewController: UIViewController, BindableType {
     
@@ -14,17 +17,18 @@ class UploadingVideoViewController: UIViewController, BindableType {
     typealias ViewModelType = UploadingVideoVM
     var viewModel: UploadingVideoVM!
     
-//    var url: URL!
     var player: AVPlayer!
     var layerPlayer: AVPlayerLayer!
+ 
     
-    @IBOutlet weak var playBtnView: UIView!
-    @IBOutlet weak var addBtn: UIButton!
-    @IBOutlet weak var slider: UISlider!
+    var playView: PlayVideoView!
+        
     
     override func viewDidLoad() {
+        
         super.viewDidLoad()
         
+        setUpPlayVideoView()
         playVideo()
         
     }
@@ -32,8 +36,9 @@ class UploadingVideoViewController: UIViewController, BindableType {
     override func viewWillLayoutSubviews() {
         super.viewWillLayoutSubviews()
         
-        setUpPlayerBtn()
-        setUpAddBtn()
+        //        setUpBackBtn()
+        //        setUpPlayerBtn()
+        //        setUpAddBtn()
     }
     
     override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
@@ -46,13 +51,70 @@ class UploadingVideoViewController: UIViewController, BindableType {
     }
     
     
+    func setUpPlayVideoView() {
+        
+        self.playView = PlayVideoView()
+        playView.frame = view.bounds
+        
+        setUpBackBtn()
+        setUpPlayerBtn()
+        setUpAddBtn()
+        
+        
+        let tap = UITapGestureRecognizer()
+        
+        tap.rx.event
+            .debounce(.microseconds(1000), scheduler: MainScheduler.instance)
+            .asDriver { err in
+                
+                print(err)
+                
+                return Driver.empty()
+            }
+            .asObservable()
+            .withLatestFrom(viewModel.isPlayingRelay)
+            .flatMap { [unowned self] isPlaying in self.viewModel.setIsPlaying(isPlaying: isPlaying) }
+            .subscribe(onNext: { [unowned self] isPlaying in
+                
+                if isPlaying {
+                    self.player.play()
+                }
+                else {
+                    self.player.pause()
+                }
+                
+                self.playView.playImgView.image = isPlaying ? UIImage(systemName: "pause.fill") : UIImage(systemName: "play.fill")
+                
+            })
+            .disposed(by: viewModel.disposeBag)
+        
+        
+        
+        self.playView.addGestureRecognizer(tap)
+        
+        view.addSubview(self.playView)
+    }
+    
+    
+    
+    func setUpBackBtn() {
+        
+        self.playView.backBtn.rx.tap
+            .debounce(.microseconds(1000), scheduler: MainScheduler.instance)
+            .asDriver(onErrorJustReturn: ())
+            .asObservable()
+            .subscribe(onNext: { [unowned self] in self.viewModel.back() })
+            .disposed(by: viewModel.disposeBag)
+    }
+    
     func setUpPlayerBtn() {
         
-        playBtnView.layer.borderWidth = 3
-        playBtnView.clipsToBounds = true
-        playBtnView.layer.cornerRadius = playBtnView.frame.width / 2
-        playBtnView.layer.borderColor = UIColor.systemOrange.cgColor
-        playBtnView.backgroundColor = UIColor.clear
+        self.playView.playImgView.image = UIImage(systemName: "pause.fill")
+        self.playView.playBtnView.layer.borderWidth = 3
+        self.playView.playBtnView.clipsToBounds = true
+        self.playView.playBtnView.layer.cornerRadius = self.playView.playBtnView.frame.width / 2
+        self.playView.playBtnView.layer.borderColor = UIColor.systemOrange.cgColor
+        self.playView.playBtnView.backgroundColor = UIColor.clear
         
     }
     
@@ -60,38 +122,50 @@ class UploadingVideoViewController: UIViewController, BindableType {
     
     func setUpAddBtn() {
         
-        addBtn.setImage(UIImage(systemName: "chevron.right"), for: .normal)
+        self.playView.addBtn.setTitle("Add", for: .normal)
+        self.playView.addBtn.setImage(UIImage(systemName: "chevron.right"), for: .normal)
         
-        addBtn.transform = CGAffineTransform(scaleX: -1.0, y: 1.0)
-        addBtn.titleLabel?.transform = CGAffineTransform(scaleX: -1.0, y: 1.0)
-        addBtn.imageView?.transform = CGAffineTransform(scaleX: -1.0, y: 1.0)
+        self.playView.addBtn.transform = CGAffineTransform(scaleX: -1.0, y: 1.0)
+        self.playView.addBtn.titleLabel?.transform = CGAffineTransform(scaleX: -1.0, y: 1.0)
+        self.playView.addBtn.imageView?.transform = CGAffineTransform(scaleX: -1.0, y: 1.0)
         
-        addBtn.clipsToBounds = true
-        addBtn.layer.cornerRadius = 30
+        self.playView.addBtn.clipsToBounds = true
+        self.playView.addBtn.layer.cornerRadius = 5
+        self.playView.addBtn.backgroundColor = UIColor.white
+        self.playView.addBtn.tintColor = UIColor.systemOrange
         
-        addBtn.backgroundColor = UIColor.white
-        addBtn.tintColor = UIColor.systemOrange
+        self.playView.addBtn.rx.tap
+            .debounce(.microseconds(1000), scheduler: MainScheduler.instance)
+            .asDriver(onErrorJustReturn: ())
+            .asObservable()
+            .subscribe(onNext: { [unowned self] in self.viewModel.addVideo() })
+            .disposed(by: viewModel.disposeBag)
     }
+    
+    
     
     func playVideo() {
         
         viewModel.urlSubject
             .subscribe(onNext: { [unowned self] url in
-
-                self.player =  AVPlayer(url: viewModel.url)
+                
+                self.player =  AVPlayer(url: url)
                 
                 self.layerPlayer = createPlayerLayer()
-               
-                view.layer.addSublayer(self.layerPlayer)
                 
-                player.play()
-
-                self.playBtnView.isHidden = true
-
+                
+                view.layer.addSublayer(self.layerPlayer)
+                self.setUpPlayVideoView()
+                
+                self.player.play()
+                self.viewModel.isPlayingRelay.onNext(true)
+                
+                //                self.playView.playBtnView.isHidden = true
+                
             }, onError: { err in
-
+                
                 print(err)
-
+                
             })
             .disposed(by: viewModel.disposeBag)
         
@@ -106,15 +180,7 @@ class UploadingVideoViewController: UIViewController, BindableType {
         return layer
     }
     
-    /*
-     // MARK: - Navigation
-     
-     // In a storyboard-based application, you will often want to do a little preparation before navigation
-     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-     // Get the new view controller using segue.destination.
-     // Pass the selected object to the new view controller.
-     }
-     */
+    
     
 }
 

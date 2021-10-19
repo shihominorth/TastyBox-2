@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="19162" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+    <device id="retina6_1" orientation="portrait" appearance="light"/>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="19144"/>
+        <capability name="Safe area layout guides" minToolsVersion="9.0"/>
+        <capability name="System colors in document resources" minToolsVersion="11.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="PlayVideoView" customModule="TastyBox_2" customModuleProvider="target">
+            <connections>
+                <outlet property="addBtn" destination="tHc-lS-LCn" id="mm9-uZ-Bui"/>
+                <outlet property="backBtn" destination="1VV-0p-2vd" id="h6r-Hc-6yC"/>
+                <outlet property="playBtnView" destination="oxb-pO-nI6" id="eeH-bt-PR7"/>
+                <outlet property="playImgView" destination="LQg-eY-Po8" id="Cau-hb-dYB"/>
+                <outlet property="slider" destination="eQu-Nx-sp5" id="eK7-at-o7g"/>
+            </connections>
+        </placeholder>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <view contentMode="scaleToFill" id="iN0-l3-epB">
+            <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
+            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+            <subviews>
+                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="oxb-pO-nI6">
+                    <rect key="frame" x="157" y="398" width="100" height="100"/>
+                    <subviews>
+                        <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="play.fill" catalog="system" translatesAutoresizingMaskIntoConstraints="NO" id="LQg-eY-Po8">
+                            <rect key="frame" x="20" y="21.5" width="60" height="56.5"/>
+                            <color key="tintColor" systemColor="systemOrangeColor"/>
+                            <constraints>
+                                <constraint firstAttribute="width" constant="60" id="MEY-Vp-XRf"/>
+                                <constraint firstAttribute="height" constant="60" id="gel-mn-cga"/>
+                            </constraints>
+                        </imageView>
+                    </subviews>
+                    <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                    <constraints>
+                        <constraint firstItem="LQg-eY-Po8" firstAttribute="centerY" secondItem="oxb-pO-nI6" secondAttribute="centerY" id="9iU-Yo-7De"/>
+                        <constraint firstItem="LQg-eY-Po8" firstAttribute="centerX" secondItem="oxb-pO-nI6" secondAttribute="centerX" id="Y24-f9-isL"/>
+                        <constraint firstAttribute="width" constant="100" id="cJc-bS-rCe"/>
+                        <constraint firstAttribute="height" constant="100" id="t2i-GJ-NVE"/>
+                    </constraints>
+                </view>
+                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="tHc-lS-LCn">
+                    <rect key="frame" x="327" y="721" width="67" height="31"/>
+                    <color key="tintColor" systemColor="systemOrangeColor"/>
+                    <state key="normal" title="Button"/>
+                    <buttonConfiguration key="configuration" style="plain" title="Button"/>
+                </button>
+                <slider opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" value="0.5" minValue="0.0" maxValue="1" translatesAutoresizingMaskIntoConstraints="NO" id="eQu-Nx-sp5">
+                    <rect key="frame" x="18" y="777" width="378" height="31"/>
+                    <color key="minimumTrackTintColor" systemColor="systemOrangeColor"/>
+                </slider>
+                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="1VV-0p-2vd">
+                    <rect key="frame" x="20" y="44" width="31.5" height="31"/>
+                    <color key="tintColor" systemColor="systemOrangeColor"/>
+                    <state key="normal" title="Button"/>
+                    <buttonConfiguration key="configuration" style="plain" image="chevron.compact.left" catalog="system"/>
+                </button>
+            </subviews>
+            <viewLayoutGuide key="safeArea" id="vUN-kp-3ea"/>
+            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+            <gestureRecognizers/>
+            <constraints>
+                <constraint firstItem="1VV-0p-2vd" firstAttribute="leading" secondItem="vUN-kp-3ea" secondAttribute="leading" constant="20" id="2NG-85-Je4"/>
+                <constraint firstItem="oxb-pO-nI6" firstAttribute="centerX" secondItem="eQu-Nx-sp5" secondAttribute="centerX" id="5gb-Tj-yn6"/>
+                <constraint firstItem="eQu-Nx-sp5" firstAttribute="leading" secondItem="vUN-kp-3ea" secondAttribute="leading" constant="20" id="7fa-hy-vtc"/>
+                <constraint firstItem="vUN-kp-3ea" firstAttribute="trailing" secondItem="tHc-lS-LCn" secondAttribute="trailing" constant="20" id="BpR-tE-q3U"/>
+                <constraint firstItem="oxb-pO-nI6" firstAttribute="centerY" secondItem="iN0-l3-epB" secondAttribute="centerY" id="SqR-Va-CM7"/>
+                <constraint firstItem="eQu-Nx-sp5" firstAttribute="top" secondItem="tHc-lS-LCn" secondAttribute="bottom" constant="25" id="TR6-d3-oET"/>
+                <constraint firstItem="1VV-0p-2vd" firstAttribute="top" secondItem="vUN-kp-3ea" secondAttribute="top" id="VaA-iU-oQO"/>
+                <constraint firstItem="vUN-kp-3ea" firstAttribute="bottom" secondItem="eQu-Nx-sp5" secondAttribute="bottom" constant="55" id="WLj-9E-RAH"/>
+                <constraint firstItem="oxb-pO-nI6" firstAttribute="centerX" secondItem="iN0-l3-epB" secondAttribute="centerX" id="dMu-iX-ndG"/>
+                <constraint firstItem="vUN-kp-3ea" firstAttribute="trailing" secondItem="eQu-Nx-sp5" secondAttribute="trailing" constant="20" id="eGI-U5-8H3"/>
+            </constraints>
+            <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
+            <point key="canvasLocation" x="137.68115942028987" y="59.598214285714285"/>
+        </view>
+    </objects>
+    <resources>
+        <image name="chevron.compact.left" catalog="system" width="64" height="128"/>
+        <image name="play.fill" catalog="system" width="116" height="128"/>
+        <systemColor name="systemOrangeColor">
+            <color red="1" green="0.58431372549019611" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+        </systemColor>
+    </resources>
+</document>

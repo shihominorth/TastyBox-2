@@ -8,16 +8,18 @@
 import Foundation
 import Firebase
 import RxSwift
+import RxRelay
 
 class UploadingVideoVM: ViewModelBase {
     
-    var url: URL!
-    var urlSubject: Observable<URL>!
+//    var url: URL!
     
     let sceneCoodinator: SceneCoordinator
     let user: Firebase.User
     
-
+    var urlSubject: Observable<URL>!
+    var isPlayingRelay = PublishSubject<Bool>()
+    
     init(sceneCoodinator: SceneCoordinator, user: Firebase.User, url: URL) {
         
         self.sceneCoodinator = sceneCoodinator
@@ -25,7 +27,6 @@ class UploadingVideoVM: ViewModelBase {
         
         super.init()
         
-        self.url = url
         self.urlSubject = observeUrl(url: url)
         
     }
@@ -39,5 +40,39 @@ class UploadingVideoVM: ViewModelBase {
             return Disposables.create()
             
         }
+    }
+    
+    func observeIsPlaying(isPlaying: Bool) -> Observable<Bool> {
+        
+        return Observable.create { observer in
+            
+            observer.onNext(isPlaying)
+            
+            return Disposables.create()
+            
+        }
+    }
+    
+    func setIsPlaying(isPlaying: Bool) -> Observable<Bool> {
+        
+        return Observable.create { [unowned self] observer in
+        
+            self.isPlayingRelay.onNext(!isPlaying)
+            observer.onNext(!isPlaying)
+            
+            return Disposables.create()
+        }
+    }
+    
+    func addVideo() {
+        
+        self.sceneCoodinator.pop(animated: true)
+        
+    }
+    
+    func back() {
+        
+        self.sceneCoodinator.pop(animated: true)
+        
     }
 }
