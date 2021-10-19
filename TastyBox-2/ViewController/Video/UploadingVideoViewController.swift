@@ -99,6 +99,12 @@ class UploadingVideoViewController: UIViewController, BindableType {
     
     func setUpBackBtn() {
         
+        self.playView.backBtn.setTitle("", for: .normal)
+        self.playView.backBtn.layer.cornerRadius = self.playView.frame.width / 2
+        self.playView.backBtn.tintColor = UIColor.systemOrange
+        self.playView.backBtn.layer.borderColor = UIColor.systemOrange.cgColor
+        
+        
         self.playView.backBtn.rx.tap
             .debounce(.microseconds(1000), scheduler: MainScheduler.instance)
             .asDriver(onErrorJustReturn: ())
@@ -131,8 +137,11 @@ class UploadingVideoViewController: UIViewController, BindableType {
         
         self.playView.addBtn.clipsToBounds = true
         self.playView.addBtn.layer.cornerRadius = 5
-        self.playView.addBtn.backgroundColor = UIColor.white
-        self.playView.addBtn.tintColor = UIColor.systemOrange
+        self.playView.addBtn.backgroundColor = UIColor.systemOrange
+        self.playView.addBtn.tintColor = UIColor.white
+        self.playView.addBtn.layer.borderColor = UIColor.systemOrange.cgColor
+        
+        self.playView.addBtn.titleEdgeInsets = UIEdgeInsets(top: 3, left: 3, bottom: 3, right: 100)
         
         self.playView.addBtn.rx.tap
             .debounce(.microseconds(1000), scheduler: MainScheduler.instance)

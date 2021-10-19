@@ -54,10 +54,15 @@
                     <color key="minimumTrackTintColor" systemColor="systemOrangeColor"/>
                 </slider>
                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="1VV-0p-2vd">
-                    <rect key="frame" x="20" y="44" width="31.5" height="31"/>
-                    <color key="tintColor" systemColor="systemOrangeColor"/>
+                    <rect key="frame" x="20" y="44" width="30" height="30"/>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="30" id="MCe-j2-8Tv"/>
+                        <constraint firstAttribute="width" constant="30" id="u4V-6M-CkB"/>
+                    </constraints>
                     <state key="normal" title="Button"/>
-                    <buttonConfiguration key="configuration" style="plain" image="chevron.compact.left" catalog="system"/>
+                    <buttonConfiguration key="configuration" style="plain">
+                        <backgroundConfiguration key="background" image="chevron.backward" catalog="system"/>
+                    </buttonConfiguration>
                 </button>
             </subviews>
             <viewLayoutGuide key="safeArea" id="vUN-kp-3ea"/>
@@ -80,7 +85,7 @@
         </view>
     </objects>
     <resources>
-        <image name="chevron.compact.left" catalog="system" width="64" height="128"/>
+        <image name="chevron.backward" catalog="system" width="96" height="128"/>
         <image name="play.fill" catalog="system" width="116" height="128"/>
         <systemColor name="systemOrangeColor">
             <color red="1" green="0.58431372549019611" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
