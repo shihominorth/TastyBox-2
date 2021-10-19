@@ -17,7 +17,9 @@ class UploadingVideoViewController: UIViewController, BindableType {
     typealias ViewModelType = UploadingVideoVM
     var viewModel: UploadingVideoVM!
     
-    var player: AVPlayer!
+    var playerItem: AVPlayerItem!
+    var playerLooper: AVPlayerLooper!
+    var player: AVQueuePlayer!
     var layerPlayer: AVPlayerLayer!
     
     
@@ -178,8 +180,9 @@ class UploadingVideoViewController: UIViewController, BindableType {
         viewModel.urlSubject
             .subscribe(onNext: { [unowned self] url in
                 
-                self.player =  AVPlayer(url: url)
-                self.player.actionAtItemEnd = .none
+                self.playerItem = AVPlayerItem(url: url)
+                self.player =  AVQueuePlayer(playerItem: self.playerItem)
+                self.playerLooper = AVPlayerLooper(player: self.player, templateItem: playerItem)
                 
                 self.player.addObserver(self, forKeyPath: "actionAtItemEnd", options: [.new], context: nil)
                 self.player.addObserver(self, forKeyPath: "currentItem.loadedTimeRanges", options: [.new], context: nil)
