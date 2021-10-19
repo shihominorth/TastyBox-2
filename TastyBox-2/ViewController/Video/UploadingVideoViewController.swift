@@ -19,26 +19,19 @@ class UploadingVideoViewController: UIViewController, BindableType {
     
     var player: AVPlayer!
     var layerPlayer: AVPlayerLayer!
- 
+    
     
     var playView: PlayVideoView!
-        
     
     override func viewDidLoad() {
         
         super.viewDidLoad()
         
+        self.view.backgroundColor = .black
+        
         setUpPlayVideoView()
         playVideo()
         
-    }
-    
-    override func viewWillLayoutSubviews() {
-        super.viewWillLayoutSubviews()
-        
-        //        setUpBackBtn()
-        //        setUpPlayerBtn()
-        //        setUpAddBtn()
     }
     
     override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
@@ -59,6 +52,7 @@ class UploadingVideoViewController: UIViewController, BindableType {
         setUpBackBtn()
         setUpPlayerBtn()
         setUpAddBtn()
+        setUpSlider()
         
         
         let tap = UITapGestureRecognizer()
@@ -101,7 +95,7 @@ class UploadingVideoViewController: UIViewController, BindableType {
         
         self.playView.backBtn.setTitle("", for: .normal)
         self.playView.backBtn.layer.cornerRadius = self.playView.frame.width / 2
-        self.playView.backBtn.tintColor = UIColor.systemOrange
+        self.playView.backBtn.tintColor = .systemOrange
         self.playView.backBtn.layer.borderColor = UIColor.systemOrange.cgColor
         
         
@@ -120,8 +114,9 @@ class UploadingVideoViewController: UIViewController, BindableType {
         self.playView.playBtnView.clipsToBounds = true
         self.playView.playBtnView.layer.cornerRadius = self.playView.playBtnView.frame.width / 2
         self.playView.playBtnView.layer.borderColor = UIColor.systemOrange.cgColor
-        self.playView.playBtnView.backgroundColor = UIColor.clear
+        self.playView.playBtnView.backgroundColor = .clear
         
+        //        self.playView.playImgView.isHidden = true
     }
     
     
@@ -137,8 +132,8 @@ class UploadingVideoViewController: UIViewController, BindableType {
         
         self.playView.addBtn.clipsToBounds = true
         self.playView.addBtn.layer.cornerRadius = 5
-        self.playView.addBtn.backgroundColor = UIColor.systemOrange
-        self.playView.addBtn.tintColor = UIColor.white
+        self.playView.addBtn.backgroundColor = .systemOrange
+        self.playView.addBtn.tintColor = .white
         self.playView.addBtn.layer.borderColor = UIColor.systemOrange.cgColor
         
         self.playView.addBtn.titleEdgeInsets = UIEdgeInsets(top: 3, left: 3, bottom: 3, right: 100)
@@ -151,6 +146,31 @@ class UploadingVideoViewController: UIViewController, BindableType {
             .disposed(by: viewModel.disposeBag)
     }
     
+    func setUpSlider() {
+        
+        self.playView.slider.rx.controlEvent(.valueChanged)
+            .catch { err in
+                return .empty()
+            }
+            .subscribe(onNext: { [unowned self] in
+                
+                if let duration = self.player.currentItem?.duration {
+                    
+                    let totalSeconds = CMTimeGetSeconds(duration)
+                    let value = Float64(self.playView.slider.value) * totalSeconds
+                    let seekTime = CMTime(value: Int64(value), timescale: 1)
+                    
+                    
+                    player.seek(to: seekTime, completionHandler: { isCompleted in
+                        
+                    })
+                }
+                
+            })
+            .disposed(by: viewModel.disposeBag)
+        
+    }
+    
     
     
     func playVideo() {
@@ -159,6 +179,10 @@ class UploadingVideoViewController: UIViewController, BindableType {
             .subscribe(onNext: { [unowned self] url in
                 
                 self.player =  AVPlayer(url: url)
+                self.player.actionAtItemEnd = .none
+                
+                self.player.addObserver(self, forKeyPath: "actionAtItemEnd", options: [.new], context: nil)
+                self.player.addObserver(self, forKeyPath: "currentItem.loadedTimeRanges", options: [.new], context: nil)
                 
                 self.layerPlayer = createPlayerLayer()
                 
@@ -167,7 +191,21 @@ class UploadingVideoViewController: UIViewController, BindableType {
                 self.setUpPlayVideoView()
                 
                 self.player.play()
-                self.viewModel.isPlayingRelay.onNext(true)
+                
+                let interval = CMTime(value: 1, timescale: 2)
+                
+                self.player.addPeriodicTimeObserver(forInterval: interval, queue: DispatchQueue.main) { [unowned self] progressTime in
+                    
+                    if let duration = self.player.currentItem?.duration {
+                        
+                        let seconds = CMTimeGetSeconds(progressTime)
+                        let durationSeconds = CMTimeGetSeconds(duration)
+                        self.playView.slider.value = Float(seconds / durationSeconds)
+                        
+                    }
+                }
+                
+                //                self.viewModel.isPlayingRelay.onNext(true)
                 
                 //                self.playView.playBtnView.isHidden = true
                 
@@ -177,6 +215,8 @@ class UploadingVideoViewController: UIViewController, BindableType {
                 
             })
             .disposed(by: viewModel.disposeBag)
+        
+        
         
     }
     
@@ -190,6 +230,19 @@ class UploadingVideoViewController: UIViewController, BindableType {
     }
     
     
+    override func observeValue(forKeyPath keyPath: String?, of object: Any?, change: [NSKeyValueChangeKey : Any]?, context: UnsafeMutableRawPointer?) {
+        if keyPath == "currentItem.loadedTimeRanges" {
+            
+            playView.indicator.stopAnimating()
+            self.viewModel.isPlayingRelay.onNext(true)
+            
+        }
+//        else if keyPath == "actionAtItemEnd"{
+//            if let playerItem = object as? AVPlayerItem {
+//                playerItem.seek(to: CMTime.zero, completionHandler: nil)
+//            }
+//        }
+    }
     
 }
 
