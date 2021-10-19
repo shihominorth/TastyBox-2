@@ -42,12 +42,6 @@ class UploadingVideoViewController: UIViewController, BindableType {
     }
     
     func bindViewModel() {
-
-        self.playView.playImgView.isHidden = true
-        self.playView.playBtnView.isHidden = true
-        
-        viewModel.isHiddenPlayingViewRelay
-            .bind(to: self.playView.playBtnView.rx.isHidden).disposed(by: viewModel.disposeBag)
         
         viewModel.isHiddenPlayingViewRelay
             .bind(to: self.playView.addBtn.rx.isHidden).disposed(by: viewModel.disposeBag)
@@ -68,7 +62,6 @@ class UploadingVideoViewController: UIViewController, BindableType {
         playView.frame = view.bounds
         
         setUpBackBtn()
-        setUpPlayerBtn()
         setUpAddBtn()
         setUpSlider()
         
@@ -114,25 +107,13 @@ class UploadingVideoViewController: UIViewController, BindableType {
             .subscribe(onNext: { [unowned self] in self.viewModel.back() })
             .disposed(by: viewModel.disposeBag)
     }
-    
-    func setUpPlayerBtn() {
-        
-        self.playView.playImgView.image = UIImage(systemName: "pause.fill")
-        self.playView.playBtnView.layer.borderWidth = 3
-        self.playView.playBtnView.clipsToBounds = true
-        self.playView.playBtnView.layer.cornerRadius = self.playView.playBtnView.frame.width / 2
-        self.playView.playBtnView.layer.borderColor = UIColor.systemOrange.cgColor
-        self.playView.playBtnView.backgroundColor = .clear
-        
-    }
-    
-    
+
     
     func setUpAddBtn() {
         
         self.playView.addBtn.setTitle("Add", for: .normal)
         self.playView.addBtn.setImage(UIImage(systemName: "chevron.right"), for: .normal)
-        
+
         self.playView.addBtn.transform = CGAffineTransform(scaleX: -1.0, y: 1.0)
         self.playView.addBtn.titleLabel?.transform = CGAffineTransform(scaleX: -1.0, y: 1.0)
         self.playView.addBtn.imageView?.transform = CGAffineTransform(scaleX: -1.0, y: 1.0)

@@ -41,8 +41,7 @@ class PlayVideoView: UIView {
         return result
     }()
     
-    @IBOutlet weak var playBtnView: UIView!
-    @IBOutlet weak var playImgView: UIImageView!
+    
     @IBOutlet weak var backBtn: UIButton!
     @IBOutlet weak var addBtn: UIButton!
     @IBOutlet weak var slider: UISlider!

@@ -17,20 +17,8 @@ class EditMainImageTVCell: UITableViewCell {
     var mainImgDataSubject = PublishSubject<Data>()
     var thumbnailDataSubject = PublishSubject<Data>()
    
-    var mainImage = UIImage(named: "PhotoUpload") {
-        didSet {
-            DispatchQueue.main.async {
-                self.collectionView.reloadItems(at: [IndexPath(row: 0, section: 0)])
-            }
-        }
-    }
-    var thumbnailImg = UIImage(named: "VideoUpload") {
-        didSet {
-            DispatchQueue.main.async {
-                self.collectionView.reloadItems(at: [IndexPath(row: 1, section: 0)])
-            }
-        }
-    }
+    var mainImage = UIImage(named: "PhotoUpload")
+    var thumbnailImg = UIImage(named: "VideoUpload")
     
     var disposeBag = DisposeBag()
     
@@ -59,10 +47,11 @@ class EditMainImageTVCell: UITableViewCell {
         collectionView.dataSource = self
         
         mainImgDataSubject
+            .observe(on: MainScheduler.instance)
             .subscribe(onNext: { [unowned self] data in
                 
                 self.mainImage = UIImage(data: data)
-                
+                self.collectionView.reloadItems(at: [IndexPath(row: 0, section: 0)])
                 
             }, onError: { err in
                 
@@ -72,10 +61,11 @@ class EditMainImageTVCell: UITableViewCell {
             .disposed(by: disposeBag)
         
         thumbnailDataSubject
+            .observe(on: MainScheduler.instance)
             .subscribe(onNext: { [unowned self] data in
                 
-                self.mainImage = UIImage(data: data)
-                
+                self.thumbnailImg = UIImage(data: data)
+                self.collectionView.reloadItems(at: [IndexPath(row: 1, section: 0)])
                 
             }, onError: { err in
                 

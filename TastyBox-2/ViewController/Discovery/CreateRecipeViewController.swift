@@ -5,7 +5,7 @@
 //  Created by 北島　志帆美 on 2021-10-16.
 //
 
-import AVKit
+import AVFoundation
 import UIKit
 import Photos
 import PhotosUI
@@ -42,7 +42,7 @@ class CreateRecipeViewController: UIViewController, BindableType {
         viewModel.videoPicker.delegate = self
         
         self.viewModel.playVideo()
-        
+        self.addedVideo()
     }
     
     fileprivate func setUpTableView() {
@@ -66,6 +66,36 @@ class CreateRecipeViewController: UIViewController, BindableType {
                 
             })
             .disposed(by: viewModel.disposeBag)
+    }
+    
+    func addedVideo() {
+        
+        viewModel.isAddedSubject
+            .filter { $0 }
+            .withLatestFrom(viewModel.videoPlaySubject)
+            .subscribe(onNext: { [unowned self] url in
+               
+                if let data = self.getThumbnailImage(forUrl: url)?.convertToData() {
+                    self.viewModel.thumbnailImgDataSubject.onNext(data)
+                }
+                
+            })
+            .disposed(by: viewModel.disposeBag)
+            
+    }
+    
+    func getThumbnailImage(forUrl url: URL) -> UIImage? {
+        let asset: AVAsset = AVAsset(url: url)
+        let imageGenerator = AVAssetImageGenerator(asset: asset)
+
+        do {
+            let thumbnailImage = try imageGenerator.copyCGImage(at: CMTimeMake(value: 1, timescale: 60) , actualTime: nil)
+            return UIImage(cgImage: thumbnailImage)
+        } catch let error {
+            print(error)
+        }
+
+        return nil
     }
     
 }
@@ -119,11 +149,11 @@ extension CreateRecipeViewController: UITableViewDelegate, UITableViewDataSource
                     .disposed(by: cell.disposeBag)
                 
                 
-                viewModel.mainImgData
+                viewModel.mainImgDataSubject
                     .bind(to: cell.mainImgDataSubject)
                     .disposed(by: cell.disposeBag)
                 
-                viewModel.thumbnailImgData
+                viewModel.thumbnailImgDataSubject
                     .bind(to: cell.thumbnailDataSubject)
                     .disposed(by: cell.disposeBag)
                 
@@ -423,7 +453,7 @@ extension CreateRecipeViewController: PHPickerViewControllerDelegate {
                 }
                 else if let image = image as? UIImage, let data = image.convertToData() {
                     
-                    self.viewModel.mainImgData.onNext(data)
+                    self.viewModel.mainImgDataSubject.onNext(data)
                     
                 }
                 

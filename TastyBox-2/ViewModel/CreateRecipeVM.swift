@@ -28,11 +28,12 @@ class CreateRecipeVM: ViewModelBase {
     let photoPicker = ImagePickScene.photo.viewController()
     let videoPicker = ImagePickScene.video.viewController()
     
-    let videoPlaySubject = PublishSubject<URL>()
+    var videoPlaySubject = PublishSubject<URL>()
 
+    var isAddedSubject = BehaviorSubject<Bool>(value: false)
     
-    var mainImgData = PublishSubject<Data>()
-    var thumbnailImgData = PublishSubject<Data>()
+    var mainImgDataSubject = PublishSubject<Data>()
+    var thumbnailImgDataSubject = PublishSubject<Data>()
 
     var ingredients = [Ingredient]()
     var instructions = [Instruction]()
@@ -147,6 +148,7 @@ class CreateRecipeVM: ViewModelBase {
             .subscribe(onNext: { url in
                 
                 let vm = UploadingVideoVM(sceneCoodinator: self.sceneCoodinator, user: self.user, url: url)
+                vm.delegate = self
                 let vc = VideoScene.player(vm).viewController()
                 
                 self.sceneCoodinator.transition(to: vc, type: .modalHalf)
@@ -157,4 +159,13 @@ class CreateRecipeVM: ViewModelBase {
  
     }
     
+    
+    
 }
+
+extension CreateRecipeVM: UploadingVideoVMDelegate {
+    func addVideo(isAdded: Bool) {
+        isAddedSubject.onNext(isAdded)
+    }
+}
+
