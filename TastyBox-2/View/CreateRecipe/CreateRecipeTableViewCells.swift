@@ -120,6 +120,9 @@ class EditInstructionTVCell: UITableViewCell {
     @IBOutlet weak var imgViewBtn: UIButton!
     @IBOutlet weak var txtView: UITextView!
     
+    var tapped: Observable<Int>!
+    var indexPathSubject: PublishSubject<Int>!
+    
     var disposeBag = DisposeBag()
     
     override func awakeFromNib() {
@@ -133,6 +136,14 @@ class EditInstructionTVCell: UITableViewCell {
 
         // Configure the view for the selected state
         txtView.isScrollEnabled = false
+        
+        indexPathSubject = PublishSubject<Int>()
+        
+        tapped = imgViewBtn.rx.tap
+            .debounce(.microseconds(1000), scheduler: MainScheduler.instance)
+            .asDriver(onErrorJustReturn: ())
+            .asObservable()
+            .withLatestFrom(self.indexPathSubject)
         
     }
 }

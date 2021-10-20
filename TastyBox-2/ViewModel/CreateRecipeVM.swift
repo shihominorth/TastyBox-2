@@ -38,13 +38,17 @@ class CreateRecipeVM: ViewModelBase {
     var ingredients = [Ingredient]()
     var instructions = [Instruction]()
     
+    var pickingImgIndexSubject = PublishSubject<Int>()
+    
 //    public init() {}
     
     init(sceneCoodinator: SceneCoordinator, user: Firebase.User) {
         
         self.sceneCoodinator = sceneCoodinator
         self.user = user
-            
+        
+//        mainImgDataSubject = photoPicker.rx.imageData
+//        thumbnailImgDataSubject = videoPicker.rx.videoUrl
     }
  
     func isAppendNewIngredient() -> Observable<Bool> {
@@ -120,9 +124,17 @@ class CreateRecipeVM: ViewModelBase {
             return Disposables.create()
         }
     }
+
+    func instructionsToImagePicker(index: Int) {
+
+        self.pickingImgIndexSubject.onNext(index)
+        self.sceneCoodinator.transition(to: photoPicker, type: .imagePick)
+        
+    }
     
     
     func toImagePicker() {
+        
         
         self.sceneCoodinator.transition(to: photoPicker, type: .imagePick)
         

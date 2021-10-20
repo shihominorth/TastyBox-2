@@ -38,11 +38,19 @@ class CreateRecipeViewController: UIViewController, BindableType {
     
     func bindViewModel() {
         
-        viewModel.photoPicker.delegate = self
-        viewModel.videoPicker.delegate = self
+//        viewModel.photoPicker.delegate = self
+//        viewModel.videoPicker.delegate = self
         
         self.viewModel.playVideo()
         self.addedVideo()
+        
+        viewModel.pickingImgIndexSubject
+            .subscribe(onNext: { [unowned self] index in
+                
+                self.viewModel.instructionsToImagePicker(index: index)
+                
+            })
+            .disposed(by: viewModel.disposeBag)
     }
     
     fileprivate func setUpTableView() {
@@ -337,6 +345,7 @@ extension CreateRecipeViewController: UITableViewDelegate, UITableViewDataSource
             
             if let cell = tableView.dequeueReusableCell(withIdentifier: "editInstructions", for: indexPath) as? EditInstructionTVCell {
                 
+                cell.stepNumLbl.text = "Step \(indexPath.row + 1)"
                 
                 viewModel.keyboardOpen
                     .subscribe(onNext: { [weak self] notification in
@@ -366,6 +375,11 @@ extension CreateRecipeViewController: UITableViewDelegate, UITableViewDataSource
                     tableView.reloadRows(at: [indexPath], with: .automatic)
                     
                 }).disposed(by: cell.disposeBag)
+                
+                cell.indexPathSubject.onNext(indexPath.row)
+                
+                cell.tapped.bind(to: viewModel.pickingImgIndexSubject).disposed(by: cell.disposeBag)
+                
                 
                 return cell
             }
@@ -432,8 +446,35 @@ extension CreateRecipeViewController: UITableViewDelegate, UITableViewDataSource
         
         return false
     }
+    
+    
+    func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
+        
+        // 削除処理
+        let deleteAction = UIContextualAction(style: .destructive, title: "Delete") { [unowned self] (action, view, completionHandler) in
+            //削除処理を記述
+            switch indexPath.section {
+            case 4:
+                self.viewModel.ingredients.remove(at: indexPath.row)
+                tableView.deleteRows(at: [indexPath], with: .automatic)
+            case 6:
+                self.viewModel.instructions.remove(at: indexPath.row)
+                tableView.deleteRows(at: [indexPath], with: .automatic)
+            default:
+                break
+            }
+            
+          
+            // 実行結果に関わらず記述
+            completionHandler(true)
+        }
+        
+        // 定義したアクションをセット
+        return UISwipeActionsConfiguration(actions: [deleteAction])
+    }
 }
 
+// delegate proxy
 extension CreateRecipeViewController: PHPickerViewControllerDelegate {
     
     func picker(_ picker: PHPickerViewController, didFinishPicking results: [PHPickerResult]) {
@@ -452,6 +493,7 @@ extension CreateRecipeViewController: PHPickerViewControllerDelegate {
                     
                 }
                 else if let image = image as? UIImage, let data = image.convertToData() {
+                    
                     
                     self.viewModel.mainImgDataSubject.onNext(data)
                     

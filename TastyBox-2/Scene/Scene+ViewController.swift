@@ -262,10 +262,6 @@ extension VideoScene {
         switch self {
         case .player(let viewModel):
             
-//            let player = AVPlayer(url: url)
-//            let playerVC = AVPlayerViewController()
-//            playerVC.player = player
-            
             var vc = storyboard.instantiateViewController(withIdentifier: "uploadingVideoVC") as! UploadingVideoViewController
             vc.bindViewModel(to: viewModel)
             
