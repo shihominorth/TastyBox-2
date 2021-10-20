@@ -38,9 +38,9 @@ class CreateRecipeViewController: UIViewController, BindableType {
     
     func bindViewModel() {
         
-        self.viewModel.playVideo()
+        //        self.viewModel.playVideo()
         //        self.addedVideo()
-    
+        
     }
     
     fileprivate func setUpTableView() {
@@ -118,31 +118,22 @@ extension CreateRecipeViewController: UITableViewDelegate, UITableViewDataSource
                 
                 cell.collectionView.rx.itemSelected
                     .filter { $0.row == 0 }
-                    .subscribe(onNext: { [unowned self] _ in
-                        
-                        self.viewModel.toImagePicker()
-                        
-                    })
+                    .do(onNext: { [unowned self] _ in self.viewModel.toImagePicker() })
+                    .flatMap { [unowned self] _ in self.viewModel.getImage() }
+                    .bind(to: cell.mainImgDataSubject)
                     .disposed(by: cell.disposeBag)
                 
                 cell.collectionView.rx.itemSelected
                     .filter { $0.row == 1 }
-                    .subscribe(onNext: { [unowned self] _ in
-                        
-                        self.viewModel.toVideoPicker()
-                        
-                    })
-                    .disposed(by: cell.disposeBag)
-                
-                
-                viewModel.mainImgDataSubject
-                    .bind(to: cell.mainImgDataSubject)
-                    .disposed(by: cell.disposeBag)
-                
-                viewModel.thumbnailImgDataSubject
+                    .do(onNext: { [unowned self] _ in self.viewModel.toVideoPicker() })
+                    .flatMap { [unowned self] _ in self.viewModel.getVideoUrl() }
+                    .observe(on: MainScheduler.instance)
+                    .do(onNext:  { [unowned self] in self.viewModel.playVideo(url: $0) })
+                    .flatMap { [unowned self] in self.viewModel.getThumbnail(url: $0)}
                     .bind(to: cell.thumbnailDataSubject)
                     .disposed(by: cell.disposeBag)
                 
+                        
                 return cell
             }
             
@@ -325,6 +316,9 @@ extension CreateRecipeViewController: UITableViewDelegate, UITableViewDataSource
                 
                 cell.stepNumLbl.text = "Step \(indexPath.row + 1)"
                 
+                let data = self.viewModel.instructions[indexPath.row].imageData
+                cell.imgSubject.onNext(data)
+               
                 viewModel.keyboardOpen
                     .subscribe(onNext: { [weak self] notification in
                         if let keyboardSize = (notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue)?.cgRectValue, let viewHeight =  self?.view.frame.height{
@@ -356,14 +350,7 @@ extension CreateRecipeViewController: UITableViewDelegate, UITableViewDataSource
                 
                 cell.tapped
                     .flatMap { [unowned self] in self.viewModel.instructionsToImagePicker(index: indexPath.row) }
-                    .observe(on: MainScheduler.instance)
-                    .subscribe(onNext: { data in
-                        
-                        if let image = UIImage(data: data) {
-                            cell.imgViewBtn.setBackgroundImage(image, for: .normal)
-                        }
-                        
-                    })
+                    .bind(to: cell.imgSubject)
                     .disposed(by: cell.disposeBag)
                 
                 return cell
@@ -438,17 +425,28 @@ extension CreateRecipeViewController: UITableViewDelegate, UITableViewDataSource
         // 削除処理
         let deleteAction = UIContextualAction(style: .destructive, title: "Delete") { [unowned self] (action, view, completionHandler) in
             //削除処理を記述
+            
             switch indexPath.section {
             case 4:
                 self.viewModel.ingredients.remove(at: indexPath.row)
-                tableView.deleteRows(at: [indexPath], with: .automatic)
+               
             case 6:
                 self.viewModel.instructions.remove(at: indexPath.row)
-                tableView.deleteRows(at: [indexPath], with: .automatic)
+               
             default:
                 break
             }
             
+            switch indexPath.section {
+
+            case 4, 6:
+                tableView.deleteRows(at: [indexPath], with: .automatic)
+                tableView.reloadSections(IndexSet(integer: indexPath.section), with: .automatic)
+
+            default:
+                break
+            }
+
             
             // 実行結果に関わらず記述
             completionHandler(true)

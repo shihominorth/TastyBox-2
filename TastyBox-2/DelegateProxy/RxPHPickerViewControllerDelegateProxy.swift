@@ -24,6 +24,8 @@ class RxPHPickerViewControllerDelegateProxy: DelegateProxy<PHPickerViewControlle
     
     func picker(_ picker: PHPickerViewController, didFinishPicking results: [PHPickerResult]) {
        
+        Thread.sleep(forTimeInterval: 0.5)
+
         picker.dismiss(animated: true, completion: nil)
         
         guard let provider = results.first?.itemProvider else { return }

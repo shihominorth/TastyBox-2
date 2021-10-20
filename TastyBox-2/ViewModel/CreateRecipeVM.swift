@@ -33,7 +33,7 @@ class CreateRecipeVM: ViewModelBase {
     var videoPlaySubject = PublishSubject<URL>()
 
     var isAddedSubject = BehaviorSubject<Bool>(value: false)
-    
+
     var mainImgDataSubject: Observable<Data>!
     var thumbnailImgDataSubject: Observable<Data>!
 
@@ -51,8 +51,8 @@ class CreateRecipeVM: ViewModelBase {
         super.init()
        
         mainImgDataSubject = photoPicker.rx.imageData
-        thumbnailImgDataSubject = videoPicker.rx.videoUrl
-            .flatMap { [unowned self] in self.apiType.getThumbnailData(url: $0) }
+//        thumbnailImgDataSubject = videoPicker.rx.videoUrl
+//            .flatMap { [unowned self] in self.apiType.getThumbnailData(url: $0) }
             
     }
  
@@ -134,71 +134,105 @@ class CreateRecipeVM: ViewModelBase {
 
         self.sceneCoodinator.transition(to: photoPicker, type: .imagePick)
         
-       return photoPicker.rx.imageData
+        return photoPicker.rx.imageData
             .catch { err in
                 
                 print(err)
                 
                 return .empty()
             }
-//            .flatMap { [unowned self] data in
-//                return pickingImgIndexSubject.map { (data, $0) }
-//            }
             .do(onNext: { [unowned self] data in
                 
                 self.instructions[index].imageData = data
                 
              })
                 
-//            .disposed(by: self.disposeBag)
-            
-        
     }
-    
     
     func toImagePicker() {
         
-        
         self.sceneCoodinator.transition(to: photoPicker, type: .imagePick)
-        
-    }
     
-    func toVideoPicker() {
- 
-        self.sceneCoodinator.transition(to: videoPicker, type: .imagePick)
-        
     }
-    
-    func playVideo() {
-        
-        
-        videoPlaySubject
-            .observe(on: MainScheduler.instance)
+
+    func getImage() -> Observable<Data> {
+
+        return photoPicker.rx.imageData
             .catch { err in
                 
                 print(err)
                 
                 return .empty()
             }
-            .subscribe(onNext: { url in
+    }
+    
+    func toVideoPicker() {
+
+//        DispatchQueue.main.async {
+            self.sceneCoodinator.transition(to: self.videoPicker, type: .imagePick)
+//        }
+    }
+    
+    func getVideoUrl() -> Observable<URL> {
+
+        return videoPicker.rx.videoUrl
+            .catch { err in
                 
-                let vm = UploadingVideoVM(sceneCoodinator: self.sceneCoodinator, user: self.user, url: url)
-                vm.delegate = self
-                let vc = VideoScene.player(vm).viewController()
+                print(err)
                 
-                self.sceneCoodinator.transition(to: vc, type: .modalHalf)
-                
-                
-            })
-            .disposed(by: disposeBag)
+                return .empty()
+            }
+            .map { $0 }
+    }
+    
+    func playVideo(url: URL) {
+        
+        
+        let vm = UploadingVideoVM(sceneCoodinator: self.sceneCoodinator, user: self.user, url: url)
+        vm.delegate = self
+        let vc = VideoScene.player(vm).viewController()
+        
+        self.sceneCoodinator.transition(to: vc, type: .modalHalf)
+        
+//        
+//        videoPlaySubject
+//            .observe(on: MainScheduler.instance)
+//            .catch { err in
+//                
+//                print(err)
+//                
+//                return .empty()
+//            }
+//            .subscribe(onNext: { url in
+//                
+//                let vm = UploadingVideoVM(sceneCoodinator: self.sceneCoodinator, user: self.user, url: url)
+//                vm.delegate = self
+//                let vc = VideoScene.player(vm).viewController()
+//                
+//                self.sceneCoodinator.transition(to: vc, type: .modalHalf)
+//                
+//                
+//            })
+//            .disposed(by: disposeBag)
  
+    }
+    
+    func getThumbnail(url: URL) -> Observable<Data> {
+        
+        return isAddedSubject
+            .filter { $0 }
+            .flatMap { [unowned self] _ in self.apiType.getThumbnailData(url: url) }
+       
     }
     
 }
 
 extension CreateRecipeVM: UploadingVideoVMDelegate {
+    
     func addVideo(isAdded: Bool) {
+        
         isAddedSubject.onNext(isAdded)
+        
     }
 }
 
