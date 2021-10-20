@@ -38,19 +38,9 @@ class CreateRecipeViewController: UIViewController, BindableType {
     
     func bindViewModel() {
         
-//        viewModel.photoPicker.delegate = self
-//        viewModel.videoPicker.delegate = self
-        
         self.viewModel.playVideo()
-        self.addedVideo()
-        
-        viewModel.pickingImgIndexSubject
-            .subscribe(onNext: { [unowned self] index in
-                
-                self.viewModel.instructionsToImagePicker(index: index)
-                
-            })
-            .disposed(by: viewModel.disposeBag)
+        //        self.addedVideo()
+    
     }
     
     fileprivate func setUpTableView() {
@@ -76,35 +66,23 @@ class CreateRecipeViewController: UIViewController, BindableType {
             .disposed(by: viewModel.disposeBag)
     }
     
-    func addedVideo() {
-        
-        viewModel.isAddedSubject
-            .filter { $0 }
-            .withLatestFrom(viewModel.videoPlaySubject)
-            .subscribe(onNext: { [unowned self] url in
-               
-                if let data = self.getThumbnailImage(forUrl: url)?.convertToData() {
-                    self.viewModel.thumbnailImgDataSubject.onNext(data)
-                }
-                
-            })
-            .disposed(by: viewModel.disposeBag)
-            
-    }
+    //    func addedVideo() {
+    //
+    //        viewModel.isAddedSubject
+    //            .filter { $0 }
+    //            .withLatestFrom(viewModel.videoPlaySubject)
+    //            .subscribe(onNext: { [unowned self] url in
+    //
+    //                if let data = self.getThumbnailImage(forUrl: url)?.convertToData() {
+    //                    self.viewModel.thumbnailImgDataSubject.onNext(data)
+    //                }
+    //
+    //            })
+    //            .disposed(by: viewModel.disposeBag)
+    //
+    //    }
     
-    func getThumbnailImage(forUrl url: URL) -> UIImage? {
-        let asset: AVAsset = AVAsset(url: url)
-        let imageGenerator = AVAssetImageGenerator(asset: asset)
-
-        do {
-            let thumbnailImage = try imageGenerator.copyCGImage(at: CMTimeMake(value: 1, timescale: 60) , actualTime: nil)
-            return UIImage(cgImage: thumbnailImage)
-        } catch let error {
-            print(error)
-        }
-
-        return nil
-    }
+    
     
 }
 
@@ -376,10 +354,17 @@ extension CreateRecipeViewController: UITableViewDelegate, UITableViewDataSource
                     
                 }).disposed(by: cell.disposeBag)
                 
-                cell.indexPathSubject.onNext(indexPath.row)
-                
-                cell.tapped.bind(to: viewModel.pickingImgIndexSubject).disposed(by: cell.disposeBag)
-                
+                cell.tapped
+                    .flatMap { [unowned self] in self.viewModel.instructionsToImagePicker(index: indexPath.row) }
+                    .observe(on: MainScheduler.instance)
+                    .subscribe(onNext: { data in
+                        
+                        if let image = UIImage(data: data) {
+                            cell.imgViewBtn.setBackgroundImage(image, for: .normal)
+                        }
+                        
+                    })
+                    .disposed(by: cell.disposeBag)
                 
                 return cell
             }
@@ -464,7 +449,7 @@ extension CreateRecipeViewController: UITableViewDelegate, UITableViewDataSource
                 break
             }
             
-          
+            
             // 実行結果に関わらず記述
             completionHandler(true)
         }
@@ -473,56 +458,3 @@ extension CreateRecipeViewController: UITableViewDelegate, UITableViewDataSource
         return UISwipeActionsConfiguration(actions: [deleteAction])
     }
 }
-
-// delegate proxy
-extension CreateRecipeViewController: PHPickerViewControllerDelegate {
-    
-    func picker(_ picker: PHPickerViewController, didFinishPicking results: [PHPickerResult]) {
-        
-        picker.dismiss(animated: true, completion: nil)
-        
-        guard let provider = results.first?.itemProvider else { return }
-        
-        if provider.hasItemConformingToTypeIdentifier(UTType.image.identifier) {
-            
-            provider.loadObject(ofClass: UIImage.self) { [unowned self] image, err in
-                
-                if let err = err {
-                    
-                    print(err)
-                    
-                }
-                else if let image = image as? UIImage, let data = image.convertToData() {
-                    
-                    
-                    self.viewModel.mainImgDataSubject.onNext(data)
-                    
-                }
-                
-            }
-            
-        }
-        else if provider.hasItemConformingToTypeIdentifier(UTType.video.identifier) ||  provider.hasItemConformingToTypeIdentifier(UTType.quickTimeMovie.identifier) {
-            
-            guard let typeIdentifier = provider.registeredTypeIdentifiers.first else { return }
-
-            provider.loadItem(forTypeIdentifier: typeIdentifier, options: nil) { [unowned self] url, err in
-                
-                if let err = err {
-                    
-                    self.viewModel.videoPlaySubject.onError(err)
-                    
-                }
-                else if let url = url as? URL {
-                    
-                    self.viewModel.videoPlaySubject.onNext(url)
-                    
-                }
-            
-            }
-        }
-        
-        
-    }
-}
-

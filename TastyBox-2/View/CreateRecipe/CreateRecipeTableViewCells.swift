@@ -120,7 +120,7 @@ class EditInstructionTVCell: UITableViewCell {
     @IBOutlet weak var imgViewBtn: UIButton!
     @IBOutlet weak var txtView: UITextView!
     
-    var tapped: Observable<Int>!
+    var tapped: Observable<Void>!
     var indexPathSubject: PublishSubject<Int>!
     
     var disposeBag = DisposeBag()
@@ -129,6 +129,12 @@ class EditInstructionTVCell: UITableViewCell {
         super.awakeFromNib()
         // Initialization code
         disposeBag = DisposeBag()
+        
+        tapped = imgViewBtn.rx.tap
+            .debounce(.microseconds(1000), scheduler: MainScheduler.instance)
+            .asDriver(onErrorJustReturn: ())
+            .asObservable()
+
     }
 
     override func setSelected(_ selected: Bool, animated: Bool) {
@@ -136,14 +142,11 @@ class EditInstructionTVCell: UITableViewCell {
 
         // Configure the view for the selected state
         txtView.isScrollEnabled = false
-        
-        indexPathSubject = PublishSubject<Int>()
-        
+        //
         tapped = imgViewBtn.rx.tap
             .debounce(.microseconds(1000), scheduler: MainScheduler.instance)
             .asDriver(onErrorJustReturn: ())
             .asObservable()
-            .withLatestFrom(self.indexPathSubject)
         
     }
 }

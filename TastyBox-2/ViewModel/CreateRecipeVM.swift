@@ -16,9 +16,11 @@ class CreateRecipeVM: ViewModelBase {
     let sceneCoodinator: SceneCoordinator
     let user: Firebase.User
     
+    let apiType: CreateRecipeDMProtocol.Type
+    
     let keyboardOpen = NotificationCenter.default.rx.notification(UIResponder.keyboardWillShowNotification).observe(on: MainScheduler.instance)
     
-    let keyboardClose = NotificationCenter.default.rx.notification(UIResponder.keyboardWillHideNotification).observe(on: MainScheduler.instance)
+    let keyboardClose = NotificationCenter.default.rx.notification(UIResponder.keyboardWillHideNotification).observe(on: MainScheduler.instance) //全部終わったらkeyboard sizeだけ返すようにする
     
     var isUserScrollingRelay = BehaviorRelay<Bool>(value: true)
     
@@ -32,23 +34,26 @@ class CreateRecipeVM: ViewModelBase {
 
     var isAddedSubject = BehaviorSubject<Bool>(value: false)
     
-    var mainImgDataSubject = PublishSubject<Data>()
-    var thumbnailImgDataSubject = PublishSubject<Data>()
+    var mainImgDataSubject: Observable<Data>!
+    var thumbnailImgDataSubject: Observable<Data>!
 
     var ingredients = [Ingredient]()
     var instructions = [Instruction]()
     
     var pickingImgIndexSubject = PublishSubject<Int>()
-    
-//    public init() {}
-    
-    init(sceneCoodinator: SceneCoordinator, user: Firebase.User) {
         
+    init(sceneCoodinator: SceneCoordinator, user: Firebase.User, apiType: CreateRecipeDMProtocol.Type = CreateRecipeDM.self) {
+                
         self.sceneCoodinator = sceneCoodinator
         self.user = user
+        self.apiType = apiType
         
-//        mainImgDataSubject = photoPicker.rx.imageData
-//        thumbnailImgDataSubject = videoPicker.rx.videoUrl
+        super.init()
+       
+        mainImgDataSubject = photoPicker.rx.imageData
+        thumbnailImgDataSubject = videoPicker.rx.videoUrl
+            .flatMap { [unowned self] in self.apiType.getThumbnailData(url: $0) }
+            
     }
  
     func isAppendNewIngredient() -> Observable<Bool> {
@@ -95,7 +100,7 @@ class CreateRecipeVM: ViewModelBase {
         let uuid = UUID()
         let uniqueIdString = uuid.uuidString.replacingOccurrences(of: "-", with: "")
         
-        let instruction = Instruction(index: self.instructions.count, imageUrl: "", text: "")
+        let instruction = Instruction(index: self.instructions.count, imageData: Data(), text: "")
         
         self.instructions.append(instruction)
     }
@@ -125,10 +130,28 @@ class CreateRecipeVM: ViewModelBase {
         }
     }
 
-    func instructionsToImagePicker(index: Int) {
+    func instructionsToImagePicker(index: Int) -> Observable<Data> {
 
-        self.pickingImgIndexSubject.onNext(index)
         self.sceneCoodinator.transition(to: photoPicker, type: .imagePick)
+        
+       return photoPicker.rx.imageData
+            .catch { err in
+                
+                print(err)
+                
+                return .empty()
+            }
+//            .flatMap { [unowned self] data in
+//                return pickingImgIndexSubject.map { (data, $0) }
+//            }
+            .do(onNext: { [unowned self] data in
+                
+                self.instructions[index].imageData = data
+                
+             })
+                
+//            .disposed(by: self.disposeBag)
+            
         
     }
     
@@ -170,8 +193,6 @@ class CreateRecipeVM: ViewModelBase {
             .disposed(by: disposeBag)
  
     }
-    
-    
     
 }
 

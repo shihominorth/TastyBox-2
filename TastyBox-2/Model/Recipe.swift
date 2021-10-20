@@ -28,7 +28,7 @@ struct Recipe {
 
 struct Instruction {
     var index: Int
-    var imageUrl: String
+    var imageData: Data
     var text: String
 }
 
