@@ -11,6 +11,10 @@ import RxSwift
 import RxCocoa
 import RxDataSources
 
+protocol SelectGenreProtocol: AnyObject {
+    func addGenre(genres: [Genre])
+}
+
 class SelectGenresVM: ViewModelBase {
     
     let sceneCoordinator: SceneCoordinator
@@ -18,8 +22,11 @@ class SelectGenresVM: ViewModelBase {
     
     let apiType: CreateRecipeDMProtocol.Type
     
+    weak var delegate: SelectGenreProtocol?
+    
     var items = BehaviorRelay<[SectionOfGenre]>(value: [])
     var searchedItems: [SectionOfGenre] = []
+    var selectedGenres = BehaviorRelay<[Genre]>(value: [])
     
     let dissapperSubject = PublishSubject<Void>()
     let searchTextSubject = PublishSubject<String>()
@@ -72,6 +79,7 @@ class SelectGenresVM: ViewModelBase {
             .disposed(by: disposeBag)
     }
     
+    
     func filterSearchedItems(with allItems: [SectionOfGenre], query: String) -> [SectionOfGenre] {
         
         guard query.isNotEmpty else {
@@ -85,6 +93,34 @@ class SelectGenresVM: ViewModelBase {
             SectionOfGenre(header: $0.header, items: $0.items.filter { $0.title.range(of: query, options: .anchored) != nil
             })
         }
+    }
+    
+    func addGenre(indexSection: Int, indexRow: Int) {
+
+        
+        let newGenre =  self.items.value[indexSection].items[indexRow]
+        var currentItems = self.selectedGenres.value
+        
+        currentItems.append(newGenre)
+        
+        self.selectedGenres.accept(currentItems)
+    }
+    
+    func removeGenre(indexSection: Int, indexRow: Int) {
+       
+        let newGenre =  self.items.value[indexSection].items[indexRow]
+        let currentItems = self.selectedGenres.value
+        
+        let newItems = currentItems.filter { $0.id != newGenre.id }
+        
+        self.selectedGenres.accept(newItems)
+    }
+    
+    func addGenres(genres: [Genre]) {
+    
+        self.sceneCoordinator.pop(animated: true)
+        self.delegate?.addGenre(genres: genres)
+    
     }
 //    
 //    

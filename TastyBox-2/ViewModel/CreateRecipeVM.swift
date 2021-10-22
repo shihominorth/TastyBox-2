@@ -42,6 +42,7 @@ class CreateRecipeVM: ViewModelBase {
     let titleSubject = PublishSubject<String>()
     let servingSubject = PublishSubject<Int>()
     let timeSubject = PublishSubject<Int>()
+    let genres = PublishSubject<[Genre]>()
     
     var ingredients = [Ingredient]()
     var instructions = [Instruction]()
@@ -214,9 +215,26 @@ class CreateRecipeVM: ViewModelBase {
 //        self.sceneCoodinator.transition(to: nc, type: .modal(.automatic, .coverVertical))
 
         self.sceneCoodinator.modalTransition(to: Scene.createReceipeScene(scene: .selectGenre(vm)), type: .modal(.automatic, .coverVertical))
-
+            .asObservable()
+            .subscribe(onError: { err in
+                print(err)
+            
+            }, onCompleted: { [unowned self] in
+                
+                vm.delegate = self
+                
+            })
+            .disposed(by: disposeBag)
     }
     
+}
+
+extension CreateRecipeVM: SelectGenreProtocol {
+    func addGenre(genres: [Genre]) {
+    
+        self.genres.onNext(genres)
+        
+    }
 }
 
 extension CreateRecipeVM: UploadingVideoVMDelegate {

@@ -15,8 +15,8 @@ class SelectGenresViewController: UIViewController, BindableType {
     typealias ViewModelType = SelectGenresVM
     var viewModel: SelectGenresVM!
     
-    let addBtn = UIBarButtonItem()
-    let cancelBtn = UIBarButtonItem()
+    @IBOutlet weak var cancelBtn: UIBarButtonItem!
+    @IBOutlet weak var addBtn: UIBarButtonItem!
     
 //    let headerView = GenresTableHeaderView()
     
@@ -32,9 +32,9 @@ class SelectGenresViewController: UIViewController, BindableType {
         super.viewDidLoad()
         
         // Do any additional setup after loading the view.
-    
-        self.navigationController?.navigationItem.rightBarButtonItem = addBtn
-        self.navigationController?.navigationItem.leftBarButtonItem = cancelBtn
+//
+//        self.navigationController?.navigationItem.rightBarButtonItem = addBtn
+//        self.navigationController?.navigationItem.leftBarButtonItem = cancelBtn
         
         setUpCollectionView()
         setUpDataSource()
@@ -56,17 +56,41 @@ class SelectGenresViewController: UIViewController, BindableType {
 //        viewModel.differenceSubject.onNext([sectionOfGenres])
         viewModel.items.accept([sectionOfGenres])
         
+        viewModel.items
+//            .startWith([])
+            .bind(to: collectionView.rx.items(dataSource: dataSource))
+            .disposed(by: viewModel.disposeBag)
+        
+        
+        addBtn.rx.tap
+            .asDriver(onErrorJustReturn: ())
+            .asObservable()
+            .withLatestFrom(self.viewModel.selectedGenres)
+            .subscribe(onNext: { [unowned self] genres in
+               
+                self.viewModel.addGenres(genres: genres)
+            
+            })
+            .disposed(by: viewModel.disposeBag)
+        
+        cancelBtn.rx.tap
+            .asDriver(onErrorJustReturn: ())
+            .asObservable()
+            .subscribe(onNext: { [unowned self] _ in
+               
+                self.viewModel.sceneCoordinator.pop(animated: true)
+            
+            })
+            .disposed(by: viewModel.disposeBag)
+        
+        
 //        Observable.combineLatest(viewModel.searchTextSubject, viewModel.items) { query, items in
 //                self.viewModel.filterSearchedItems(with: items, query: query)
 //            }
 //            .bind(to: collectionView.rx.items(dataSource: dataSource))
 //            .disposed(by: viewModel.disposeBag)
         
-        viewModel.items
-//            .startWith([])
-            .bind(to: collectionView.rx.items(dataSource: dataSource))
-            .disposed(by: viewModel.disposeBag)
-        
+     
 //        viewModel.getGenre()
         
 //        let isQueryEmpty = viewModel.searchTextSubject.skip(1)
@@ -170,8 +194,19 @@ class SelectGenresViewController: UIViewController, BindableType {
             .subscribe(onNext: { [unowned self] indexPath in
                     
                 let cell = collectionView.cellForItem(at: indexPath) as! GenreCVCell
+               
                 cell.setIsSelectedGenre()
                     
+                if cell.isSelectedGenre {
+                    
+                    self.viewModel.addGenre(indexSection: indexPath.section, indexRow: indexPath.row)
+                
+                }
+                else {
+                
+                    self.viewModel.removeGenre(indexSection: indexPath.section, indexRow: indexPath.row)
+                
+                }
             })
             .disposed(by: viewModel.disposeBag)
                 

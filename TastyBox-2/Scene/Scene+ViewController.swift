@@ -27,8 +27,8 @@ extension Scene {
             return nc
 
         case .createReceipeScene(scene: .createRecipe(let viewModel)):
-            var vc = storyboard.instantiateViewController(withIdentifier: "createRecipe") as! CreateRecipeViewController
             
+            var vc = storyboard.instantiateViewController(withIdentifier: "createRecipe") as! CreateRecipeViewController
             
             vc.bindViewModel(to: viewModel)
             

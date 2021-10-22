@@ -545,10 +545,12 @@
                         </constraints>
                     </view>
                     <navigationItem key="navigationItem" id="Y6W-kZ-1YS">
-                        <barButtonItem key="leftBarButtonItem" title="Cancel" id="Owp-i1-axe"/>
-                        <barButtonItem key="rightBarButtonItem" title="Add" id="1bo-v0-30k"/>
+                        <barButtonItem key="leftBarButtonItem" systemItem="cancel" id="7Vm-DD-jMQ"/>
+                        <barButtonItem key="rightBarButtonItem" systemItem="add" id="DPk-mQ-eBL"/>
                     </navigationItem>
                     <connections>
+                        <outlet property="addBtn" destination="DPk-mQ-eBL" id="t7A-qw-aLC"/>
+                        <outlet property="cancelBtn" destination="7Vm-DD-jMQ" id="GJE-DM-vKx"/>
                         <outlet property="collectionView" destination="c9z-Sn-aEQ" id="nfa-PO-VL2"/>
                     </connections>
                 </viewController>
