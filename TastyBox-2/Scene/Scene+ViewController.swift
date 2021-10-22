@@ -9,6 +9,66 @@ import UIKit
 import Photos
 import PhotosUI
 
+extension Scene {
+    
+    func viewController() -> UIViewController {
+
+        let storyboard = UIStoryboard(name: "CreateRecipe", bundle: nil)
+
+        switch self {
+        case .createReceipeScene(scene: .selectGenre(let viewModel)):
+           
+            let nc = storyboard.instantiateViewController(withIdentifier: "selectGenreNC") as! UINavigationController
+            
+            var vc = nc.viewControllers.first as? SelectGenresViewController
+            
+            vc?.bindViewModel(to: viewModel)
+            
+            return nc
+
+        case .createReceipeScene(scene: .createRecipe(let viewModel)):
+            var vc = storyboard.instantiateViewController(withIdentifier: "createRecipe") as! CreateRecipeViewController
+            
+            
+            vc.bindViewModel(to: viewModel)
+            
+            return vc
+        }
+        
+        
+    }
+    
+//    func getViewController(scene: Scene, viewModel: ViewModelBase) -> UIViewController {
+//        
+//        var result: UIViewController!
+//        
+//        switch scene {
+//        case .createScene:
+//            
+//            var viewcontroller: UIViewController? {
+//                
+//                if let viewModel = viewModel as? SelectGenresVM {
+//                    return CreateRecipeScene.selectGenre(viewModel).viewController()
+//                }
+//                else if let viewModel = viewModel as? CreateRecipeVM {
+//                    return CreateRecipeScene.createRecipe(viewModel).viewController()
+//                }
+//              
+//                return nil
+//            }
+//            
+//            result = viewcontroller
+//            
+//        default:
+//            break
+//        }
+//        
+//        
+//        return result
+//        
+//    }
+}
+
 extension LoadingScene {
     func viewController() -> UIViewController {
         let storyboard = UIStoryboard(name: "Tutorial", bundle: nil)
@@ -19,12 +79,15 @@ extension LoadingScene {
             let nc = storyboard.instantiateViewController(withIdentifier: "loadingNC") as! UINavigationController
             var vc = nc.viewControllers.first as! LoadingViewController
             vc.bindViewModel(to: viewModel)
+          
             return nc
             
             
         case .tutorial(let viewModel):
+            
             var vc = storyboard.instantiateViewController(withIdentifier: "tutorial") as! TutorialViewController
             vc.bindViewModel(to: viewModel)
+           
             return vc
         }
     }
@@ -208,6 +271,16 @@ extension CreateRecipeScene {
             vc.bindViewModel(to: viewModel)
             
             return vc
+            
+        case .selectGenre(let viewModel):
+           
+            let nc = storyboard.instantiateViewController(withIdentifier: "selectGenreNC") as! UINavigationController
+
+//            var vc = storyboard.instantiateViewController(withIdentifier: "selectGenre") as! SelectGenresViewController
+//
+//            vc.bindViewModel(to: viewModel)
+            
+            return nc
         }
     }
 }

@@ -6,6 +6,7 @@
 //
 
 import AVFoundation
+import Action
 import UIKit
 import Photos
 import PhotosUI
@@ -21,6 +22,7 @@ class CreateRecipeViewController: UIViewController, BindableType {
     
     @IBOutlet weak var tableView: UITableView!
     
+    var addGenresBtn = UIBarButtonItem()
     
     
     override func viewDidLoad() {
@@ -33,19 +35,32 @@ class CreateRecipeViewController: UIViewController, BindableType {
         self.viewModel.appendNewInstructions()
         
         setUpTableView()
+        
+        addGenresBtn.title = "Next"
+        self.navigationItem.rightBarButtonItem = addGenresBtn
     }
     
     
     func bindViewModel() {
         
-        //        self.viewModel.playVideo()
-        //        self.addedVideo()
+        addGenresBtn.rx.tap
+            .debounce(.microseconds(1000), scheduler: MainScheduler.instance)
+            .asDriver(onErrorJustReturn: ())
+            .asObservable()
+            .subscribe(onNext: { [unowned self] _ in
+               
+                self.viewModel.goToAddGenres()
+            
+            })
+            .disposed(by: viewModel.disposeBag)
         
     }
     
     fileprivate func setUpTableView() {
         
         self.tableView.allowsSelectionDuringEditing = true
+        
+        tableView.tableFooterView = UIView()
         
         tableView.rx.didScroll
             .observe(on: MainScheduler.asyncInstance)
@@ -65,24 +80,6 @@ class CreateRecipeViewController: UIViewController, BindableType {
             })
             .disposed(by: viewModel.disposeBag)
     }
-    
-    //    func addedVideo() {
-    //
-    //        viewModel.isAddedSubject
-    //            .filter { $0 }
-    //            .withLatestFrom(viewModel.videoPlaySubject)
-    //            .subscribe(onNext: { [unowned self] url in
-    //
-    //                if let data = self.getThumbnailImage(forUrl: url)?.convertToData() {
-    //                    self.viewModel.thumbnailImgDataSubject.onNext(data)
-    //                }
-    //
-    //            })
-    //            .disposed(by: viewModel.disposeBag)
-    //
-    //    }
-    
-    
     
 }
 
@@ -208,7 +205,7 @@ extension CreateRecipeViewController: UITableViewDelegate, UITableViewDataSource
                     .disposed(by: cell.disposeBag)
                 
                 
-                cell.editbtn.rx.tap
+                cell.editBtn.rx.tap
                     .debounce(.microseconds(1000), scheduler: MainScheduler.instance)
                     .asDriver(onErrorJustReturn: ())
                     .asObservable()
@@ -225,6 +222,15 @@ extension CreateRecipeViewController: UITableViewDelegate, UITableViewDataSource
                             
                             tableView.setEditing(false, animated: true)
                             tableView.setEditing(true, animated: true)
+                        }
+                        
+                        if cell.editBtn.titleLabel?.text == "Edit" {
+                        
+                            cell.editBtn.setTitle("Done", for: .normal)
+                       
+                        }
+                        else {
+                            cell.editBtn.setTitle("Edit", for: .normal)
                         }
                         
                     }, onError: { err in
@@ -298,6 +304,12 @@ extension CreateRecipeViewController: UITableViewDelegate, UITableViewDataSource
                             tableView.setEditing(true, animated: true)
                         }
                         
+                        if cell.editBtn.titleLabel?.text == "Edit" {
+                            cell.editBtn.setTitle("Done", for: .normal)
+                        }
+                        else {
+                            cell.editBtn.setTitle("Edit", for: .normal)
+                        }
                         
                     }, onError: { err in
                         print(err)

@@ -17,11 +17,18 @@
 		6F06EBE926F6B3D100F2218B /* LoadingVM.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F06EBE826F6B3D100F2218B /* LoadingVM.swift */; };
 		6F06EBEB26F824ED00F2218B /* ObservableType+.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F06EBEA26F824EC00F2218B /* ObservableType+.swift */; };
 		6F06EBEE26F825F700F2218B /* ActivityIndicator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F06EBED26F825F700F2218B /* ActivityIndicator.swift */; };
+		6F078169272094D100C01833 /* GenreCVCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F078168272094D100C01833 /* GenreCVCell.swift */; };
+		6F07816B27209CDC00C01833 /* GenreCRV.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F07816A27209CDC00C01833 /* GenreCRV.swift */; };
 		6F0E695A271EC3A3002BD547 /* PlayVideoView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 6F0E6959271EC3A3002BD547 /* PlayVideoView.xib */; };
 		6F0E695E271EDDD8002BD547 /* PlayVideoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F0E695D271EDDD8002BD547 /* PlayVideoView.swift */; };
 		6F0E6960271F98FF002BD547 /* RxPHPickerViewControllerDelegateProxy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F0E695F271F98FE002BD547 /* RxPHPickerViewControllerDelegateProxy.swift */; };
 		6F0E6962272022FB002BD547 /* CreateRecipeDM.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F0E6961272022FB002BD547 /* CreateRecipeDM.swift */; };
 		6F0E6964272024E6002BD547 /* CGImage+.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F0E6963272024E6002BD547 /* CGImage+.swift */; };
+		6F0E696627208183002BD547 /* SelectGenresViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F0E696527208183002BD547 /* SelectGenresViewController.swift */; };
+		6F0E6968272082B8002BD547 /* GenresTableHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F0E6967272082B8002BD547 /* GenresTableHeaderView.swift */; };
+		6F0E696A272082DC002BD547 /* GenresTableViewHeaderView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 6F0E6969272082DC002BD547 /* GenresTableViewHeaderView.xib */; };
+		6F0E696C27208870002BD547 /* SelectGenresVM.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F0E696B27208870002BD547 /* SelectGenresVM.swift */; };
+		6F0E696E27208D8A002BD547 /* Genre.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F0E696D27208D8A002BD547 /* Genre.swift */; };
 		6F114E01271C8A7900B3BE63 /* UploadingVideoVM.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F114E00271C8A7900B3BE63 /* UploadingVideoVM.swift */; };
 		6F114E0D271D71F800B3BE63 /* UIView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F114E0C271D71F800B3BE63 /* UIView.swift */; };
 		6F194CBA271C77A40084F829 /* VideoPlayer.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 6F194CB9271C77A40084F829 /* VideoPlayer.storyboard */; };
@@ -37,6 +44,8 @@
 		6F512A3026F45BF200826657 /* TutorialCVCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F512A2F26F45BF200826657 /* TutorialCVCell.swift */; };
 		6F512A3226F467A300826657 /* FlowLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F512A3126F467A300826657 /* FlowLayout.swift */; };
 		6F6D0AEE26EED71500CD27AE /* RxFaceBookLoginDelegateProxy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F6D0AED26EED71500CD27AE /* RxFaceBookLoginDelegateProxy.swift */; };
+		6F71EBEC2721FEAD001BF538 /* RxUIViewController+.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F71EBEB2721FEAD001BF538 /* RxUIViewController+.swift */; };
+		6F71EBEE2722B1CC001BF538 /* GenreCollectionViewFlowLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F71EBED2722B1CB001BF538 /* GenreCollectionViewFlowLayout.swift */; };
 		6F74C4252719BAB9007BB9E6 /* DiscoveryPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F74C4242719BAB8007BB9E6 /* DiscoveryPresenter.swift */; };
 		6F74C4292719DC61007BB9E6 /* CreateRecipeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F74C4282719DC61007BB9E6 /* CreateRecipeViewController.swift */; };
 		6F74C42B2719DEE7007BB9E6 /* CreateRecipeVM.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F74C42A2719DEE7007BB9E6 /* CreateRecipeVM.swift */; };
@@ -65,6 +74,8 @@
 		6FA70A9926E7A1FF00474FE5 /* SetPasswordViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FA70A9826E7A1FE00474FE5 /* SetPasswordViewController.swift */; };
 		6FA70A9B26E7A69500474FE5 /* SetPasswordVM.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FA70A9A26E7A69400474FE5 /* SetPasswordVM.swift */; };
 		6FA70A9D26E8EA5700474FE5 /* ViewController+.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FA70A9C26E8EA5600474FE5 /* ViewController+.swift */; };
+		6FAAB4C32720CCB400B42C67 /* SearchBarRCV.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FAAB4C22720CCB400B42C67 /* SearchBarRCV.swift */; };
+		6FAAB4C52720CCDC00B42C67 /* SearchBarRCV.xib in Resources */ = {isa = PBXBuildFile; fileRef = 6FAAB4C42720CCDC00B42C67 /* SearchBarRCV.xib */; };
 		6FB06F3D26D67E0100E110B4 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FB06F3C26D67E0100E110B4 /* AppDelegate.swift */; };
 		6FB06F3F26D67E0100E110B4 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FB06F3E26D67E0100E110B4 /* SceneDelegate.swift */; };
 		6FB06F4126D67E0100E110B4 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FB06F4026D67E0100E110B4 /* ViewController.swift */; };
@@ -129,11 +140,18 @@
 		6F06EBE826F6B3D100F2218B /* LoadingVM.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoadingVM.swift; sourceTree = "<group>"; };
 		6F06EBEA26F824EC00F2218B /* ObservableType+.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ObservableType+.swift"; sourceTree = "<group>"; };
 		6F06EBED26F825F700F2218B /* ActivityIndicator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActivityIndicator.swift; sourceTree = "<group>"; };
+		6F078168272094D100C01833 /* GenreCVCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GenreCVCell.swift; sourceTree = "<group>"; };
+		6F07816A27209CDC00C01833 /* GenreCRV.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GenreCRV.swift; sourceTree = "<group>"; };
 		6F0E6959271EC3A3002BD547 /* PlayVideoView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = PlayVideoView.xib; sourceTree = "<group>"; };
 		6F0E695D271EDDD8002BD547 /* PlayVideoView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayVideoView.swift; sourceTree = "<group>"; };
 		6F0E695F271F98FE002BD547 /* RxPHPickerViewControllerDelegateProxy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RxPHPickerViewControllerDelegateProxy.swift; sourceTree = "<group>"; };
 		6F0E6961272022FB002BD547 /* CreateRecipeDM.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateRecipeDM.swift; sourceTree = "<group>"; };
 		6F0E6963272024E6002BD547 /* CGImage+.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CGImage+.swift"; sourceTree = "<group>"; };
+		6F0E696527208183002BD547 /* SelectGenresViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SelectGenresViewController.swift; sourceTree = "<group>"; };
+		6F0E6967272082B8002BD547 /* GenresTableHeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GenresTableHeaderView.swift; sourceTree = "<group>"; };
+		6F0E6969272082DC002BD547 /* GenresTableViewHeaderView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = GenresTableViewHeaderView.xib; sourceTree = "<group>"; };
+		6F0E696B27208870002BD547 /* SelectGenresVM.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SelectGenresVM.swift; sourceTree = "<group>"; };
+		6F0E696D27208D8A002BD547 /* Genre.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Genre.swift; sourceTree = "<group>"; };
 		6F114E00271C8A7900B3BE63 /* UploadingVideoVM.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UploadingVideoVM.swift; sourceTree = "<group>"; };
 		6F114E0C271D71F800B3BE63 /* UIView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIView.swift; sourceTree = "<group>"; };
 		6F194CB9271C77A40084F829 /* VideoPlayer.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = VideoPlayer.storyboard; sourceTree = "<group>"; };
@@ -149,6 +167,8 @@
 		6F512A2F26F45BF200826657 /* TutorialCVCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TutorialCVCell.swift; sourceTree = "<group>"; };
 		6F512A3126F467A300826657 /* FlowLayout.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FlowLayout.swift; sourceTree = "<group>"; };
 		6F6D0AED26EED71500CD27AE /* RxFaceBookLoginDelegateProxy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RxFaceBookLoginDelegateProxy.swift; sourceTree = "<group>"; };
+		6F71EBEB2721FEAD001BF538 /* RxUIViewController+.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "RxUIViewController+.swift"; sourceTree = "<group>"; };
+		6F71EBED2722B1CB001BF538 /* GenreCollectionViewFlowLayout.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GenreCollectionViewFlowLayout.swift; sourceTree = "<group>"; };
 		6F74C4242719BAB8007BB9E6 /* DiscoveryPresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiscoveryPresenter.swift; sourceTree = "<group>"; };
 		6F74C4282719DC61007BB9E6 /* CreateRecipeViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateRecipeViewController.swift; sourceTree = "<group>"; };
 		6F74C42A2719DEE7007BB9E6 /* CreateRecipeVM.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateRecipeVM.swift; sourceTree = "<group>"; };
@@ -178,6 +198,8 @@
 		6FA70A9826E7A1FE00474FE5 /* SetPasswordViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SetPasswordViewController.swift; sourceTree = "<group>"; };
 		6FA70A9A26E7A69400474FE5 /* SetPasswordVM.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SetPasswordVM.swift; sourceTree = "<group>"; };
 		6FA70A9C26E8EA5600474FE5 /* ViewController+.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ViewController+.swift"; sourceTree = "<group>"; };
+		6FAAB4C22720CCB400B42C67 /* SearchBarRCV.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchBarRCV.swift; sourceTree = "<group>"; };
+		6FAAB4C42720CCDC00B42C67 /* SearchBarRCV.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = SearchBarRCV.xib; sourceTree = "<group>"; };
 		6FB06F3926D67E0100E110B4 /* TastyBox-2.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "TastyBox-2.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		6FB06F3C26D67E0100E110B4 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		6FB06F3E26D67E0100E110B4 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -277,6 +299,7 @@
 			children = (
 				6F06EBEA26F824EC00F2218B /* ObservableType+.swift */,
 				6F06EBED26F825F700F2218B /* ActivityIndicator.swift */,
+				6F71EBEB2721FEAD001BF538 /* RxUIViewController+.swift */,
 			);
 			path = Rx;
 			sourceTree = "<group>";
@@ -391,6 +414,7 @@
 				6FC062C126ECA3D70016B990 /* Notification.swift */,
 				6FEF087F26F2A4B000C02CDD /* Recipe.swift */,
 				6FE9EB4D26F99EF4000AF9D4 /* Ingredient.swift */,
+				6F0E696D27208D8A002BD547 /* Genre.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -561,6 +585,13 @@
 				6FE15ED1271AA3BD0047D3D8 /* CreateRecipe */,
 				6F0E6959271EC3A3002BD547 /* PlayVideoView.xib */,
 				6F0E695D271EDDD8002BD547 /* PlayVideoView.swift */,
+				6F0E6967272082B8002BD547 /* GenresTableHeaderView.swift */,
+				6F0E6969272082DC002BD547 /* GenresTableViewHeaderView.xib */,
+				6F078168272094D100C01833 /* GenreCVCell.swift */,
+				6F07816A27209CDC00C01833 /* GenreCRV.swift */,
+				6FAAB4C22720CCB400B42C67 /* SearchBarRCV.swift */,
+				6FAAB4C42720CCDC00B42C67 /* SearchBarRCV.xib */,
+				6F71EBED2722B1CB001BF538 /* GenreCollectionViewFlowLayout.swift */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -613,6 +644,7 @@
 				6F512A2626F416BD00826657 /* Tutorial */,
 				6F9E04162700A0F9005DCEF4 /* Ingredient */,
 				6F194CBD271C7F200084F829 /* Video */,
+				6F0E696527208183002BD547 /* SelectGenresViewController.swift */,
 			);
 			path = ViewController;
 			sourceTree = "<group>";
@@ -640,6 +672,7 @@
 				6FE9EB5126F9A6E8000AF9D4 /* Ingredient */,
 				6F74C42A2719DEE7007BB9E6 /* CreateRecipeVM.swift */,
 				6F114E00271C8A7900B3BE63 /* UploadingVideoVM.swift */,
+				6F0E696B27208870002BD547 /* SelectGenresVM.swift */,
 			);
 			path = ViewModel;
 			sourceTree = "<group>";
@@ -676,6 +709,7 @@
 				6FB06F3726D67E0100E110B4 /* Resources */,
 				5E81A006DB99BD1708F65240 /* [CP] Embed Pods Frameworks */,
 				6F06D6BA2717DF1400D4277A /* ShellScript */,
+				C418A1EFC8CA251665E4C242 /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -725,7 +759,9 @@
 			buildActionMask = 2147483647;
 			files = (
 				6F74C42E2719E4D5007BB9E6 /* CreateRecipe.storyboard in Resources */,
+				6FAAB4C52720CCDC00B42C67 /* SearchBarRCV.xib in Resources */,
 				6FF66B8926D7975C0024495E /* Login.storyboard in Resources */,
+				6F0E696A272082DC002BD547 /* GenresTableViewHeaderView.xib in Resources */,
 				6FF66BA826D7B13D0024495E /* About.storyboard in Resources */,
 				6FB06F4926D67E0600E110B4 /* LaunchScreen.storyboard in Resources */,
 				6FB06F4626D67E0600E110B4 /* Assets.xcassets in Resources */,
@@ -798,6 +834,23 @@
 			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
 			showEnvVarsInLog = 0;
 		};
+		C418A1EFC8CA251665E4C242 /* [CP] Copy Pods Resources */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-TastyBox-2/Pods-TastyBox-2-resources-${CONFIGURATION}-input-files.xcfilelist",
+			);
+			name = "[CP] Copy Pods Resources";
+			outputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-TastyBox-2/Pods-TastyBox-2-resources-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-TastyBox-2/Pods-TastyBox-2-resources.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
 /* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
@@ -824,18 +877,24 @@
 				6FF66BA526D7B0800024495E /* RegisterAccountDM.swift in Sources */,
 				6F512A2C26F42DE300826657 /* TutorialViewController.swift in Sources */,
 				6FB06F4126D67E0100E110B4 /* ViewController.swift in Sources */,
+				6F0E696E27208D8A002BD547 /* Genre.swift in Sources */,
 				6FE9EB4E26F99EF4000AF9D4 /* Ingredient.swift in Sources */,
 				6F512A2426F4169800826657 /* LoadingViewController.swift in Sources */,
+				6F0E696627208183002BD547 /* SelectGenresViewController.swift in Sources */,
 				6FE9EB5026F9A6E1000AF9D4 /* RefrigeratorVM.swift in Sources */,
 				6F9BE63926D7CD9D005DD80B /* UserdataManager.swift in Sources */,
 				6F9E04182700A113005DCEF4 /* ShoppinglistViewController.swift in Sources */,
 				6F06EBEE26F825F700F2218B /* ActivityIndicator.swift in Sources */,
+				6F0E6968272082B8002BD547 /* GenresTableHeaderView.swift in Sources */,
 				6FEA390C26D8BEEB002F81A3 /* String+.swift in Sources */,
 				6FE9EB5626F9BA30000AF9D4 /* RefrigeratorTVCell.swift in Sources */,
+				6F71EBEC2721FEAD001BF538 /* RxUIViewController+.swift in Sources */,
+				6F078169272094D100C01833 /* GenreCVCell.swift in Sources */,
 				6F9BE64026D7DC7D005DD80B /* RegisterMyInfoDM.swift in Sources */,
 				6FEF089126F30D8A00C02CDD /* Void.swift in Sources */,
 				6FA70A9B26E7A69500474FE5 /* SetPasswordVM.swift in Sources */,
 				6FE15ED3271AA6B50047D3D8 /* EditMainImageTVCell.swift in Sources */,
+				6F07816B27209CDC00C01833 /* GenreCRV.swift in Sources */,
 				6F9BE63E26D7D63C005DD80B /* ResetPasswordDM.swift in Sources */,
 				6FEF087E26F2A40A00C02CDD /* FollowingRecipeViewController.swift in Sources */,
 				6FE9EB5326F9A9DF000AF9D4 /* RefrigeratorDM.swift in Sources */,
@@ -860,6 +919,7 @@
 				6F0E6962272022FB002BD547 /* CreateRecipeDM.swift in Sources */,
 				6FE9EB4B26F98A87000AF9D4 /* RefrigeratorViewController.swift in Sources */,
 				6FE15ED0271AA3A80047D3D8 /* CreateRecipeTableViewCells.swift in Sources */,
+				6F71EBEE2722B1CC001BF538 /* GenreCollectionViewFlowLayout.swift in Sources */,
 				6F9BE63B26D7CF0B005DD80B /* AboutViewController.swift in Sources */,
 				6FB06F3D26D67E0100E110B4 /* AppDelegate.swift in Sources */,
 				6FEF088526F2A85A00C02CDD /* MainPageViewController.swift in Sources */,
@@ -894,11 +954,13 @@
 				6F9A0D1F2710B74200DABB45 /* EditShoppingItemDelegate.swift in Sources */,
 				6F018BA426DB82B7006416D3 /* SceneTransitionType.swift in Sources */,
 				6FA70A9D26E8EA5700474FE5 /* ViewController+.swift in Sources */,
+				6FAAB4C32720CCB400B42C67 /* SearchBarRCV.swift in Sources */,
 				6FB06F3F26D67E0100E110B4 /* SceneDelegate.swift in Sources */,
 				6FEA391726DA98D7002F81A3 /* RxGIDSignInDelegateProxy.swift in Sources */,
 				6FC062C026EAE4020016B990 /* Error+.swift in Sources */,
 				6FEA391126D8D1E4002F81A3 /* ViewModelBase.swift in Sources */,
 				6F9A0D1627101E7C00DABB45 /* SemiModalOverlayView.swift in Sources */,
+				6F0E696C27208870002BD547 /* SelectGenresVM.swift in Sources */,
 				6FF66BA426D7B0800024495E /* LoginMainDM.swift in Sources */,
 				6FEA390E26D8C35B002F81A3 /* CustomPickerView.swift in Sources */,
 			);

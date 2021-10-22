@@ -27,15 +27,7 @@ class EditMainImageTVCell: UITableViewCell {
         // Initialization code
         
         // Do any additional setup after loading the view, typically from a nib.
-        let layout: UICollectionViewFlowLayout = UICollectionViewFlowLayout()
-        layout.sectionInset = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 0)
-        layout.itemSize =  CGSize(width: self.contentView.frame.width, height: self.contentView.frame.width)
-        layout.minimumInteritemSpacing = 0
-        layout.minimumLineSpacing = 0
-        layout.scrollDirection = .horizontal
-        collectionView.collectionViewLayout = layout
-        
-        collectionView.backgroundColor = hexStringToUIColor(hex: "#FEFACA")
+    
         
         disposeBag = DisposeBag()
     }
@@ -45,6 +37,16 @@ class EditMainImageTVCell: UITableViewCell {
 
         // Configure the view for the selected state
         collectionView.dataSource = self
+        
+        let layout: UICollectionViewFlowLayout = UICollectionViewFlowLayout()
+        layout.sectionInset = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 0)
+        layout.itemSize =  CGSize(width: self.contentView.frame.width, height: self.contentView.frame.width)
+        layout.minimumInteritemSpacing = 0
+        layout.minimumLineSpacing = 0
+        layout.scrollDirection = .horizontal
+        collectionView.collectionViewLayout = layout
+        
+        collectionView.backgroundColor = hexStringToUIColor(hex: "#FEFACA")
         
         mainImgDataSubject
             .observe(on: MainScheduler.instance)
@@ -126,6 +128,8 @@ extension EditMainImageTVCell: UICollectionViewDataSource {
             return cell
         }
     }
+    
+    
     
 }
 

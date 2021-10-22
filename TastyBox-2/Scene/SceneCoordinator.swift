@@ -32,10 +32,42 @@ class SceneCoordinator: NSObject, SceneCoordinatorType {
         }
     }
     
+ 
+    
+    @discardableResult
+    func modalTransition(to scene: Scene, type: SceneTransitionType) -> Completable {
+    
+        let subject = PublishSubject<Void>()
+        let viewController = scene.viewController()
+        
+        switch type {
+       
+        case .modal(let presentationStyle, let transitionStyle):
+            
+            viewController.modalPresentationStyle = presentationStyle ?? .fullScreen
+            viewController.modalTransitionStyle =  transitionStyle ?? .flipHorizontal
+            
+
+            currentViewController.present(viewController, animated: true) {
+                subject.onCompleted()
+            }
+            
+            currentViewController = SceneCoordinator.actualViewController(for: viewController)
+      
+        default:
+            break
+        }
+        
+        return subject.asObservable()
+            .take(1)
+            .ignoreElements().asCompletable()
+    }
+    
     @discardableResult
     func transition(to viewController: UIViewController, type: SceneTransitionType) -> Completable {
         
         let subject = PublishSubject<Void>()
+        let dissappearsubject = PublishSubject<Void>()
         
         switch type {
         case .root:
@@ -60,15 +92,12 @@ class SceneCoordinator: NSObject, SceneCoordinatorType {
                 .bind(to: subject)
             
             navigationController.pushViewController(viewController, animated: true)
-            
-        // Challenge 3: we don't need this line anymore
-        // currentViewController = SceneCoordinator.actualViewController(for: viewController)
-        
+                    
         case .modal(let presentationStyle, let transitionStyle):
 
             viewController.modalPresentationStyle = presentationStyle ?? .fullScreen
             viewController.modalTransitionStyle =  transitionStyle ?? .flipHorizontal
-            
+  
             currentViewController.present(viewController, animated: true) {
                 subject.onCompleted()
             }
@@ -143,10 +172,12 @@ class SceneCoordinator: NSObject, SceneCoordinatorType {
         }
         
         
+        
         return subject.asObservable()
             .take(1)
             .ignoreElements().asCompletable()
     }
+    
     
     @discardableResult
     func pop(animated: Bool) -> Completable {
@@ -181,6 +212,25 @@ class SceneCoordinator: NSObject, SceneCoordinatorType {
         return subject.asObservable()
             .take(1)
             .ignoreElements().asCompletable()
+    }
+    
+    
+    @discardableResult
+    func userDissmissed(viewController: UIViewController) -> Completable {
+        
+        let subject = PublishSubject<Void>()
+        
+        if let presenter = currentViewController.presentingViewController {
+         
+            self.currentViewController = SceneCoordinator.actualViewController(for: presenter)
+            subject.onCompleted()
+            
+        }
+        
+        return subject.asObservable()
+            .take(1)
+            .ignoreElements().asCompletable()
+        
     }
     
 }

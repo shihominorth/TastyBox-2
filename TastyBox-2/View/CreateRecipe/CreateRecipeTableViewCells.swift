@@ -53,7 +53,7 @@ class EditTimeNSearvingTVCell: UITableViewCell {
 class EditIngredientsHeaderCell: UITableViewCell {
     
     @IBOutlet weak var addBtn: UIButton!
-    @IBOutlet weak var editbtn: UIButton!
+    @IBOutlet weak var editBtn: UIButton!
     var disposeBag = DisposeBag()
     
     

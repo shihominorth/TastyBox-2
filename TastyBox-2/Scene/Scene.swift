@@ -7,6 +7,15 @@
 
 import Foundation
 
+enum Scene {
+//    case loadingScene, loginScene, mainScene, ingredientScene, createScene, imageScene, videoScene
+    enum createRecipeScene {
+        case createRecipe(CreateRecipeVM), selectGenre(SelectGenresVM)
+    }
+   
+    case createReceipeScene(scene: createRecipeScene)
+}
+
 enum LoadingScene {
     case loading(LoadingVM), tutorial(TutorialVM)
 }
@@ -25,7 +34,7 @@ enum IngredientScene {
 
 
 enum CreateRecipeScene {
-    case createRecipe(CreateRecipeVM)
+    case createRecipe(CreateRecipeVM), selectGenre(SelectGenresVM)
 }
 
 enum ImagePickScene {

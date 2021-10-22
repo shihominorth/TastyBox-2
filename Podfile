@@ -19,13 +19,14 @@ pod 'Firebase/Auth'
 pod 'Firebase/Firestore'
 pod 'Firebase/Storage'
 pod 'Firebase/Core'
-
+pod 'GoogleMLKit/ImageLabeling', '2.3.0'
 
 # for reactive-programming
 pod 'RxSwift'
 pod 'RxCocoa'
 pod 'Action'
 pod 'RxTimelane'
+pod 'RxDataSources'
 
 pod 'DifferenceKit'
 

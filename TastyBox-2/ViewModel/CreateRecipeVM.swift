@@ -6,9 +6,11 @@
 //
 
 import Foundation
+import Action
 import Firebase
 import RxSwift
 import RxCocoa
+import UIKit
 //import UIKit
 
 class CreateRecipeVM: ViewModelBase {
@@ -36,7 +38,11 @@ class CreateRecipeVM: ViewModelBase {
 
     var mainImgDataSubject: Observable<Data>!
     var thumbnailImgDataSubject: Observable<Data>!
-
+    
+    let titleSubject = PublishSubject<String>()
+    let servingSubject = PublishSubject<Int>()
+    let timeSubject = PublishSubject<Int>()
+    
     var ingredients = [Ingredient]()
     var instructions = [Instruction]()
     
@@ -51,8 +57,6 @@ class CreateRecipeVM: ViewModelBase {
         super.init()
        
         mainImgDataSubject = photoPicker.rx.imageData
-//        thumbnailImgDataSubject = videoPicker.rx.videoUrl
-//            .flatMap { [unowned self] in self.apiType.getThumbnailData(url: $0) }
             
     }
  
@@ -168,9 +172,8 @@ class CreateRecipeVM: ViewModelBase {
     
     func toVideoPicker() {
 
-//        DispatchQueue.main.async {
-            self.sceneCoodinator.transition(to: self.videoPicker, type: .imagePick)
-//        }
+        self.sceneCoodinator.transition(to: self.videoPicker, type: .imagePick)
+
     }
     
     func getVideoUrl() -> Observable<URL> {
@@ -193,27 +196,6 @@ class CreateRecipeVM: ViewModelBase {
         let vc = VideoScene.player(vm).viewController()
         
         self.sceneCoodinator.transition(to: vc, type: .modalHalf)
-        
-//        
-//        videoPlaySubject
-//            .observe(on: MainScheduler.instance)
-//            .catch { err in
-//                
-//                print(err)
-//                
-//                return .empty()
-//            }
-//            .subscribe(onNext: { url in
-//                
-//                let vm = UploadingVideoVM(sceneCoodinator: self.sceneCoodinator, user: self.user, url: url)
-//                vm.delegate = self
-//                let vc = VideoScene.player(vm).viewController()
-//                
-//                self.sceneCoodinator.transition(to: vc, type: .modalHalf)
-//                
-//                
-//            })
-//            .disposed(by: disposeBag)
  
     }
     
@@ -223,6 +205,16 @@ class CreateRecipeVM: ViewModelBase {
             .filter { $0 }
             .flatMap { [unowned self] _ in self.apiType.getThumbnailData(url: url) }
        
+    }
+    
+    func goToAddGenres() {
+   
+        let vm = SelectGenresVM(sceneCoordinator: self.sceneCoodinator, user: self.user)
+//
+//        self.sceneCoodinator.transition(to: nc, type: .modal(.automatic, .coverVertical))
+
+        self.sceneCoodinator.modalTransition(to: Scene.createReceipeScene(scene: .selectGenre(vm)), type: .modal(.automatic, .coverVertical))
+
     }
     
 }
