@@ -206,8 +206,73 @@
                                             <outlet property="timeTxtField" destination="cCQ-tE-XDQ" id="izR-Kc-zVF"/>
                                         </connections>
                                     </tableViewCell>
-                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="editHeaderIngredients" id="pMo-UX-T7t" customClass="EditIngredientsHeaderCell" customModule="TastyBox_2" customModuleProvider="target">
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="isVIPCell" id="Yxl-Eq-pJi" customClass="RecipeVIPTVCell" customModule="TastyBox_2" customModuleProvider="target">
                                         <rect key="frame" x="0.0" y="542" width="414" height="43.5"/>
+                                        <autoresizingMask key="autoresizingMask"/>
+                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="Yxl-Eq-pJi" id="DKR-9b-yOD">
+                                            <rect key="frame" x="0.0" y="0.0" width="414" height="43.5"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                            <subviews>
+                                                <stackView opaque="NO" contentMode="scaleToFill" spacing="286" translatesAutoresizingMaskIntoConstraints="NO" id="God-sp-CNs">
+                                                    <rect key="frame" x="19" y="6.5" width="376.5" height="31"/>
+                                                    <subviews>
+                                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="VIP" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Wmq-jb-hMi">
+                                                            <rect key="frame" x="0.0" y="0.0" width="41.5" height="31"/>
+                                                            <fontDescription key="fontDescription" type="boldSystem" pointSize="17"/>
+                                                            <color key="textColor" red="0.63529411759999999" green="0.51764705879999995" blue="0.36862745099999999" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                                            <nil key="highlightedColor"/>
+                                                        </label>
+                                                        <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" on="YES" translatesAutoresizingMaskIntoConstraints="NO" id="KXK-D6-62b">
+                                                            <rect key="frame" x="327.5" y="0.0" width="51" height="31"/>
+                                                            <color key="onTintColor" red="0.63529411759999999" green="0.51764705879999995" blue="0.36862745099999999" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                                        </switch>
+                                                    </subviews>
+                                                    <constraints>
+                                                        <constraint firstAttribute="width" constant="376.5" id="v1z-uA-pce"/>
+                                                        <constraint firstAttribute="height" constant="31" id="ye2-pg-3Iz"/>
+                                                    </constraints>
+                                                </stackView>
+                                            </subviews>
+                                            <color key="backgroundColor" red="0.99607843139999996" green="0.98039215690000003" blue="0.79215686269999996" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+                                            <constraints>
+                                                <constraint firstItem="God-sp-CNs" firstAttribute="centerY" secondItem="DKR-9b-yOD" secondAttribute="centerY" id="3aR-fT-kYu"/>
+                                                <constraint firstItem="God-sp-CNs" firstAttribute="leading" secondItem="DKR-9b-yOD" secondAttribute="leading" constant="19" id="47W-bA-1NY"/>
+                                                <constraint firstAttribute="trailing" secondItem="God-sp-CNs" secondAttribute="trailing" constant="18.5" id="hsn-pK-WEX"/>
+                                            </constraints>
+                                        </tableViewCellContentView>
+                                        <connections>
+                                            <outlet property="isVIPSwitch" destination="KXK-D6-62b" id="BjV-nW-i8h"/>
+                                        </connections>
+                                    </tableViewCell>
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="selectGenreTVCell" id="OwO-1o-zIc" customClass="SelectGenreTVCell" customModule="TastyBox_2" customModuleProvider="target">
+                                        <rect key="frame" x="0.0" y="585.5" width="414" height="45.5"/>
+                                        <autoresizingMask key="autoresizingMask"/>
+                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="OwO-1o-zIc" id="Jyw-ZB-rsn">
+                                            <rect key="frame" x="0.0" y="0.0" width="414" height="45.5"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                            <subviews>
+                                                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Fw8-iH-61i">
+                                                    <rect key="frame" x="20" y="7" width="374" height="31.5"/>
+                                                    <state key="normal" title="Button"/>
+                                                    <buttonConfiguration key="configuration" style="plain" title="Button"/>
+                                                </button>
+                                            </subviews>
+                                            <constraints>
+                                                <constraint firstItem="Fw8-iH-61i" firstAttribute="centerX" secondItem="Jyw-ZB-rsn" secondAttribute="centerX" id="2ck-Hg-qbi"/>
+                                                <constraint firstItem="Fw8-iH-61i" firstAttribute="top" secondItem="Jyw-ZB-rsn" secondAttribute="top" constant="7" id="8pb-Ek-Nxm"/>
+                                                <constraint firstItem="Fw8-iH-61i" firstAttribute="leading" secondItem="Jyw-ZB-rsn" secondAttribute="leading" constant="20" symbolic="YES" id="Olt-gW-TP5"/>
+                                                <constraint firstAttribute="bottom" secondItem="Fw8-iH-61i" secondAttribute="bottom" constant="7" id="Q3m-Um-51f"/>
+                                                <constraint firstItem="Fw8-iH-61i" firstAttribute="centerY" secondItem="Jyw-ZB-rsn" secondAttribute="centerY" id="tl1-FR-p2i"/>
+                                                <constraint firstAttribute="trailing" secondItem="Fw8-iH-61i" secondAttribute="trailing" constant="20" symbolic="YES" id="yQ1-Uc-QYd"/>
+                                            </constraints>
+                                        </tableViewCellContentView>
+                                        <color key="backgroundColor" red="0.99607843139999996" green="0.98039215690000003" blue="0.79215686269999996" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+                                        <connections>
+                                            <outlet property="selectBtn" destination="Fw8-iH-61i" id="S5b-Hp-2pc"/>
+                                        </connections>
+                                    </tableViewCell>
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="editHeaderIngredients" id="pMo-UX-T7t" customClass="EditIngredientsHeaderCell" customModule="TastyBox_2" customModuleProvider="target">
+                                        <rect key="frame" x="0.0" y="631" width="414" height="43.5"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="pMo-UX-T7t" id="Zs3-Ec-AFb">
                                             <rect key="frame" x="0.0" y="0.0" width="414" height="43.5"/>
@@ -273,7 +338,7 @@
                                         </connections>
                                     </tableViewCell>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="editingredients" id="OCg-IV-8DJ" customClass="EditIngredientsTVCell" customModule="TastyBox_2" customModuleProvider="target">
-                                        <rect key="frame" x="0.0" y="585.5" width="414" height="43.5"/>
+                                        <rect key="frame" x="0.0" y="674.5" width="414" height="43.5"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="OCg-IV-8DJ" id="1bw-yr-PVC">
                                             <rect key="frame" x="0.0" y="0.0" width="414" height="43.5"/>
@@ -315,7 +380,7 @@
                                         </connections>
                                     </tableViewCell>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="editHeaderInstructions" id="KkJ-kg-Iwh" customClass="EditInstructionHeaderTVCell" customModule="TastyBox_2" customModuleProvider="target">
-                                        <rect key="frame" x="0.0" y="629" width="414" height="43.5"/>
+                                        <rect key="frame" x="0.0" y="718" width="414" height="43.5"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="KkJ-kg-Iwh" id="a3p-eC-XXc">
                                             <rect key="frame" x="0.0" y="0.0" width="414" height="43.5"/>
@@ -378,7 +443,7 @@
                                         </connections>
                                     </tableViewCell>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="editInstructions" rowHeight="120" id="QaR-bo-LXM" customClass="EditInstructionTVCell" customModule="TastyBox_2" customModuleProvider="target">
-                                        <rect key="frame" x="0.0" y="672.5" width="414" height="120"/>
+                                        <rect key="frame" x="0.0" y="761.5" width="414" height="120"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="QaR-bo-LXM" id="BCx-o7-cPo">
                                             <rect key="frame" x="0.0" y="0.0" width="414" height="120"/>
@@ -545,36 +610,36 @@
                         </constraints>
                     </view>
                     <navigationItem key="navigationItem" id="Y6W-kZ-1YS">
-                        <barButtonItem key="leftBarButtonItem" systemItem="cancel" id="7Vm-DD-jMQ"/>
-                        <barButtonItem key="rightBarButtonItem" systemItem="add" id="DPk-mQ-eBL"/>
+                        <barButtonItem key="leftBarButtonItem" systemItem="cancel" id="SrG-GK-bGZ"/>
+                        <barButtonItem key="rightBarButtonItem" systemItem="add" id="IId-em-S2U"/>
                     </navigationItem>
                     <connections>
-                        <outlet property="addBtn" destination="DPk-mQ-eBL" id="t7A-qw-aLC"/>
-                        <outlet property="cancelBtn" destination="7Vm-DD-jMQ" id="GJE-DM-vKx"/>
+                        <outlet property="addBtn" destination="IId-em-S2U" id="Sjg-8V-OvA"/>
+                        <outlet property="cancelBtn" destination="SrG-GK-bGZ" id="nIP-VD-yRX"/>
                         <outlet property="collectionView" destination="c9z-Sn-aEQ" id="nfa-PO-VL2"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="IiU-Zu-sqj" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="6334.7826086956529" y="-698.4375"/>
+            <point key="canvasLocation" x="5986" y="-698"/>
         </scene>
         <!--Navigation Controller-->
-        <scene sceneID="UL5-cG-ijT">
+        <scene sceneID="spz-Fm-nvA">
             <objects>
-                <navigationController storyboardIdentifier="selectGenreNC" automaticallyAdjustsScrollViewInsets="NO" id="vMO-LA-n7p" sceneMemberID="viewController">
+                <navigationController storyboardIdentifier="selectGenreNC" automaticallyAdjustsScrollViewInsets="NO" id="dFE-ZN-Lap" sceneMemberID="viewController">
                     <toolbarItems/>
-                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="d6r-CL-n30">
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="wRt-7m-Sdr">
                         <rect key="frame" x="0.0" y="44" width="414" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
                     </navigationBar>
                     <nil name="viewControllers"/>
                     <connections>
-                        <segue destination="s12-zL-FAO" kind="relationship" relationship="rootViewController" id="eYk-MY-5dg"/>
+                        <segue destination="s12-zL-FAO" kind="relationship" relationship="rootViewController" id="P2v-kI-X0u"/>
                     </connections>
                 </navigationController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="R0d-Nv-fVz" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="SR0-r0-Cbf" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="5424.6376811594209" y="-698.4375"/>
+            <point key="canvasLocation" x="5211.594202898551" y="-698.4375"/>
         </scene>
     </scenes>
     <resources>

@@ -49,11 +49,17 @@ class SelectGenresVM: ViewModelBase {
         .asObservable()
     }
     
-    init(sceneCoordinator: SceneCoordinator, user: Firebase.User, apiType: CreateRecipeDMProtocol.Type = CreateRecipeDM.self) {
+    init(sceneCoordinator: SceneCoordinator, user: Firebase.User, genres: [Genre], apiType: CreateRecipeDMProtocol.Type = CreateRecipeDM.self) {
         
         self.sceneCoordinator = sceneCoordinator
         self.user = user
         self.apiType = apiType
+        
+        var items = self.selectedGenres.value
+        
+        items.append(contentsOf: genres)
+        
+        self.selectedGenres.accept(items)
         
         super.init()
         

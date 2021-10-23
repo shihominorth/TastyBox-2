@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import DifferenceKit
 import Firebase
 import RxSwift
 import RxCocoa
@@ -29,6 +30,19 @@ struct Genre {
         
         self.id = id
         self.title = title
+    }
+}
+
+extension Genre: Differentiable {
+    
+    var differenceIdentifier: String {
+        return self.id
+    }
+    
+    func isContentEqual(to source: Genre) -> Bool {
+        
+        return self.id == source.id
+    
     }
 }
 

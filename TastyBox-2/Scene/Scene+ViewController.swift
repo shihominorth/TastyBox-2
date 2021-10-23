@@ -13,26 +13,17 @@ extension Scene {
     
     func viewController() -> UIViewController {
 
-        let storyboard = UIStoryboard(name: "CreateRecipe", bundle: nil)
-
         switch self {
-        case .createReceipeScene(scene: .selectGenre(let viewModel)):
-           
-            let nc = storyboard.instantiateViewController(withIdentifier: "selectGenreNC") as! UINavigationController
-            
-            var vc = nc.viewControllers.first as? SelectGenresViewController
-            
-            vc?.bindViewModel(to: viewModel)
-            
-            return nc
 
         case .createReceipeScene(scene: .createRecipe(let viewModel)):
             
-            var vc = storyboard.instantiateViewController(withIdentifier: "createRecipe") as! CreateRecipeViewController
+            return CreateRecipeScene.createRecipe(viewModel).viewController()
             
-            vc.bindViewModel(to: viewModel)
             
-            return vc
+        case .createReceipeScene(scene: .selectGenre(let viewModel)):
+                        
+            return CreateRecipeScene.selectGenre(viewModel).viewController()
+
         }
         
         
@@ -276,9 +267,11 @@ extension CreateRecipeScene {
            
             let nc = storyboard.instantiateViewController(withIdentifier: "selectGenreNC") as! UINavigationController
 
+            var vc = nc.viewControllers.first as? SelectGenresViewController
+            
 //            var vc = storyboard.instantiateViewController(withIdentifier: "selectGenre") as! SelectGenresViewController
-//
-//            vc.bindViewModel(to: viewModel)
+
+            vc?.bindViewModel(to: viewModel)
             
             return nc
         }

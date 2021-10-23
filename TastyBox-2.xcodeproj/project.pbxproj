@@ -17,7 +17,6 @@
 		6F06EBE926F6B3D100F2218B /* LoadingVM.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F06EBE826F6B3D100F2218B /* LoadingVM.swift */; };
 		6F06EBEB26F824ED00F2218B /* ObservableType+.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F06EBEA26F824EC00F2218B /* ObservableType+.swift */; };
 		6F06EBEE26F825F700F2218B /* ActivityIndicator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F06EBED26F825F700F2218B /* ActivityIndicator.swift */; };
-		6F078169272094D100C01833 /* GenreCVCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F078168272094D100C01833 /* GenreCVCell.swift */; };
 		6F07816B27209CDC00C01833 /* GenreCRV.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F07816A27209CDC00C01833 /* GenreCRV.swift */; };
 		6F0E695A271EC3A3002BD547 /* PlayVideoView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 6F0E6959271EC3A3002BD547 /* PlayVideoView.xib */; };
 		6F0E695E271EDDD8002BD547 /* PlayVideoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F0E695D271EDDD8002BD547 /* PlayVideoView.swift */; };
@@ -46,6 +45,9 @@
 		6F6D0AEE26EED71500CD27AE /* RxFaceBookLoginDelegateProxy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F6D0AED26EED71500CD27AE /* RxFaceBookLoginDelegateProxy.swift */; };
 		6F71EBEC2721FEAD001BF538 /* RxUIViewController+.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F71EBEB2721FEAD001BF538 /* RxUIViewController+.swift */; };
 		6F71EBEE2722B1CC001BF538 /* GenreCollectionViewFlowLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F71EBED2722B1CB001BF538 /* GenreCollectionViewFlowLayout.swift */; };
+		6F71EBF027234E68001BF538 /* EmptySelectedGenreTVCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F71EBEF27234E68001BF538 /* EmptySelectedGenreTVCell.swift */; };
+		6F71EBF227237082001BF538 /* GenreTVCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F71EBF127237082001BF538 /* GenreTVCell.swift */; };
+		6F71EBF427237536001BF538 /* RxGenreCollectionViewDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F71EBF327237536001BF538 /* RxGenreCollectionViewDataSource.swift */; };
 		6F74C4252719BAB9007BB9E6 /* DiscoveryPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F74C4242719BAB8007BB9E6 /* DiscoveryPresenter.swift */; };
 		6F74C4292719DC61007BB9E6 /* CreateRecipeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F74C4282719DC61007BB9E6 /* CreateRecipeViewController.swift */; };
 		6F74C42B2719DEE7007BB9E6 /* CreateRecipeVM.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F74C42A2719DEE7007BB9E6 /* CreateRecipeVM.swift */; };
@@ -82,6 +84,10 @@
 		6FB06F4426D67E0100E110B4 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 6FB06F4226D67E0100E110B4 /* Main.storyboard */; };
 		6FB06F4626D67E0600E110B4 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 6FB06F4526D67E0600E110B4 /* Assets.xcassets */; };
 		6FB06F4926D67E0600E110B4 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 6FB06F4726D67E0600E110B4 /* LaunchScreen.storyboard */; };
+		6FB970AA2724147000350F84 /* RecipeGenresCVCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FB970A92724147000350F84 /* RecipeGenresCVCell.swift */; };
+		6FB970AC272417FD00350F84 /* GenreCVCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FB970AB272417FC00350F84 /* GenreCVCell.swift */; };
+		6FB970AE2724358300350F84 /* SelectGenreTVCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FB970AD2724358300350F84 /* SelectGenreTVCell.swift */; };
+		6FB970B027245D0A00350F84 /* RecipeVIPTVCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FB970AF27245D0A00350F84 /* RecipeVIPTVCell.swift */; };
 		6FBCB91226D7B5F200C050B2 /* User.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FBCB91126D7B5F200C050B2 /* User.swift */; };
 		6FBCB92A26D7CBD500C050B2 /* RegisterMyInfoProfileTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FBCB92626D7CBD500C050B2 /* RegisterMyInfoProfileTableViewController.swift */; };
 		6FBCB92B26D7CBD500C050B2 /* ResetPasswordViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FBCB92726D7CBD500C050B2 /* ResetPasswordViewController.swift */; };
@@ -140,7 +146,6 @@
 		6F06EBE826F6B3D100F2218B /* LoadingVM.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoadingVM.swift; sourceTree = "<group>"; };
 		6F06EBEA26F824EC00F2218B /* ObservableType+.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ObservableType+.swift"; sourceTree = "<group>"; };
 		6F06EBED26F825F700F2218B /* ActivityIndicator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActivityIndicator.swift; sourceTree = "<group>"; };
-		6F078168272094D100C01833 /* GenreCVCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GenreCVCell.swift; sourceTree = "<group>"; };
 		6F07816A27209CDC00C01833 /* GenreCRV.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GenreCRV.swift; sourceTree = "<group>"; };
 		6F0E6959271EC3A3002BD547 /* PlayVideoView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = PlayVideoView.xib; sourceTree = "<group>"; };
 		6F0E695D271EDDD8002BD547 /* PlayVideoView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayVideoView.swift; sourceTree = "<group>"; };
@@ -169,6 +174,9 @@
 		6F6D0AED26EED71500CD27AE /* RxFaceBookLoginDelegateProxy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RxFaceBookLoginDelegateProxy.swift; sourceTree = "<group>"; };
 		6F71EBEB2721FEAD001BF538 /* RxUIViewController+.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "RxUIViewController+.swift"; sourceTree = "<group>"; };
 		6F71EBED2722B1CB001BF538 /* GenreCollectionViewFlowLayout.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GenreCollectionViewFlowLayout.swift; sourceTree = "<group>"; };
+		6F71EBEF27234E68001BF538 /* EmptySelectedGenreTVCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmptySelectedGenreTVCell.swift; sourceTree = "<group>"; };
+		6F71EBF127237082001BF538 /* GenreTVCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GenreTVCell.swift; sourceTree = "<group>"; };
+		6F71EBF327237536001BF538 /* RxGenreCollectionViewDataSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RxGenreCollectionViewDataSource.swift; sourceTree = "<group>"; };
 		6F74C4242719BAB8007BB9E6 /* DiscoveryPresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiscoveryPresenter.swift; sourceTree = "<group>"; };
 		6F74C4282719DC61007BB9E6 /* CreateRecipeViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateRecipeViewController.swift; sourceTree = "<group>"; };
 		6F74C42A2719DEE7007BB9E6 /* CreateRecipeVM.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateRecipeVM.swift; sourceTree = "<group>"; };
@@ -208,6 +216,10 @@
 		6FB06F4526D67E0600E110B4 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		6FB06F4826D67E0600E110B4 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		6FB06F4A26D67E0600E110B4 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		6FB970A92724147000350F84 /* RecipeGenresCVCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecipeGenresCVCell.swift; sourceTree = "<group>"; };
+		6FB970AB272417FC00350F84 /* GenreCVCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GenreCVCell.swift; sourceTree = "<group>"; };
+		6FB970AD2724358300350F84 /* SelectGenreTVCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SelectGenreTVCell.swift; sourceTree = "<group>"; };
+		6FB970AF27245D0A00350F84 /* RecipeVIPTVCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecipeVIPTVCell.swift; sourceTree = "<group>"; };
 		6FBCB91126D7B5F200C050B2 /* User.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = User.swift; sourceTree = "<group>"; };
 		6FBCB92626D7CBD500C050B2 /* RegisterMyInfoProfileTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RegisterMyInfoProfileTableViewController.swift; sourceTree = "<group>"; };
 		6FBCB92726D7CBD500C050B2 /* ResetPasswordViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ResetPasswordViewController.swift; sourceTree = "<group>"; };
@@ -587,11 +599,17 @@
 				6F0E695D271EDDD8002BD547 /* PlayVideoView.swift */,
 				6F0E6967272082B8002BD547 /* GenresTableHeaderView.swift */,
 				6F0E6969272082DC002BD547 /* GenresTableViewHeaderView.xib */,
-				6F078168272094D100C01833 /* GenreCVCell.swift */,
 				6F07816A27209CDC00C01833 /* GenreCRV.swift */,
 				6FAAB4C22720CCB400B42C67 /* SearchBarRCV.swift */,
 				6FAAB4C42720CCDC00B42C67 /* SearchBarRCV.xib */,
 				6F71EBED2722B1CB001BF538 /* GenreCollectionViewFlowLayout.swift */,
+				6F71EBEF27234E68001BF538 /* EmptySelectedGenreTVCell.swift */,
+				6F71EBF127237082001BF538 /* GenreTVCell.swift */,
+				6F71EBF327237536001BF538 /* RxGenreCollectionViewDataSource.swift */,
+				6FB970A92724147000350F84 /* RecipeGenresCVCell.swift */,
+				6FB970AB272417FC00350F84 /* GenreCVCell.swift */,
+				6FB970AD2724358300350F84 /* SelectGenreTVCell.swift */,
+				6FB970AF27245D0A00350F84 /* RecipeVIPTVCell.swift */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -874,12 +892,14 @@
 				6FEF088326F2A7FD00C02CDD /* IngredientsViewController.swift in Sources */,
 				6F018BA226DB7F18006416D3 /* Scene+ViewController.swift in Sources */,
 				6FF66B9C26D7AF430024495E /* LoginMainVM.swift in Sources */,
+				6FB970AC272417FD00350F84 /* GenreCVCell.swift in Sources */,
 				6FF66BA526D7B0800024495E /* RegisterAccountDM.swift in Sources */,
 				6F512A2C26F42DE300826657 /* TutorialViewController.swift in Sources */,
 				6FB06F4126D67E0100E110B4 /* ViewController.swift in Sources */,
 				6F0E696E27208D8A002BD547 /* Genre.swift in Sources */,
 				6FE9EB4E26F99EF4000AF9D4 /* Ingredient.swift in Sources */,
 				6F512A2426F4169800826657 /* LoadingViewController.swift in Sources */,
+				6FB970AE2724358300350F84 /* SelectGenreTVCell.swift in Sources */,
 				6F0E696627208183002BD547 /* SelectGenresViewController.swift in Sources */,
 				6FE9EB5026F9A6E1000AF9D4 /* RefrigeratorVM.swift in Sources */,
 				6F9BE63926D7CD9D005DD80B /* UserdataManager.swift in Sources */,
@@ -889,7 +909,6 @@
 				6FEA390C26D8BEEB002F81A3 /* String+.swift in Sources */,
 				6FE9EB5626F9BA30000AF9D4 /* RefrigeratorTVCell.swift in Sources */,
 				6F71EBEC2721FEAD001BF538 /* RxUIViewController+.swift in Sources */,
-				6F078169272094D100C01833 /* GenreCVCell.swift in Sources */,
 				6F9BE64026D7DC7D005DD80B /* RegisterMyInfoDM.swift in Sources */,
 				6FEF089126F30D8A00C02CDD /* Void.swift in Sources */,
 				6FA70A9B26E7A69500474FE5 /* SetPasswordVM.swift in Sources */,
@@ -906,10 +925,12 @@
 				6FBCB92D26D7CBD500C050B2 /* LoginMainPageViewController.swift in Sources */,
 				6F0E695E271EDDD8002BD547 /* PlayVideoView.swift in Sources */,
 				6F06EBE926F6B3D100F2218B /* LoadingVM.swift in Sources */,
+				6F71EBF027234E68001BF538 /* EmptySelectedGenreTVCell.swift in Sources */,
 				6F9E041C2700A196005DCEF4 /* ShoppinglistVM.swift in Sources */,
 				6FF66B9E26D7AF430024495E /* RegisterEmailVM.swift in Sources */,
 				6F9E042D2701DCE8005DCEF4 /* BalloonView.swift in Sources */,
 				6F26D4E826DF9E360050BA84 /* AboutVM.swift in Sources */,
+				6F71EBF427237536001BF538 /* RxGenreCollectionViewDataSource.swift in Sources */,
 				6F9A0D1C27101FFA00DABB45 /* SemiModalPresenter.swift in Sources */,
 				6F9E041F2700C169005DCEF4 /* EditShoppingListViewController.swift in Sources */,
 				6FBCB92A26D7CBD500C050B2 /* RegisterMyInfoProfileTableViewController.swift in Sources */,
@@ -920,10 +941,12 @@
 				6FE9EB4B26F98A87000AF9D4 /* RefrigeratorViewController.swift in Sources */,
 				6FE15ED0271AA3A80047D3D8 /* CreateRecipeTableViewCells.swift in Sources */,
 				6F71EBEE2722B1CC001BF538 /* GenreCollectionViewFlowLayout.swift in Sources */,
+				6FB970B027245D0A00350F84 /* RecipeVIPTVCell.swift in Sources */,
 				6F9BE63B26D7CF0B005DD80B /* AboutViewController.swift in Sources */,
 				6FB06F3D26D67E0100E110B4 /* AppDelegate.swift in Sources */,
 				6FEF088526F2A85A00C02CDD /* MainPageViewController.swift in Sources */,
 				6F9E04212700C3C0005DCEF4 /* EditShoppinglistVM.swift in Sources */,
+				6F71EBF227237082001BF538 /* GenreTVCell.swift in Sources */,
 				6F9A0D1A27101F6D00DABB45 /* SemiModalPresentationController.swift in Sources */,
 				6F194CBC271C7F190084F829 /* UploadingVideoViewController.swift in Sources */,
 				6FEF088026F2A4B000C02CDD /* Recipe.swift in Sources */,
@@ -960,6 +983,7 @@
 				6FC062C026EAE4020016B990 /* Error+.swift in Sources */,
 				6FEA391126D8D1E4002F81A3 /* ViewModelBase.swift in Sources */,
 				6F9A0D1627101E7C00DABB45 /* SemiModalOverlayView.swift in Sources */,
+				6FB970AA2724147000350F84 /* RecipeGenresCVCell.swift in Sources */,
 				6F0E696C27208870002BD547 /* SelectGenresVM.swift in Sources */,
 				6FF66BA426D7B0800024495E /* LoginMainDM.swift in Sources */,
 				6FEA390E26D8C35B002F81A3 /* CustomPickerView.swift in Sources */,

@@ -15,10 +15,11 @@ class SelectGenresViewController: UIViewController, BindableType {
     typealias ViewModelType = SelectGenresVM
     var viewModel: SelectGenresVM!
     
-    @IBOutlet weak var cancelBtn: UIBarButtonItem!
-    @IBOutlet weak var addBtn: UIBarButtonItem!
+//    let addBtn = UIBarButtonItem()
     
-//    let headerView = GenresTableHeaderView()
+    @IBOutlet weak var addBtn: UIBarButtonItem!
+    //    let headerView = GenresTableHeaderView()
+    @IBOutlet weak var cancelBtn: UIBarButtonItem!
     
     var dataSource: RxCollectionViewSectionedReloadDataSource<SectionOfGenre>!
     
@@ -34,6 +35,8 @@ class SelectGenresViewController: UIViewController, BindableType {
         // Do any additional setup after loading the view.
 //
 //        self.navigationController?.navigationItem.rightBarButtonItem = addBtn
+//        
+        
 //        self.navigationController?.navigationItem.leftBarButtonItem = cancelBtn
         
         setUpCollectionView()
@@ -51,11 +54,16 @@ class SelectGenresViewController: UIViewController, BindableType {
     func bindViewModel() {
         
         
-        let sectionOfGenres = SectionOfGenre(header: "", items: [Genre(id: "", title: "dummy"), Genre(id: "", title: "dummy2")])
+        var sectionOfGenres = SectionOfGenre(header: "", items: [Genre(id: "dummy", title: "dummy"), Genre(id: "dummy2", title: "dummy2")])
+                                                                 
         
 //        viewModel.differenceSubject.onNext([sectionOfGenres])
         viewModel.items.accept([sectionOfGenres])
         
+//        Observable.combineLatest(viewModel.items, viewModel.selectedGenres)
+//            .flatMap { items, selectedGenres in
+//
+//            }
         viewModel.items
 //            .startWith([])
             .bind(to: collectionView.rx.items(dataSource: dataSource))
@@ -132,6 +140,14 @@ class SelectGenresViewController: UIViewController, BindableType {
             let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "genreCell", for: indexPath) as! GenreCVCell
             cell.titleLbl.text = "# \(item.title)"
             
+            if self.viewModel.selectedGenres.value.filter({ $0.id == item.id }).isNotEmpty {
+                cell.isSelectedGenre = true
+            }
+            else {
+                cell.isSelectedGenre = false
+            }
+            
+            cell.configure()
             
             return cell
         })
