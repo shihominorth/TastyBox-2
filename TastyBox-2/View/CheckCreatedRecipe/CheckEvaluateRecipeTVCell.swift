@@ -7,9 +7,12 @@
 
 import UIKit
 
-class CheckEvaluateRecipeCellTVCell: UITableViewCell {
+class CheckEvaluateRecipeTVCell: UITableViewCell {
 
     @IBOutlet weak var collectionView: UICollectionView!
+    
+    var evaluates: [Evaluate]!
+    var likes: Int!
     
     override func awakeFromNib() {
         super.awakeFromNib()

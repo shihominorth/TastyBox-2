@@ -12,6 +12,9 @@ class CheckMainImageTVCell: UITableViewCell {
     @IBOutlet weak var slider: UISlider!
     @IBOutlet weak var playVideoView: UIView!
     
+    var imgData: Data!
+    var videoURL: URL!
+    
     override func awakeFromNib() {
         super.awakeFromNib()
         // Initialization code

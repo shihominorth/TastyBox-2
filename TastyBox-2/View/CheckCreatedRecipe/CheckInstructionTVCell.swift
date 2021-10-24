@@ -13,6 +13,8 @@ class CheckInstructionTVCell: UITableViewCell {
     @IBOutlet weak var stepLbl: UILabel!
     @IBOutlet weak var instructionLbl: UILabel!
     
+    var instruction: Instruction!
+    
     override func awakeFromNib() {
         super.awakeFromNib()
         // Initialization code

@@ -11,6 +11,8 @@ class CheckIngredientTVCell: UITableViewCell {
 
     @IBOutlet weak var nameLbl: UILabel!
     @IBOutlet weak var amountLbl: UILabel!
+    
+    var ingredient: Ingredient!
 
     override func awakeFromNib() {
         super.awakeFromNib()

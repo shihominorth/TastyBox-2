@@ -12,6 +12,7 @@ class CheckUserTVCell: UITableViewCell {
     @IBOutlet weak var userNameLbl: UILabel!
     @IBOutlet weak var userImgViewBtn: UIButton!
     
+    var user: User!
     
     override func awakeFromNib() {
         super.awakeFromNib()

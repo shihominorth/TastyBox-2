@@ -12,6 +12,8 @@ class CheckGenresTVCell: UITableViewCell {
     @IBOutlet weak var collectionView: UICollectionView!
     @IBOutlet weak var expandBtn: UIButton!
     
+    var genres:[Genre]!
+    
     override func awakeFromNib() {
         super.awakeFromNib()
         // Initialization code
