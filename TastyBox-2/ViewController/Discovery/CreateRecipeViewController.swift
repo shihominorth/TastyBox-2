@@ -222,7 +222,7 @@ extension CreateRecipeViewController: UITableViewDelegate, UITableViewDataSource
             
         case 3:
             
-            if let cell = tableView.dequeueReusableCell(withIdentifier: "isVIPCell", for: indexPath) as? RecipeVIPTVCell{
+            if let cell = tableView.dequeueReusableCell(withIdentifier: "isVIPCell", for: indexPath) as? RecipeVIPTVCell {
             
                 cell.isVIPSwitch.isOn = false
                 

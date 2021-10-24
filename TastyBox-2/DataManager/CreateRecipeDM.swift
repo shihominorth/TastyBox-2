@@ -11,8 +11,12 @@ import Firebase
 import RxSwift
 
 protocol CreateRecipeDMProtocol: AnyObject {
+    
     static func getThumbnailData(url: URL) -> Observable<Data>
-    static func getGenres(user: Firebase.User) -> Observable<[Genre]>
+    static func getMyGenresIDs(user: Firebase.User) -> Observable<[String]>
+    static func getMyGenres(ids: [String], user: Firebase.User) -> Observable<([Genre], Bool)>
+    static func createGenres(genres: [Genre], user: Firebase.User) -> Observable<([Genre], Bool)>
+    
 }
 
 class CreateRecipeDM: CreateRecipeDMProtocol {
@@ -42,75 +46,209 @@ class CreateRecipeDM: CreateRecipeDMProtocol {
         }
     }
     
-    
-    static func getGenres(user: Firebase.User) -> Observable<[Genre]> {
+    static func getMyGenresIDs(user: Firebase.User) -> Observable<[String]> {
         
         return Observable.create { observer in
             
             db.collection("users").document(user.uid).collection("genres")
                 .addSnapshotListener { snapShot, err in
-                    
+
                     if let err = err {
+
                         observer.onError(err)
+
                     }
                     else {
-                        
+
                         if let docs = snapShot?.documents {
-                            
-                            let genres = docs.compactMap { doc -> Genre? in
-                                
-                                if let genre = Genre(document: doc) {
-                                    return genre
-                                }
-                                else {
-                                    return nil
-                                }
-                            }
-                            
-                            observer.onNext(genres)
+
+                            let ids = docs.map { $0.documentID }
+                            observer.onNext(ids)
                         }
                     }
                 }
             
             return Disposables.create()
+        }
+    }
+    
+    
+    static func getMyGenres(ids: [String], user: Firebase.User) -> Observable<([Genre], Bool)> {
+        
+        return .create { observer in
+            
+            var inplementCount = ids.count
+            var genres:[Genre] = []
+
+            ids.enumerated().forEach { index, id in
+
+                db.collection("genres").whereField("id", isEqualTo: id).getDocuments { snapShot, err in
+
+                    inplementCount -= 1
+                    
+                    if let err = err {
+
+                        if inplementCount == 0 {
+
+                            print(err)
+                            observer.onNext((genres, true))
+
+                        }
+                        else {
+
+                            observer.onError(err)
+                        }
+
+                    }
+                    else {
+
+                        if let doc = snapShot?.documents.first {
+
+                            if let genre = Genre(document: doc) {
+
+                                genres.append(genre)
+
+                            }
+
+                            if inplementCount == 0 {
+
+                                observer.onNext((genres, true))
+
+                            }
+                            else {
+
+                                observer.onNext((genres, false))
+                            }
+
+                        }
+
+                    }
+
+                }
+
+            }
+            
+            return Disposables.create()
             
         }
     }
-//    
-//    func labelingImage(data: Data) {
-//            
-//        let options = VisionObjectDetectorOptions()
-//    
-//        let visionImage = VisionImage(data: data)
-//        visionImage.orientation = image.imageOrientation
-//        let labeler = ImageLabeler.imageLabeler(options: options)
-//
-//            labeler.process(image) { labels, error in
-//                
-//                guard error == nil else {
-//                    print(error!)
-//                    return
-//                    
-//                }
-//                guard let labels = labels else { return }
-//
-//                // Task succeeded.
-//                // ...
-//                for (index, label) in labels.enumerated() {
-//                    let labelText = label.text
-//                   
-//                    if labelText == "Cuisine" || labelText == "Food" || labelText == "Recipe" || labelText == "Cooking" || labelText == "Dish" || labelText == "Ingredient" {
-//                      
-//                        
-//                    } else {
-//                        self.labels.append(labelText)
-//                    }
-//                    
-//                    if index == labels.count - 1 {
-//                        print(self.labels)
-//                        self.delegate?.passLabeledArray(arr: self.labels)
-//                    }
-//                }
-//            }
-//        }
+    
+    
+    static func createGenres(genres: [Genre], user: Firebase.User) -> Observable<([Genre], Bool)> {
+        
+        return .create { observer in
+            
+            genres.enumerated().forEach { index, genre in
+                
+                let data: [String : Any] = [
+                    
+                    "id": genre.id,
+                    "title": genre.title,
+                    "count": FieldValue.increment(Int64(1))
+                ]
+                
+                
+                db.collection("genres").document(genre.id).setData(data) { err in
+                    
+                    if let err = err {
+                        
+                        
+                        if index == genres.count - 1 {
+                            
+                            print(err)
+                            
+                            observer.onNext((genres, true))
+                            
+                        }
+                        else {
+                            
+                            observer.onError(err)
+                        }
+                        
+                    }
+                    else {
+                        
+                        db.collection("users").document(user.uid).collection("genres").document(genre.id).setData([
+                            
+                            "id": genre.id,
+                            "usedLatestDate": Date(),
+                            "count": FieldValue.increment(Int64(1))
+                            
+                        ]) { err in
+                            
+                            if let err = err {
+                                
+                                
+                                if index == genres.count - 1 {
+                                    
+                                    print(err)
+                                    
+                                    observer.onNext((genres, true))
+                                    
+                                }
+                                else {
+                                    
+                                    observer.onError(err)
+                                }
+                                
+                            }
+                            else {
+                                
+                                if index == genres.count - 1 {
+                                    
+                                    observer.onNext((genres, true))
+                                    
+                                }
+                                else {
+                                    
+                                    observer.onNext((genres, false))
+                                }
+                            }
+                        }
+                        
+                    }
+                }
+            }
+            
+            return Disposables.create()
+            
+        }
+    }
+    //
+    //    func labelingImage(data: Data) {
+    //
+    //        let options = VisionObjectDetectorOptions()
+    //
+    //        let visionImage = VisionImage(data: data)
+    //        visionImage.orientation = image.imageOrientation
+    //        let labeler = ImageLabeler.imageLabeler(options: options)
+    //
+    //            labeler.process(image) { labels, error in
+    //
+    //                guard error == nil else {
+    //                    print(error!)
+    //                    return
+    //
+    //                }
+    //                guard let labels = labels else { return }
+    //
+    //                // Task succeeded.
+    //                // ...
+    //                for (index, label) in labels.enumerated() {
+    //                    let labelText = label.text
+    //
+    //                    if labelText == "Cuisine" || labelText == "Food" || labelText == "Recipe" || labelText == "Cooking" || labelText == "Dish" || labelText == "Ingredient" {
+    //
+    //
+    //                    } else {
+    //                        self.labels.append(labelText)
+    //                    }
+    //
+    //                    if index == labels.count - 1 {
+    //                        print(self.labels)
+    //                        self.delegate?.passLabeledArray(arr: self.labels)
+    //                    }
+    //                }
+    //            }
+    //        }
 }

@@ -67,19 +67,26 @@ class SelectGenresVM: ViewModelBase {
         
     }
     
-    func getGenre() {
+    func getMyGenre() {
         
-        self.apiType.getGenres(user: self.user)
+        self.apiType.getMyGenresIDs(user: self.user)
+            .flatMap { self.apiType.getMyGenres(ids: $0, user: self.user) }
             .catch { err in
-              
+                
                 print(err)
                 
                 return .empty()
-            }
-            .subscribe(onNext: { [unowned self] genres in
                 
-                let sectionOfGenres = SectionOfGenre(header: "", items: genres)
-                self.differenceSubject.onNext([sectionOfGenres])
+            }
+            .subscribe(onNext: { [unowned self] genres, isLast in
+                
+                if isLast {
+                    
+                    let sectionOfGenres = SectionOfGenre(header: "", items: genres)
+
+                    self.differenceSubject.onNext([sectionOfGenres])
+                    self.items.accept([sectionOfGenres])
+                }
                 
             })
             .disposed(by: disposeBag)
@@ -120,6 +127,12 @@ class SelectGenresVM: ViewModelBase {
         let newItems = currentItems.filter { $0.id != newGenre.id }
         
         self.selectedGenres.accept(newItems)
+    }
+    
+    func createGenres(genres: [Genre]) -> Observable<([Genre], Bool)> {
+        
+        return self.apiType.createGenres(genres: genres, user: self.user)
+        
     }
     
     func addGenres(genres: [Genre]) {

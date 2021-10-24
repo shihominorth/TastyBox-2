@@ -54,11 +54,13 @@ class SelectGenresViewController: UIViewController, BindableType {
     func bindViewModel() {
         
         
-        var sectionOfGenres = SectionOfGenre(header: "", items: [Genre(id: "dummy", title: "dummy"), Genre(id: "dummy2", title: "dummy2")])
+//        var sectionOfGenres = SectionOfGenre(header: "", items: [Genre(id: "dummy", title: "dummy"), Genre(id: "dummy2", title: "dummy2")])
                                                                  
         
 //        viewModel.differenceSubject.onNext([sectionOfGenres])
-        viewModel.items.accept([sectionOfGenres])
+//        viewModel.items.accept([sectionOfGenres])
+        
+        viewModel.getMyGenre()
         
 //        Observable.combineLatest(viewModel.items, viewModel.selectedGenres)
 //            .flatMap { items, selectedGenres in
@@ -74,9 +76,17 @@ class SelectGenresViewController: UIViewController, BindableType {
             .asDriver(onErrorJustReturn: ())
             .asObservable()
             .withLatestFrom(self.viewModel.selectedGenres)
-            .subscribe(onNext: { [unowned self] genres in
+            .flatMap { [unowned self] in
+                self.viewModel.createGenres(genres: $0)
+            }
+            .catch { err in
+                return .empty()
+            }
+            .subscribe(onNext: { [unowned self] genres, isLast in
                
-                self.viewModel.addGenres(genres: genres)
+                if isLast {
+                    self.viewModel.addGenres(genres: genres)
+                }
             
             })
             .disposed(by: viewModel.disposeBag)

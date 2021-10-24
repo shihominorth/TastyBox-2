@@ -21,7 +21,7 @@ struct Genre {
         self.id = id
         self.title = title
     }
-  
+    
     init?(document:  QueryDocumentSnapshot) {
         
         let data = document.data()
@@ -31,6 +31,20 @@ struct Genre {
         self.id = id
         self.title = title
     }
+    
+    init?(documentSnapshot:  DocumentSnapshot) {
+        
+        guard let data = documentSnapshot.data() else { return nil }
+        
+        guard let id = data["id"] as? String, let title = data["title"] as? String else { return nil }
+        
+        self.id = id
+        self.title = title
+        
+    }
+    
+    
+    
 }
 
 extension Genre: Differentiable {
@@ -42,14 +56,14 @@ extension Genre: Differentiable {
     func isContentEqual(to source: Genre) -> Bool {
         
         return self.id == source.id
-    
+        
     }
 }
 
 
 struct SectionOfGenre {
-  var header: String
-  var items: [Item]
+    var header: String
+    var items: [Item]
     
     init(header: String, items: [Item]) {
         self.header = header
@@ -58,13 +72,13 @@ struct SectionOfGenre {
 }
 
 extension SectionOfGenre: SectionModelType {
-
+    
     typealias Item = Genre
-
+    
     init(original: SectionOfGenre, items: [Item]) {
-
+        
         self = original
         self.items = items
-
+        
     }
 }
