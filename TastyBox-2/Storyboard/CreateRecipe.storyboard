@@ -532,10 +532,10 @@
             </objects>
             <point key="canvasLocation" x="3828.985507246377" y="-698.4375"/>
         </scene>
-        <!--View Controller-->
+        <!--Check Created Recipe View Controller-->
         <scene sceneID="oWD-dg-2Ia">
             <objects>
-                <viewController id="gkd-Dj-9kv" sceneMemberID="viewController">
+                <viewController id="gkd-Dj-9kv" customClass="CheckCreatedRecipeViewController" customModule="TastyBox_2" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="6Zh-Am-Dzm">
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -544,7 +544,7 @@
                                 <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                                 <color key="backgroundColor" red="0.99607843139999996" green="0.98039215690000003" blue="0.79215686269999996" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
                                 <prototypes>
-                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" rowHeight="444" id="Wnq-y6-PMb">
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" rowHeight="444" id="Wnq-y6-PMb" customClass="CheckMainImageTVCell" customModule="TastyBox_2" customModuleProvider="target">
                                         <rect key="frame" x="0.0" y="44.5" width="414" height="444"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="Wnq-y6-PMb" id="tk2-WJ-p38">
@@ -571,8 +571,12 @@
                                                 <constraint firstAttribute="trailing" secondItem="4y1-5i-fwU" secondAttribute="trailing" id="xDP-Jb-zHz"/>
                                             </constraints>
                                         </tableViewCellContentView>
+                                        <connections>
+                                            <outlet property="playVideoView" destination="4y1-5i-fwU" id="TUT-g9-xkT"/>
+                                            <outlet property="slider" destination="1hz-aw-swD" id="bM2-Ck-kT3"/>
+                                        </connections>
                                     </tableViewCell>
-                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" id="3G0-5x-JV9">
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" id="3G0-5x-JV9" customClass="CheckTitleTVCell" customModule="TastyBox_2" customModuleProvider="target">
                                         <rect key="frame" x="0.0" y="488.5" width="414" height="43.5"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="3G0-5x-JV9" id="98f-8e-uF9">
@@ -593,8 +597,11 @@
                                                 <constraint firstItem="mAT-lp-sd8" firstAttribute="leading" secondItem="98f-8e-uF9" secondAttribute="leadingMargin" id="ovu-k7-0KB"/>
                                             </constraints>
                                         </tableViewCellContentView>
+                                        <connections>
+                                            <outlet property="titleLbl" destination="mAT-lp-sd8" id="MOM-7R-RIB"/>
+                                        </connections>
                                     </tableViewCell>
-                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" rowHeight="80" id="dd1-wl-nwg">
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" rowHeight="80" id="dd1-wl-nwg" customClass="CheckEvaluateRecipeCellTVCell" customModule="TastyBox_2" customModuleProvider="target">
                                         <rect key="frame" x="0.0" y="532" width="414" height="80"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="dd1-wl-nwg" id="uLi-F3-yCR">
@@ -656,8 +663,11 @@
                                                 <constraint firstAttribute="bottom" secondItem="AQK-pq-iqJ" secondAttribute="bottom" id="kdg-g6-K8h"/>
                                             </constraints>
                                         </tableViewCellContentView>
+                                        <connections>
+                                            <outlet property="collectionView" destination="AQK-pq-iqJ" id="dTj-qF-9y2"/>
+                                        </connections>
                                     </tableViewCell>
-                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" rowHeight="100" id="Ucv-K8-eDU">
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" rowHeight="100" id="Ucv-K8-eDU" customClass="CheckGenresTVCell" customModule="TastyBox_2" customModuleProvider="target">
                                         <rect key="frame" x="0.0" y="612" width="414" height="100"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="Ucv-K8-eDU" id="EhU-3C-JwE">
@@ -723,8 +733,12 @@
                                                 <constraint firstAttribute="trailing" secondItem="uhE-K0-R50" secondAttribute="trailing" id="dOf-BK-47z"/>
                                             </constraints>
                                         </tableViewCellContentView>
+                                        <connections>
+                                            <outlet property="collectionView" destination="uhE-K0-R50" id="rm8-fi-f3D"/>
+                                            <outlet property="expandBtn" destination="HPp-rN-UIN" id="InT-RG-8kk"/>
+                                        </connections>
                                     </tableViewCell>
-                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" rowHeight="60" id="KK0-OR-djH">
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" rowHeight="60" id="KK0-OR-djH" customClass="CheckUserTVCell" customModule="TastyBox_2" customModuleProvider="target">
                                         <rect key="frame" x="0.0" y="712" width="414" height="60"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="KK0-OR-djH" id="xee-c9-5Vn">
@@ -754,8 +768,12 @@
                                                 <constraint firstItem="bcc-9I-aJk" firstAttribute="centerY" secondItem="xee-c9-5Vn" secondAttribute="centerY" id="sHb-1A-xbg"/>
                                             </constraints>
                                         </tableViewCellContentView>
+                                        <connections>
+                                            <outlet property="userImgViewBtn" destination="hNW-Db-xyR" id="3IM-bL-XTw"/>
+                                            <outlet property="userNameLbl" destination="bcc-9I-aJk" id="PF6-32-EXe"/>
+                                        </connections>
                                     </tableViewCell>
-                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" id="Z8D-Pu-zRO">
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" id="Z8D-Pu-zRO" customClass="CheckTimeNServingTVCell" customModule="TastyBox_2" customModuleProvider="target">
                                         <rect key="frame" x="0.0" y="772" width="414" height="43.5"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="Z8D-Pu-zRO" id="rnK-q5-Ny0">
@@ -782,8 +800,12 @@
                                                 <constraint firstItem="gZB-DE-Keq" firstAttribute="centerY" secondItem="rnK-q5-Ny0" secondAttribute="centerY" id="ofk-FH-9B4"/>
                                             </constraints>
                                         </tableViewCellContentView>
+                                        <connections>
+                                            <outlet property="serveLbl" destination="lyM-bn-3QH" id="gmG-Pe-WS2"/>
+                                            <outlet property="timeLbl" destination="gZB-DE-Keq" id="yGB-Yq-Yp9"/>
+                                        </connections>
                                     </tableViewCell>
-                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" id="wXe-SB-YDi">
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" id="wXe-SB-YDi" customClass="CheckIngredientTVCell" customModule="TastyBox_2" customModuleProvider="target">
                                         <rect key="frame" x="0.0" y="815.5" width="414" height="43.5"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="wXe-SB-YDi" id="GX6-Dd-L8n">
@@ -810,8 +832,12 @@
                                                 <constraint firstItem="C5K-5y-yQk" firstAttribute="leading" secondItem="GX6-Dd-L8n" secondAttribute="leadingMargin" id="p6Q-Eg-Tvw"/>
                                             </constraints>
                                         </tableViewCellContentView>
+                                        <connections>
+                                            <outlet property="amountLbl" destination="HHM-yF-6Bc" id="Bbv-bz-xQQ"/>
+                                            <outlet property="nameLbl" destination="C5K-5y-yQk" id="5Jn-WQ-uEK"/>
+                                        </connections>
                                     </tableViewCell>
-                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" rowHeight="120" id="JGX-9f-YLj">
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" rowHeight="120" id="JGX-9f-YLj" customClass="CheckInstructionTVCell" customModule="TastyBox_2" customModuleProvider="target">
                                         <rect key="frame" x="0.0" y="859" width="414" height="120"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="JGX-9f-YLj" id="Yam-Yi-l92">
@@ -855,6 +881,11 @@
                                                 <constraint firstItem="Y90-cD-65n" firstAttribute="leading" secondItem="Yam-Yi-l92" secondAttribute="leadingMargin" id="yn1-2D-01R"/>
                                             </constraints>
                                         </tableViewCellContentView>
+                                        <connections>
+                                            <outlet property="imgView" destination="eOe-3b-MIl" id="fBT-Sv-gRh"/>
+                                            <outlet property="instructionLbl" destination="83O-fd-vpg" id="t8A-Bs-c1y"/>
+                                            <outlet property="stepLbl" destination="QN9-j8-r82" id="5I8-d3-Qjy"/>
+                                        </connections>
                                     </tableViewCell>
                                 </prototypes>
                             </tableView>
@@ -868,10 +899,13 @@
                             <constraint firstItem="n4w-Yw-Iog" firstAttribute="top" secondItem="6Zh-Am-Dzm" secondAttribute="top" id="p9P-NN-CN6"/>
                         </constraints>
                     </view>
+                    <connections>
+                        <outlet property="tableView" destination="n4w-Yw-Iog" id="vdZ-km-uYp"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="svP-I3-1gp" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="3828.985507246377" y="86.383928571428569"/>
+            <point key="canvasLocation" x="3794" y="390"/>
         </scene>
         <!--Select Genres View Controller-->
         <scene sceneID="3Wk-VV-Zui">

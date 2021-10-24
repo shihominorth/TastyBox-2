@@ -2,6 +2,9 @@
 <Workspace
    version = "1.0">
    <FileRef
+      location = "group:/Users/kitajimashihomi/portfolio/TastyBox-2/TastyBox-2/DataManager/Login/CheckTimeNServingTVCell.swift">
+   </FileRef>
+   <FileRef
       location = "group:TastyBox-2.xcodeproj">
    </FileRef>
    <FileRef
