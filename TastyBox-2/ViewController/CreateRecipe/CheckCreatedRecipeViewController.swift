@@ -10,8 +10,12 @@ import RxSwift
 import RxCocoa
 import RxDataSources
 
-class CheckCreatedRecipeViewController: UIViewController {
-    
+class CheckCreatedRecipeViewController: UIViewController, BindableType {
+ 
+
+    typealias ViewModelType = CheckRecipeVM
+    var viewModel: CheckRecipeVM!
+
     @IBOutlet weak var tableView: UITableView!
     
     var dataSource: RxTableViewSectionedReloadDataSource<RecipeItemSectionModel>!
@@ -20,19 +24,30 @@ class CheckCreatedRecipeViewController: UIViewController {
         super.viewDidLoad()
         
         // Do any additional setup after loading the view.
-        setUpDataSource()
+       
         
         
     }
+    
+    
+    func bindViewModel() {
+        
+        setUpDataSource()
+        
+        viewModel.completeSections()
+            .bind(to: tableView.rx.items(dataSource: dataSource))
+            .disposed(by: viewModel.disposeBag)
+            
+    }
+    
     
     
     func setUpDataSource() {
         
         dataSource = RxTableViewSectionedReloadDataSource<RecipeItemSectionModel> { dataSource, tableView, indexPath, element in
             
-           
-            
             switch dataSource[indexPath] {
+            
             case .imageData(let data, let url):
                 
                 
@@ -44,7 +59,6 @@ class CheckCreatedRecipeViewController: UIViewController {
                     return cell
                 }
                 
-                
             case .title(let title):
                 
                 if let cell = tableView.dequeueReusableCell(withIdentifier: "checkTitleTVCell", for: indexPath) as? CheckTitleTVCell {
@@ -54,21 +68,21 @@ class CheckCreatedRecipeViewController: UIViewController {
                     return cell
                 }
                 
-            case .evaluate(let evaluates, let likes):
+            case .evaluate(let evaluates):
                 
                 if let cell = tableView.dequeueReusableCell(withIdentifier: "checkEvaluateRecipeTVCell", for: indexPath) as? CheckEvaluateRecipeTVCell {
 
                     cell.evaluates = evaluates
-                    cell.likes = likes
+                    cell.likes = 0
                     
                     return cell
                 }
-                
-            case .genres(let genres):
+              
+            case .genres(let genre):
                 
                 if let cell = tableView.dequeueReusableCell(withIdentifier: "checkGenresTVCell", for: indexPath) as? CheckGenresTVCell {
                     
-                    cell.genres = genres
+                    cell.genres = genre
                     
                     return cell
                 }
@@ -92,19 +106,20 @@ class CheckCreatedRecipeViewController: UIViewController {
                     return cell
                 }
                 
-            case .ingredients(let ingredients):
+            case .ingredients(let ingredient):
                 
                 if let cell = tableView.dequeueReusableCell(withIdentifier: "checkIngredientTVCell", for: indexPath) as? CheckIngredientTVCell {
                     
-                    cell.ingredient = ingredients[indexPath.row]
+                    cell.ingredient = ingredient
                     
                     return cell
                 }
                 
-            case .instructions(let instructions):
+            case let .instructions(instruction):
                 
                 if let cell = tableView.dequeueReusableCell(withIdentifier: "checkInstructionTVCell", for: indexPath) as? CheckInstructionTVCell {
-                    cell.instruction = instructions[indexPath.row]
+
+                    cell.instruction = instruction
                     
                     return cell
                 }
@@ -122,3 +137,5 @@ class CheckCreatedRecipeViewController: UIViewController {
         
     }
 }
+
+

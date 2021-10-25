@@ -16,12 +16,15 @@ protocol CreateRecipeDMProtocol: AnyObject {
     static func getMyGenresIDs(user: Firebase.User) -> Observable<[String]>
     static func getMyGenres(ids: [String], user: Firebase.User) -> Observable<([Genre], Bool)>
     static func createGenres(genres: [Genre], user: Firebase.User) -> Observable<([Genre], Bool)>
+    static func getUserImage(user: Firebase.User) -> Observable<Data>
+    static func getUser(user: Firebase.User) -> Observable<User>
     
 }
 
 class CreateRecipeDM: CreateRecipeDMProtocol {
     
     static let db = Firestore.firestore()
+    static let storage = Storage.storage().reference()
     
     static func getThumbnailData(url: URL) -> Observable<Data> {
         
@@ -52,16 +55,16 @@ class CreateRecipeDM: CreateRecipeDMProtocol {
             
             db.collection("users").document(user.uid).collection("genres")
                 .addSnapshotListener { snapShot, err in
-
+                    
                     if let err = err {
-
+                        
                         observer.onError(err)
-
+                        
                     }
                     else {
-
+                        
                         if let docs = snapShot?.documents {
-
+                            
                             let ids = docs.map { $0.documentID }
                             observer.onNext(ids)
                         }
@@ -79,53 +82,53 @@ class CreateRecipeDM: CreateRecipeDMProtocol {
             
             var inplementCount = ids.count
             var genres:[Genre] = []
-
+            
             ids.enumerated().forEach { index, id in
-
+                
                 db.collection("genres").whereField("id", isEqualTo: id).getDocuments { snapShot, err in
-
+                    
                     inplementCount -= 1
                     
                     if let err = err {
-
+                        
                         if inplementCount == 0 {
-
+                            
                             print(err)
                             observer.onNext((genres, true))
-
+                            
                         }
                         else {
-
+                            
                             observer.onError(err)
                         }
-
+                        
                     }
                     else {
-
+                        
                         if let doc = snapShot?.documents.first {
-
+                            
                             if let genre = Genre(document: doc) {
-
+                                
                                 genres.append(genre)
-
+                                
                             }
-
+                            
                             if inplementCount == 0 {
-
+                                
                                 observer.onNext((genres, true))
-
+                                
                             }
                             else {
-
+                                
                                 observer.onNext((genres, false))
                             }
-
+                            
                         }
-
+                        
                     }
-
+                    
                 }
-
+                
             }
             
             return Disposables.create()
@@ -212,6 +215,76 @@ class CreateRecipeDM: CreateRecipeDMProtocol {
             
             return Disposables.create()
             
+        }
+    }
+    
+    
+    static func getUserImage(user: Firebase.User) -> Observable<Data> {
+        
+        
+        return .create { observer in
+            
+            self.storage.child("users/\(user.uid)/userImage.jpg").getData(maxSize: 1 * 1024 * 1024) { data, err in
+                
+                if let err = err {
+                    
+                    observer.onError(err)
+                    
+                }
+                else {
+                    
+                    if let data = data {
+ 
+                        observer.onNext(data)
+                                                
+                    }
+                }
+                
+            }
+            
+            return Disposables.create()
+            
+        }
+    }
+    
+    static func getUser(user: Firebase.User) -> Observable<User> {
+        
+        return .create {  observer in
+            
+            db.collection("users").document(user.uid).getDocument { doc, err in
+                
+                if let err = err {
+                    
+                    observer.onError(err)
+                    
+                }
+                else {
+                    
+                    self.storage.child("users/\(user.uid)/userImage.jpg").getData(maxSize: 1 * 1024 * 1024) { data, err in
+                        
+                        if let err = err {
+                            
+                            observer.onError(err)
+                            
+                        }
+                        else {
+                            
+                            if let data = data {
+                                
+                                if let doc = doc, let user = User(document: doc, imgData: data) {
+                                    
+                                    observer.onNext(user)
+                                    
+                                }
+                            }
+                        }
+                        
+                    }
+                }
+                
+            }
+            
+            return Disposables.create()
         }
     }
     //

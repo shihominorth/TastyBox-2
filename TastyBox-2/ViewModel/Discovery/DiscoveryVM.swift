@@ -76,9 +76,11 @@ class DiscoveryVM: ViewModelBase {
     func toCreateRecipeVC() {
         
         let vm = CreateRecipeVM(sceneCoodinator: self.sceneCoodinator, user: self.user)
-        let vc = CreateRecipeScene.createRecipe(vm).viewController()
+//        let vc = CreateRecipeScene.createRecipe(vm).viewController()
+//
+//        self.sceneCoodinator.transition(to: vc, type: .push)
         
-        self.sceneCoodinator.transition(to: vc, type: .push)
+        self.sceneCoodinator.modalTransition(to: .createReceipeScene(scene: .createRecipe(vm)), type: .push)
     }
     
     

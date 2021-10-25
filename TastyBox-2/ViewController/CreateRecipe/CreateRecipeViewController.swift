@@ -43,16 +43,31 @@ class CreateRecipeViewController: UIViewController, BindableType {
     
     func bindViewModel() {
         
-//        addGenresBtn.rx.tap
-//            .debounce(.microseconds(1000), scheduler: MainScheduler.instance)
-//            .asDriver(onErrorJustReturn: ())
-//            .asObservable()
-//            .subscribe(onNext: { [unowned self] _ in
-//               
-//                self.viewModel.goToAddGenres(gernres: <#[Genre]#>)
-//            
-//            })
-//            .disposed(by: viewModel.disposeBag)
+        addGenresBtn.rx.tap
+            .debounce(.microseconds(1000), scheduler: MainScheduler.instance)
+            .asDriver(onErrorJustReturn: ())
+            .asObservable()
+            .withLatestFrom(viewModel.isFilledRequirement())
+            .filter { $0 }
+            .withLatestFrom(viewModel.combined)
+            .subscribe(onNext: { [unowned self] isFilled in
+               
+//                if viewModel.ingredients[0].name.isNotEmpty && viewModel.ingredients[0].amount.isNotEmpty &&  viewModel.instructions[0].text.isNotEmpty && isFilled {
+                    self.viewModel.goToNext()
+//                }
+               
+            })
+            .disposed(by: viewModel.disposeBag)
+        
+        viewModel.keyboardClose
+            .subscribe(onNext: { [unowned self] _ in
+                
+                if self.view.frame.origin.y != 0 {
+                    self.view.frame.origin.y = 0
+                }
+                
+            })
+            .disposed(by: viewModel.disposeBag)
         
 //        viewModel.genres
 //            .debug()
@@ -79,6 +94,7 @@ class CreateRecipeViewController: UIViewController, BindableType {
             .subscribe(onNext: { [unowned self] genres in
                 
 //                self.tableView.reloadSections([3], animationStyle: .automatic)
+             
                 
             }, onError: { err in
                 print(err)
@@ -146,6 +162,7 @@ extension CreateRecipeViewController: UITableViewDelegate, UITableViewDataSource
         case 0:
             
             if let cell = tableView.dequeueReusableCell(withIdentifier: "editMainImage", for: indexPath) as? EditMainImageTVCell {
+            
                 
                 cell.collectionView.rx.itemSelected
                     .filter { $0.row == 0 }
@@ -171,6 +188,10 @@ extension CreateRecipeViewController: UITableViewDelegate, UITableViewDataSource
         case 1:
             
             if let cell = tableView.dequeueReusableCell(withIdentifier: "editTitle", for: indexPath) as? EditTitleRecipeTVCell {
+                
+                cell.txtField.rx.text.orEmpty
+                    .bind(to: viewModel.titleSubject)
+                    .disposed(by: cell.disposeBag)
                 
                 viewModel.keyboardOpen
                     .subscribe(onNext: { [weak self] notification in
@@ -198,6 +219,14 @@ extension CreateRecipeViewController: UITableViewDelegate, UITableViewDataSource
         case 2:
             
             if let cell = tableView.dequeueReusableCell(withIdentifier: "editTimeNserving", for: indexPath) as? EditTimeNSearvingTVCell {
+                
+                cell.timeTxtField.rx.text.orEmpty
+                    .bind(to: viewModel.timeSubject)
+                    .disposed(by: cell.disposeBag)
+                
+                cell.servingTxtField.rx.text.orEmpty
+                    .bind(to: viewModel.servingSubject)
+                    .disposed(by: cell.disposeBag)
                 
                 viewModel.keyboardOpen
                     .subscribe(onNext: { [weak self] notification in
@@ -266,7 +295,7 @@ extension CreateRecipeViewController: UITableViewDelegate, UITableViewDataSource
                     .flatMap { [unowned self] in self.viewModel.isAppendNewIngredient() }
                     .subscribe(onNext: { [unowned self] isAppended in
                         
-                        tableView.insertRows(at: [IndexPath(row: self.viewModel.ingredients.count - 1, section: 4)], with: .automatic)
+                        tableView.insertRows(at: [IndexPath(row: self.viewModel.ingredients.count - 1, section: 6)], with: .automatic)
                         
                     }, onError: { err in
                         print(err)
@@ -314,20 +343,43 @@ extension CreateRecipeViewController: UITableViewDelegate, UITableViewDataSource
         case 6:
             
             if let cell = tableView.dequeueReusableCell(withIdentifier: "editingredients", for: indexPath) as? EditIngredientsTVCell {
+            
+                cell.nameTxtField.rx.text.orEmpty
+                    .bind(onNext: { [unowned self] text in
+                        
+                        self.viewModel.ingredients[indexPath.row].name = text
+                        self.viewModel.ingredientsSubject.onNext(self.viewModel.ingredients)
+
+                    })
+                    .disposed(by: cell.disposeBag)
+                
+                cell.amountTxtField.rx.text.orEmpty
+                    .bind(onNext: { [unowned self] text in
+                        
+                        self.viewModel.ingredients[indexPath.row].amount = text
+                        self.viewModel.ingredientsSubject.onNext(self.viewModel.ingredients)
+
+                    })
+                    .disposed(by: cell.disposeBag)
+                
                 
                 viewModel.keyboardOpen
                     .subscribe(onNext: { [weak self] notification in
                         
-                        if let keyboardSize = (notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue)?.cgRectValue, let viewHeight =  self?.view.frame.height, let tableView = self?.tableView {
+                        if let keyboardSize = (notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue)?.cgRectValue, let viewHeight =  self?.view.frame.height, let strongSelf = self {
                             
                             if cell.nameTxtField.isFirstResponder || cell.amountTxtField.isFirstResponder {
                                 
                                 let cellRect = tableView.rectForRow(at: indexPath)
-                                let cellRectInView = tableView.convert(cellRect, to: self?.navigationController?.view)
+                                let cellRectInView = tableView.convert(cellRect, to: strongSelf.navigationController?.view)
                                 
                                 if cellRectInView.origin.y + cellRect.height >= viewHeight - keyboardSize.height {
-                                    tableView.setContentOffset(CGPoint(x: 0.0, y: keyboardSize.height + cellRectInView.height), animated: true)
+//                                    tableView.setContentOffset(CGPoint(x: 0.0, y: keyboardSize.height + cellRectInView.height), animated: true)
+                                    if strongSelf.view.frame.origin.y == 0 {
+                                        strongSelf.view.frame.origin.y -= keyboardSize.height
+                                    }
                                     
+                                    strongSelf.tableView.scrollToRow(at: indexPath, at: .bottom, animated: true)
                                 }
                             }
                         }
@@ -341,6 +393,7 @@ extension CreateRecipeViewController: UITableViewDelegate, UITableViewDataSource
             
             if let cell = tableView.dequeueReusableCell(withIdentifier: "editHeaderInstructions", for: indexPath) as? EditInstructionHeaderTVCell {
                 
+                
                 cell.addBtn.rx.tap
                     .debounce(.microseconds(1000), scheduler: MainScheduler.instance)
                     .asDriver(onErrorJustReturn: ())
@@ -348,7 +401,7 @@ extension CreateRecipeViewController: UITableViewDelegate, UITableViewDataSource
                     .flatMap { [unowned self] in self.viewModel.isAppendNewInstructions() }
                     .subscribe(onNext: { [unowned self] isAppended in
                         
-                        tableView.insertRows(at: [IndexPath(row: self.viewModel.instructions.count - 1, section: 6)], with: .automatic)
+                        tableView.insertRows(at: [IndexPath(row: self.viewModel.instructions.count - 1, section: 8)], with: .automatic)
                         
                     }, onError: { err in
                         print(err)
@@ -398,37 +451,64 @@ extension CreateRecipeViewController: UITableViewDelegate, UITableViewDataSource
                 
                 cell.stepNumLbl.text = "Step \(indexPath.row + 1)"
                 
-                let data = self.viewModel.instructions[indexPath.row].imageData
-                cell.imgSubject.onNext(data)
+                cell.txtView.rx.text.orEmpty
+                    .do(onNext: { text in
+                        self.viewModel.instructions[indexPath.row].text = text
+                        self.viewModel.instructionsSubject.onNext(self.viewModel.instructions)
+                    })
+                    .bind(onNext: { [unowned self] text in
+                       
+                     
+                        
+
+                        self.tableView.beginUpdates()
+                        self.tableView.endUpdates()
+                        
+                       
+                    })
+                    .disposed(by: cell.disposeBag)
+                
+                cell.imgSubject.bind(onNext: { data in
+                    
+                    self.viewModel.instructions[indexPath.row].imageData = data
+                })
+                    .disposed(by: cell.disposeBag)
+                
+//                cell.imgSubject.onNext(data)
                
                 viewModel.keyboardOpen
                     .subscribe(onNext: { [weak self] notification in
-                        if let keyboardSize = (notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue)?.cgRectValue, let viewHeight =  self?.view.frame.height{
+                        if let keyboardSize = (notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue)?.cgRectValue, let strongSelf =  self {
                             
                             if cell.txtView.isFirstResponder  {
                                 
-                                
-                                let cellRect = tableView.rectForRow(at: indexPath)
-                                let cellRectInView = tableView.convert(cellRect, to: self?.navigationController?.view)
-                                
-                                
-                                
-                                if cellRectInView.origin.y + cellRect.height >= viewHeight - keyboardSize.height {
-                                    
-                                    tableView.setContentOffset(CGPoint(x: 0.0, y: keyboardSize.height), animated: true)
-                                    
+                                if strongSelf.view.frame.origin.y == 0 {
+                                    strongSelf.view.frame.origin.y -= keyboardSize.height
                                 }
+                              
+                                strongSelf.tableView.scrollToRow(at: indexPath, at: .bottom, animated: true)
+                                
+//                                let cellRect = tableView.rectForRow(at: indexPath)
+//                                let cellRectInView = tableView.convert(cellRect, to: self?.navigationController?.view)
+//
+//
+//
+//                                if cellRectInView.origin.y + cellRect.height >= viewHeight - keyboardSize.height {
+//
+//                                    tableView.setContentOffset(CGPoint(x: 0.0, y: keyboardSize.height), animated: true)
+//
+//                                }
                             }
                             
                         }
                     })
                     .disposed(by: cell.disposeBag)
                 
-                cell.txtView.rx.text.subscribe(onNext: { text in
-                    
-                    tableView.reloadRows(at: [indexPath], with: .automatic)
-                    
-                }).disposed(by: cell.disposeBag)
+//                cell.txtView.rx.text.subscribe(onNext: { text in
+//
+//                    tableView.reloadRows(at: [indexPath], with: .automatic)
+//
+//                }).disposed(by: cell.disposeBag)
                 
                 cell.tapped
                     .flatMap { [unowned self] in self.viewModel.instructionsToImagePicker(index: indexPath.row) }

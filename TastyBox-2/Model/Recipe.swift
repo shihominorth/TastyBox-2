@@ -50,7 +50,7 @@ struct Evaluate {
 
 
 enum RecipeDetailSectionItem {
-    case imageData(Data, URL), title(String), evaluate([Evaluate], Int), timeAndServing(Int, Int), user(User), genres([Genre]), ingredients([Ingredient]), instructions([Instruction]) //likes(Int), serving(Int), videoURL(URL),
+    case imageData(Data, URL?), title(String), evaluate([Evaluate]), timeAndServing(Int, Int), user(User), genres([Genre]), ingredients(Ingredient), instructions(Instruction) //likes(Int), serving(Int), videoURL(URL),
 }
 
 enum RecipeItemSectionModel {
@@ -63,10 +63,20 @@ enum RecipeItemSectionModel {
 //    case likes(content: [RecipeDetailSectionItem])
 //    case serving(content: [RecipeDetailSectionItem])
 //    case user(content: [RecipeDetailSectionItem])
-    case genresSection(content: [RecipeDetailSectionItem])
+//    case genresSection(content: [RecipeDetailSectionItem])
 //    case isVIP(content: [RecipeDetailSectionItem])
-    case ingredientSection(content: [RecipeDetailSectionItem])
-    case instructionSection(content: [RecipeDetailSectionItem])
+//    case ingredientSection(content: [RecipeDetailSectionItem])
+//    case instructionSection(content: [RecipeDetailSectionItem])
+    
+    case mainImageData(imgData: Data, videoURL: URL?)
+    case title(title: String)
+    case evaluate(evaluates: RecipeDetailSectionItem)
+    case timeAndServing(time: Int, serving: Int)
+    case user(user: User)
+    case genres(genre: RecipeDetailSectionItem)
+//    case isVIP(isVIP: Bool)
+    case ingredients(ingredient: [RecipeDetailSectionItem])
+    case instructions(instruction: [RecipeDetailSectionItem])
     
 }
 
@@ -78,6 +88,41 @@ extension RecipeItemSectionModel: SectionModelType {
     var items: [RecipeDetailSectionItem] {
         
         switch self {
+       
+        case .mainImageData(let imgData, let videoURL):
+            return [RecipeDetailSectionItem.imageData(imgData, videoURL)]
+
+        case .title(let title):
+            
+            return [RecipeDetailSectionItem.title(title)]
+            
+        case .evaluate(let evaluates):
+            
+            return [evaluates]
+            
+
+        case .timeAndServing(let time, let serving):
+           
+            return [RecipeDetailSectionItem.timeAndServing(time, serving)]
+
+        case .user(let user):
+        
+            return [RecipeDetailSectionItem.user(user)]
+        
+        case .genres(let genres):
+
+            return [genres]
+
+        case .ingredients(let ingredients):
+
+            return ingredients.map { $0 }
+
+        case .instructions(let instructions):
+
+            return instructions.map { $0 }
+        }
+        
+//        switch self {
             
 //        case let .mainImageData(data):
 //            return data
@@ -101,8 +146,8 @@ extension RecipeItemSectionModel: SectionModelType {
 //        case let .likes(likes):
 //            return likes
 //
-        case let .genresSection(genres):
-            return genres
+//        case let .genresSection(genres):
+//            return genres
             
 //        case let .user(user):
 //            return user
@@ -110,20 +155,20 @@ extension RecipeItemSectionModel: SectionModelType {
 //        case let .isVIP(isVIP):
 //            return isVIP
             
-        case let .ingredientSection(ingredients):
-            return ingredients
-            
-        case let .instructionSection(instructions):
-            return instructions
-        }
+//        case let .ingredientSection(ingredients):
+//            return ingredients
+//
+//        case let .instructionSection(instructions):
+//            return instructions
+//        }
     }
     
     var title: String {
         
         switch self {
-        case .ingredientSection:
+        case .ingredients:
             return "Ingredients"
-        case .instructionSection:
+        case .instructions:
             return "Instructions"
         default:
             return ""
@@ -133,6 +178,40 @@ extension RecipeItemSectionModel: SectionModelType {
     init(original: RecipeItemSectionModel, items: [RecipeDetailSectionItem]) {
         
         switch original {
+       
+        case let .mainImageData(imgData, videoURL):
+            
+            self = .mainImageData(imgData: imgData, videoURL: videoURL)
+            
+        case let .title(title):
+
+            self = .title(title: title)
+
+        case let .evaluate(evaluates):
+            
+            self = .evaluate(evaluates: evaluates)
+            
+        case let .timeAndServing(time, serving):
+           
+            self = .timeAndServing(time: time, serving: serving)
+            
+        case let .user(user):
+            
+            self = .user(user: user)
+            
+        case let .genres(genres):
+            
+            self = .genres(genre: genres)
+            
+        case .ingredients(_):
+            
+            self = .ingredients(ingredient: items)
+            
+        case .instructions(_):
+            
+            self = .instructions(instruction: items)
+        }
+//        switch original {
             
 //        case .mainImageData:
 //            self = .mainImageData(content: items)
@@ -164,22 +243,22 @@ extension RecipeItemSectionModel: SectionModelType {
 //
 //            self = .evaluate(content: items)
 //
-        case .genresSection:
-            
-            self = .genresSection(content: items)
+//        case .genresSection:
+//
+//            self = .genresSection(content: items)
             
 //        case .isVIP:
 //            
 //            self = .isVIP(content: items)
             
-        case .ingredientSection:
+//        case .ingredientSection:
+//
+//            self = .ingredientSection(content: items)
             
-            self = .ingredientSection(content: items)
-            
-        case .instructionSection:
-            
-            self = .instructionSection(content: items)
-        }
+//        case .instructionSection:
+//
+//            self = .instructionSection(content: items)
+//        }
     }
     
 }

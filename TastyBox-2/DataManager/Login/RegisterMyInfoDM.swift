@@ -66,7 +66,7 @@ class RegisterMyInfoDM: RegisterMyInfoProtocol {
                     let metaData = StorageMetadata()
                     metaData.contentType = "image/jpg"
                     
-                    Storage.storage().reference().child("user/\(uid)/usertImage").putData(myImage, metadata: metaData) { metaData, err in
+                    Storage.storage().reference().child("users/\(uid)/userImage").putData(myImage, metadata: metaData) { metaData, err in
                         if let err = err {
                             
                             completable(.error(err))

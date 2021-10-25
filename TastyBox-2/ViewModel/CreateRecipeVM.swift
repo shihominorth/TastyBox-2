@@ -36,18 +36,29 @@ class CreateRecipeVM: ViewModelBase {
     
     var isAddedSubject = BehaviorSubject<Bool>(value: false)
     
-    var mainImgDataSubject: Observable<Data>!
-    var thumbnailImgDataSubject: Observable<Data>!
+    var mainImgDataSubject = PublishSubject<Data>()
+    var thumbnailImgDataSubject = PublishSubject<Data>()
     
     let titleSubject = PublishSubject<String>()
-    let servingSubject = PublishSubject<Int>()
-    let timeSubject = PublishSubject<Int>()
+    let servingSubject = PublishSubject<String>()
+    let timeSubject = PublishSubject<String>()
     let selectedGenres = BehaviorRelay<[Genre]>(value: [])
     
     var isVIPSubject = PublishSubject<Bool>()
     
+    
+//    var ingredients: [[String:String]] = []
+//    var instructions: [[String:String]] = []
+//    var instructionsData:[Data] = []
+
     var ingredients = [Ingredient]()
     var instructions = [Instruction]()
+    var ingredientsSubject = PublishSubject<[Ingredient]>()
+    var instructionsSubject = PublishSubject<[Instruction]>()
+    let combined: Observable<Bool>
+    
+    let isIngredienstNotEmpty = PublishSubject<Bool>()
+    let isInstructionsNotEmpty = PublishSubject<Bool>()
     
     var pickingImgIndexSubject = PublishSubject<Int>()
     
@@ -57,9 +68,115 @@ class CreateRecipeVM: ViewModelBase {
         self.user = user
         self.apiType = apiType
         
-        super.init()
         
-        mainImgDataSubject = photoPicker.rx.imageData
+//        mainImgDataSubject = photoPicker.rx.imageData
+        let ingredientValidation = self.ingredientsSubject
+            .map { $0[0] }
+            .debug()
+            .map { !$0.name.isEmpty && !$0.amount.isEmpty }
+            .share(replay: 1, scope: .forever)
+        
+        let instructionValidation = self.instructionsSubject.map { $0[0] }
+            .debug()
+            .map { !$0.text.isEmpty }
+            .share(replay: 1, scope: .forever)
+        
+        self.combined = .combineLatest(ingredientValidation, instructionValidation) { isIngredientValid, isInstructionValid in
+            return isIngredientValid && isInstructionValid
+        }
+        
+        super.init()
+
+    }
+    
+    func isFilledRequirement() -> Observable<Bool> {
+        
+        
+        let isMainImgValidation = self.mainImgDataSubject
+            .map { !$0.isEmpty }
+            .share(replay: 1, scope: .forever)
+        
+        let isTitleValidation = self.titleSubject
+            .map { !$0.isEmpty }
+            .share(replay: 1, scope: .forever)
+        
+        let isTimeValidation = self.timeSubject
+            .map { !$0.isEmpty }
+            .share(replay: 1, scope: .forever)
+        
+        let isServingValidation = self.servingSubject
+            .map { !$0.isEmpty }
+            .share(replay: 1, scope: .forever)
+        
+      
+
+        var isContainIngredient: Bool {
+            
+            guard let firstItem = self.ingredients.first else { return false }
+            
+            if firstItem.name.isEmpty || firstItem.amount.isEmpty  {
+                return false
+            }
+            else {
+                return true
+            }
+            
+           
+        }
+        
+        var isContainInstruction: Bool {
+            
+            guard let firstItem = self.instructions.first else { return false }
+            
+            if firstItem.text.isEmpty {
+            
+                return false
+            
+            }
+            else {
+                return true
+            }
+           
+        }
+        
+       
+        
+        return Observable.combineLatest(isMainImgValidation, isTitleValidation, isTimeValidation, isServingValidation) { (mainPhoto, isTitle, isTime, isServing) in
+            return mainPhoto && isTitle && isTime && isServing
+         }
+       
+         
+    }
+    
+//    func isIngredientsAndInstructions(isOthersFilled: Bool) -> Observable<Bool> {
+//        
+//        
+//        
+//        
+//    }
+    
+    func goToNext()  -> Observable<Bool> {
+        
+//        return Observable.combineLatest(self.mainImgDataSubject, isAddedSubject, videoPlaySubject, titleSubject, timeSubject, servingSubject, isVIPSubject, selectedGenres) { mainImageData, isAdded, url, title, time, serving, isVIP, genres -> CheckRecipeVM in
+        
+        return Observable.combineLatest(self.mainImgDataSubject, isVIPSubject) { mainImageData, isVIP -> Bool in
+            
+            return isVIP
+//            let url = isAdded ? url : nil
+//
+//            let vm = CheckRecipeVM(sceneCoodinator: self.sceneCoodinator, user: self.user, title: title, mainPhoto: mainImageData, video: url, time: time, serving: serving, isVIP: isVIP, genres: genres, ingredients: self.ingredients, instructions: self.instructions)
+//
+//            return vm
+           
+        }
+        
+//        .flatMap { [unowned self] in
+//
+//            self.sceneCoodinator.modalTransition(to: .createReceipeScene(scene: .checkRecipe($0)), type: .push).asObservable()
+//                .map { $0 }
+//
+//        }
+//
         
     }
     
@@ -100,6 +217,7 @@ class CreateRecipeVM: ViewModelBase {
         let indredient = Ingredient(key: uniqueIdString, name: "", amount: "", order: self.ingredients.count)
         
         self.ingredients.append(indredient)
+        self.ingredientsSubject.onNext(self.ingredients)
     }
     
     func appendNewInstructions() {
@@ -110,6 +228,7 @@ class CreateRecipeVM: ViewModelBase {
         let instruction = Instruction(index: self.instructions.count, imageData: Data(), text: "")
         
         self.instructions.append(instruction)
+        self.instructionsSubject.onNext(self.instructions)
     }
     
     
@@ -171,6 +290,11 @@ class CreateRecipeVM: ViewModelBase {
                 
                 return .empty()
             }
+            .do(onNext: { [unowned self] in
+            
+                self.mainImgDataSubject.onNext($0)
+            
+            })
     }
     
     func toVideoPicker() {
