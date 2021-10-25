@@ -47,9 +47,19 @@ class CreateRecipeViewController: UIViewController, BindableType {
             .debounce(.microseconds(1000), scheduler: MainScheduler.instance)
             .asDriver(onErrorJustReturn: ())
             .asObservable()
-            .withLatestFrom(viewModel.isFilledRequirement())
+            .withLatestFrom(viewModel.combinedRequirements)
+            .flatMap { [unowned self]  isMainImgValid, isTitleValid, isTimeValid, isServingValid in
+                
+                self.viewModel.isFilledRequirement(isMainImgValid: isMainImgValid, isTitleValid: isTitleValid, isTimeValid: isTimeValid, isServingValid: isServingValid)
+                
+            }
+            .withLatestFrom(viewModel.combinedIngredientAndInstructionValidation)
+            .flatMap { [unowned self] isIngredientValid, isInstructionValid in
+               
+                self.viewModel.isIngredientsAndInstructions(isIngredientValid: isIngredientValid, isInstructionValid: isInstructionValid)
+                
+            }
             .filter { $0 }
-            .withLatestFrom(viewModel.combined)
             .subscribe(onNext: { [unowned self] isFilled in
                
 //                if viewModel.ingredients[0].name.isNotEmpty && viewModel.ingredients[0].amount.isNotEmpty &&  viewModel.instructions[0].text.isNotEmpty && isFilled {

@@ -10,6 +10,7 @@ import Action
 import Firebase
 import RxSwift
 import RxCocoa
+import SCLAlertView
 import UIKit
 //import UIKit
 
@@ -55,8 +56,18 @@ class CreateRecipeVM: ViewModelBase {
     var instructions = [Instruction]()
     var ingredientsSubject = PublishSubject<[Ingredient]>()
     var instructionsSubject = PublishSubject<[Instruction]>()
-    let combined: Observable<Bool>
+   
+    let isMainImgValidation:  Observable<Bool>
+    let isTitleValidation:  Observable<Bool>
+    let isTimeValidation:  Observable<Bool>
+    let isServingValidation:  Observable<Bool>
+    let ingredientValidation: Observable<Bool>
+    let instructionValidation: Observable<Bool>
     
+    let combinedRequirements: Observable<(Bool, Bool, Bool, Bool)>
+    let combinedIngredientAndInstructionValidation: Observable<(Bool, Bool)>
+    
+  
     let isIngredienstNotEmpty = PublishSubject<Bool>()
     let isInstructionsNotEmpty = PublishSubject<Bool>()
     
@@ -68,92 +79,158 @@ class CreateRecipeVM: ViewModelBase {
         self.user = user
         self.apiType = apiType
         
+    
+        self.isMainImgValidation = self.mainImgDataSubject
+            .map { !$0.isEmpty }
+            .share(replay: 1, scope: .forever)
         
-//        mainImgDataSubject = photoPicker.rx.imageData
-        let ingredientValidation = self.ingredientsSubject
+        self.isTitleValidation = self.titleSubject
+            .map { !$0.isEmpty }
+            .share(replay: 1, scope: .forever)
+        
+        self.isTimeValidation = self.timeSubject
+            .map { !$0.isEmpty }
+            .share(replay: 1, scope: .forever)
+        
+        self.isServingValidation = self.servingSubject
+            .map { !$0.isEmpty }
+            .share(replay: 1, scope: .forever)
+        
+        self.ingredientValidation = self.ingredientsSubject
             .map { $0[0] }
             .debug()
             .map { !$0.name.isEmpty && !$0.amount.isEmpty }
             .share(replay: 1, scope: .forever)
         
-        let instructionValidation = self.instructionsSubject.map { $0[0] }
+        self.instructionValidation = self.instructionsSubject.map { $0[0] }
             .debug()
             .map { !$0.text.isEmpty }
             .share(replay: 1, scope: .forever)
         
-        self.combined = .combineLatest(ingredientValidation, instructionValidation) { isIngredientValid, isInstructionValid in
-            return isIngredientValid && isInstructionValid
+        self.combinedRequirements = .combineLatest(self.isMainImgValidation, self.isTitleValidation, self.isTimeValidation, self.isServingValidation) { isMainImgValid, isTitleValid, isTimeValid, isServingValid in
+            
+            return (isMainImgValid, isTitleValid, isTitleValid, isServingValid)
+        }
+        
+        self.combinedIngredientAndInstructionValidation = .combineLatest(ingredientValidation, instructionValidation) { isIngredientValid, isInstructionValid in
+            return (isIngredientValid, isInstructionValid)
         }
         
         super.init()
 
     }
     
-    func isFilledRequirement() -> Observable<Bool> {
+    func isFilledRequirement(isMainImgValid: Bool, isTitleValid: Bool, isTimeValid: Bool, isServingValid: Bool) -> Observable<Bool> {
         
         
-        let isMainImgValidation = self.mainImgDataSubject
-            .map { !$0.isEmpty }
-            .share(replay: 1, scope: .forever)
-        
-        let isTitleValidation = self.titleSubject
-            .map { !$0.isEmpty }
-            .share(replay: 1, scope: .forever)
-        
-        let isTimeValidation = self.timeSubject
-            .map { !$0.isEmpty }
-            .share(replay: 1, scope: .forever)
-        
-        let isServingValidation = self.servingSubject
-            .map { !$0.isEmpty }
-            .share(replay: 1, scope: .forever)
-        
-      
+        return Observable.create { observer in
 
-        var isContainIngredient: Bool {
+            var notValidRequirements: [String] = []
             
-            guard let firstItem = self.ingredients.first else { return false }
+            if !isMainImgValid {
+                notValidRequirements.append("Main Photo Image")
+            }
+            if !isTitleValid {
+                notValidRequirements.append("Title")
+            }
+            if !isTimeValid {
+                notValidRequirements.append("Time")
+            }
+            if !isServingValid {
+                notValidRequirements.append("Servings")
+            }
             
-            if firstItem.name.isEmpty || firstItem.amount.isEmpty  {
-                return false
+            
+            if notValidRequirements.isEmpty {
+                observer.onNext(true)
             }
             else {
-                return true
+                
+            let subtitle = notValidRequirements.joined(separator: "\n・ ")
+                
+                SCLAlertView().showTitle(
+                   "Empty requirement below", // Title of view
+                    subTitle: subtitle,
+                    timeout: .none, // String of view
+                    completeText: "Done", // Optional button value, default: ""
+                    style: .error, // Styles - see below.
+                    colorStyle: 0xA429FF,
+                    colorTextButton: 0xFFFFFF
+                )
+                
+                observer.onNext(false)
             }
             
-           
+            return Disposables.create()
+  
         }
-        
-        var isContainInstruction: Bool {
-            
-            guard let firstItem = self.instructions.first else { return false }
-            
-            if firstItem.text.isEmpty {
-            
-                return false
-            
-            }
-            else {
-                return true
-            }
-           
-        }
-        
-       
-        
-        return Observable.combineLatest(isMainImgValidation, isTitleValidation, isTimeValidation, isServingValidation) { (mainPhoto, isTitle, isTime, isServing) in
-            return mainPhoto && isTitle && isTime && isServing
-         }
        
          
     }
     
-//    func isIngredientsAndInstructions(isOthersFilled: Bool) -> Observable<Bool> {
-//        
-//        
-//        
-//        
-//    }
+    func isIngredientsAndInstructions(isIngredientValid: Bool, isInstructionValid: Bool) -> Observable<Bool> {
+        
+        return Observable.create { observer in
+
+            var notValidRequirements: [String] = []
+        
+            if !isIngredientValid {
+                notValidRequirements.append("Ingredients")
+            }
+            if !isInstructionValid {
+                notValidRequirements.append("Instructions")
+            }
+            
+            
+            if notValidRequirements.isEmpty {
+                observer.onNext(true)
+            }
+            else {
+                
+                let title: String? = {
+                  
+                    if !isIngredientValid && !isInstructionValid {
+                        
+                        return "Ingredients and Instructions"
+                    }
+                    else if !isIngredientValid {
+                    
+                        return "Ingredients"
+                    
+                    }
+                    else if !isInstructionValid {
+
+                        return "Instructions"
+                    }
+                    
+                    return nil
+                }()
+                
+            let subtitle = notValidRequirements.joined(separator: "\n・ ")
+              
+                if let title = title {
+                   
+                    SCLAlertView().showTitle(
+                       "You need at least one \(title)  below", // Title of view
+                        subTitle: subtitle,
+                        timeout: .none, // String of view
+                        completeText: "Done", // Optional button value, default: ""
+                        style: .error, // Styles - see below.
+                        colorStyle: 0xA429FF,
+                        colorTextButton: 0xFFFFFF
+                    )
+                }
+                
+                observer.onNext(false)
+               
+            }
+            
+            return Disposables.create()
+  
+        }
+        
+        
+    }
     
     func goToNext()  -> Observable<Bool> {
         
