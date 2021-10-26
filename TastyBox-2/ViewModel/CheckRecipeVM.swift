@@ -9,6 +9,7 @@ import Foundation
 import Firebase
 import UIKit
 import RxSwift
+import RxRelay
 
 class CheckRecipeVM {
     
@@ -21,6 +22,8 @@ class CheckRecipeVM {
     var sections: [RecipeItemSectionModel] = []
     let evaluates: [Evaluate]
     let isVIP: Bool
+    var isDisplayed = false
+    var isEnded = false
     
     let disposeBag = DisposeBag()
     

@@ -11,6 +11,8 @@ import AVFoundation
 
 class PlayVideoInsideTVCellView: UIView {
 
+    @IBOutlet weak var imgView: UIImageView!
+    
     override static var layerClass: AnyClass {
         
         return AVPlayerLayer.self
@@ -30,4 +32,9 @@ class PlayVideoInsideTVCellView: UIView {
             playerLayer.player = newValue
         }
     }
+//
+//    var completion: (CMTime) -> Void {
+//
+//    }
+
 }

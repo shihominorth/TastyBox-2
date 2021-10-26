@@ -14,7 +14,16 @@ class CheckMainImageTVCell: UITableViewCell {
     @IBOutlet weak var playVideoView: PlayVideoInsideTVCellView!
     
     
-    var imgData: Data! 
+    var imgData: Data! {
+        didSet {
+           
+            if let data = imgData, let image = UIImage(data: data) {
+                self.playVideoView.imgView.image = image
+            }
+           
+        }
+    }
+    
     var videoURL: URL!
     
     var tap: UITapGestureRecognizer!
@@ -27,6 +36,25 @@ class CheckMainImageTVCell: UITableViewCell {
     override func awakeFromNib() {
         super.awakeFromNib()
         // Initialization code
+        
+       
+        self.playVideoView.playerLayer.frame = self.playVideoView.frame
+        self.playVideoView.playerLayer.videoGravity = .resizeAspect
+        
+//        self.playVideoView.playerLayer.player?.play()
+        
+        let interval = CMTime(value: 1, timescale: 2)
+        
+        self.playVideoView.playerLayer.player?.addPeriodicTimeObserver(forInterval: interval, queue: DispatchQueue.main) { [unowned self] progressTime in
+            
+            if let duration = self.player.currentItem?.duration {
+                
+                let seconds = CMTimeGetSeconds(progressTime)
+                let durationSeconds = CMTimeGetSeconds(duration)
+                self.slider.value = Float(seconds / durationSeconds)
+                
+            }
+        }
     }
 
     override func setSelected(_ selected: Bool, animated: Bool) {

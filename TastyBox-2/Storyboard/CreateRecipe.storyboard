@@ -553,11 +553,25 @@
                                             <subviews>
                                                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="4y1-5i-fwU" customClass="PlayVideoInsideTVCellView" customModule="TastyBox_2" customModuleProvider="target">
                                                     <rect key="frame" x="0.0" y="0.0" width="414" height="414"/>
+                                                    <subviews>
+                                                        <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="yxp-Gt-59D">
+                                                            <rect key="frame" x="0.0" y="0.0" width="414" height="414"/>
+                                                        </imageView>
+                                                    </subviews>
                                                     <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                                                     <constraints>
+                                                        <constraint firstItem="yxp-Gt-59D" firstAttribute="leading" secondItem="4y1-5i-fwU" secondAttribute="leading" id="F93-7Y-iIR"/>
                                                         <constraint firstAttribute="height" relation="greaterThanOrEqual" constant="414" id="JRl-4w-bq1"/>
+                                                        <constraint firstItem="yxp-Gt-59D" firstAttribute="top" secondItem="4y1-5i-fwU" secondAttribute="top" id="L5P-VJ-SJ7"/>
+                                                        <constraint firstItem="yxp-Gt-59D" firstAttribute="centerY" secondItem="4y1-5i-fwU" secondAttribute="centerY" id="Ugt-rV-yFc"/>
+                                                        <constraint firstItem="yxp-Gt-59D" firstAttribute="centerX" secondItem="4y1-5i-fwU" secondAttribute="centerX" id="d11-lL-jt4"/>
+                                                        <constraint firstAttribute="bottom" secondItem="yxp-Gt-59D" secondAttribute="bottom" id="rMg-BC-nxl"/>
+                                                        <constraint firstAttribute="trailing" secondItem="yxp-Gt-59D" secondAttribute="trailing" id="z9K-BO-a5X"/>
                                                         <constraint firstAttribute="width" constant="414" id="zEQ-Ph-NLG"/>
                                                     </constraints>
+                                                    <connections>
+                                                        <outlet property="imgView" destination="yxp-Gt-59D" id="jXI-9s-bAu"/>
+                                                    </connections>
                                                 </view>
                                                 <slider opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" value="0.5" minValue="0.0" maxValue="1" translatesAutoresizingMaskIntoConstraints="NO" id="1hz-aw-swD">
                                                     <rect key="frame" x="18" y="414" width="378" height="28"/>
@@ -914,7 +928,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="svP-I3-1gp" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="3829" y="68"/>
+            <point key="canvasLocation" x="3828.985507246377" y="67.633928571428569"/>
         </scene>
         <!--Select Genres View Controller-->
         <scene sceneID="3Wk-VV-Zui">
