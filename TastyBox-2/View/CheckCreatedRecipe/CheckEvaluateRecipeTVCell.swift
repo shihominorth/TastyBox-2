@@ -17,6 +17,15 @@ class CheckEvaluateRecipeTVCell: UITableViewCell {
     override func awakeFromNib() {
         super.awakeFromNib()
         // Initialization code
+        collectionView.dataSource = self
+        
+        let flowLayout = UICollectionViewFlowLayout()
+        flowLayout.itemSize = CGSize(width: 80, height: 80)
+        flowLayout.scrollDirection = .horizontal
+        flowLayout.sectionInset = UIEdgeInsets(top: 0, left: 20, bottom: 0, right: 20)
+
+        collectionView.collectionViewLayout = flowLayout
+        
     }
 
     override func setSelected(_ selected: Bool, animated: Bool) {
@@ -25,4 +34,20 @@ class CheckEvaluateRecipeTVCell: UITableViewCell {
         // Configure the view for the selected state
     }
 
+}
+
+extension CheckEvaluateRecipeTVCell: UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
+    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+        return evaluates.count
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "checkEvaluateRecipeCVCell", for: indexPath) as! CheckEvaluateRecipeCVCell
+        
+        cell.imgView.image = UIImage(data: evaluates[indexPath.row].imgData)
+        cell.titleLbl.text = evaluates[indexPath.row].title
+        
+        return cell
+        
+    }
 }

@@ -51,11 +51,6 @@ class CreateRecipeVM: ViewModelBase {
     
     var isVIPSubject = BehaviorSubject<Bool>(value: false)
     
-    
-    //    var ingredients: [[String:String]] = []
-    //    var instructions: [[String:String]] = []
-    //    var instructionsData:[Data] = []
-    
     var ingredients = [Ingredient]()
     var instructions = [Instruction]()
     var ingredientsSubject = BehaviorSubject<[Ingredient]>(value: [])
@@ -259,21 +254,8 @@ class CreateRecipeVM: ViewModelBase {
                 
                 self.sceneCoodinator.modalTransition(to: .createReceipeScene(scene: .checkRecipe(vm)), type: .push)
                 
-//                print("succeed")
-                
-                
             })
             .disposed(by: disposeBag)
-        
-        
-//        let boolInputs:  Observable<(Bool, Bool)> = .combineLatest(self.isAddedSubject.asObservable(), self.isVIPSubject.asObservable()) { isAdded, isVIP -> (Bool, Bool) in
-//            
-//            return (isAdded, isVIP)
-//            
-//        }
-        
-        //        let <#name#> = <#value#>
-        
         
     }
     
@@ -448,7 +430,6 @@ class CreateRecipeVM: ViewModelBase {
             })
             .disposed(by: disposeBag)
         
-        //        self.sceneCoodinator.modalTransition(to: Scene.createReceipeScene(scene: .selectGenre(vm)), type: .push)
         
     }
     

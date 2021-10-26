@@ -80,39 +80,6 @@ class CreateRecipeViewController: UIViewController, BindableType {
             })
             .disposed(by: viewModel.disposeBag)
         
-//        viewModel.genres
-//            .debug()
-//            .catch { err in
-//                print(err)
-//
-//                return .empty()
-//            }
-//            .subscribe(onNext: { [unowned self] genres in
-//
-//                self.tableView.reloadSections([3], animationStyle: .automatic)
-//
-//            })
-//            .disposed(by: viewModel.disposeBag)
-
-       
-//            if let cell = self.tableView.cellForRow(at: IndexPath(row: 0, section: 3)) as? SelectGenreTVCell {
-               
-//                cell.setSelected(viewModel.selectedGenres.value.isEmpty , animated: true)
-//                tableView.reloadSections([3], animationStyle: .automatic)
-
-//            }
-        viewModel.selectedGenres
-            .subscribe(onNext: { [unowned self] genres in
-                
-//                self.tableView.reloadSections([3], animationStyle: .automatic)
-             
-                
-            }, onError: { err in
-                print(err)
-            })
-            .disposed(by: viewModel.disposeBag)
-        
-        
     }
     
     fileprivate func setUpTableView() {
@@ -120,9 +87,7 @@ class CreateRecipeViewController: UIViewController, BindableType {
         self.tableView.allowsSelectionDuringEditing = true
         
         tableView.tableFooterView = UIView()
-        
-//        tableView.register(GenreTVCell.self, forCellReuseIdentifier: "GenreTVCell")
-        
+                
         tableView.rx.didScroll
             .observe(on: MainScheduler.asyncInstance)
             .catch { err in
@@ -583,12 +548,12 @@ extension CreateRecipeViewController: UITableViewDelegate, UITableViewDataSource
             }
             
         }
-        else if self.viewModel.isEditableIngredientsRelay.value && indexPath.section == 4 {
+        else if self.viewModel.isEditableIngredientsRelay.value && indexPath.section == 6 {
             
             return true
             
         }
-        else if self.viewModel.isEditInstructionsRelay.value && indexPath.section == 6 {
+        else if self.viewModel.isEditInstructionsRelay.value && indexPath.section == 8 {
             
             return true
         }
@@ -618,7 +583,7 @@ extension CreateRecipeViewController: UITableViewDelegate, UITableViewDataSource
 
             case 6, 8:
                 tableView.deleteRows(at: [indexPath], with: .automatic)
-                tableView.reloadSections(IndexSet(integer: indexPath.section), with: .automatic)
+//                tableView.reloadSections(IndexSet(integer: indexPath.section), with: .automatic)
 
             default:
                 break

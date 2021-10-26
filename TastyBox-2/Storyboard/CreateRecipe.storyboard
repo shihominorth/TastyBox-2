@@ -618,7 +618,7 @@
                                                         <inset key="sectionInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
                                                     </collectionViewFlowLayout>
                                                     <cells>
-                                                        <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" id="hGG-Ru-nHk">
+                                                        <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="checkEvaluateRecipeCVCell" id="hGG-Ru-nHk" customClass="CheckEvaluateRecipeCVCell" customModule="TastyBox_2" customModuleProvider="target">
                                                             <rect key="frame" x="0.0" y="0.0" width="80" height="80"/>
                                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                             <collectionViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" id="rEF-gi-l4A">
@@ -636,7 +636,7 @@
                                                                             </imageView>
                                                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="TyD-Cx-qpG">
                                                                                 <rect key="frame" x="0.0" y="58" width="50" height="12"/>
-                                                                                <fontDescription key="fontDescription" type="system" pointSize="10"/>
+                                                                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                                                                 <nil key="textColor"/>
                                                                                 <nil key="highlightedColor"/>
                                                                             </label>
@@ -652,6 +652,10 @@
                                                                 </constraints>
                                                             </collectionViewCellContentView>
                                                             <size key="customSize" width="80" height="80"/>
+                                                            <connections>
+                                                                <outlet property="imgView" destination="aJT-6q-WCS" id="iZb-bO-Gu5"/>
+                                                                <outlet property="titleLbl" destination="TyD-Cx-qpG" id="NNi-J7-6dr"/>
+                                                            </connections>
                                                         </collectionViewCell>
                                                     </cells>
                                                 </collectionView>
@@ -751,25 +755,23 @@
                                                     <nil key="textColor"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
-                                                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="hNW-Db-xyR">
+                                                <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="tJL-hr-TLA">
                                                     <rect key="frame" x="344" y="5" width="50" height="50"/>
                                                     <constraints>
-                                                        <constraint firstAttribute="height" constant="50" id="c7h-R2-8IY"/>
-                                                        <constraint firstAttribute="width" constant="50" id="wqj-Bs-P98"/>
+                                                        <constraint firstAttribute="width" constant="50" id="OGb-2t-fna"/>
+                                                        <constraint firstAttribute="width" secondItem="tJL-hr-TLA" secondAttribute="height" multiplier="1:1" id="yN4-DS-1Ys"/>
                                                     </constraints>
-                                                    <state key="normal" title="Button"/>
-                                                    <buttonConfiguration key="configuration" style="plain" title="Button"/>
-                                                </button>
+                                                </imageView>
                                             </subviews>
                                             <constraints>
-                                                <constraint firstAttribute="trailing" secondItem="hNW-Db-xyR" secondAttribute="trailing" constant="20" symbolic="YES" id="Jep-U5-Pkl"/>
-                                                <constraint firstItem="hNW-Db-xyR" firstAttribute="centerY" secondItem="xee-c9-5Vn" secondAttribute="centerY" id="QBP-8o-uD5"/>
+                                                <constraint firstAttribute="trailing" secondItem="tJL-hr-TLA" secondAttribute="trailing" constant="20" symbolic="YES" id="Wii-6t-TWV"/>
                                                 <constraint firstItem="bcc-9I-aJk" firstAttribute="leading" secondItem="xee-c9-5Vn" secondAttribute="leadingMargin" id="hSc-j6-Tm0"/>
+                                                <constraint firstItem="tJL-hr-TLA" firstAttribute="centerY" secondItem="xee-c9-5Vn" secondAttribute="centerY" id="pDU-xu-y3g"/>
                                                 <constraint firstItem="bcc-9I-aJk" firstAttribute="centerY" secondItem="xee-c9-5Vn" secondAttribute="centerY" id="sHb-1A-xbg"/>
                                             </constraints>
                                         </tableViewCellContentView>
                                         <connections>
-                                            <outlet property="userImgViewBtn" destination="hNW-Db-xyR" id="3IM-bL-XTw"/>
+                                            <outlet property="userImgViewBtn" destination="tJL-hr-TLA" id="UcG-WB-bSx"/>
                                             <outlet property="userNameLbl" destination="bcc-9I-aJk" id="PF6-32-EXe"/>
                                         </connections>
                                     </tableViewCell>
@@ -855,13 +857,13 @@
                                                     <rect key="frame" x="20" y="11" width="266" height="98"/>
                                                     <subviews>
                                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="QN9-j8-r82">
-                                                            <rect key="frame" x="0.0" y="0.0" width="266" height="12"/>
-                                                            <fontDescription key="fontDescription" type="system" pointSize="10"/>
+                                                            <rect key="frame" x="0.0" y="0.0" width="266" height="17"/>
+                                                            <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                                             <nil key="textColor"/>
                                                             <nil key="highlightedColor"/>
                                                         </label>
                                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" ambiguous="YES" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="83O-fd-vpg">
-                                                            <rect key="frame" x="0.0" y="20" width="266" height="78"/>
+                                                            <rect key="frame" x="0.0" y="25" width="266" height="73"/>
                                                             <constraints>
                                                                 <constraint firstAttribute="height" relation="greaterThanOrEqual" constant="70" id="zoJ-uj-EHS"/>
                                                             </constraints>

@@ -36,7 +36,6 @@ class CheckRecipeVM {
         let titleSection: RecipeItemSectionModel = .title(title: title)
         let evaluateSection: RecipeItemSectionModel = .evaluate(evaluates: .evaluate(evaluates))
         let genresSection: RecipeItemSectionModel = .genres(genre: .genres(genres))
-//        let userSection: RecipeItemSectionModel = .user(user: user)
         
         guard let time = Int(time), let serving = Int(serving) else { return }
         let timeNServingSection: RecipeItemSectionModel = .timeAndServing(time: time, serving: serving)

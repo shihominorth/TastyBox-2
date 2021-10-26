@@ -26,7 +26,6 @@ class CheckCreatedRecipeViewController: UIViewController, BindableType {
         // Do any additional setup after loading the view.
        
         
-        
     }
     
     
@@ -37,7 +36,9 @@ class CheckCreatedRecipeViewController: UIViewController, BindableType {
         viewModel.completeSections()
             .bind(to: tableView.rx.items(dataSource: dataSource))
             .disposed(by: viewModel.disposeBag)
-            
+       
+        tableView.rx.setDelegate(self).disposed(by: viewModel.disposeBag)
+
     }
     
     
@@ -48,7 +49,7 @@ class CheckCreatedRecipeViewController: UIViewController, BindableType {
             
             switch dataSource[indexPath] {
             
-            case .imageData(let data, let url):
+            case let .imageData(data, url):
                 
                 
                 if let cell = tableView.dequeueReusableCell(withIdentifier: "checkMainTVCell", for: indexPath) as? CheckMainImageTVCell {
@@ -59,7 +60,7 @@ class CheckCreatedRecipeViewController: UIViewController, BindableType {
                     return cell
                 }
                 
-            case .title(let title):
+            case let .title(title):
                 
                 if let cell = tableView.dequeueReusableCell(withIdentifier: "checkTitleTVCell", for: indexPath) as? CheckTitleTVCell {
                     
@@ -68,17 +69,17 @@ class CheckCreatedRecipeViewController: UIViewController, BindableType {
                     return cell
                 }
                 
-            case .evaluate(let evaluates):
+            case let .evaluate(evaluates):
                 
                 if let cell = tableView.dequeueReusableCell(withIdentifier: "checkEvaluateRecipeTVCell", for: indexPath) as? CheckEvaluateRecipeTVCell {
 
                     cell.evaluates = evaluates
-                    cell.likes = 0
+//                    cell.likes = 0
                     
                     return cell
                 }
               
-            case .genres(let genre):
+            case let .genres(genre):
                 
                 if let cell = tableView.dequeueReusableCell(withIdentifier: "checkGenresTVCell", for: indexPath) as? CheckGenresTVCell {
                     
@@ -87,7 +88,7 @@ class CheckCreatedRecipeViewController: UIViewController, BindableType {
                     return cell
                 }
                 
-            case .user(let user):
+            case let .user(user):
                 
                 if let cell = tableView.dequeueReusableCell(withIdentifier: "checkUserTVCell", for: indexPath) as? CheckUserTVCell {
                     
@@ -96,7 +97,7 @@ class CheckCreatedRecipeViewController: UIViewController, BindableType {
                     return cell
                 }
                 
-            case .timeAndServing(let time, let serving):
+            case let .timeAndServing(time, serving):
                 
                 if let cell = tableView.dequeueReusableCell(withIdentifier: "checkTimeNServingTVCell", for: indexPath) as? CheckTimeNServingTVCell {
                     
@@ -106,11 +107,12 @@ class CheckCreatedRecipeViewController: UIViewController, BindableType {
                     return cell
                 }
                 
-            case .ingredients(let ingredient):
+            case let .ingredients(ingredient):
                 
                 if let cell = tableView.dequeueReusableCell(withIdentifier: "checkIngredientTVCell", for: indexPath) as? CheckIngredientTVCell {
                     
                     cell.ingredient = ingredient
+                    cell.configure(ingredient: ingredient)
                     
                     return cell
                 }
@@ -120,6 +122,7 @@ class CheckCreatedRecipeViewController: UIViewController, BindableType {
                 if let cell = tableView.dequeueReusableCell(withIdentifier: "checkInstructionTVCell", for: indexPath) as? CheckInstructionTVCell {
 
                     cell.instruction = instruction
+                    cell.configure(instruction: instruction)
                     
                     return cell
                 }
@@ -135,6 +138,25 @@ class CheckCreatedRecipeViewController: UIViewController, BindableType {
             
         }
         
+    }
+}
+
+
+extension CheckCreatedRecipeViewController: UITableViewDelegate {
+    
+    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        
+        switch indexPath.section {
+        case 0:
+            return 444
+        case 2:
+            return 80
+        case 4:
+            return 60
+            
+        default:
+            return UITableView.automaticDimension
+        }
     }
 }
 

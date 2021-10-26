@@ -25,4 +25,10 @@ class CheckIngredientTVCell: UITableViewCell {
         // Configure the view for the selected state
     }
 
+    func configure(ingredient: Ingredient) {
+        
+        nameLbl.text = ingredient.name
+        amountLbl.text = ingredient.amount
+        
+    }
 }

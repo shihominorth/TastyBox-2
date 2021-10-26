@@ -10,13 +10,23 @@ import UIKit
 class CheckUserTVCell: UITableViewCell {
 
     @IBOutlet weak var userNameLbl: UILabel!
-    @IBOutlet weak var userImgViewBtn: UIButton!
-    
-    var user: User!
+    @IBOutlet weak var userImgViewBtn: UIImageView!
+    var user: User! {
+        didSet {
+            userNameLbl.text = user.name
+           
+            if let image = UIImage(data: user.imageData) {
+                userImgViewBtn.image = image
+            }
+           
+        }
+    }
     
     override func awakeFromNib() {
         super.awakeFromNib()
         // Initialization code
+        
+        userImgViewBtn.layer.cornerRadius = userImgViewBtn.frame.width / 2
     }
 
     override func setSelected(_ selected: Bool, animated: Bool) {

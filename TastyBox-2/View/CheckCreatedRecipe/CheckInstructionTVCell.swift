@@ -26,4 +26,11 @@ class CheckInstructionTVCell: UITableViewCell {
         // Configure the view for the selected state
     }
 
+    func configure(instruction: Instruction) {
+        
+        stepLbl.text = "Step \(instruction.index + 1)"
+        imgView.image = UIImage(data: instruction.imageData)
+        instructionLbl.text = instruction.text
+        
+    }
 }

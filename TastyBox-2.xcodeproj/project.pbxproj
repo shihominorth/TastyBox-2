@@ -53,6 +53,7 @@
 		6F74C42B2719DEE7007BB9E6 /* CreateRecipeVM.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F74C42A2719DEE7007BB9E6 /* CreateRecipeVM.swift */; };
 		6F74C42E2719E4D5007BB9E6 /* CreateRecipe.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 6F74C42C2719E20A007BB9E6 /* CreateRecipe.storyboard */; };
 		6F77D4852726DF8D00F1FCD9 /* CheckTimeNServingTVCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F77D4842726DF8D00F1FCD9 /* CheckTimeNServingTVCell.swift */; };
+		6F77D487272825C800F1FCD9 /* CheckEvaluateRecipeCVCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F77D486272825C800F1FCD9 /* CheckEvaluateRecipeCVCell.swift */; };
 		6F9A0D0B27101A6E00DABB45 /* SemiModalDismissAnimatedTransition.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F9A0D0A27101A6E00DABB45 /* SemiModalDismissAnimatedTransition.swift */; };
 		6F9A0D0E27101ACA00DABB45 /* SemiModalDismissInteractiveTransition.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F9A0D0D27101ACA00DABB45 /* SemiModalDismissInteractiveTransition.swift */; };
 		6F9A0D1027101B1400DABB45 /* SemiModalIndicatorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F9A0D0F27101B1400DABB45 /* SemiModalIndicatorView.swift */; };
@@ -193,6 +194,7 @@
 		6F74C42A2719DEE7007BB9E6 /* CreateRecipeVM.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateRecipeVM.swift; sourceTree = "<group>"; };
 		6F74C42C2719E20A007BB9E6 /* CreateRecipe.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = CreateRecipe.storyboard; sourceTree = "<group>"; };
 		6F77D4842726DF8D00F1FCD9 /* CheckTimeNServingTVCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = CheckTimeNServingTVCell.swift; path = "/Users/kitajimashihomi/portfolio/TastyBox-2/TastyBox-2/View/CheckCreatedRecipe/CheckTimeNServingTVCell.swift"; sourceTree = "<absolute>"; };
+		6F77D486272825C800F1FCD9 /* CheckEvaluateRecipeCVCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CheckEvaluateRecipeCVCell.swift; sourceTree = "<group>"; };
 		6F9A0D0A27101A6E00DABB45 /* SemiModalDismissAnimatedTransition.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SemiModalDismissAnimatedTransition.swift; sourceTree = "<group>"; };
 		6F9A0D0D27101ACA00DABB45 /* SemiModalDismissInteractiveTransition.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SemiModalDismissInteractiveTransition.swift; sourceTree = "<group>"; };
 		6F9A0D0F27101B1400DABB45 /* SemiModalIndicatorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SemiModalIndicatorView.swift; sourceTree = "<group>"; };
@@ -658,6 +660,7 @@
 				6FB970AB272417FC00350F84 /* GenreCVCell.swift */,
 				6FB970AD2724358300350F84 /* SelectGenreTVCell.swift */,
 				6FB970AF27245D0A00350F84 /* RecipeVIPTVCell.swift */,
+				6F77D486272825C800F1FCD9 /* CheckEvaluateRecipeCVCell.swift */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -950,6 +953,7 @@
 				6F0E696E27208D8A002BD547 /* Genre.swift in Sources */,
 				6FE9EB4E26F99EF4000AF9D4 /* Ingredient.swift in Sources */,
 				6F512A2426F4169800826657 /* LoadingViewController.swift in Sources */,
+				6F77D487272825C800F1FCD9 /* CheckEvaluateRecipeCVCell.swift in Sources */,
 				6FB970AE2724358300350F84 /* SelectGenreTVCell.swift in Sources */,
 				6F0E696627208183002BD547 /* SelectGenresViewController.swift in Sources */,
 				6FE9EB5026F9A6E1000AF9D4 /* RefrigeratorVM.swift in Sources */,
