@@ -268,7 +268,7 @@
                                                         <color key="titleColor" red="1" green="0.57647058819999997" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                                     </state>
                                                     <connections>
-                                                        <action selector="showChoice:" destination="sCM-XV-MC5" eventType="touchUpInside" id="Lec-AJ-F2W"/>
+                                                        <action selector="showChoice:" destination="sCM-XV-MC5" eventType="touchUpInside" id="Pho-AP-rSL"/>
                                                     </connections>
                                                 </button>
                                             </subviews>
@@ -453,21 +453,17 @@
                                 </cells>
                             </tableViewSection>
                         </sections>
-                        <connections>
-                            <outlet property="dataSource" destination="sCM-XV-MC5" id="O6X-X4-FVb"/>
-                            <outlet property="delegate" destination="sCM-XV-MC5" id="rrf-6W-B6b"/>
-                        </connections>
                     </tableView>
                     <navigationItem key="navigationItem" title="USER PROFILE" largeTitleDisplayMode="always" id="NaL-EB-DbM">
                         <barButtonItem key="rightBarButtonItem" style="plain" systemItem="done" id="8sM-UP-VdT"/>
                     </navigationItem>
                     <connections>
-                        <outlet property="cuisineTypeTextField" destination="BIF-wv-U7g" id="mYX-7M-KWe"/>
-                        <outlet property="doneButton" destination="8sM-UP-VdT" id="kve-eO-x6M"/>
-                        <outlet property="emailTextField" destination="VQL-3c-5ob" id="NNW-xy-DoT"/>
-                        <outlet property="familySizeTextField" destination="r0e-aK-1qR" id="UmL-Yg-wmJ"/>
-                        <outlet property="userImageButton" destination="5jn-J5-b8M" id="JRu-6e-woh"/>
-                        <outlet property="userNameTextField" destination="5Su-yr-sXm" id="dK9-OK-XaK"/>
+                        <outlet property="cuisineTypeTextField" destination="BIF-wv-U7g" id="K0U-Yj-g8m"/>
+                        <outlet property="doneButton" destination="8sM-UP-VdT" id="fXf-h9-EkN"/>
+                        <outlet property="emailTextField" destination="VQL-3c-5ob" id="aUt-gc-omF"/>
+                        <outlet property="familySizeTextField" destination="r0e-aK-1qR" id="6ck-7i-fI9"/>
+                        <outlet property="userImageButton" destination="5jn-J5-b8M" id="0wr-x0-ywj"/>
+                        <outlet property="userNameTextField" destination="5Su-yr-sXm" id="ggH-2P-FMh"/>
                     </connections>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dMN-ac-V5P" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>

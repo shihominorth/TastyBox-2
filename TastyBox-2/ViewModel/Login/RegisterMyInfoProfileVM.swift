@@ -18,7 +18,8 @@ class RegisterMyInfoProfileVM: ViewModelBase {
     let sceneCoodinator: SceneCoordinator
     let user: Firebase.User
     
-    var userImage = BehaviorRelay(value: #imageLiteral(resourceName: "defaultUserImage").pngData())
+    let defaultUserImageData = #imageLiteral(resourceName: "defaultUserImage").pngData()
+    var userImage: BehaviorRelay<Data>!
     var isEnableDone = BehaviorRelay(value: false)
     var observeTxtFields = BehaviorRelay<String>(value: "")
     
@@ -38,45 +39,71 @@ class RegisterMyInfoProfileVM: ViewModelBase {
         
         self.user = user
         
-        guard let displayName = user.displayName, let userEmail = user.email, let userImageURL = user.photoURL, let userImageData = try? Data(contentsOf: userImageURL) else { return }
+        guard let displayName = user.displayName, let userEmail = user.email else { return }
         
         
         userName.accept(displayName)
         email.accept(userEmail)
-        userImage.accept(userImageData)
+        
     }
     
-    
-    lazy var registerUserAction: Action<(String, String, String, String, Data?), Void> = { this in
+    func getUserImage() -> Observable<Data> {
         
-        return Action { (name, email, familySize, cuisineType, image)  in
-            
-            return Observable.create { observer in
+        return self.apiType.getUserImage(user: self.user)
+            .catch { err in
                 
-                self.apiType.userRegister(userName: name, email: email, familySize: familySize, cuisineType: cuisineType, accountImage: image)
-                    .subscribe(onCompleted: {
-                        let vm = DiscoveryVM(sceneCoodinator: self.sceneCoodinator, user: self.user)
-                        let vc = MainScene.discovery(vm).viewController()
-                        self.sceneCoodinator.transition(to: vc, type: .modal)
-                    }, onError: { err in
-                       
-                        guard let reason = err.handleAuthenticationError() else { return }
-                        SCLAlertView().showTitle(
-                            reason.reason, // Title of view
-                            subTitle: reason.solution,
-                            timeout: .none, // String of view
-                            completeText: "Done", // Optional button value, default: ""
-                            style: .error, // Styles - see below.
-                            colorStyle: 0xA429FF,
-                            colorTextButton: 0xFFFFFF
-                        )
-                        
-                    })
+                if let userImageURL = self.user.photoURL, let userImageData = try? Data(contentsOf: userImageURL) {
+                    return Observable.just(userImageData)
+                }
+                
+                else if let defaultUserImageData = self.defaultUserImageData {
+                    return Observable.just(defaultUserImageData)
+                }
+                
+                return .empty()
                 
             }
-            
-        }
-    }(self)
+            .do(onNext: { [unowned self] data in
+                
+                self.userImage = BehaviorRelay<Data>(value: data)
+            })
+                
+                
+                }
     
+    func registerUser() -> Observable<Void> {
+        
+        return Observable.combineLatest(userName.asObservable(), email.asObservable(), familySize.asObservable(), cuisineType.asObservable(), userImage.asObservable())
+            .flatMap { [unowned self] (name, email, familySize, cuisineType, userImage)  in
+                self.apiType.userRegister(userName: name, email: email, familySize: familySize, cuisineType: cuisineType, accountImage: userImage)
+            }
+            .catch { err in
+                
+                print(err)
+                
+                guard let reason = err.handleFireStoreError() else { return .empty() }
+                
+                SCLAlertView().showTitle(
+                    reason.reason, // Title of view
+                    subTitle: reason.solution,
+                    timeout: .none, // String of view
+                    completeText: "Done", // Optional button value, default: ""
+                    style: .error, // Styles - see below.
+                    colorStyle: 0xA429FF,
+                    colorTextButton: 0xFFFFFF
+                )
+                
+                return .empty()
+            }
+        
+    }
+    
+    func goToNext() {
+ 
+        let vm = DiscoveryVM(sceneCoodinator: self.sceneCoodinator, user: self.user)
+        let vc = MainScene.discovery(vm).viewController()
+        self.sceneCoodinator.transition(to: vc, type: .modal)
+        
+    }
     
 }

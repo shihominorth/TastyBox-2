@@ -22,6 +22,7 @@ protocol LoginMainProtocol: AnyObject {
     static func login(email: String?, password: String?) -> Single<AuthDataResult>
     static func loginWithGoogle(viewController presenting: UIViewController) -> Single<Firebase.User>
     static func startSignInWithAppleFlow(authorizationController: UIViewController) -> Observable<ASAuthorizationController>
+    static func logined(user: Firebase.User) -> Observable<Firebase.User>
 }
 
 class LoginMainDM: LoginMainProtocol {
@@ -284,6 +285,32 @@ class LoginMainDM: LoginMainProtocol {
 //            single.onNext(user)
 //        }
     }
+    
+    static func logined(user: Firebase.User) -> Observable<Firebase.User> {
+        
+        return Observable.create { observer in
+            
+            Firestore.firestore().collection("users").document(user.uid).setData([
+                
+                "id": user.uid,
+                "isVIP": false,
+                "isFirst": false
+                
+            ] , merge: true) { err in
+                    if let err = err {
+                       
+                        observer.onError(err)
+                        
+                    } else {
+                        
+                        observer.onNext(user)
+                    }
+                }
+            
+            return Disposables.create()
+        }
+    }
+
     
     func sendEmailVailidation() -> Completable {
         

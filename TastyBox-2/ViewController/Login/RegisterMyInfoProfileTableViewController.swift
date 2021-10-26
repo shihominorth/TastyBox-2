@@ -39,11 +39,12 @@ class RegisterMyInfoProfileTableViewController: UITableViewController, UIPickerV
     
     
     var familyPicker = UIPickerView()
-
+    
     var cuisinePicker = UIPickerView()
-        
+    
     
     fileprivate func setUpTxtFields() {
+        
         userNameTextField.text = viewModel.user.displayName
         emailTextField.text = viewModel.user.email
         
@@ -60,61 +61,82 @@ class RegisterMyInfoProfileTableViewController: UITableViewController, UIPickerV
         
         familySizeTextField.tag = 100
         cuisineTypeTextField.tag = 200
+        
+        let bar = UIToolbar()
+        let endBtn = UIBarButtonItem(title: "Reset", style: .plain, target: self, action: #selector(closeKeyboard))
+        bar.items = [endBtn]
+        bar.sizeToFit()
+        
+        familySizeTextField.inputAccessoryView = bar
+        cuisineTypeTextField.inputAccessoryView = bar
     }
     
     override func viewDidLoad() {
         
         super.viewDidLoad()
-                
+        
         setUpTxtFields()
         
         setUpKeyboard()
         
         PickerColor()
         
-      
-      
-        guard let data = viewModel.userImage.value, let image = UIImage(data: data) else { return }
-        image.withRenderingMode(.alwaysOriginal)
-        
         userImageButton.imageView?.contentMode = .scaleAspectFit
         userImageButton.layer.cornerRadius = 0.5 * userImageButton.bounds.size.width
         userImageButton.clipsToBounds = true
-        userImageButton.setBackgroundImage(image, for: .normal)
-       
+        
+        
+        
     }
     
     
     func bindViewModel() {
-
+        
         let _ = viewModel.isEnableDone.bind(to: doneButton.rx.isEnabled)
         
-        let info = Observable.combineLatest(userNameTextField.rx.text.orEmpty, emailTextField.rx.text.orEmpty, familySizeTextField.rx.text.orEmpty, cuisineTypeTextField.rx.text.orEmpty, viewModel.userImage)
+        //        let info = Observable.combineLatest(userNameTextField.rx.text.orEmpty, emailTextField.rx.text.orEmpty, familySizeTextField.rx.text.orEmpty, cuisineTypeTextField.rx.text.orEmpty, viewModel.userImage)
         
-            
-        _ = userNameTextField.rx.text.orEmpty.bind(to: viewModel.userName)
-        _ = emailTextField.rx.text.orEmpty.bind(to: viewModel.email)
-        _ = familySizeTextField.rx.text.orEmpty.bind(to: viewModel.familySize)
-        _ = cuisineTypeTextField.rx.text.orEmpty.bind(to: viewModel.cuisineType)
-
         
-        let _ = Observable.combineLatest(viewModel.userName.asObservable(), viewModel.email.asObservable(), viewModel.familySize.asObservable(), viewModel.cuisineType.asObservable())
-            .subscribe { (name, email, familySize, cuisineType) in
+        userNameTextField.rx.text.orEmpty.bind(to: viewModel.userName).disposed(by: viewModel.disposeBag)
+        emailTextField.rx.text.orEmpty.bind(to: viewModel.email).disposed(by: viewModel.disposeBag)
+        familySizeTextField.rx.text.orEmpty.bind(to: viewModel.familySize).disposed(by: viewModel.disposeBag)
+        cuisineTypeTextField.rx.text.orEmpty.bind(to: viewModel.cuisineType).disposed(by: viewModel.disposeBag)
+        
+        self.viewModel.getUserImage()
+            .subscribe(onNext: { data in
+                
+                guard let image = UIImage(data: data) else { return }
+                image.withRenderingMode(.alwaysOriginal)
+                self.userImageButton.setBackgroundImage(image, for: .normal)
+                
+            })
+            .disposed(by: viewModel.disposeBag)
+        
+        
+        Observable.combineLatest(viewModel.userName.asObservable(), viewModel.email.asObservable(), viewModel.familySize.asObservable(), viewModel.cuisineType.asObservable()) { (name, email, familySize, cuisineType) -> Bool in
             
             if name.isNotEmpty && email.isNotEmpty && familySize.isNotEmpty && cuisineType.isNotEmpty {
-                self.viewModel.isEnableDone.accept(true)
+                return true
             }
             else {
-                self.viewModel.isEnableDone.accept(false)
+                return false
             }
         }
-        
+        .bind(to: viewModel.isEnableDone)
+        .disposed(by: viewModel.disposeBag)
         
         doneButton.rx.tap
-            .withLatestFrom(info)
             .throttle(.milliseconds(1000), scheduler: MainScheduler.asyncInstance)
-            .bind(to: viewModel.registerUserAction.inputs)
+            .flatMap { [unowned self] in
+                self.viewModel.registerUser()
+            }
+            .subscribe(onNext: { _ in
+                
+                self.viewModel.goToNext()
+                
+            })
             .disposed(by: viewModel.disposeBag)
+        
         
         
     }
