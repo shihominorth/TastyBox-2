@@ -392,6 +392,11 @@ class CreateRecipeVM: ViewModelBase {
                 return .empty()
             }
             .map { $0 }
+            .do(onNext: { [unowned self] in
+                
+                self.videoPlaySubject.onNext($0)
+                
+            })
     }
     
     func playVideo(url: URL) {

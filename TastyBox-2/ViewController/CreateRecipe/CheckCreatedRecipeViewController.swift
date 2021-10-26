@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import AVFoundation
 import RxSwift
 import RxCocoa
 import RxDataSources
@@ -20,11 +21,35 @@ class CheckCreatedRecipeViewController: UIViewController, BindableType {
     
     var dataSource: RxTableViewSectionedReloadDataSource<RecipeItemSectionModel>!
     
+    var playerItem: AVPlayerItem!
+    var playerLooper: AVPlayerLooper!
+    var player: AVQueuePlayer!
+    var layerPlayer: AVPlayerLayer!
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
         // Do any additional setup after loading the view.
        
+        if let url = viewModel.url {
+            
+            let visibleRect = CGRect(origin: tableView.contentOffset, size: tableView.bounds.size)
+            let visiblePoint = CGPoint(x: visibleRect.midX, y: visibleRect.midY)
+            
+            self.playerItem = AVPlayerItem(url: url)
+            self.player =  AVQueuePlayer(playerItem: self.playerItem)
+            self.playerLooper = AVPlayerLooper(player: self.player, templateItem: playerItem)
+            
+            self.player.addObserver(self, forKeyPath: "actionAtItemEnd", options: [.new], context: nil)
+            self.player.addObserver(self, forKeyPath: "currentItem.loadedTimeRanges", options: [.new], context: nil)
+            
+           
+           let cell = tableView.cellForRow(at: IndexPath(row: 0, section: 0)) as! CheckMainImageTVCell
+            cell.playVideoView.playerLayer.player = self.player
+            cell.playVideoView.playerLayer.player?.play()
+        
+        }
+     
         
     }
     
@@ -38,8 +63,29 @@ class CheckCreatedRecipeViewController: UIViewController, BindableType {
             .disposed(by: viewModel.disposeBag)
        
         tableView.rx.setDelegate(self).disposed(by: viewModel.disposeBag)
+        
+        tableView.rx.didScroll
+            .subscribe(onNext: { [unowned self] _ in
+                
+                let visibleRect = CGRect(origin: tableView.contentOffset, size: tableView.bounds.size)
+                let visiblePoint = CGPoint(x: visibleRect.midX, y: visibleRect.midY)
+                
+                if let visibleIndexPath = tableView.indexPathForRow(at: visiblePoint) {
+                    
+                    if visibleIndexPath.row == 0 {
+                        print("top is row 0")
+                    }
+                }
+                
+               
+
+//                self.tableView.indexPathsForRows(in: CGPoint(x: 0.0, y: <#T##CGFloat#>))
+
+            })
+            .disposed(by: viewModel.disposeBag)
 
     }
+    
     
     
     
@@ -57,6 +103,17 @@ class CheckCreatedRecipeViewController: UIViewController, BindableType {
                     cell.imgData = data
                     cell.videoURL = url
                     
+//                    cell.setUpImageView(data: data)
+//                    if let url = url {
+//
+//                        cell.playVideoView.playerLayer.player = avPlayer
+//                        cell.playVideoView.playerLayer.player?.play()
+//
+//                    }
+                    let cellRect = tableView.rectForRow(at: indexPath)
+                    let cellRectInView = tableView.convert(cellRect, to: self.tableView.superview)
+                    print(cellRectInView)
+                  
                     return cell
                 }
                 
@@ -138,6 +195,57 @@ class CheckCreatedRecipeViewController: UIViewController, BindableType {
             
         }
         
+    }
+    
+    func setUpPlayVideoView() {
+        
+//        self.playView = PlayVideoView()
+//        playView.frame = view.bounds
+        
+      
+       
+//        setUpSlider()
+//
+//
+//        tap = UITapGestureRecognizer()
+//
+//        tap.rx.event
+//            .debounce(.microseconds(1000), scheduler: MainScheduler.instance)
+//            .asDriver { err in
+//
+//                print(err)
+//
+//                return Driver.empty()
+//            }
+//            .asObservable()
+//            .withLatestFrom(viewModel.isHiddenPlayingViewRelay)
+//            .subscribe(onNext: { isHiddden in
+//                self.viewModel.isHiddenPlayingViewRelay.accept(!isHiddden)
+//            })
+//            .disposed(by: viewModel.disposeBag)
+//
+//
+//        self.playView.addGestureRecognizer(tap)
+//
+//        view.addSubview(self.playView)
+        
+    }
+    
+    func createPlayerLayer() -> AVPlayerLayer {
+        
+        let layer = AVPlayerLayer(player: self.player)
+        layer.frame = self.view.bounds
+        layer.videoGravity = .resizeAspect
+        
+        return layer
+    }
+    
+    override func observeValue(forKeyPath keyPath: String?, of object: Any?, change: [NSKeyValueChangeKey : Any]?, context: UnsafeMutableRawPointer?) {
+        if keyPath == "currentItem.loadedTimeRanges" {
+            
+//            playView.indicator.stopAnimating()
+            
+        }
     }
 }
 

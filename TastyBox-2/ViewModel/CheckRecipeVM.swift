@@ -17,7 +17,7 @@ class CheckRecipeVM {
     
     let apiType: CreateRecipeDMProtocol.Type
     
-    
+    var url: URL? = nil
     var sections: [RecipeItemSectionModel] = []
     let evaluates: [Evaluate]
     let isVIP: Bool
@@ -29,6 +29,7 @@ class CheckRecipeVM {
         self.sceneCoodinator = sceneCoodinator
         self.user = user
         self.apiType = apiType
+       
         self.isVIP = isVIP
         self.evaluates =  [Evaluate(title: "0", imgData: UIImage(systemName: "suit.heart.fill")!.convertToData()!)]
         
@@ -48,7 +49,14 @@ class CheckRecipeVM {
         
 
         self.sections = [mainImageSection, titleSection, evaluateSection, genresSection, timeNServingSection, ingredientSection, instructionsSection]
+        
 
+        guard let video = video else {
+            self.url = nil
+            return
+        }
+        
+        self.url = video
 //        super.init()
         
     }
