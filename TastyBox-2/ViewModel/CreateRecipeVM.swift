@@ -14,6 +14,10 @@ import SCLAlertView
 import UIKit
 //import UIKit
 
+enum RecipeInput {
+    case mainPhoto(Observable<Data>), isAddedVideo(Observable<Bool>), videoURL(Observable<URL>), title(Observable<String>), time(Observable<String>), serving(Observable<String>), isVIP(Observable<Bool>), selectedGenres(Observable<[Genre]>), ingredients(Observable<[Ingredient]>), instructions(Observable<[Instruction]>)
+}
+
 class CreateRecipeVM: ViewModelBase {
     
     let sceneCoodinator: SceneCoordinator
@@ -33,30 +37,30 @@ class CreateRecipeVM: ViewModelBase {
     let photoPicker = ImagePickScene.photo.viewController()
     let videoPicker = ImagePickScene.video.viewController()
     
-    var videoPlaySubject = PublishSubject<URL>()
+    var videoPlaySubject = BehaviorSubject<URL>(value: URL(fileURLWithPath: ""))
     
     var isAddedSubject = BehaviorSubject<Bool>(value: false)
     
-    var mainImgDataSubject = PublishSubject<Data>()
+    var mainImgDataSubject = BehaviorSubject<Data>(value: Data())
     var thumbnailImgDataSubject = PublishSubject<Data>()
     
-    let titleSubject = PublishSubject<String>()
-    let servingSubject = PublishSubject<String>()
-    let timeSubject = PublishSubject<String>()
+    let titleSubject = BehaviorSubject<String>(value: "")
+    let servingSubject = BehaviorSubject<String>(value: "")
+    let timeSubject = BehaviorSubject<String>(value: "")
     let selectedGenres = BehaviorRelay<[Genre]>(value: [])
     
-    var isVIPSubject = PublishSubject<Bool>()
+    var isVIPSubject = BehaviorSubject<Bool>(value: false)
     
     
-//    var ingredients: [[String:String]] = []
-//    var instructions: [[String:String]] = []
-//    var instructionsData:[Data] = []
-
+    //    var ingredients: [[String:String]] = []
+    //    var instructions: [[String:String]] = []
+    //    var instructionsData:[Data] = []
+    
     var ingredients = [Ingredient]()
     var instructions = [Instruction]()
-    var ingredientsSubject = PublishSubject<[Ingredient]>()
-    var instructionsSubject = PublishSubject<[Instruction]>()
-   
+    var ingredientsSubject = BehaviorSubject<[Ingredient]>(value: [])
+    var instructionsSubject = BehaviorSubject<[Instruction]>(value: [])
+    
     let isMainImgValidation:  Observable<Bool>
     let isTitleValidation:  Observable<Bool>
     let isTimeValidation:  Observable<Bool>
@@ -67,7 +71,8 @@ class CreateRecipeVM: ViewModelBase {
     let combinedRequirements: Observable<(Bool, Bool, Bool, Bool)>
     let combinedIngredientAndInstructionValidation: Observable<(Bool, Bool)>
     
-  
+    let stringInputs: Observable<(String, String, String)>
+    let combinedInputs: [RecipeInput]
     let isIngredienstNotEmpty = PublishSubject<Bool>()
     let isInstructionsNotEmpty = PublishSubject<Bool>()
     
@@ -79,7 +84,7 @@ class CreateRecipeVM: ViewModelBase {
         self.user = user
         self.apiType = apiType
         
-    
+        
         self.isMainImgValidation = self.mainImgDataSubject
             .map { !$0.isEmpty }
             .share(replay: 1, scope: .forever)
@@ -103,9 +108,9 @@ class CreateRecipeVM: ViewModelBase {
             .share(replay: 1, scope: .forever)
         
         self.instructionValidation = self.instructionsSubject.map { $0[0] }
-            .debug()
-            .map { !$0.text.isEmpty }
-            .share(replay: 1, scope: .forever)
+        .debug()
+        .map { !$0.text.isEmpty }
+        .share(replay: 1, scope: .forever)
         
         self.combinedRequirements = .combineLatest(self.isMainImgValidation, self.isTitleValidation, self.isTimeValidation, self.isServingValidation) { isMainImgValid, isTitleValid, isTimeValid, isServingValid in
             
@@ -116,15 +121,21 @@ class CreateRecipeVM: ViewModelBase {
             return (isIngredientValid, isInstructionValid)
         }
         
+        self.combinedInputs = [.mainPhoto(self.mainImgDataSubject)]
+        
+        stringInputs = .combineLatest(self.titleSubject.asObservable(), self.timeSubject.asObservable(), self.servingSubject.asObservable()) { title, time, serving -> (String, String, String) in
+            return (title, time, serving)
+        }
+        
         super.init()
-
+        
     }
     
     func isFilledRequirement(isMainImgValid: Bool, isTitleValid: Bool, isTimeValid: Bool, isServingValid: Bool) -> Observable<Bool> {
         
         
         return Observable.create { observer in
-
+            
             var notValidRequirements: [String] = []
             
             if !isMainImgValid {
@@ -146,10 +157,10 @@ class CreateRecipeVM: ViewModelBase {
             }
             else {
                 
-            let subtitle = notValidRequirements.joined(separator: "\n・ ")
+                let subtitle = notValidRequirements.joined(separator: "\n・ ")
                 
                 SCLAlertView().showTitle(
-                   "Empty requirement below", // Title of view
+                    "Empty requirement below", // Title of view
                     subTitle: subtitle,
                     timeout: .none, // String of view
                     completeText: "Done", // Optional button value, default: ""
@@ -162,18 +173,18 @@ class CreateRecipeVM: ViewModelBase {
             }
             
             return Disposables.create()
-  
+            
         }
-       
-         
+        
+        
     }
     
     func isIngredientsAndInstructions(isIngredientValid: Bool, isInstructionValid: Bool) -> Observable<Bool> {
         
         return Observable.create { observer in
-
+            
             var notValidRequirements: [String] = []
-        
+            
             if !isIngredientValid {
                 notValidRequirements.append("Ingredients")
             }
@@ -188,30 +199,30 @@ class CreateRecipeVM: ViewModelBase {
             else {
                 
                 let title: String? = {
-                  
+                    
                     if !isIngredientValid && !isInstructionValid {
                         
                         return "Ingredients and Instructions"
                     }
                     else if !isIngredientValid {
-                    
+                        
                         return "Ingredients"
-                    
+                        
                     }
                     else if !isInstructionValid {
-
+                        
                         return "Instructions"
                     }
                     
                     return nil
                 }()
                 
-            let subtitle = notValidRequirements.joined(separator: "\n・ ")
-              
+                let subtitle = notValidRequirements.joined(separator: "\n・ ")
+                
                 if let title = title {
-                   
+                    
                     SCLAlertView().showTitle(
-                       "You need at least one \(title)  below", // Title of view
+                        "You need at least one \(title)  below", // Title of view
                         subTitle: subtitle,
                         timeout: .none, // String of view
                         completeText: "Done", // Optional button value, default: ""
@@ -222,38 +233,47 @@ class CreateRecipeVM: ViewModelBase {
                 }
                 
                 observer.onNext(false)
-               
+                
             }
             
             return Disposables.create()
-  
+            
         }
         
         
     }
     
-    func goToNext()  -> Observable<Bool> {
+    func goToNext(){
         
-//        return Observable.combineLatest(self.mainImgDataSubject, isAddedSubject, videoPlaySubject, titleSubject, timeSubject, servingSubject, isVIPSubject, selectedGenres) { mainImageData, isAdded, url, title, time, serving, isVIP, genres -> CheckRecipeVM in
+        Observable.zip(self.mainImgDataSubject.asObservable(), isAddedSubject.asObservable(), videoPlaySubject.asObservable(), titleSubject.asObservable(), timeSubject.asObservable(), servingSubject.asObservable(), isVIPSubject.asObservable(), selectedGenres.asObservable())
+            .flatMap { mainImageData, isAdded, url, title, time, serving, isVIP, genres  -> Observable<CheckRecipeVM> in
+                
+                let url = isAdded ? url : nil
+                
+                let vm = CheckRecipeVM(sceneCoodinator: self.sceneCoodinator, user: self.user, title: title, mainPhoto: mainImageData, video: url, time: time, serving: serving, isVIP: isVIP, genres: genres, ingredients: self.ingredients, instructions: self.instructions)
+                
+                return Observable.just(vm)
+                
+            }
+            .subscribe(onNext: { [unowned self] vm in
+                
+                self.sceneCoodinator.modalTransition(to: .createReceipeScene(scene: .checkRecipe(vm)), type: .push)
+                
+//                print("succeed")
+                
+                
+            })
+            .disposed(by: disposeBag)
         
-        return Observable.combineLatest(self.mainImgDataSubject, isVIPSubject) { mainImageData, isVIP -> Bool in
-            
-            return isVIP
-//            let url = isAdded ? url : nil
-//
-//            let vm = CheckRecipeVM(sceneCoodinator: self.sceneCoodinator, user: self.user, title: title, mainPhoto: mainImageData, video: url, time: time, serving: serving, isVIP: isVIP, genres: genres, ingredients: self.ingredients, instructions: self.instructions)
-//
-//            return vm
-           
-        }
         
-//        .flatMap { [unowned self] in
-//
-//            self.sceneCoodinator.modalTransition(to: .createReceipeScene(scene: .checkRecipe($0)), type: .push).asObservable()
-//                .map { $0 }
-//
+//        let boolInputs:  Observable<(Bool, Bool)> = .combineLatest(self.isAddedSubject.asObservable(), self.isVIPSubject.asObservable()) { isAdded, isVIP -> (Bool, Bool) in
+//            
+//            return (isAdded, isVIP)
+//            
 //        }
-//
+        
+        //        let <#name#> = <#value#>
+        
         
     }
     
@@ -349,7 +369,7 @@ class CreateRecipeVM: ViewModelBase {
                 self.instructions[index].imageData = data
                 
             })
-                
+        
                 }
     
     func toImagePicker() {
@@ -368,11 +388,11 @@ class CreateRecipeVM: ViewModelBase {
                 return .empty()
             }
             .do(onNext: { [unowned self] in
-            
+                
                 self.mainImgDataSubject.onNext($0)
-            
+                
             })
-    }
+                }
     
     func toVideoPicker() {
         
@@ -418,7 +438,7 @@ class CreateRecipeVM: ViewModelBase {
         self.sceneCoodinator.modalTransition(to: Scene.createReceipeScene(scene: .selectGenre(vm)), type: .modal(.automatic, .coverVertical))
             .asObservable()
             .subscribe(onError: { err in
-               
+                
                 print(err)
                 
             }, onCompleted: { [unowned self] in
@@ -428,7 +448,7 @@ class CreateRecipeVM: ViewModelBase {
             })
             .disposed(by: disposeBag)
         
-//        self.sceneCoodinator.modalTransition(to: Scene.createReceipeScene(scene: .selectGenre(vm)), type: .push)
+        //        self.sceneCoodinator.modalTransition(to: Scene.createReceipeScene(scene: .selectGenre(vm)), type: .push)
         
     }
     

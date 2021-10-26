@@ -53,6 +53,7 @@ class CreateRecipeViewController: UIViewController, BindableType {
                 self.viewModel.isFilledRequirement(isMainImgValid: isMainImgValid, isTitleValid: isTitleValid, isTimeValid: isTimeValid, isServingValid: isServingValid)
                 
             }
+            .filter { $0 }
             .withLatestFrom(viewModel.combinedIngredientAndInstructionValidation)
             .flatMap { [unowned self] isIngredientValid, isInstructionValid in
                
