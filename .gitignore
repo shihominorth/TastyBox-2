@@ -2,6 +2,11 @@
 #
 # gitignore contributors: remember to update Global/Xcode.gitignore, Objective-C.gitignore & Swift.gitignore
 
+
+TastyBox-2.xcodeproj/xcshareddata/
+TastyBox-2.xcworkspace/xcshareddata/WorkspaceSettings.xcsettings	
+
+
 ## User settings
 xcuserdata/
 

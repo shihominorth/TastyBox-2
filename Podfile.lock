@@ -358,7 +358,10 @@ PODS:
   - DifferenceKit/Core (1.2.0)
   - DifferenceKit/UIKitExtension (1.2.0):
     - DifferenceKit/Core
+<<<<<<< HEAD
   - Differentiator (5.0.0)
+=======
+>>>>>>> feature/login
   - FBAEMKit (12.0.2):
     - FBSDKCoreKit_Basics (= 12.0.2)
   - FBSDKCoreKit (12.0.2):
@@ -474,6 +477,7 @@ PODS:
     - AppAuth (~> 1.4)
     - GTMAppAuth (~> 1.0)
     - GTMSessionFetcher/Core (~> 1.1)
+<<<<<<< HEAD
   - GoogleToolboxForMac/DebugUtils (2.3.2):
     - GoogleToolboxForMac/Defines (= 2.3.2)
   - GoogleToolboxForMac/Defines (2.3.2)
@@ -486,6 +490,8 @@ PODS:
     - GoogleToolboxForMac/Defines (= 2.3.2)
     - "GoogleToolboxForMac/NSString+URLArguments (= 2.3.2)"
   - "GoogleToolboxForMac/NSString+URLArguments (2.3.2)"
+=======
+>>>>>>> feature/login
   - GoogleUtilities/AppDelegateSwizzler (7.6.0):
     - GoogleUtilities/Environment
     - GoogleUtilities/Logger
@@ -504,8 +510,11 @@ PODS:
   - GoogleUtilities/Reachability (7.6.0):
     - GoogleUtilities/Logger
   - GoogleUtilities/UserDefaults (7.6.0):
+<<<<<<< HEAD
     - GoogleUtilities/Logger
   - GoogleUtilitiesComponents (1.0.0):
+=======
+>>>>>>> feature/login
     - GoogleUtilities/Logger
   - "gRPC-C++ (1.28.2)":
     - "gRPC-C++/Implementation (= 1.28.2)"
@@ -677,7 +686,10 @@ SPEC CHECKSUMS:
   AppAuth: 31bcec809a638d7bd2f86ea8a52bd45f6e81e7c7
   BoringSSL-GRPC: 8edf627ee524575e2f8d19d56f068b448eea3879
   DifferenceKit: 5659c430bb7fe45876fa32ce5cba5d6167f0c805
+<<<<<<< HEAD
   Differentiator: e8497ceab83c1b10ca233716d547b9af21b9344d
+=======
+>>>>>>> feature/login
   FBAEMKit: c6b8ddf8371640fcd1a3b844d0f8884c8f334cea
   FBSDKCoreKit: 506c0fd1c09a3075f62be8fa36bdd921c563daa9
   FBSDKCoreKit_Basics: c0701d1634c944d60dd3c6361d66dbd0e707a456
@@ -693,11 +705,16 @@ SPEC CHECKSUMS:
   FirebaseStorage: 54ff752ecbd27f1c354c3f5e8c55f6ad5783699b
   GoogleAppMeasurement: 5ba1164e3c844ba84272555e916d0a6d3d977e91
   GoogleDataTransport: 629c20a4d363167143f30ea78320d5a7eb8bd940
+<<<<<<< HEAD
   GoogleMLKit: 53d5adbee0fe5a701e970f1387d2cfececd5bc50
   GoogleSignIn: fd381840dbe7c1137aa6dc30849a5c3e070c034a
   GoogleToolboxForMac: 8bef7c7c5cf7291c687cf5354f39f9db6399ad34
   GoogleUtilities: 684ee790a24f73ebb2d1d966e9711c203f2a4237
   GoogleUtilitiesComponents: a69c0b3b369ba443e988141e75ef49d9010b1c80
+=======
+  GoogleSignIn: fd381840dbe7c1137aa6dc30849a5c3e070c034a
+  GoogleUtilities: 684ee790a24f73ebb2d1d966e9711c203f2a4237
+>>>>>>> feature/login
   "gRPC-C++": 13d8ccef97d5c3c441b7e3c529ef28ebee86fad2
   gRPC-Core: 4afa11bfbedf7cdecd04de535a9e046893404ed5
   GTMAppAuth: ad5c2b70b9a8689e1a04033c9369c4915bfcbe89

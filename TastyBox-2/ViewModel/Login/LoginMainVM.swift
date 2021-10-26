@@ -235,6 +235,12 @@ class LoginMainVM: ViewModelBase {
            }
        }(self)
     
+    func logined(user: Firebase.User) -> Observable<Firebase.User> {
+        
+        return self.apiType.logined(user: user)
+        
+    }
+    
 //        func login(controller: ASAuthorizationController, didCompleteWithAuthorization authorization: ASAuthorization) {
 //            let authentication = self.apiType.authorizationController(controller: controller, didCompleteWithAuthorization: authorization)
 //

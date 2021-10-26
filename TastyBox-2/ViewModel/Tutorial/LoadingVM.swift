@@ -31,7 +31,7 @@ class LoadingVM {
                     
                     let viewModel = RegisterMyInfoProfileVM(sceneCoodinator: self.sceneCoodinator, user: user)
                     let firstScene = LoginScene.profileRegister(viewModel).viewController()
-                    self.sceneCoodinator.transition(to: firstScene, type: .usePresentNC)
+                    self.sceneCoodinator.transition(to: firstScene, type: .push)
                     
                 } else {
                     
