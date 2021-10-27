@@ -51,7 +51,7 @@ class UploadingVideoViewController: UIViewController, BindableType {
         viewModel.isHiddenPlayingViewRelay
             .bind(to: self.playView.slider.rx.isHidden).disposed(by: viewModel.disposeBag)
         
-
+        
         self.viewModel.isHiddenPlayingViewRelay.accept(false)
     }
     
@@ -88,6 +88,10 @@ class UploadingVideoViewController: UIViewController, BindableType {
         
         view.addSubview(self.playView)
         
+        NotificationCenter.default.addObserver(self, selector: #selector(itemNewErrorLogEntry), name: .AVPlayerItemNewErrorLogEntry, object: nil)
+        
+        NotificationCenter.default.addObserver(self, selector: #selector(itemPlaybackStalled), name: .AVPlayerItemPlaybackStalled, object: nil)
+        
     }
     
     
@@ -107,13 +111,13 @@ class UploadingVideoViewController: UIViewController, BindableType {
             .subscribe(onNext: { [unowned self] in self.viewModel.back() })
             .disposed(by: viewModel.disposeBag)
     }
-
+    
     
     func setUpAddBtn() {
         
         self.playView.addBtn.setTitle("Add", for: .normal)
         self.playView.addBtn.setImage(UIImage(systemName: "chevron.right"), for: .normal)
-
+        
         self.playView.addBtn.transform = CGAffineTransform(scaleX: -1.0, y: 1.0)
         self.playView.addBtn.titleLabel?.transform = CGAffineTransform(scaleX: -1.0, y: 1.0)
         self.playView.addBtn.imageView?.transform = CGAffineTransform(scaleX: -1.0, y: 1.0)
@@ -164,6 +168,14 @@ class UploadingVideoViewController: UIViewController, BindableType {
         viewModel.urlSubject
             .subscribe(onNext: { [unowned self] url in
                 
+                if AVAsset(url: url).isPlayable {
+                    print("success: ", AVAsset(url: url).isPlayable)
+                }
+                
+                let urlString = url.absoluteString
+                
+                print("is valid : ", urlString.isValidURL)
+                
                 self.playerItem = AVPlayerItem(url: url)
                 self.player =  AVQueuePlayer(playerItem: self.playerItem)
                 self.playerLooper = AVPlayerLooper(player: self.player, templateItem: playerItem)
@@ -177,7 +189,13 @@ class UploadingVideoViewController: UIViewController, BindableType {
                 view.layer.addSublayer(self.layerPlayer)
                 self.setUpPlayVideoView()
                 
-                self.player.play()
+//                self.player.play()
+                
+                if #available(iOS 10.0, *) {
+                    self.player.playImmediately(atRate: 1.0)
+                } else {
+                    self.player.play()
+                }
                 
                 let interval = CMTime(value: 1, timescale: 2)
                 
@@ -212,6 +230,14 @@ class UploadingVideoViewController: UIViewController, BindableType {
         return layer
     }
     
+    @objc func itemPlaybackStalled() {
+        print("AVPlayerItemNewErrorLogEntry")
+    }
+    
+    @objc func itemNewErrorLogEntry() {
+        print("itemNewErrorLogEntry")
+    }
+    
     
     override func observeValue(forKeyPath keyPath: String?, of object: Any?, change: [NSKeyValueChangeKey : Any]?, context: UnsafeMutableRawPointer?) {
         if keyPath == "currentItem.loadedTimeRanges" {
@@ -229,4 +255,16 @@ extension UploadingVideoViewController: SemiModalPresenterDelegate {
         return self.view.frame.height
     }
     
+}
+
+extension String {
+    var isValidURL: Bool {
+        let detector = try! NSDataDetector(types: NSTextCheckingResult.CheckingType.link.rawValue)
+        if let match = detector.firstMatch(in: self, options: [], range: NSRange(location: 0, length: self.utf16.count)) {
+            // it is a link, if the match covers the whole string
+            return match.range.length == self.utf16.count
+        } else {
+            return false
+        }
+    }
 }

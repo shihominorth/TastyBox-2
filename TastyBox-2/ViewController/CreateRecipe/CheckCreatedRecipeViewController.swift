@@ -23,7 +23,7 @@ class CheckCreatedRecipeViewController: UIViewController, BindableType {
     
     var playerItem: AVPlayerItem!
     var player: AVPlayer!
-    var layerPlayer: AVPlayerLayer!
+//    var layerPlayer: AVPlayerLayer!
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -32,17 +32,17 @@ class CheckCreatedRecipeViewController: UIViewController, BindableType {
         
         if let url = viewModel.url {
             
-//            let visibleRect = CGRect(origin: tableView.contentOffset, size: tableView.bounds.size)
-//            let visiblePoint = CGPoint(x: visibleRect.midX, y: visibleRect.midY)
+            //            let visibleRect = CGRect(origin: tableView.contentOffset, size: tableView.bounds.size)
+            //            let visiblePoint = CGPoint(x: visibleRect.midX, y: visibleRect.midY)
             
             self.playerItem = AVPlayerItem(url: url)
             self.player =  AVPlayer(playerItem: self.playerItem)
-          
+            
             
             self.player.addObserver(self, forKeyPath: "actionAtItemEnd", options: [.new], context: nil)
             self.player.addObserver(self, forKeyPath: "currentItem.loadedTimeRanges", options: [.new], context: nil)
             NotificationCenter.default.addObserver(self, selector: #selector(playerDidFinishPlaying), name: .AVPlayerItemDidPlayToEndTime, object: nil)
-
+            
         }
         
         
@@ -61,31 +61,41 @@ class CheckCreatedRecipeViewController: UIViewController, BindableType {
         
         tableView.rx.didScroll
             .subscribe(onNext: { [unowned self] _ in
-
+                
                 let visibleRect = CGRect(origin: tableView.contentOffset, size: tableView.bounds.size)
                 let visiblePoint = CGPoint(x: visibleRect.midX, y: visibleRect.midY)
-
+                
                 if let visibleIndexPath = tableView.indexPathForRow(at: visiblePoint) {
-
+                    
                     if visibleIndexPath.row == 0 {
                         
                         if let cell = tableView.visibleCells[0] as? CheckMainImageTVCell {
                             
-                            cell.playVideoView.imgView.alpha = 1.0
-                            
-                            UIView.animate(withDuration: 0.2, delay: 2.0, options: [], animations: {
-                               
-                                cell.playVideoView.imgView.alpha = 0.0
-                            
-                            }) { isCompleted in
+                           if viewModel.url != nil {
                                 
-                                if isCompleted {
-                                    cell.playVideoView.imgView.isHidden = true
-                                    cell.playVideoView.playerLayer.player?.play()
-                                    viewModel.isDisplayed = true
+                                cell.playVideoView.playerLayer.player = self.player
+                                
+                                UIView.animate(withDuration: 0.2, delay: 2.0, options: [], animations: {
+                                    
+                                    cell.playVideoView.imgView.alpha = 0.0
+                                    
+                                }) { isCompleted in
+                                    
+                                    if isCompleted {
+                                        
+                                        cell.playVideoView.imgView.isHidden = true
+                                        cell.playVideoView.playerLayer.player?.play()
+                                        
+                                        if viewModel.isDisplayed == false {
+                                            
+                                            viewModel.isDisplayed = true
+                                            
+                                        }
+                                    }
+                                    
                                 }
-                             
                             }
+                            
                         }
                     }
                 }
@@ -112,17 +122,16 @@ class CheckCreatedRecipeViewController: UIViewController, BindableType {
                     cell.imgData = data
                     cell.videoURL = url
                     
-                   
-                    cell.playVideoView.playerLayer.player = self.player
                     
                     if viewModel.isDisplayed == false && viewModel.url != nil {
                         
+                        cell.playVideoView.playerLayer.player = self.player
                         cell.playVideoView.imgView.alpha = 1.0
                         
                         UIView.animate(withDuration: 0.2, delay: 2.0, options: [], animations: {
-                           
+                            
                             cell.playVideoView.imgView.alpha = 0.0
-                        
+                            
                         }) { isCompleted in
                             
                             if isCompleted {
@@ -130,11 +139,11 @@ class CheckCreatedRecipeViewController: UIViewController, BindableType {
                                 cell.playVideoView.playerLayer.player?.play()
                                 viewModel.isDisplayed = true
                             }
-                         
+                            
                         }
                         
                     }
-
+                    
                     return cell
                 }
                 
@@ -152,7 +161,6 @@ class CheckCreatedRecipeViewController: UIViewController, BindableType {
                 if let cell = tableView.dequeueReusableCell(withIdentifier: "checkEvaluateRecipeTVCell", for: indexPath) as? CheckEvaluateRecipeTVCell {
                     
                     cell.evaluates = evaluates
-                    //                    cell.likes = 0
                     
                     return cell
                 }
@@ -180,7 +188,7 @@ class CheckCreatedRecipeViewController: UIViewController, BindableType {
                 if let cell = tableView.dequeueReusableCell(withIdentifier: "checkTimeNServingTVCell", for: indexPath) as? CheckTimeNServingTVCell {
                     
                     cell.timeLbl.text = "\(time) mins"
-                    cell.serveLbl.text = "\(serving) ppl"
+                    cell.serveLbl.text = "\(serving) serving"
                     
                     return cell
                 }
@@ -267,8 +275,9 @@ class CheckCreatedRecipeViewController: UIViewController, BindableType {
         viewModel.isEnded = true
         
         if let cell = tableView.cellForRow(at: IndexPath(row: 0, section: 0)) as? CheckMainImageTVCell {
-           
+            
             cell.playVideoView.imgView.isHidden = false
+            cell.playVideoView.imgView.alpha = 1.0
             
         }
     }
@@ -292,29 +301,34 @@ extension CheckCreatedRecipeViewController: UITableViewDelegate {
         }
     }
     
-//    func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
-//
-//        guard let videoCell = (cell as? CheckMainImageTVCell) else { return }
-//
-//        let visibleCells = tableView.visibleCells
-//        let minIndex = visibleCells.startIndex
-//
-//        if tableView.visibleCells.firstIndex(of: cell) == minIndex {
-//
-//            videoCell.playVideoView.imgView.isHidden = true
-//            videoCell.playVideoView.player?.play()
-//
-//        }
-//    }
-
+    //    func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
+    //
+    //        guard let videoCell = (cell as? CheckMainImageTVCell) else { return }
+    //
+    //        let visibleCells = tableView.visibleCells
+    //        let minIndex = visibleCells.startIndex
+    //
+    //        if tableView.visibleCells.firstIndex(of: cell) == minIndex {
+    //
+    //            videoCell.playVideoView.imgView.isHidden = true
+    //            videoCell.playVideoView.player?.play()
+    //
+    //        }
+    //    }
+    
     
     func tableView(_ tableView: UITableView, didEndDisplaying cell: UITableViewCell, forRowAt indexPath: IndexPath) {
-       
-        guard let videoCell = (cell as? CheckMainImageTVCell) else { return }
         
-        videoCell.playVideoView.player?.pause()
-        videoCell.playVideoView.player = nil
-        videoCell.playVideoView.imgView.isHidden = false
+        if viewModel.url != nil {
+            
+            guard let videoCell = (cell as? CheckMainImageTVCell) else { return }
+            
+            videoCell.playVideoView.player?.pause()
+            videoCell.playVideoView.player = nil
+            videoCell.playVideoView.imgView.isHidden = false
+            videoCell.playVideoView.imgView.alpha = 1.0
+            
+        }
     }
 }
 
