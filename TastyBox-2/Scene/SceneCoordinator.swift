@@ -71,7 +71,17 @@ class SceneCoordinator: NSObject, SceneCoordinatorType {
             }
             
             currentViewController = SceneCoordinator.actualViewController(for: viewController)
-      
+        
+        case .modalHalf:
+            
+            semiModalPresenter.viewController = viewController
+           
+            currentViewController.present(viewController, animated: true) { [unowned self] in
+                self.currentViewController = SceneCoordinator.actualViewController(for: viewController)
+                self.semiModalPresenter.dissmissDelegate = self
+                subject.onCompleted()
+            }
+            
         default:
             break
         }
@@ -174,7 +184,7 @@ class SceneCoordinator: NSObject, SceneCoordinatorType {
 
         case .imagePick:
             
-            if viewController is PHPickerViewController {
+            if viewController is PHPickerViewController && !(currentViewController is PHPickerViewController) {
 
                 viewController.modalPresentationStyle = .automatic
                 viewController.modalTransitionStyle = .coverVertical

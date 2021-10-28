@@ -486,10 +486,11 @@ extension CreateRecipeViewController: UITableViewDelegate, UITableViewDataSource
 //
 //                }).disposed(by: cell.disposeBag)
                 
-                cell.tapped
-                    .flatMap { [unowned self] in self.viewModel.instructionsToImagePicker(index: indexPath.row) }
-                    .bind(to: cell.imgSubject)
-                    .disposed(by: cell.disposeBag)
+                        cell.tapped
+                        .flatMapLatest { [unowned self] in self.viewModel.instructionsToImagePicker(index: indexPath.row) }
+                        .debug()
+                        .bind(to: cell.imgSubject)
+                        .disposed(by: cell.disposeBag)
                 
                 return cell
             }

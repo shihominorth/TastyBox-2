@@ -277,6 +277,14 @@ extension Scene {
             vc.bindViewModel(to: viewModel)
             
             return vc
+            
+        case .publishRecipe(let viewModel):
+            
+            var vc = storyboard.instantiateViewController(withIdentifier: "PublishRecipeVC") as! PublishRecipeOptionsViewController
+
+            vc.bindViewModel(to: viewModel)
+            
+            return vc
         }
     }
 }

@@ -24,6 +24,7 @@ class CheckCreatedRecipeViewController: UIViewController, BindableType {
     var playerItem: AVPlayerItem!
     var player: AVPlayer!
 //    var layerPlayer: AVPlayerLayer!
+    let publishBtn = UIBarButtonItem()
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -46,6 +47,10 @@ class CheckCreatedRecipeViewController: UIViewController, BindableType {
         }
         
         
+        publishBtn.title = "Publish"
+        
+        self.navigationItem.rightBarButtonItem = publishBtn
+        
     }
     
     
@@ -56,6 +61,7 @@ class CheckCreatedRecipeViewController: UIViewController, BindableType {
         viewModel.completeSections()
             .bind(to: tableView.rx.items(dataSource: dataSource))
             .disposed(by: viewModel.disposeBag)
+        
         
         tableView.rx.setDelegate(self).disposed(by: viewModel.disposeBag)
         
@@ -103,6 +109,16 @@ class CheckCreatedRecipeViewController: UIViewController, BindableType {
             })
             .disposed(by: viewModel.disposeBag)
         
+        
+        publishBtn.rx.tap
+            .asDriver(onErrorJustReturn: ())
+            .asObservable()
+            .subscribe(onNext: { _ in
+
+                self.viewModel.uploadRecipe()
+
+            })
+            .disposed(by: viewModel.disposeBag)
     }
     
     

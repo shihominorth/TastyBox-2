@@ -18,7 +18,13 @@ protocol CreateRecipeDMProtocol: AnyObject {
     static func createGenres(genres: [Genre], user: Firebase.User) -> Observable<([Genre], Bool)>
     static func getUserImage(user: Firebase.User) -> Observable<Data>
     static func getUser(user: Firebase.User) -> Observable<User>
-    
+    static func createUploadingRecipeData(isVIP: Bool, sections: [RecipeItemSectionModel], user: Firebase.User) -> Observable<[String: Any]>
+    static func createInstructionsData(section: RecipeItemSectionModel, user: Firebase.User, recipeID: String) -> Observable<[[String: Any]]>
+    static func createIngredientsData(section: RecipeItemSectionModel, user: Firebase.User, recipeID: String) -> Observable<[[String: Any]]> 
+    static func createGenresData(sections: [RecipeItemSectionModel]) -> Observable<[[String: Any]]>
+    static func updateRecipe(recipeData: [String: Any], ingredientsData: [[String: Any]],  instructionsData: [[String: Any]], user: Firebase.User) -> Observable<[String: Any]>
+    static func updateUserInterestedGenres(genresData: [[String: Any]], user: Firebase.User) -> Observable<Void> 
+
 }
 
 class CreateRecipeDM: CreateRecipeDMProtocol {
@@ -234,9 +240,9 @@ class CreateRecipeDM: CreateRecipeDMProtocol {
                 else {
                     
                     if let data = data {
- 
+                        
                         observer.onNext(data)
-                                                
+                        
                     }
                 }
                 
@@ -286,6 +292,355 @@ class CreateRecipeDM: CreateRecipeDMProtocol {
             
             return Disposables.create()
         }
+    }
+    
+    
+    static func createUploadingRecipeData(isVIP: Bool, sections: [RecipeItemSectionModel], user: Firebase.User) -> Observable<[String: Any]> {
+        
+        return .create {  observer in
+            
+            var data:[String: Any] = [:]
+            var tempItems:[RecipeDetailSectionItem] = []
+            var genresDic:[String: Bool] = [:]
+            var ingredientsDic:[String: Bool] = [:]
+            
+            let uuid = UUID()
+            let uniqueIdString = uuid.uuidString.replacingOccurrences(of: "-", with: "")
+            
+            
+            data["id"] = uniqueIdString
+            data["publisherID"] = user.uid
+            data["isVIP"] = isVIP
+            
+            
+            let newSections: [RecipeItemSectionModel] = sections.compactMap {
+                
+                switch $0 {
+                case .title, .timeAndServing, .instructions:
+                    return $0
+                    
+                case let .genres(genres):
+                    
+                    tempItems.append(genres)
+                    
+                case let .ingredients(ingredients):
+                    
+                    tempItems.append(contentsOf: ingredients)
+                    
+                    
+                default:
+                    break
+                }
+                
+                return nil
+            }
+            
+            
+            newSections.forEach {
+                
+                switch $0 {
+                    
+                case .title(let title):
+                
+                    data["title"] = title
+                    
+                    
+                case .timeAndServing(let time, let serving):
+                    
+                    data["time"] = time
+                    data["serving"] = serving
+                    
+                default:
+                    break
+                }
+                
+            }
+            
+            tempItems.forEach {
+                
+                switch $0 {
+                case let .genres(genres):
+                    
+                    genres.forEach {
+                        genresDic[$0.title.capitalized] = true
+                    }
+                    
+//                    data["genres"] = genresDic
+                    
+                case let .ingredients(ingredient):
+                    
+                    
+                    ingredientsDic[ingredient.name] = true
+                    genresDic[ingredient.name] = true
+                    
+                default:
+                    break
+                }
+            }
+            
+            data["genres"] = genresDic
+            data["ingredients"] = ingredientsDic
+            
+            observer.onNext(data)
+            
+            return  Disposables.create()
+            
+        }
+    }
+    
+    static func createGenresData(sections: [RecipeItemSectionModel]) -> Observable<[[String: Any]]>  {
+        
+        return .create { observer in
+            
+            var items: [RecipeDetailSectionItem] = []
+            var result: [[String: Any]] = []
+            
+            sections.forEach { section in
+                
+                switch section {
+                case let .genres(genres):
+                    
+                    items.append(genres)
+                    
+                case let .ingredients(ingredients):
+                    
+                    items.append(contentsOf: ingredients)
+                    
+                default:
+                    break
+                }
+                
+            }
+            
+            
+            items.forEach { item in
+                
+                switch item {
+                case let .genres(genres):
+                    
+                    genres.forEach { genre in
+                        
+                        var data:[String: Any] = [:]
+                        
+                        data["id"] = genre.id
+                        data["name"] = genre.title
+                        
+                        
+                        result.append(data)
+                    }
+                    
+                case let .ingredients(ingredient):
+                    
+                    var data:[String: Any] = [:]
+                    
+                    let uuid = UUID()
+                    let uniqueIdString = uuid.uuidString.replacingOccurrences(of: "-", with: "")
+                    
+                    data["id"] = uniqueIdString
+                    data["name"] = ingredient.name
+                    
+                    result.append(data)
+                    
+                    
+                default:
+                    break
+                }
+                
+                
+            }
+            
+            observer.onNext(result)
+            
+            return  Disposables.create()
+        }
+    }
+    
+    static func createInstructionsData(section: RecipeItemSectionModel, user: Firebase.User, recipeID: String) -> Observable<[[String: Any]]>  {
+        
+        return .create { observer in
+            
+            var tempItems:[RecipeDetailSectionItem] = []
+            var result: [[String: Any]] = []
+            
+            switch section {
+            case let .instructions(instructions):
+                
+                tempItems.append(contentsOf: instructions)
+                
+                
+            default:
+                break
+            }
+            
+            tempItems.forEach { item in
+                
+                var data:[String: Any] = [:]
+                
+                switch item {
+                case let .instructions(instruction):
+                    
+                    let uuid = UUID()
+                    let uniqueIdString = uuid.uuidString.replacingOccurrences(of: "-", with: "")
+                    
+                    data["id"] = uniqueIdString
+                    data["index"] = instruction.index
+                    data["text"] = instruction.text
+                    data["imageURL"] = "users/\(user.uid)/recipes/\(recipeID)/\(uniqueIdString)/instructionImage.jpg"
+                    
+                    result.append(data)
+                    
+                default:
+                    break
+                }
+            }
+            
+            observer.onNext(result)
+            
+            return  Disposables.create()
+        }
+    }
+    
+   
+    static func createIngredientsData(section: RecipeItemSectionModel, user: Firebase.User, recipeID: String) -> Observable<[[String: Any]]> {
+        
+        return .create { observer in
+            
+            var tempItems:[RecipeDetailSectionItem] = []
+            var result: [[String: Any]] = []
+            
+            switch section {
+            case let .ingredients(ingredients):
+                
+                tempItems.append(contentsOf: ingredients)
+                
+                
+            default:
+                break
+            }
+            
+            tempItems.enumerated().forEach { index, item in
+                
+                var data:[String: Any] = [:]
+                
+                switch item {
+                case let .ingredients(ingredient):
+                    
+                    data["id"] = ingredient.id
+                    data["name"] = ingredient.name
+                    data["amount"] = ingredient.amount
+                    data["index"] = index
+                    
+                    result.append(data)
+                    
+                default:
+                    break
+                }
+            }
+            
+            observer.onNext(result)
+            
+            return Disposables.create()
+        }
+    }
+    
+    static func updateRecipe(recipeData: [String: Any], ingredientsData: [[String: Any]],  instructionsData: [[String: Any]], user: Firebase.User) -> Observable<[String: Any]>  {
+        
+        return .create { observer in
+            
+            guard let recipeId = recipeData["id"] as? String else { return Disposables.create() }
+            
+            
+            db.collection("recipes").document(recipeId).setData(recipeData, merge: true) { err in
+                
+                if let err = err {
+                    
+                    observer.onError(err)
+                }
+                else {
+                    
+                    ingredientsData.forEach {
+                        
+                        guard let ingredientID = $0["id"] as? String else { return }
+                        
+                        db.collection("recipes").document(recipeId).collection("ingredients").document(ingredientID).setData($0, merge: true) { err in
+                            
+                            if let err = err {
+                                
+                                observer.onError(err)
+                            }
+                            else {
+                                
+                                instructionsData.forEach {
+                                    
+                                    guard let instructionID = $0["id"] as? String else { return }
+                                    
+                                    db.collection("recipes").document(recipeId).collection("instructions").document(instructionID).setData($0, merge: true) { err in
+                                        
+                                        if let err = err {
+                                            
+                                            observer.onError(err)
+                                        }
+                                        else {
+                                            
+                                            observer.onNext(recipeData)
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+    
+                }
+            }
+            
+            return  Disposables.create()
+            
+        }
+    }
+    
+    static func updateUserInterestedGenres(genresData: [[String: Any]], user: Firebase.User) -> Observable<Void> {
+        
+        return .create { observer in
+            
+            var ids:[String: Bool] = [:]
+            var idsData: [String: Any] = [:]
+            
+            genresData.forEach { data in
+                
+                guard let genreID = data["id"] as? String else { return }
+                
+                db.collection("genres").document(genreID).setData(data, merge: true) { err in
+                    
+                    if let err = err {
+                        
+                        observer.onError(err)
+                    }
+                    
+                }
+                
+                ids[genreID] = true
+            }
+            
+            idsData["genres"] = ids
+                
+            
+            db.collection("users").document(user.uid).updateData(idsData) { err in
+                
+                if let err = err {
+                    
+                    observer.onError(err)
+                }
+                else {
+                    
+                    observer.onNext(())
+                    
+                }
+            }
+            
+            
+            return  Disposables.create()
+        }
+        
     }
     //
     //    func labelingImage(data: Data) {
