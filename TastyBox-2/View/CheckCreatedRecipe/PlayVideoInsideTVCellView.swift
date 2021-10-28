@@ -32,6 +32,8 @@ class PlayVideoInsideTVCellView: UIView {
             playerLayer.player = newValue
         }
     }
+    
+   
 //
 //    var completion: (CMTime) -> Void {
 //

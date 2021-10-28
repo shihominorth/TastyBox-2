@@ -18,10 +18,12 @@ class CheckRecipeVM {
     
     let apiType: CreateRecipeDMProtocol.Type
     
+    var mainPhoto: Data
     var url: URL? = nil
     var sections: [RecipeItemSectionModel] = []
     let evaluates: [Evaluate]
     let isVIP: Bool
+    let instructions: [Instruction]
     var isDisplayed = false
     var isEnded = false
     
@@ -40,6 +42,8 @@ class CheckRecipeVM {
         
         self.isVIP = isVIP
         self.evaluates =  [Evaluate(title: "0", imgData: UIImage(systemName: "suit.heart.fill")!.convertToData()!)]
+        self.mainPhoto = mainPhoto
+        self.instructions = instructions
         
         let mainImageSection: RecipeItemSectionModel = .mainImageData(imgData: mainPhoto, videoURL: video)
         let titleSection: RecipeItemSectionModel = .title(title: title)
@@ -158,7 +162,7 @@ class CheckRecipeVM {
         }
         .subscribe(onNext: { [unowned self] recipeData, ingredientsData, instructionsData, genresData in
             
-            let vm = PublishRecipeVM(sceneCoodinator: self.sceneCoodinator, user: self.user, recipeData: recipeData, ingredientsData: ingredientsData, instructionsData: instructionsData, genresData: genresData, isVIP: self.isVIP)
+            let vm = PublishRecipeVM(sceneCoodinator: self.sceneCoodinator, user: self.user, recipeData: recipeData, ingredientsData: ingredientsData, instructionsData: instructionsData, genresData: genresData, isVIP: self.isVIP,  video: self.url, mainImage: self.mainPhoto, instructions: instructions)
             
             self.sceneCoodinator.modalTransition(to: .createReceipeScene(scene: .publishRecipe(vm)), type: .modalHalf)
         

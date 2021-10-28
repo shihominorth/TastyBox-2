@@ -9,6 +9,7 @@ import Foundation
 import AVFoundation
 import Firebase
 import RxSwift
+import UIKit
 
 protocol CreateRecipeDMProtocol: AnyObject {
     
@@ -20,10 +21,12 @@ protocol CreateRecipeDMProtocol: AnyObject {
     static func getUser(user: Firebase.User) -> Observable<User>
     static func createUploadingRecipeData(isVIP: Bool, sections: [RecipeItemSectionModel], user: Firebase.User) -> Observable<[String: Any]>
     static func createInstructionsData(section: RecipeItemSectionModel, user: Firebase.User, recipeID: String) -> Observable<[[String: Any]]>
-    static func createIngredientsData(section: RecipeItemSectionModel, user: Firebase.User, recipeID: String) -> Observable<[[String: Any]]> 
+    static func createIngredientsData(section: RecipeItemSectionModel, user: Firebase.User, recipeID: String) -> Observable<[[String: Any]]>
     static func createGenresData(sections: [RecipeItemSectionModel]) -> Observable<[[String: Any]]>
     static func updateRecipe(recipeData: [String: Any], ingredientsData: [[String: Any]],  instructionsData: [[String: Any]], user: Firebase.User) -> Observable<[String: Any]>
-    static func updateUserInterestedGenres(genresData: [[String: Any]], user: Firebase.User) -> Observable<Void> 
+    static func updateUserInterestedGenres(genresData: [[String: Any]], user: Firebase.User) -> Observable<Void>
+    static func compressData(imgData: [Data]) -> Observable<[Data]>
+    static func uploadImages(mainPhoto: Data, videoURL: URL?, user: Firebase.User, recipeID: String) -> Observable<Void>
 
 }
 
@@ -341,7 +344,7 @@ class CreateRecipeDM: CreateRecipeDMProtocol {
                 switch $0 {
                     
                 case .title(let title):
-                
+                    
                     data["title"] = title
                     
                     
@@ -365,7 +368,7 @@ class CreateRecipeDM: CreateRecipeDMProtocol {
                         genresDic[$0.title.capitalized] = true
                     }
                     
-//                    data["genres"] = genresDic
+                    //                    data["genres"] = genresDic
                     
                 case let .ingredients(ingredient):
                     
@@ -500,7 +503,7 @@ class CreateRecipeDM: CreateRecipeDMProtocol {
         }
     }
     
-   
+    
     static func createIngredientsData(section: RecipeItemSectionModel, user: Firebase.User, recipeID: String) -> Observable<[[String: Any]]> {
         
         return .create { observer in
@@ -589,7 +592,7 @@ class CreateRecipeDM: CreateRecipeDMProtocol {
                             }
                         }
                     }
-    
+                    
                 }
             }
             
@@ -622,7 +625,7 @@ class CreateRecipeDM: CreateRecipeDMProtocol {
             }
             
             idsData["genres"] = ids
-                
+            
             
             db.collection("users").document(user.uid).updateData(idsData) { err in
                 
@@ -641,6 +644,90 @@ class CreateRecipeDM: CreateRecipeDMProtocol {
             return  Disposables.create()
         }
         
+    }
+    
+   static func compressData(imgData: [Data]) -> Observable<[Data]> {
+        
+        return .create { observer in
+            
+            var result:[Data] = []
+            
+            imgData.forEach { data in
+                
+                if let img = UIImage(data: data), let compressedData = img.jpegData(compressionQuality: 0.7) {
+
+                    result.append(compressedData)
+                }
+            }
+            
+            observer.onNext(result)
+            
+            return Disposables.create ()
+        }
+    }
+    
+    
+  static func uploadImages(mainPhoto: Data, videoURL: URL?, user: Firebase.User, recipeID: String) -> Observable<Void> {
+        
+        return .create { observer in
+            
+//            if let imgData = mainPhoto {
+//            if let imgData = mainPhoto.jpegData(compressionQuality: 0.75)  {
+                let metaData = StorageMetadata()
+                metaData.contentType = "image/jpg"
+                
+                self.storage.child("users/\(user.uid)/\(recipeID)/mainPhoto.jpg").putData(mainPhoto, metadata: metaData) { metadata, err in
+                    
+                    if let err = err {
+                        
+                        observer.onError(err)
+                        
+                    } else {
+                        
+                        if let videoURL = videoURL {
+                            let metadata = StorageMetadata()
+                            //specify MIME type
+                            metadata.contentType = "video/quicktime"
+
+                            //convert video url to data
+                            if let videoData = NSData(contentsOf: videoURL) as Data? {
+                                //use 'putData' instead
+                                let uploadTask = self.storage.child("users/\(user.uid)/\(recipeID)/movie.mov").putData(videoData, metadata: metadata)
+                                
+                                // Listen for state changes, errors, and completion of the upload.
+                                uploadTask.observe(.resume) { snapshot in
+                                  // Upload resumed, also fires when the upload starts
+                                    print("resume")
+                                }
+
+                                uploadTask.observe(.pause) { snapshot in
+                                  // Upload paused
+                                    print("pause")
+                                }
+
+                                uploadTask.observe(.progress) { snapshot in
+                                  // Upload reported progress
+                                  let percentComplete = 100.0 * Double(snapshot.progress!.completedUnitCount)
+                                    / Double(snapshot.progress!.totalUnitCount)
+                                    
+                                    print(percentComplete)
+                                }
+
+                                uploadTask.observe(.success) { snapshot in
+                                  // Upload completed successfully
+                                    observer.onNext(())
+                                }
+                            }
+                            
+                        } else {
+                            observer.onNext(())
+                        }
+
+                    }
+                }
+//            }
+            return Disposables.create()
+        }
     }
     //
     //    func labelingImage(data: Data) {

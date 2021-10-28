@@ -7,6 +7,7 @@
 
 import UIKit
 import AVFoundation
+import RxSwift
 
 class CheckMainImageTVCell: UITableViewCell {
 
@@ -33,6 +34,8 @@ class CheckMainImageTVCell: UITableViewCell {
     var player: AVQueuePlayer!
     var layerPlayer: AVPlayerLayer!
     
+    var disposeBag = DisposeBag()
+
     override func awakeFromNib() {
         super.awakeFromNib()
         // Initialization code
@@ -41,20 +44,12 @@ class CheckMainImageTVCell: UITableViewCell {
         self.playVideoView.playerLayer.frame = self.playVideoView.frame
         self.playVideoView.playerLayer.videoGravity = .resizeAspect
         
+        self.slider.value = 0.0
+        
+        disposeBag = DisposeBag()
+
 //        self.playVideoView.playerLayer.player?.play()
         
-        let interval = CMTime(value: 1, timescale: 2)
-        
-        self.playVideoView.playerLayer.player?.addPeriodicTimeObserver(forInterval: interval, queue: DispatchQueue.main) { [unowned self] progressTime in
-            
-            if let duration = self.player.currentItem?.duration {
-                
-                let seconds = CMTimeGetSeconds(progressTime)
-                let durationSeconds = CMTimeGetSeconds(duration)
-                self.slider.value = Float(seconds / durationSeconds)
-                
-            }
-        }
     }
 
     override func setSelected(_ selected: Bool, animated: Bool) {
@@ -86,6 +81,43 @@ class CheckMainImageTVCell: UITableViewCell {
         guard let imgView = self.playVideoView.subviews.first as? UIImageView else { return }
         imgView.image = temp
       
+    }
+    
+    func setSlider() {
+      
+        let interval = CMTime(value: 1, timescale: 2)
+        
+        self.playVideoView.playerLayer.player?.addPeriodicTimeObserver(forInterval: interval, queue: DispatchQueue.main) { [unowned self] progressTime in
+            
+            if let duration = self.playVideoView.playerLayer.player?.currentItem?.duration {
+                
+                let seconds = CMTimeGetSeconds(progressTime)
+                let durationSeconds = CMTimeGetSeconds(duration)
+                self.slider.value = Float(seconds / durationSeconds)
+                
+            }
+        }
+        
+        self.slider.rx.controlEvent(.valueChanged)
+            .catch { err in
+                return .empty()
+            }
+            .subscribe(onNext: { [unowned self] in
+                
+                if let duration = self.playVideoView.playerLayer.player?.currentItem?.duration {
+                    
+                    let totalSeconds = CMTimeGetSeconds(duration)
+                    let value = Float64(self.slider.value) * totalSeconds
+                    let seekTime = CMTime(value: Int64(value), timescale: 1)
+                    
+                    
+                    self.playVideoView.playerLayer.player?.seek(to: seekTime, completionHandler: { isCompleted in
+                        
+                    })
+                }
+                
+            })
+            .disposed(by: disposeBag)
     }
 
 }

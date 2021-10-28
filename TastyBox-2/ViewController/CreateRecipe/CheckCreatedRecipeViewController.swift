@@ -77,7 +77,7 @@ class CheckCreatedRecipeViewController: UIViewController, BindableType {
                         
                         if let cell = tableView.visibleCells[0] as? CheckMainImageTVCell {
                             
-                           if viewModel.url != nil {
+                           if viewModel.url != nil  && !viewModel.isEnded {
                                 
                                 cell.playVideoView.playerLayer.player = self.player
                                 
@@ -137,12 +137,13 @@ class CheckCreatedRecipeViewController: UIViewController, BindableType {
                     
                     cell.imgData = data
                     cell.videoURL = url
-                    
-                    
+
                     if viewModel.isDisplayed == false && viewModel.url != nil {
                         
                         cell.playVideoView.playerLayer.player = self.player
                         cell.playVideoView.imgView.alpha = 1.0
+                        
+                        cell.setSlider()
                         
                         UIView.animate(withDuration: 0.2, delay: 2.0, options: [], animations: {
                             

@@ -544,11 +544,11 @@
                                 <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                                 <color key="backgroundColor" red="0.99607843139999996" green="0.98039215690000003" blue="0.79215686269999996" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
                                 <prototypes>
-                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="checkMainTVCell" rowHeight="444" id="Wnq-y6-PMb" customClass="CheckMainImageTVCell" customModule="TastyBox_2" customModuleProvider="target">
-                                        <rect key="frame" x="0.0" y="44.5" width="414" height="444"/>
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="checkMainTVCell" rowHeight="461" id="Wnq-y6-PMb" customClass="CheckMainImageTVCell" customModule="TastyBox_2" customModuleProvider="target">
+                                        <rect key="frame" x="0.0" y="44.5" width="414" height="461"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="Wnq-y6-PMb" id="tk2-WJ-p38">
-                                            <rect key="frame" x="0.0" y="0.0" width="414" height="444"/>
+                                            <rect key="frame" x="0.0" y="0.0" width="414" height="461"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="4y1-5i-fwU" customClass="PlayVideoInsideTVCellView" customModule="TastyBox_2" customModuleProvider="target">
@@ -556,36 +556,38 @@
                                                     <subviews>
                                                         <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="yxp-Gt-59D">
                                                             <rect key="frame" x="0.0" y="0.0" width="414" height="414"/>
+                                                            <constraints>
+                                                                <constraint firstAttribute="width" constant="414" id="Lah-rx-kCp"/>
+                                                                <constraint firstAttribute="height" constant="414" id="m1q-jU-872"/>
+                                                            </constraints>
                                                         </imageView>
                                                     </subviews>
                                                     <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                                                     <constraints>
-                                                        <constraint firstItem="yxp-Gt-59D" firstAttribute="leading" secondItem="4y1-5i-fwU" secondAttribute="leading" id="F93-7Y-iIR"/>
+                                                        <constraint firstItem="yxp-Gt-59D" firstAttribute="top" secondItem="4y1-5i-fwU" secondAttribute="top" id="2Ns-4c-0so"/>
+                                                        <constraint firstAttribute="trailing" secondItem="yxp-Gt-59D" secondAttribute="trailing" id="3Gu-pw-byV"/>
                                                         <constraint firstAttribute="height" relation="greaterThanOrEqual" constant="414" id="JRl-4w-bq1"/>
-                                                        <constraint firstItem="yxp-Gt-59D" firstAttribute="top" secondItem="4y1-5i-fwU" secondAttribute="top" id="L5P-VJ-SJ7"/>
-                                                        <constraint firstItem="yxp-Gt-59D" firstAttribute="centerY" secondItem="4y1-5i-fwU" secondAttribute="centerY" id="Ugt-rV-yFc"/>
-                                                        <constraint firstItem="yxp-Gt-59D" firstAttribute="centerX" secondItem="4y1-5i-fwU" secondAttribute="centerX" id="d11-lL-jt4"/>
-                                                        <constraint firstAttribute="bottom" secondItem="yxp-Gt-59D" secondAttribute="bottom" id="rMg-BC-nxl"/>
-                                                        <constraint firstAttribute="trailing" secondItem="yxp-Gt-59D" secondAttribute="trailing" id="z9K-BO-a5X"/>
+                                                        <constraint firstItem="yxp-Gt-59D" firstAttribute="centerX" secondItem="4y1-5i-fwU" secondAttribute="centerX" id="oSf-cw-k1n"/>
                                                         <constraint firstAttribute="width" constant="414" id="zEQ-Ph-NLG"/>
+                                                        <constraint firstItem="yxp-Gt-59D" firstAttribute="leading" secondItem="4y1-5i-fwU" secondAttribute="leading" id="zEi-3A-zn5"/>
                                                     </constraints>
                                                     <connections>
                                                         <outlet property="imgView" destination="yxp-Gt-59D" id="jXI-9s-bAu"/>
                                                     </connections>
                                                 </view>
                                                 <slider opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" value="0.5" minValue="0.0" maxValue="1" translatesAutoresizingMaskIntoConstraints="NO" id="1hz-aw-swD">
-                                                    <rect key="frame" x="18" y="414" width="378" height="28"/>
+                                                    <rect key="frame" x="18" y="420" width="378" height="31"/>
                                                     <color key="minimumTrackTintColor" systemColor="systemOrangeColor"/>
                                                 </slider>
                                             </subviews>
                                             <constraints>
-                                                <constraint firstItem="1hz-aw-swD" firstAttribute="top" secondItem="4y1-5i-fwU" secondAttribute="bottom" id="17G-0n-TVj"/>
                                                 <constraint firstAttribute="trailing" secondItem="4y1-5i-fwU" secondAttribute="trailing" id="Fzi-jI-wJR"/>
+                                                <constraint firstItem="1hz-aw-swD" firstAttribute="top" secondItem="4y1-5i-fwU" secondAttribute="bottom" constant="6" id="NYH-qo-0p6"/>
                                                 <constraint firstItem="4y1-5i-fwU" firstAttribute="top" secondItem="tk2-WJ-p38" secondAttribute="top" id="aSx-mK-4fJ"/>
-                                                <constraint firstItem="1hz-aw-swD" firstAttribute="trailing" secondItem="tk2-WJ-p38" secondAttribute="trailingMargin" id="i8M-hB-azw"/>
-                                                <constraint firstAttribute="bottomMargin" secondItem="1hz-aw-swD" secondAttribute="bottom" constant="-8" id="iRc-ck-844"/>
+                                                <constraint firstItem="1hz-aw-swD" firstAttribute="bottom" secondItem="tk2-WJ-p38" secondAttribute="bottomMargin" id="kVT-hY-zNi"/>
                                                 <constraint firstItem="4y1-5i-fwU" firstAttribute="centerX" secondItem="tk2-WJ-p38" secondAttribute="centerX" id="rcE-dr-9II"/>
-                                                <constraint firstItem="1hz-aw-swD" firstAttribute="leading" secondItem="tk2-WJ-p38" secondAttribute="leadingMargin" id="vEX-hB-p6e"/>
+                                                <constraint firstItem="1hz-aw-swD" firstAttribute="trailing" secondItem="tk2-WJ-p38" secondAttribute="trailingMargin" id="vsr-6i-AGy"/>
+                                                <constraint firstItem="1hz-aw-swD" firstAttribute="leading" secondItem="tk2-WJ-p38" secondAttribute="leadingMargin" id="wTu-vF-tzH"/>
                                                 <constraint firstAttribute="trailing" secondItem="4y1-5i-fwU" secondAttribute="trailing" id="xDP-Jb-zHz"/>
                                             </constraints>
                                         </tableViewCellContentView>
@@ -595,7 +597,7 @@
                                         </connections>
                                     </tableViewCell>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="checkTitleTVCell" id="3G0-5x-JV9" customClass="CheckTitleTVCell" customModule="TastyBox_2" customModuleProvider="target">
-                                        <rect key="frame" x="0.0" y="488.5" width="414" height="43.5"/>
+                                        <rect key="frame" x="0.0" y="505.5" width="414" height="43.5"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="3G0-5x-JV9" id="98f-8e-uF9">
                                             <rect key="frame" x="0.0" y="0.0" width="414" height="43.5"/>
@@ -620,7 +622,7 @@
                                         </connections>
                                     </tableViewCell>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="checkEvaluateRecipeTVCell" rowHeight="80" id="dd1-wl-nwg" customClass="CheckEvaluateRecipeTVCell" customModule="TastyBox_2" customModuleProvider="target">
-                                        <rect key="frame" x="0.0" y="532" width="414" height="80"/>
+                                        <rect key="frame" x="0.0" y="549" width="414" height="80"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="dd1-wl-nwg" id="uLi-F3-yCR">
                                             <rect key="frame" x="0.0" y="0.0" width="414" height="80"/>
@@ -693,7 +695,7 @@
                                         </connections>
                                     </tableViewCell>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="checkGenresTVCell" rowHeight="100" id="Ucv-K8-eDU" customClass="CheckGenresTVCell" customModule="TastyBox_2" customModuleProvider="target">
-                                        <rect key="frame" x="0.0" y="612" width="414" height="100"/>
+                                        <rect key="frame" x="0.0" y="629" width="414" height="100"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="Ucv-K8-eDU" id="EhU-3C-JwE">
                                             <rect key="frame" x="0.0" y="0.0" width="414" height="100"/>
@@ -764,7 +766,7 @@
                                         </connections>
                                     </tableViewCell>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="checkUserTVCell" rowHeight="60" id="KK0-OR-djH" customClass="CheckUserTVCell" customModule="TastyBox_2" customModuleProvider="target">
-                                        <rect key="frame" x="0.0" y="712" width="414" height="60"/>
+                                        <rect key="frame" x="0.0" y="729" width="414" height="60"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="KK0-OR-djH" id="xee-c9-5Vn">
                                             <rect key="frame" x="0.0" y="0.0" width="414" height="60"/>
@@ -797,7 +799,7 @@
                                         </connections>
                                     </tableViewCell>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="checkTimeNServingTVCell" id="Z8D-Pu-zRO" customClass="CheckTimeNServingTVCell" customModule="TastyBox_2" customModuleProvider="target">
-                                        <rect key="frame" x="0.0" y="772" width="414" height="43.5"/>
+                                        <rect key="frame" x="0.0" y="789" width="414" height="43.5"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="Z8D-Pu-zRO" id="rnK-q5-Ny0">
                                             <rect key="frame" x="0.0" y="0.0" width="414" height="43.5"/>
@@ -829,7 +831,7 @@
                                         </connections>
                                     </tableViewCell>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="checkIngredientTVCell" id="wXe-SB-YDi" customClass="CheckIngredientTVCell" customModule="TastyBox_2" customModuleProvider="target">
-                                        <rect key="frame" x="0.0" y="815.5" width="414" height="43.5"/>
+                                        <rect key="frame" x="0.0" y="832.5" width="414" height="43.5"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="wXe-SB-YDi" id="GX6-Dd-L8n">
                                             <rect key="frame" x="0.0" y="0.0" width="414" height="43.5"/>
@@ -861,29 +863,29 @@
                                         </connections>
                                     </tableViewCell>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="checkInstructionTVCell" rowHeight="120" id="JGX-9f-YLj" customClass="CheckInstructionTVCell" customModule="TastyBox_2" customModuleProvider="target">
-                                        <rect key="frame" x="0.0" y="859" width="414" height="120"/>
+                                        <rect key="frame" x="0.0" y="876" width="414" height="120"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="JGX-9f-YLj" id="Yam-Yi-l92">
                                             <rect key="frame" x="0.0" y="0.0" width="414" height="120"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
-                                                <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" translatesAutoresizingMaskIntoConstraints="NO" id="eOe-3b-MIl">
+                                                <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="eOe-3b-MIl">
                                                     <rect key="frame" x="294" y="10" width="100" height="100"/>
                                                     <constraints>
                                                         <constraint firstAttribute="height" constant="100" id="4vF-9V-mC5"/>
                                                         <constraint firstAttribute="width" constant="100" id="lPf-YL-QLQ"/>
                                                     </constraints>
                                                 </imageView>
-                                                <stackView opaque="NO" contentMode="scaleToFill" ambiguous="YES" axis="vertical" spacing="8" translatesAutoresizingMaskIntoConstraints="NO" id="Y90-cD-65n">
+                                                <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="8" translatesAutoresizingMaskIntoConstraints="NO" id="Y90-cD-65n">
                                                     <rect key="frame" x="20" y="11" width="266" height="98"/>
                                                     <subviews>
-                                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="QN9-j8-r82">
+                                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="QN9-j8-r82">
                                                             <rect key="frame" x="0.0" y="0.0" width="266" height="17"/>
                                                             <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                                             <nil key="textColor"/>
                                                             <nil key="highlightedColor"/>
                                                         </label>
-                                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" ambiguous="YES" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="83O-fd-vpg">
+                                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="83O-fd-vpg">
                                                             <rect key="frame" x="0.0" y="25" width="266" height="73"/>
                                                             <constraints>
                                                                 <constraint firstAttribute="height" relation="greaterThanOrEqual" constant="70" id="zoJ-uj-EHS"/>
@@ -900,6 +902,7 @@
                                                 <constraint firstItem="Y90-cD-65n" firstAttribute="bottom" secondItem="Yam-Yi-l92" secondAttribute="bottomMargin" id="4tt-te-qWj"/>
                                                 <constraint firstItem="eOe-3b-MIl" firstAttribute="centerY" secondItem="Yam-Yi-l92" secondAttribute="centerY" id="7rT-sE-K5B"/>
                                                 <constraint firstAttribute="trailing" secondItem="eOe-3b-MIl" secondAttribute="trailing" constant="20" symbolic="YES" id="IKy-mk-6Ub"/>
+                                                <constraint firstItem="eOe-3b-MIl" firstAttribute="top" relation="greaterThanOrEqual" secondItem="Yam-Yi-l92" secondAttribute="topMargin" priority="999" constant="2" id="i0g-jj-ZI5"/>
                                                 <constraint firstItem="Y90-cD-65n" firstAttribute="top" secondItem="Yam-Yi-l92" secondAttribute="topMargin" id="otq-yg-qth"/>
                                                 <constraint firstItem="Y90-cD-65n" firstAttribute="leading" secondItem="Yam-Yi-l92" secondAttribute="leadingMargin" id="yn1-2D-01R"/>
                                             </constraints>

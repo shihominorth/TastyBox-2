@@ -19,14 +19,17 @@ class PublishRecipeVM: ViewModelBase {
     let instructionsData: [[String: Any]]
     let ingredientsData: [[String: Any]]
     let genresData: [[String: Any]]
+    let videoURL: URL?
+    let mainImage: Data
+    let instructions: [Instruction]
     
     let apiType: CreateRecipeDMProtocol.Type
     
     var options:[(Data, String)]
     
-    let tappedPublishSubject = PublishSubject<Void>()
+    let tappedPublishSubject = BehaviorSubject<Void>(value: ())
     
-    init(sceneCoodinator: SceneCoordinator, user: Firebase.User, apiType: CreateRecipeDMProtocol.Type = CreateRecipeDM.self, recipeData: [String: Any], ingredientsData: [[String: Any]], instructionsData: [[String: Any]], genresData: [[String: Any]], isVIP: Bool) {
+    init(sceneCoodinator: SceneCoordinator, user: Firebase.User, apiType: CreateRecipeDMProtocol.Type = CreateRecipeDM.self, recipeData: [String: Any], ingredientsData: [[String: Any]], instructionsData: [[String: Any]], genresData: [[String: Any]], isVIP: Bool, video: URL?, mainImage: Data, instructions: [Instruction]) {
         
         self.sceneCoodinator = sceneCoodinator
         self.user = user
@@ -38,6 +41,10 @@ class PublishRecipeVM: ViewModelBase {
         self.instructionsData = instructionsData
         self.genresData = genresData
         
+        self.mainImage = mainImage
+        self.videoURL = video
+        self.instructions = instructions
+
         if let cancelBtnData = UIImage(systemName: "arrowshape.turn.up.backward")?.convertToData(), let publishNormalBtnData = UIImage(systemName: "square.and.arrow.up")?.convertToData() {
             
             let publishTitle = isVIP ? "Publish VIP Only Recipe" : "Publish Your Recipe"
