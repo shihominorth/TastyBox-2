@@ -245,7 +245,26 @@ class CreateRecipeVM: ViewModelBase {
                 
                 let url = isAdded ? url : nil
                 
-                let vm = CheckRecipeVM(sceneCoodinator: self.sceneCoodinator, user: self.user, title: title, mainPhoto: mainImageData, video: url, time: time, serving: serving, isVIP: isVIP, genres: genres, ingredients: self.ingredients, instructions: self.instructions)
+                let filteredIngredients = self.ingredients.filter { !$0.name.isEmpty }.enumerated()
+                    .map { index, value -> Ingredient in
+                        
+                        let newElement = value
+                        newElement.order = index
+                        
+                        return newElement
+                    }
+                
+                let filteredInstructions = self.instructions.filter { !$0.text.isEmpty }.enumerated()
+                    .map { index, value -> Instruction in
+                        
+                        var newElement = value
+                        newElement.index = index
+                        
+                        return newElement
+                    }
+                
+                
+                let vm = CheckRecipeVM(sceneCoodinator: self.sceneCoodinator, user: self.user, title: title, mainPhoto: mainImageData, video: url, time: time, serving: serving, isVIP: isVIP, genres: genres, ingredients: filteredIngredients, instructions: filteredInstructions)
                 
                 return Observable.just(vm)
                 

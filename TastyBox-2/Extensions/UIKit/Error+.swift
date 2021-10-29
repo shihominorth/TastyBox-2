@@ -107,4 +107,37 @@ extension Error {
 
         return result
     }
+    
+    func handleStorageError() -> Notification? {
+       
+        let err = self as NSError
+        var result: Notification?
+        
+        switch (StorageErrorCode(rawValue: err.code)!) {
+        case .objectNotFound:
+          // File doesn't exist
+            result = Notification(reason: "Not found", solution: "File doen't ex", isReportRequired: false)
+          break
+        case .unauthorized:
+          // User doesn't have permission to access file
+            result = Notification(reason: "You don't have permission to update.", solution: "We apologize for the inconvinience. we will fix it", isReportRequired: false)
+            
+          break
+        case .cancelled:
+          // User canceled the upload
+            result = Notification(reason: "Canceled", solution: "You can add your data again if you want. the session was canceled.", isReportRequired: false)
+          break
+
+        /* ... */
+
+        case .unknown:
+          // Unknown error occurred, inspect the server response
+          break
+        default:
+          // A separate error occurred. This is a good place to retry the upload.
+          break
+        }
+        
+        return result
+    }
 }

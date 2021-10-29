@@ -10,6 +10,7 @@ import AVFoundation
 import RxSwift
 import RxCocoa
 import RxDataSources
+import Lottie
 
 class CheckCreatedRecipeViewController: UIViewController, BindableType {
     
@@ -23,7 +24,7 @@ class CheckCreatedRecipeViewController: UIViewController, BindableType {
     
     var playerItem: AVPlayerItem!
     var player: AVPlayer!
-//    var layerPlayer: AVPlayerLayer!
+    
     let publishBtn = UIBarButtonItem()
     
     override func viewDidLoad() {
@@ -32,9 +33,6 @@ class CheckCreatedRecipeViewController: UIViewController, BindableType {
         // Do any additional setup after loading the view.
         
         if let url = viewModel.url {
-            
-            //            let visibleRect = CGRect(origin: tableView.contentOffset, size: tableView.bounds.size)
-            //            let visiblePoint = CGPoint(x: visibleRect.midX, y: visibleRect.midY)
             
             self.playerItem = AVPlayerItem(url: url)
             self.player =  AVPlayer(playerItem: self.playerItem)
@@ -49,7 +47,11 @@ class CheckCreatedRecipeViewController: UIViewController, BindableType {
         
         publishBtn.title = "Publish"
         
+        
         self.navigationItem.rightBarButtonItem = publishBtn
+        
+        let interval = CMTime(value: 1, timescale: 2)
+        
         
     }
     
@@ -77,7 +79,7 @@ class CheckCreatedRecipeViewController: UIViewController, BindableType {
                         
                         if let cell = tableView.visibleCells[0] as? CheckMainImageTVCell {
                             
-                           if viewModel.url != nil  && !viewModel.isEnded {
+                            if viewModel.url != nil  && !viewModel.isEnded {
                                 
                                 cell.playVideoView.playerLayer.player = self.player
                                 
@@ -111,12 +113,13 @@ class CheckCreatedRecipeViewController: UIViewController, BindableType {
         
         
         publishBtn.rx.tap
+            .debug()
             .asDriver(onErrorJustReturn: ())
             .asObservable()
             .subscribe(onNext: { _ in
-
+                
                 self.viewModel.uploadRecipe()
-
+                
             })
             .disposed(by: viewModel.disposeBag)
     }
@@ -137,7 +140,7 @@ class CheckCreatedRecipeViewController: UIViewController, BindableType {
                     
                     cell.imgData = data
                     cell.videoURL = url
-
+                    
                     if viewModel.isDisplayed == false && viewModel.url != nil {
                         
                         cell.playVideoView.playerLayer.player = self.player
@@ -161,6 +164,8 @@ class CheckCreatedRecipeViewController: UIViewController, BindableType {
                         
                     }
                     
+                    cell.selectionStyle = .none
+                    
                     return cell
                 }
                 
@@ -169,6 +174,7 @@ class CheckCreatedRecipeViewController: UIViewController, BindableType {
                 if let cell = tableView.dequeueReusableCell(withIdentifier: "checkTitleTVCell", for: indexPath) as? CheckTitleTVCell {
                     
                     cell.titleLbl.text = title
+                    cell.selectionStyle = .none
                     
                     return cell
                 }
@@ -178,6 +184,7 @@ class CheckCreatedRecipeViewController: UIViewController, BindableType {
                 if let cell = tableView.dequeueReusableCell(withIdentifier: "checkEvaluateRecipeTVCell", for: indexPath) as? CheckEvaluateRecipeTVCell {
                     
                     cell.evaluates = evaluates
+                    cell.selectionStyle = .none
                     
                     return cell
                 }
@@ -187,6 +194,7 @@ class CheckCreatedRecipeViewController: UIViewController, BindableType {
                 if let cell = tableView.dequeueReusableCell(withIdentifier: "checkGenresTVCell", for: indexPath) as? CheckGenresTVCell {
                     
                     cell.genres = genre
+                    cell.selectionStyle = .none
                     
                     return cell
                 }
@@ -196,6 +204,7 @@ class CheckCreatedRecipeViewController: UIViewController, BindableType {
                 if let cell = tableView.dequeueReusableCell(withIdentifier: "checkUserTVCell", for: indexPath) as? CheckUserTVCell {
                     
                     cell.user = user
+                    cell.selectionStyle = .none
                     
                     return cell
                 }
@@ -206,6 +215,7 @@ class CheckCreatedRecipeViewController: UIViewController, BindableType {
                     
                     cell.timeLbl.text = "\(time) mins"
                     cell.serveLbl.text = "\(serving) serving"
+                    cell.selectionStyle = .none
                     
                     return cell
                 }
@@ -216,6 +226,8 @@ class CheckCreatedRecipeViewController: UIViewController, BindableType {
                     
                     cell.ingredient = ingredient
                     cell.configure(ingredient: ingredient)
+                    cell.selectionStyle = .none
+                
                     
                     return cell
                 }
@@ -226,7 +238,8 @@ class CheckCreatedRecipeViewController: UIViewController, BindableType {
                     
                     cell.instruction = instruction
                     cell.configure(instruction: instruction)
-                    
+                    cell.selectionStyle = .none
+
                     return cell
                 }
                 
@@ -243,40 +256,6 @@ class CheckCreatedRecipeViewController: UIViewController, BindableType {
         
     }
     
-    func setUpPlayVideoView() {
-        
-        //        self.playView = PlayVideoView()
-        //        playView.frame = view.bounds
-        
-        
-        
-        //        setUpSlider()
-        //
-        //
-        //        tap = UITapGestureRecognizer()
-        //
-        //        tap.rx.event
-        //            .debounce(.microseconds(1000), scheduler: MainScheduler.instance)
-        //            .asDriver { err in
-        //
-        //                print(err)
-        //
-        //                return Driver.empty()
-        //            }
-        //            .asObservable()
-        //            .withLatestFrom(viewModel.isHiddenPlayingViewRelay)
-        //            .subscribe(onNext: { isHiddden in
-        //                self.viewModel.isHiddenPlayingViewRelay.accept(!isHiddden)
-        //            })
-        //            .disposed(by: viewModel.disposeBag)
-        //
-        //
-        //        self.playView.addGestureRecognizer(tap)
-        //
-        //        view.addSubview(self.playView)
-        
-    }
-    
     
     override func observeValue(forKeyPath keyPath: String?, of object: Any?, change: [NSKeyValueChangeKey : Any]?, context: UnsafeMutableRawPointer?) {
         if keyPath == "currentItem.loadedTimeRanges" {
@@ -289,12 +268,22 @@ class CheckCreatedRecipeViewController: UIViewController, BindableType {
     
     @objc func playerDidFinishPlaying() {
         
-        viewModel.isEnded = true
-        
         if let cell = tableView.cellForRow(at: IndexPath(row: 0, section: 0)) as? CheckMainImageTVCell {
-            
-            cell.playVideoView.imgView.isHidden = false
-            cell.playVideoView.imgView.alpha = 1.0
+
+            UIView.animate(withDuration: 0.2, delay: 2.0, options: [], animations: {
+                
+                cell.playVideoView.imgView.alpha = 1.0
+                
+            }) { [unowned self] isCompleted in
+                
+                if isCompleted {
+                    
+                    viewModel.isEnded = true
+                    cell.playVideoView.imgView.isHidden = false
+                    cell.slider.isHidden = true
+                }
+                
+            }
             
         }
     }
@@ -317,21 +306,6 @@ extension CheckCreatedRecipeViewController: UITableViewDelegate {
             return UITableView.automaticDimension
         }
     }
-    
-    //    func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
-    //
-    //        guard let videoCell = (cell as? CheckMainImageTVCell) else { return }
-    //
-    //        let visibleCells = tableView.visibleCells
-    //        let minIndex = visibleCells.startIndex
-    //
-    //        if tableView.visibleCells.firstIndex(of: cell) == minIndex {
-    //
-    //            videoCell.playVideoView.imgView.isHidden = true
-    //            videoCell.playVideoView.player?.play()
-    //
-    //        }
-    //    }
     
     
     func tableView(_ tableView: UITableView, didEndDisplaying cell: UITableViewCell, forRowAt indexPath: IndexPath) {

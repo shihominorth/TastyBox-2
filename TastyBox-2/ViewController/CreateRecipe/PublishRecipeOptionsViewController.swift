@@ -20,14 +20,28 @@ class PublishRecipeOptionsViewController: UIViewController, BindableType {
        
         collectionView.dataSource = self
         
+        let flowLayout = UICollectionViewFlowLayout()
+        flowLayout.itemSize = CGSize(width: self.collectionView.frame.width - 20.0, height: 50.0)
+        flowLayout.scrollDirection = .vertical
+        flowLayout.sectionInset = UIEdgeInsets(top: 10, left: 10, bottom: 10, right: 10)
+
+        collectionView.collectionViewLayout = flowLayout
+        
     }
     
     func bindViewModel() {
         
         collectionView.rx.itemSelected
-            .filter { $0.row == 0 }
-            .map { _ in }
-            .bind(to: viewModel.tappedPublishSubject )
+            .share(replay: 1, scope: .forever)
+            .subscribe(onNext: { [unowned self] indexPath in
+                
+                if indexPath.row == 0 {
+                    
+                    self.viewModel.tappedPublishSubject.onNext(())
+                    
+                }
+                
+            })
             .disposed(by: viewModel.disposeBag)
         
         viewModel.uploadRecipe()
@@ -46,12 +60,24 @@ extension PublishRecipeOptionsViewController: UICollectionViewDataSource {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "publishOptionsCVCell", for: indexPath) as! PublishRecipeOptionCVCell
        
         cell.imgView.image =  UIImage(data: viewModel.options[indexPath.row].0)
+        cell.imgView.tintColor = #colorLiteral(red: 0.6352941176, green: 0.5176470588, blue: 0.368627451, alpha: 1)
         
         cell.titleLbl.text = viewModel.options[indexPath.row].1
+        cell.titleLbl.textColor = #colorLiteral(red: 0.6352941176, green: 0.5176470588, blue: 0.368627451, alpha: 1)
+        
+        cell.layer.borderWidth = 2
+        cell.layer.borderColor = #colorLiteral(red: 0.6352941176, green: 0.5176470588, blue: 0.368627451, alpha: 1)
+        cell.layer.cornerRadius = 10
     
         return cell
         
     }
     
   
+}
+
+extension PublishRecipeOptionsViewController: SemiModalPresenterDelegate {
+    var semiModalContentHeight: CGFloat {
+        return UIScreen.main.bounds.height * 0.3
+    }
 }

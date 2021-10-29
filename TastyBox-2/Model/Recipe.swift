@@ -44,7 +44,7 @@ struct Comment {
 struct Evaluate {
     
     var title: String
-    var imgData: Data
+    var imgName: String
     
 }
 

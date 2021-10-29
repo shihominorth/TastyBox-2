@@ -24,13 +24,19 @@ protocol CreateRecipeDMProtocol: AnyObject {
     static func createIngredientsData(section: RecipeItemSectionModel, user: Firebase.User, recipeID: String) -> Observable<[[String: Any]]>
     static func createGenresData(sections: [RecipeItemSectionModel]) -> Observable<[[String: Any]]>
     static func updateRecipe(recipeData: [String: Any], ingredientsData: [[String: Any]],  instructionsData: [[String: Any]], user: Firebase.User) -> Observable<[String: Any]>
-    static func updateUserInterestedGenres(genresData: [[String: Any]], user: Firebase.User) -> Observable<Void>
+    static func generateGenresIDs(genresData: [[String: Any]], user: Firebase.User) -> Observable<[String: Bool]>
+//    static func updateUserInterestedGenres(ids: [String: Any], user: Firebase.User, completion: @escaping () -> Void, errBlock: @escaping (Error) -> Void)
+    
+    static func updateUserInterestedGenres(ids: [String: Any], user: Firebase.User) -> Observable<Void> 
     static func compressData(imgData: [Data]) -> Observable<[Data]>
     static func uploadImages(mainPhoto: Data, videoURL: URL?, user: Firebase.User, recipeID: String) -> Observable<Void>
+    static func startUpload(instructions: [Instruction], user: Firebase.User, recipeID: String) -> Observable<Int> 
 
+    
 }
 
 class CreateRecipeDM: CreateRecipeDMProtocol {
+   
     
     static let db = Firestore.firestore()
     static let storage = Storage.storage().reference()
@@ -314,7 +320,7 @@ class CreateRecipeDM: CreateRecipeDMProtocol {
             data["id"] = uniqueIdString
             data["publisherID"] = user.uid
             data["isVIP"] = isVIP
-            
+            data["updateDate"] = Date()
             
             let newSections: [RecipeItemSectionModel] = sections.compactMap {
                 
@@ -414,7 +420,7 @@ class CreateRecipeDM: CreateRecipeDMProtocol {
                 }
                 
             }
-            
+       
             
             items.forEach { item in
                 
@@ -427,7 +433,8 @@ class CreateRecipeDM: CreateRecipeDMProtocol {
                         
                         data["id"] = genre.id
                         data["name"] = genre.title
-                        
+                        data["usedLatestDate"] =  Date()
+                        data["count"] = FieldValue.increment(Int64(1))
                         
                         result.append(data)
                     }
@@ -441,6 +448,8 @@ class CreateRecipeDM: CreateRecipeDMProtocol {
                     
                     data["id"] = uniqueIdString
                     data["name"] = ingredient.name
+                    data["usedLatestDate"] =  Date()
+                    data["count"] = FieldValue.increment(Int64(1))
                     
                     result.append(data)
                     
@@ -488,7 +497,7 @@ class CreateRecipeDM: CreateRecipeDMProtocol {
                     data["id"] = uniqueIdString
                     data["index"] = instruction.index
                     data["text"] = instruction.text
-                    data["imageURL"] = "users/\(user.uid)/recipes/\(recipeID)/\(uniqueIdString)/instructionImage.jpg"
+                    data["imageURL"] = "users/\(user.uid)/recipes/\(recipeID)/\(uniqueIdString)/\(instruction.index).jpg"
                     
                     result.append(data)
                     
@@ -601,52 +610,165 @@ class CreateRecipeDM: CreateRecipeDMProtocol {
         }
     }
     
-    static func updateUserInterestedGenres(genresData: [[String: Any]], user: Firebase.User) -> Observable<Void> {
+    static func generateGenresIDs(genresData: [[String: Any]], user: Firebase.User) -> Observable<[String: Bool]> {
         
         return .create { observer in
             
             var ids:[String: Bool] = [:]
-            var idsData: [String: Any] = [:]
             
-            genresData.forEach { data in
+            genresData.enumerated().forEach { index, data in
                 
-                guard let genreID = data["id"] as? String else { return }
-                
-                db.collection("genres").document(genreID).setData(data, merge: true) { err in
+                checkGenresSaved(data: data, user: user, completion: { id in
                     
-                    if let err = err {
-                        
-                        observer.onError(err)
+                    ids[id] = true
+                    
+                    if ids.count == genresData.count {
+                        observer.onNext(ids)
                     }
                     
-                }
+                }, errBlock: { err in
+                    
+                    print(err)
+                    
+                    if ids.count == genresData.count {
+                        observer.onNext(ids)
+                    }
                 
-                ids[genreID] = true
+                })
+                              
             }
             
-            idsData["genres"] = ids
-            
-            
-            db.collection("users").document(user.uid).updateData(idsData) { err in
-                
-                if let err = err {
-                    
-                    observer.onError(err)
-                }
-                else {
-                    
-                    observer.onNext(())
-                    
-                }
-            }
-            
-            
+
             return  Disposables.create()
         }
         
     }
     
-   static func compressData(imgData: [Data]) -> Observable<[Data]> {
+    static func checkGenresSaved(data:[String: Any], user: Firebase.User, completion: @escaping (String) -> Void, errBlock: @escaping (Error) -> Void) {
+        
+        guard let genreID = data["id"] as? String, let name = data["name"] as? String else { return }
+        
+        db.collection("genres").whereField("name", isEqualTo: name.capitalized).getDocuments() { snapShot, err in
+            
+            if let _ = err {
+
+                db.collection("genres").document(genreID).setData(data, merge: true) { err in
+                    
+                    if let err = err {
+                        
+                        errBlock(err)
+                    
+                    }
+                    else {
+                        
+                        completion(genreID)
+                        
+                    }
+                }
+
+            }
+            else {
+                
+                if let snapShot = snapShot {
+                    
+                    if snapShot.documents.isEmpty {
+                       
+                        db.collection("genres").document(genreID).setData(data, merge: true) { err in
+                            
+                            if let err = err {
+                                
+                               errBlock(err)
+                            
+                            }
+                            
+                            completion(genreID)
+                        }
+                    
+                      
+                    }
+                    else {
+                        
+                        if let item = snapShot.documents.first {
+                            
+                            let id = item.documentID
+                            completion(id)
+                            
+                        }
+                        else {
+                        
+                            completion(genreID)
+                        
+                        }
+                        
+                    }
+                    
+                    
+                }
+                
+                
+            }
+            
+        }
+    }
+    
+    
+//    static func updateUserInterestedGenres(ids: [String: Any], user: Firebase.User, completion: @escaping () -> Void, errBlock: @escaping (Error) -> Void) {
+    
+    static func updateUserInterestedGenres(ids: [String: Any], user: Firebase.User) -> Observable<Void> {
+        
+        return .create { observer in
+            
+            var idsData: [String: Any] = [:]
+            idsData["genres"] = ids
+            
+            db.collection("users").document(user.uid).getDocument() { snapShot, err in
+                
+                if let err = err {
+                    
+                    observer.onError(err)
+                    
+                }
+                else {
+                    
+                    if let data = snapShot?.data(),
+                        let arrOfData = data["genres"] as? [String:Bool] {
+                                                
+                        let filteredIds = ids.filter  { !arrOfData.keys.contains($0.key) }
+                        idsData["genres"] = filteredIds
+
+                    }
+                    else {
+                        
+                        idsData["genres"] = ids
+
+                    }
+                    
+                    db.collection("users").document(user.uid).updateData(idsData) { err in
+                        
+                        if let err = err {
+                            
+                            observer.onError(err)
+                        
+                        }
+                        else {
+                        
+                            observer.onNext(())
+                        
+                        }
+                    }
+                    
+                    
+                }
+                
+            }
+
+            return Disposables.create()
+        }
+           
+//        }
+    }
+    
+    static func compressData(imgData: [Data]) -> Observable<[Data]> {
         
         return .create { observer in
             
@@ -655,7 +777,7 @@ class CreateRecipeDM: CreateRecipeDMProtocol {
             imgData.forEach { data in
                 
                 if let img = UIImage(data: data), let compressedData = img.jpegData(compressionQuality: 0.7) {
-
+                    
                     result.append(compressedData)
                 }
             }
@@ -667,67 +789,152 @@ class CreateRecipeDM: CreateRecipeDMProtocol {
     }
     
     
-  static func uploadImages(mainPhoto: Data, videoURL: URL?, user: Firebase.User, recipeID: String) -> Observable<Void> {
+    static func uploadImages(mainPhoto: Data, videoURL: URL?, user: Firebase.User, recipeID: String) -> Observable<Void> {
         
         return .create { observer in
             
-//            if let imgData = mainPhoto {
-//            if let imgData = mainPhoto.jpegData(compressionQuality: 0.75)  {
+            //            if let imgData = mainPhoto {
+            //            if let imgData = mainPhoto.jpegData(compressionQuality: 0.75)  {
+            let metaData = StorageMetadata()
+            metaData.contentType = "image/jpg"
+            
+            self.storage.child("users/\(user.uid)/\(recipeID)/mainPhoto.jpg").putData(mainPhoto, metadata: metaData) { metadata, err in
+                
+                if let err = err {
+                    
+                    observer.onError(err)
+                    
+                } else {
+                    
+                    if let videoURL = videoURL {
+                        let metadata = StorageMetadata()
+                        //specify MIME type
+                        metadata.contentType = "video/quicktime"
+                        
+                        //convert video url to data
+                        if let videoData = NSData(contentsOf: videoURL) as Data? {
+                            //use 'putData' instead
+                            let uploadTask = self.storage.child("users/\(user.uid)/\(recipeID)/movie.mov").putData(videoData, metadata: metadata)
+                            
+                            // Listen for state changes, errors, and completion of the upload.
+                            uploadTask.observe(.resume) { snapshot in
+                                // Upload resumed, also fires when the upload starts
+                                print("resume")
+                            }
+                            
+                            uploadTask.observe(.pause) { snapshot in
+                                // Upload paused
+                                print("pause")
+                            }
+                            
+                            uploadTask.observe(.progress) { snapshot in
+                                // Upload reported progress
+                                let percentComplete = 100.0 * Double(snapshot.progress!.completedUnitCount)
+                                / Double(snapshot.progress!.totalUnitCount)
+                                
+                                print(percentComplete)
+                            }
+                            
+                            uploadTask.observe(.success) { snapshot in
+                                // Upload completed successfully
+                                observer.onNext(())
+                            }
+                            
+                            
+                            uploadTask.observe(.failure) { snapshot in
+                                
+                                if let err = snapshot.error {
+                                    
+                                    observer.onError(err)
+                                    
+                                }
+                            }
+                        }
+                        
+                    } else {
+                        observer.onNext(())
+                    }
+                    
+                }
+            }
+            //            }
+            return Disposables.create()
+        }
+    }
+    
+    static func startUpload(instructions: [Instruction], user: Firebase.User, recipeID: String) -> Observable<Int> {
+        
+        return .create { observer in
+            
+            let sortedInstructions = instructions.sorted { $0.index < $1.index }
+            
+            sortedInstructions.enumerated().forEach { index, instruction in
+                
+                self.uploadInstructionsImages(instruction: instruction, user: user, recipeID: recipeID, index: index, block: {
+                    
+                    observer.onNext(index)
+                    
+                }, errBlock: { err in
+                    
+                    print(index, err)
+                    
+                    observer.onNext(index)
+                    
+                })
+                   
+                
+            }
+            
+            
+            return Disposables.create()
+        }
+    }
+    
+    static func uploadInstructionsImages(instruction: Instruction, user: Firebase.User, recipeID: String, index: Int, block: @escaping () -> Void, errBlock: @escaping (Error) -> Void) {
+        
+
+            if let img = UIImage(data: instruction.imageData), let compressedData = img.jpegData(compressionQuality: 0.7) {
+                
                 let metaData = StorageMetadata()
                 metaData.contentType = "image/jpg"
                 
-                self.storage.child("users/\(user.uid)/\(recipeID)/mainPhoto.jpg").putData(mainPhoto, metadata: metaData) { metadata, err in
+                let uploadTask = self.storage.child("users/\(user.uid)/\(recipeID)/\(instruction.index).jpg").putData(compressedData, metadata: metaData)
+                
+                // Listen for state changes, errors, and completion of the upload.
+                uploadTask.observe(.resume) { snapshot in
+                    // Upload resumed, also fires when the upload starts
+                    print("resume")
+                }
+                
+                uploadTask.observe(.pause) { snapshot in
+                    // Upload paused
+                    print("pause")
+                }
+                
+                uploadTask.observe(.progress) { snapshot in
+                    // Upload reported progress
+                    let percentComplete = 100.0 * Double(snapshot.progress!.completedUnitCount)
+                    / Double(snapshot.progress!.totalUnitCount)
                     
-                    if let err = err {
+                    print(percentComplete)
+                }
+                
+                uploadTask.observe(.success) { snapshot in
+
+                    block()
+                }
+                
+                
+                uploadTask.observe(.failure) { snapshot in
+                    
+                    if let err = snapshot.error {
                         
-                        observer.onError(err)
+                       errBlock(err)
                         
-                    } else {
-                        
-                        if let videoURL = videoURL {
-                            let metadata = StorageMetadata()
-                            //specify MIME type
-                            metadata.contentType = "video/quicktime"
-
-                            //convert video url to data
-                            if let videoData = NSData(contentsOf: videoURL) as Data? {
-                                //use 'putData' instead
-                                let uploadTask = self.storage.child("users/\(user.uid)/\(recipeID)/movie.mov").putData(videoData, metadata: metadata)
-                                
-                                // Listen for state changes, errors, and completion of the upload.
-                                uploadTask.observe(.resume) { snapshot in
-                                  // Upload resumed, also fires when the upload starts
-                                    print("resume")
-                                }
-
-                                uploadTask.observe(.pause) { snapshot in
-                                  // Upload paused
-                                    print("pause")
-                                }
-
-                                uploadTask.observe(.progress) { snapshot in
-                                  // Upload reported progress
-                                  let percentComplete = 100.0 * Double(snapshot.progress!.completedUnitCount)
-                                    / Double(snapshot.progress!.totalUnitCount)
-                                    
-                                    print(percentComplete)
-                                }
-
-                                uploadTask.observe(.success) { snapshot in
-                                  // Upload completed successfully
-                                    observer.onNext(())
-                                }
-                            }
-                            
-                        } else {
-                            observer.onNext(())
-                        }
-
                     }
                 }
-//            }
-            return Disposables.create()
-        }
+            }
+
     }
     //
     //    func labelingImage(data: Data) {

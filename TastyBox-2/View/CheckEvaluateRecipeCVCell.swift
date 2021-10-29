@@ -9,7 +9,7 @@ import UIKit
 
 class CheckEvaluateRecipeCVCell: UICollectionViewCell {
     
-    @IBOutlet weak var imgView: UIImageView!
+    @IBOutlet weak var imgView: UIImageView! 
     @IBOutlet weak var titleLbl: UILabel!
     
 }

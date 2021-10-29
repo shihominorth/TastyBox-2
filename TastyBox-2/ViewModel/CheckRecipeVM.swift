@@ -27,10 +27,10 @@ class CheckRecipeVM {
     var isDisplayed = false
     var isEnded = false
     
-    let recipeDataSubject = PublishSubject<[String: Any]>()
-    let ingredientsDataSubject = PublishSubject<[[String: Any]]>()
-    let instructionsDataSubject = PublishSubject<[[String: Any]]>()
-    let genresDataSubject = PublishSubject<[[String: Any]]>()
+    let recipeDataSubject = BehaviorSubject<[String: Any]>(value: [:])
+    let ingredientsDataSubject = BehaviorSubject<[[String: Any]]>(value: [])
+    let instructionsDataSubject = BehaviorSubject<[[String: Any]]>(value: [])
+    let genresDataSubject = BehaviorSubject<[[String: Any]]>(value: [])
     
     let disposeBag = DisposeBag()
     
@@ -41,7 +41,7 @@ class CheckRecipeVM {
         self.apiType = apiType
         
         self.isVIP = isVIP
-        self.evaluates =  [Evaluate(title: "0", imgData: UIImage(systemName: "suit.heart.fill")!.convertToData()!)]
+        self.evaluates =  [Evaluate(title: "0", imgName: "suit.heart")]
         self.mainPhoto = mainPhoto
         self.instructions = instructions
         

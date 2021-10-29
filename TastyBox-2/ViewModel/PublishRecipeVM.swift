@@ -9,6 +9,7 @@ import Foundation
 import Firebase
 import UIKit
 import RxSwift
+import SCLAlertView
 
 class PublishRecipeVM: ViewModelBase {
     
@@ -65,16 +66,77 @@ class PublishRecipeVM: ViewModelBase {
     func uploadRecipe() {
         
        let updateRecipe = tappedPublishSubject
-            .share(replay: 1, scope: .forever)
+//            .share(replay: 1, scope: .forever)
             .flatMapLatest { [unowned self] in
                 self.apiType.updateRecipe(recipeData: recipeData, ingredientsData: ingredientsData, instructionsData: instructionsData, user: self.user)
             }
             
         let updateGenres = tappedPublishSubject
-            .share(replay: 1, scope: .forever)
+//            .share(replay: 1, scope: .forever)
             .flatMapLatest { [unowned self] in
-                self.apiType.updateUserInterestedGenres(genresData: genresData, user: self.user)
+                self.apiType.generateGenresIDs(genresData: genresData, user: self.user)
             }
+            .flatMapLatest { [unowned self] data in
+                self.apiType.updateUserInterestedGenres(ids: data, user: self.user)
+            }
+            .catch { err in
+                
+                print(err)
+                
+                return .empty()
+            }
+        
+        let updateImages = tappedPublishSubject
+//            .share(replay: 1, scope: .forever)
+            .flatMapLatest { [unowned self] in
+                self.apiType.compressData(imgData: [mainImage])
+            }
+            .map { $0[0] }
+            .flatMapLatest { [unowned self] in
+                self.apiType.uploadImages(mainPhoto: $0, videoURL: self.videoURL, user: self.user, recipeID: self.recipeData["id"] as! String)
+            }
+            .catch { err in
+                
+                if let reason = err.handleStorageError()  {
+                    
+                    SCLAlertView().showTitle(
+                        reason.reason, // Title of view
+                        subTitle: reason.solution,
+                        timeout: .none, // String of view
+                        completeText: "Done", // Optional button value, default: ""
+                        style: .error, // Styles - see below.
+                        colorStyle: 0xA429FF,
+                        colorTextButton: 0xFFFFFF
+                    )
+                    
+                }
+                
+                return .empty()
+            }
+        
+        let updateInstructionsImages = tappedPublishSubject
+//            .share(replay: 1, scope: .forever)
+            .flatMapLatest { [unowned self] in
+                self.apiType.startUpload(instructions: instructions, user: self.user, recipeID: self.recipeData["id"] as! String)
+            }
+//            .catch { err in
+//
+//                if let reason = err.handleStorageError()  {
+//
+//                    SCLAlertView().showTitle(
+//                        reason.reason, // Title of view
+//                        subTitle: reason.solution,
+//                        timeout: .none, // String of view
+//                        completeText: "Done", // Optional button value, default: ""
+//                        style: .error, // Styles - see below.
+//                        colorStyle: 0xA429FF,
+//                        colorTextButton: 0xFFFFFF
+//                    )
+//
+//                }
+//
+//                return .empty()
+//            }
     
     updateRecipe
             .subscribe(onNext: { data in
@@ -100,6 +162,31 @@ class PublishRecipeVM: ViewModelBase {
             })
             .disposed(by: disposeBag)
         
+        updateImages
+            .subscribe(onNext: { data in
+                
+                print("succeed to update images")
+                
+            }, onError: { err in
+                
+                print(err)
+                
+            })
+            .disposed(by: disposeBag)
+        
+        updateInstructionsImages
+            .subscribe(onNext: { data in
+                
+                print("succeed to update instructions images")
+                
+            }, onError: { err in
+                
+                print(err)
+                
+            })
+            .disposed(by: disposeBag)
+        
     }
     
 }
+
