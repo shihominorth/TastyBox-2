@@ -7,8 +7,9 @@
 
 import UIKit
 
-class GenreCollectionViewFlowLayout: UICollectionViewFlowLayout {
+class GenreCollectionViewFlowLayout: UICollectionViewFlowLayout, UICollectionViewDelegateFlowLayout {
     
+
     override func layoutAttributesForElements(in rect: CGRect) -> [UICollectionViewLayoutAttributes]? {
         
         guard let attributes = super.layoutAttributesForElements(in: rect) else {
@@ -87,5 +88,21 @@ class GenreCollectionViewFlowLayout: UICollectionViewFlowLayout {
     }
     
 
-    
+//    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, referenceSizeForHeaderInSection section: Int) -> CGSize {
+//        
+//        // Get the view for the first header
+//        let indexPath = IndexPath(row: 0, section: section)
+//        
+//        if let headerView = collectionView.supplementaryView(forElementKind: UICollectionView.elementKindSectionHeader, at: indexPath) {
+//            
+//            // Use this view to calculate the optimal size based on the collection view's width
+//            return headerView.systemLayoutSizeFitting(CGSize(width: collectionView.frame.width, height: UIView.layoutFittingExpandedSize.height),
+//                                                      withHorizontalFittingPriority: .required, // Width is fixed
+//                                                      verticalFittingPriority: .fittingSizeLevel) // Height can be as large as needed
+//        }
+//
+//        
+//        return CGSize.zero
+//        
+//    }
 }

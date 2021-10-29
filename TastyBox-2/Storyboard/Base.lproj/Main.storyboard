@@ -719,14 +719,6 @@
             </objects>
             <point key="canvasLocation" x="3549" y="1509"/>
         </scene>
-        <!--selectGenre-->
-        <scene sceneID="9VN-wR-Qlc">
-            <objects>
-                <viewControllerPlaceholder storyboardIdentifier="selectGenre" storyboardName="CreateRecipe" referencedIdentifier="selectGenre" id="dos-ma-wqy" sceneMemberID="viewController"/>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="ptQ-uL-dbY" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
-            </objects>
-            <point key="canvasLocation" x="3773" y="73"/>
-        </scene>
     </scenes>
     <resources>
         <image name="arrow.uturn.left" catalog="system" width="128" height="112"/>

@@ -60,7 +60,7 @@ class SelectGenresViewController: UIViewController, BindableType {
 //        viewModel.differenceSubject.onNext([sectionOfGenres])
 //        viewModel.items.accept([sectionOfGenres])
         
-        viewModel.getMyGenre()
+//        viewModel.getMyGenre()
         
 //        Observable.combineLatest(viewModel.items, viewModel.selectedGenres)
 //            .flatMap { items, selectedGenres in
@@ -72,24 +72,24 @@ class SelectGenresViewController: UIViewController, BindableType {
             .disposed(by: viewModel.disposeBag)
         
         
-        addBtn.rx.tap
-            .asDriver(onErrorJustReturn: ())
-            .asObservable()
-            .withLatestFrom(self.viewModel.selectedGenres)
-            .flatMap { [unowned self] in
-                self.viewModel.createGenres(genres: $0)
-            }
-            .catch { err in
-                return .empty()
-            }
-            .subscribe(onNext: { [unowned self] genres, isLast in
-               
-                if isLast {
-                    self.viewModel.addGenres(genres: genres)
-                }
-            
-            })
-            .disposed(by: viewModel.disposeBag)
+//        addBtn.rx.tap
+//            .asDriver(onErrorJustReturn: ())
+//            .asObservable()
+//            .withLatestFrom(self.viewModel.selectedGenres)
+//            .flatMap { [unowned self] in
+//                self.viewModel.createGenres(genres: $0)
+//            }
+//            .catch { err in
+//                return .empty()
+//            }
+//            .subscribe(onNext: { [unowned self] genres, isLast in
+//
+//                if isLast {
+//                    self.viewModel.addGenres(genres: genres)
+//                }
+//
+//            })
+//            .disposed(by: viewModel.disposeBag)
         
         cancelBtn.rx.tap
             .asDriver(onErrorJustReturn: ())
@@ -192,9 +192,9 @@ class SelectGenresViewController: UIViewController, BindableType {
         }
                 
         
-        dataSource.canMoveItemAtIndexPath = { dataSource, indexPath in
-            return false
-        }
+//        dataSource.canMoveItemAtIndexPath = { dataSource, indexPath in
+//            return false
+//        }
      
     }
     
@@ -225,12 +225,12 @@ class SelectGenresViewController: UIViewController, BindableType {
                     
                 if cell.isSelectedGenre {
                     
-                    self.viewModel.addGenre(indexSection: indexPath.section, indexRow: indexPath.row)
+//                    self.viewModel.addGenre(indexSection: indexPath.section, indexRow: indexPath.row)
                 
                 }
                 else {
                 
-                    self.viewModel.removeGenre(indexSection: indexPath.section, indexRow: indexPath.row)
+//                    self.viewModel.removeGenre(indexSection: indexPath.section, indexRow: indexPath.row)
                 
                 }
             })
@@ -241,7 +241,7 @@ class SelectGenresViewController: UIViewController, BindableType {
         flowLayout.minimumLineSpacing = 20
         flowLayout.sectionInset = UIEdgeInsets(top: 10, left: 10, bottom: 10, right: 10)
                 
-        collectionView.collectionViewLayout = flowLayout
+//        collectionView.collectionViewLayout = flowLayout
                 
     }
     

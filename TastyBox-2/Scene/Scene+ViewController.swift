@@ -262,8 +262,9 @@ extension Scene {
            
             let nc = storyboard.instantiateViewController(withIdentifier: "selectGenreNC") as! UINavigationController
 
-            var vc = nc.viewControllers.first as? SelectGenresViewController
-            
+//            var vc = nc.viewControllers.first as? SelectGenresViewController
+            var vc = nc.viewControllers.first as? SearchGenresViewController
+
 //            var vc = storyboard.instantiateViewController(withIdentifier: "selectGenre") as! SelectGenresViewController
 
             vc?.bindViewModel(to: viewModel)
