@@ -150,7 +150,7 @@ class SelectGenresViewController: UIViewController, BindableType {
             let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "genreCell", for: indexPath) as! GenreCVCell
             cell.titleLbl.text = "# \(item.title)"
             
-            if self.viewModel.selectedGenres.value.filter({ $0.id == item.id }).isNotEmpty {
+            if self.viewModel.selectedGenres.value.filter({ $0.id == item.id }).exists {
                 cell.isSelectedGenre = true
             }
             else {

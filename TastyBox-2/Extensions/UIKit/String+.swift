@@ -23,7 +23,7 @@ extension String {
 
 extension Array {
     
-    var isNotEmpty: Bool {
+    var exists: Bool {
         return !self.isEmpty
     }
 }

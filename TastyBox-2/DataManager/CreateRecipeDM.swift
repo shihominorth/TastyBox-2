@@ -16,6 +16,11 @@ protocol CreateRecipeDMProtocol: AnyObject {
     static func getThumbnailData(url: URL) -> Observable<Data>
     static func getMyGenresIDs(user: Firebase.User) -> Observable<[String]>
     static func getMyGenres(ids: [String], user: Firebase.User) -> Observable<([Genre], Bool)>
+    static func searchGenres(searchWord: String) -> Observable<[Genre]>
+    static func filterNotSearchedGenres(genres: [Genre], txt: String) -> Observable<([Genre], [String])>
+    static func isFirebaseKnowsGenres(word: String, completion: @escaping (Genre?) -> Void, errBlock: @escaping (Error) -> Void)
+    static func registerNewGenres(genres: [String], user: Firebase.User) -> Observable<[Genre]>
+    static func isUserInterested(genres: [Genre], user: Firebase.User) -> Observable<[Genre]>
     static func createGenres(genres: [Genre], user: Firebase.User) -> Observable<([Genre], Bool)>
     static func getUserImage(user: Firebase.User) -> Observable<Data>
     static func getUser(user: Firebase.User) -> Observable<User>
@@ -25,18 +30,18 @@ protocol CreateRecipeDMProtocol: AnyObject {
     static func createGenresData(sections: [RecipeItemSectionModel]) -> Observable<[[String: Any]]>
     static func updateRecipe(recipeData: [String: Any], ingredientsData: [[String: Any]],  instructionsData: [[String: Any]], user: Firebase.User) -> Observable<[String: Any]>
     static func generateGenresIDs(genresData: [[String: Any]], user: Firebase.User) -> Observable<[String: Bool]>
-//    static func updateUserInterestedGenres(ids: [String: Any], user: Firebase.User, completion: @escaping () -> Void, errBlock: @escaping (Error) -> Void)
+    //    static func updateUserInterestedGenres(ids: [String: Any], user: Firebase.User, completion: @escaping () -> Void, errBlock: @escaping (Error) -> Void)
     
-    static func updateUserInterestedGenres(ids: [String: Any], user: Firebase.User) -> Observable<Void> 
+    static func updateUserInterestedGenres(ids: [String: Any], user: Firebase.User) -> Observable<Void>
     static func compressData(imgData: [Data]) -> Observable<[Data]>
     static func uploadImages(mainPhoto: Data, videoURL: URL?, user: Firebase.User, recipeID: String) -> Observable<Void>
-    static func startUpload(instructions: [Instruction], user: Firebase.User, recipeID: String) -> Observable<Int> 
-
+    static func startUpload(instructions: [Instruction], user: Firebase.User, recipeID: String) -> Observable<Int>
+    
     
 }
 
 class CreateRecipeDM: CreateRecipeDMProtocol {
-   
+    
     
     static let db = Firestore.firestore()
     static let storage = Storage.storage().reference()
@@ -152,17 +157,400 @@ class CreateRecipeDM: CreateRecipeDMProtocol {
     }
     
     
+    static func searchGenres(searchWord: String) -> Observable<[Genre]> {
+        
+        return .create { observer in
+            
+            var query = db.collection("genres").limit(to: 1)
+            let arr = Array(searchWord.lowercased())
+            
+            arr.forEach {
+                query = query.whereField("searchChar.\($0)", isEqualTo: true)
+            }
+            
+            //            db.collection("genres").whereField("name", isEqualTo: searchWord.capitalized).getDocuments { snapShot, err in
+            
+            query.getDocuments { snapShot, err in
+                
+                if let err = err {
+                    
+                    observer.onError(err)
+                    
+                }
+                
+                else {
+                    
+                    if let docs = snapShot?.documents {
+                        
+                        if docs.exists {
+                            
+                            let genres = docs.compactMap { doc -> Genre? in
+                                
+                                if let genre = Genre(document: doc) {
+                                    
+                                    return genre
+                                    
+                                }
+                                else {
+                                    return nil
+                                }
+                                
+                            }
+                            
+                            observer.onNext(genres)
+                            
+                        }
+                        else {
+                            
+                            observer.onNext([])
+                            
+                        }
+                        
+                    }
+                }
+            }
+            
+            
+            return Disposables.create()
+        }
+    }
+    
+    // filter not searched txt and selected genre array,
+    // later not searched txt should search if firestore knows each txt as genre,
+    // if knows, get doc, genenate genre, then append to selected genres
+    // if not knows genenate new genre, then apepend to selected genres
+    
+    // sort result genres by text in text view in search genre vc, then pass them.
+    
+    // check if there is under genres collection at first (cause to get genre id to register my interested genres). if not add it.
+    // check if registered my instereted genres secondally, if no, add it.
+    
+    static func filterNotSearchedGenres(genres: [Genre], txt: String) -> Observable<([Genre], [String])> {
+        
+        return .create { observer in
+            
+            var selectedArr:[Genre] = []
+            var notSearchedarr:[String] = []
+            
+            var arrTxt = txt.components(separatedBy: "#").filter { $0 != "" }
+            arrTxt = arrTxt.map { $0.filter { char in
+                
+                return char != " "
+                
+            } }
+            
+            arrTxt.forEach { txt in
+                
+                if let matchedGenre = genres.first(where: { $0.title == txt }) {
+                    
+                    selectedArr.append(matchedGenre)
+                    
+                }
+                else {
+                    
+                    notSearchedarr.append(txt)
+                }
+            }
+            
+            
+            observer.onNext((selectedArr, notSearchedarr))
+            
+            return Disposables.create()
+        }
+        
+    }
+    
+    static func isFirebaseKnowsGenres(word: String, completion: @escaping (Genre?) -> Void, errBlock: @escaping (Error) -> Void) {
+        
+//        words.forEach { word in
+//            query doesn't work
+        var query = db.collection("genres").limit(to: 30)
+        let arr = Array(Set(word.lowercased()))
+
+
+            arr.forEach {
+                query = query.whereField("searchChar.\($0)", isEqualTo: true)
+            }
+            
+//        var query = db.collection("genres").whereField("searchChar.H", isEqualTo: true)
+            query.getDocuments { snapShot, err in
+                
+                if let err = err {
+                    
+                    errBlock(err)
+                    
+                }
+                
+                else {
+                    
+                    if let docs = snapShot?.documents {
+                        
+                        if docs.exists {
+                            
+                            let genres = docs.compactMap { doc -> Genre? in
+                                
+                                if let genre = Genre(document: doc) {
+                                    
+                                    return genre
+                                    
+                                }
+                                else {
+                                    return nil
+                                }
+                                
+                            }
+                            
+                            if let genre = genres.first(where: { $0.title == word} ) {
+                                
+                                completion(genre)
+                            }
+                            else {
+                                completion(nil)
+                            }
+                            
+                        }
+                        else {
+                            
+                            completion(nil)
+                            
+                        }
+                        
+                    }
+                }
+            }
+//        }
+    }
+    
+    static func isUserInterested(genres: [Genre], user: Firebase.User) -> Observable<[Genre]> {
+        
+        return .create { observer in
+            
+            var finishedGenres: [Genre] = []
+            
+            genres.enumerated().forEach { index, genre in
+                
+                registerUserInterestedGenres(genre: genre, user: user, completion: {
+                    
+                    finishedGenres.append(genre)
+                    
+                    if genres.count == finishedGenres.count {
+                        
+                        observer.onNext(finishedGenres)
+                    }
+                    
+                }, errBlock: { err in
+                    
+                    print(err)
+                    
+                    if genres.count == finishedGenres.count {
+                        
+                        observer.onNext(finishedGenres)
+                        
+                    }
+                    
+                })
+                
+            }
+            
+            return Disposables.create()
+            
+        }
+        
+    }
+    
+    static func registerUserInterestedGenres(genre: Genre, user: Firebase.User, completion: @escaping () -> Void, errBlock: @escaping (Error) -> Void) {
+        
+        db.collection("users").document(user.uid).collection("genres").document(genre.id).setData([
+            
+            "id": genre.id,
+            "usedLatestDate": Date(),
+            "count": FieldValue.increment(Int64(1))
+            
+        ]) { err in
+            
+            if let err = err {
+                
+                errBlock(err)
+                
+            }
+            else {
+                
+                db.collection("users").document(user.uid).getDocument { snapShot, err in
+                    
+                    if let err = err {
+                        
+                        errBlock(err)
+                        
+                    }
+                    else {
+                    
+                        if let data = snapShot?.data(), let value = data["genres"] as? [String: Bool] {
+                            
+                            var newDic = value
+                            newDic[genre.id] = true
+    
+                            db.collection("users").document(user.uid).updateData([
+                                
+                                "genres": newDic
+                                
+                            ]){ err in
+                                
+                                if let err = err {
+                                    
+                                    errBlock(err)
+                                    
+                                }
+                                else {
+                                    
+                                    completion()
+                                    
+                                }
+                            }
+                        }
+                        
+                       
+                        
+                    }
+                    
+                }
+                
+                
+            }
+        }
+        
+    }
+    
+    static func registerNewGenres(genres: [String], user: Firebase.User) -> Observable<[Genre]> {
+        
+        return .create { observer in
+            
+            var finishedGenres: [String] = []
+            var registeredGenres: [Genre] = []
+            
+            genres.enumerated().forEach { index, txt in
+                
+                
+                let uuid = UUID()
+                let uniqueIdString = uuid.uuidString.replacingOccurrences(of: "-", with: "")
+                
+                let arrGenre = Array(txt.lowercased())
+                var dicGenre:[String: Bool] = [:]
+                
+                arrGenre.forEach {
+                    
+                    let key = String($0)
+                    dicGenre[key] = true
+                    
+                }
+                
+                
+                let data: [String : Any] = [
+                    
+                    "id": uniqueIdString,
+                    "title": txt,
+                    "count": FieldValue.increment(Int64(1)),
+                    "usedLatestDate": Date(),
+                    "searchChar": dicGenre
+                ]
+                
+                let genre = Genre(id: uniqueIdString, title: txt)
+                
+                registerUnderGenres(data: data, user: user, completion: {
+                    
+                    
+                    registerUserInterestedGenres(genre: genre, user: user, completion: {
+                        
+                        finishedGenres.append(txt)
+                        registeredGenres.append(genre)
+                        
+                        if genres.count == finishedGenres.count {
+                            
+                            observer.onNext(registeredGenres)
+                        }
+                        
+                        
+                    }, errBlock: { err in
+                        
+                        print(err)
+                        
+                        finishedGenres.append(txt)
+                        registeredGenres.append(genre)
+                        
+                        if genres.count == finishedGenres.count {
+                            
+                            observer.onNext(registeredGenres)
+                        }
+                        
+                        
+                    })
+                    
+                }, errBlock: { err in
+                    
+                    print(err)
+                    
+                    finishedGenres.append(txt)
+                    registeredGenres.append(genre)
+                    
+                    if genres.count == finishedGenres.count {
+                        
+                        observer.onNext(registeredGenres)
+                    }
+                    
+                    
+                })
+                
+            }
+            
+            
+            
+            return Disposables.create()
+            
+        }
+    }
+    
+    static func registerUnderGenres(data: [String: Any], user: Firebase.User, completion: @escaping () -> Void, errBlock: @escaping (Error) -> Void) {
+        
+        guard let id = data["id"] as? String else { return }
+        
+        db.collection("genres").document(id).setData(data) { err in
+            
+            if let err = err {
+                
+                errBlock(err)
+                
+            }
+            else {
+                
+                completion()
+            }
+        }
+    }
+    
+    
     static func createGenres(genres: [Genre], user: Firebase.User) -> Observable<([Genre], Bool)> {
         
         return .create { observer in
             
             genres.enumerated().forEach { index, genre in
                 
+                let arrGenre = Array(genre.title)
+                var dicGenre:[String: Bool] = [:]
+                
+                arrGenre.forEach {
+                    
+                    let key = String($0)
+                    dicGenre[key] = true
+                    
+                }
+                
+                
                 let data: [String : Any] = [
                     
                     "id": genre.id,
                     "title": genre.title,
-                    "count": FieldValue.increment(Int64(1))
+                    "count": FieldValue.increment(Int64(1)),
+                    "usedLatestDate": Date(),
+                    "searchChar": dicGenre
                 ]
                 
                 
@@ -232,6 +620,8 @@ class CreateRecipeDM: CreateRecipeDMProtocol {
             
         }
     }
+    
+    
     
     
     static func getUserImage(user: Firebase.User) -> Observable<Data> {
@@ -420,7 +810,7 @@ class CreateRecipeDM: CreateRecipeDMProtocol {
                 }
                 
             }
-       
+            
             
             items.forEach { item in
                 
@@ -436,6 +826,18 @@ class CreateRecipeDM: CreateRecipeDMProtocol {
                         data["usedLatestDate"] =  Date()
                         data["count"] = FieldValue.increment(Int64(1))
                         
+                        let arrGenre = Array(genre.title)
+                        var dicGenre:[String: Bool] = [:]
+                        
+                        arrGenre.forEach {
+                            
+                            let key = String($0)
+                            dicGenre[key] = true
+                            
+                        }
+                        
+                        data["searchChar"] = dicGenre
+                        
                         result.append(data)
                     }
                     
@@ -450,6 +852,19 @@ class CreateRecipeDM: CreateRecipeDMProtocol {
                     data["name"] = ingredient.name
                     data["usedLatestDate"] =  Date()
                     data["count"] = FieldValue.increment(Int64(1))
+                    
+                    
+                    let arrIngredient = Array(ingredient.name)
+                    var dicIngredient:[String: Bool] = [:]
+                    
+                    arrIngredient.forEach {
+                        
+                        let key = String($0)
+                        dicIngredient[key] = true
+                        
+                    }
+                    
+                    data["searchChar"] = dicIngredient
                     
                     result.append(data)
                     
@@ -633,12 +1048,12 @@ class CreateRecipeDM: CreateRecipeDMProtocol {
                     if ids.count == genresData.count {
                         observer.onNext(ids)
                     }
-                
+                    
                 })
-                              
+                
             }
             
-
+            
             return  Disposables.create()
         }
         
@@ -651,13 +1066,13 @@ class CreateRecipeDM: CreateRecipeDMProtocol {
         db.collection("genres").whereField("name", isEqualTo: name.capitalized).getDocuments() { snapShot, err in
             
             if let _ = err {
-
+                
                 db.collection("genres").document(genreID).setData(data, merge: true) { err in
                     
                     if let err = err {
                         
                         errBlock(err)
-                    
+                        
                     }
                     else {
                         
@@ -665,26 +1080,26 @@ class CreateRecipeDM: CreateRecipeDMProtocol {
                         
                     }
                 }
-
+                
             }
             else {
                 
                 if let snapShot = snapShot {
                     
                     if snapShot.documents.isEmpty {
-                       
+                        
                         db.collection("genres").document(genreID).setData(data, merge: true) { err in
                             
                             if let err = err {
                                 
-                               errBlock(err)
-                            
+                                errBlock(err)
+                                
                             }
                             
                             completion(genreID)
                         }
-                    
-                      
+                        
+                        
                     }
                     else {
                         
@@ -695,9 +1110,9 @@ class CreateRecipeDM: CreateRecipeDMProtocol {
                             
                         }
                         else {
-                        
+                            
                             completion(genreID)
-                        
+                            
                         }
                         
                     }
@@ -712,7 +1127,7 @@ class CreateRecipeDM: CreateRecipeDMProtocol {
     }
     
     
-//    static func updateUserInterestedGenres(ids: [String: Any], user: Firebase.User, completion: @escaping () -> Void, errBlock: @escaping (Error) -> Void) {
+    //    static func updateUserInterestedGenres(ids: [String: Any], user: Firebase.User, completion: @escaping () -> Void, errBlock: @escaping (Error) -> Void) {
     
     static func updateUserInterestedGenres(ids: [String: Any], user: Firebase.User) -> Observable<Void> {
         
@@ -731,16 +1146,16 @@ class CreateRecipeDM: CreateRecipeDMProtocol {
                 else {
                     
                     if let data = snapShot?.data(),
-                        let arrOfData = data["genres"] as? [String:Bool] {
-                                                
+                       let arrOfData = data["genres"] as? [String:Bool] {
+                        
                         let filteredIds = ids.filter  { !arrOfData.keys.contains($0.key) }
                         idsData["genres"] = filteredIds
-
+                        
                     }
                     else {
                         
                         idsData["genres"] = ids
-
+                        
                     }
                     
                     db.collection("users").document(user.uid).updateData(idsData) { err in
@@ -748,12 +1163,12 @@ class CreateRecipeDM: CreateRecipeDMProtocol {
                         if let err = err {
                             
                             observer.onError(err)
-                        
+                            
                         }
                         else {
-                        
+                            
                             observer.onNext(())
-                        
+                            
                         }
                     }
                     
@@ -761,11 +1176,11 @@ class CreateRecipeDM: CreateRecipeDMProtocol {
                 }
                 
             }
-
+            
             return Disposables.create()
         }
-           
-//        }
+        
+        //        }
     }
     
     static func compressData(imgData: [Data]) -> Observable<[Data]> {
@@ -881,7 +1296,7 @@ class CreateRecipeDM: CreateRecipeDMProtocol {
                     observer.onNext(index)
                     
                 })
-                   
+                
                 
             }
             
@@ -892,49 +1307,49 @@ class CreateRecipeDM: CreateRecipeDMProtocol {
     
     static func uploadInstructionsImages(instruction: Instruction, user: Firebase.User, recipeID: String, index: Int, block: @escaping () -> Void, errBlock: @escaping (Error) -> Void) {
         
-
-            if let img = UIImage(data: instruction.imageData), let compressedData = img.jpegData(compressionQuality: 0.7) {
+        
+        if let img = UIImage(data: instruction.imageData), let compressedData = img.jpegData(compressionQuality: 0.7) {
+            
+            let metaData = StorageMetadata()
+            metaData.contentType = "image/jpg"
+            
+            let uploadTask = self.storage.child("users/\(user.uid)/\(recipeID)/\(instruction.index).jpg").putData(compressedData, metadata: metaData)
+            
+            // Listen for state changes, errors, and completion of the upload.
+            uploadTask.observe(.resume) { snapshot in
+                // Upload resumed, also fires when the upload starts
+                print("resume")
+            }
+            
+            uploadTask.observe(.pause) { snapshot in
+                // Upload paused
+                print("pause")
+            }
+            
+            uploadTask.observe(.progress) { snapshot in
+                // Upload reported progress
+                let percentComplete = 100.0 * Double(snapshot.progress!.completedUnitCount)
+                / Double(snapshot.progress!.totalUnitCount)
                 
-                let metaData = StorageMetadata()
-                metaData.contentType = "image/jpg"
+                print(percentComplete)
+            }
+            
+            uploadTask.observe(.success) { snapshot in
                 
-                let uploadTask = self.storage.child("users/\(user.uid)/\(recipeID)/\(instruction.index).jpg").putData(compressedData, metadata: metaData)
+                block()
+            }
+            
+            
+            uploadTask.observe(.failure) { snapshot in
                 
-                // Listen for state changes, errors, and completion of the upload.
-                uploadTask.observe(.resume) { snapshot in
-                    // Upload resumed, also fires when the upload starts
-                    print("resume")
-                }
-                
-                uploadTask.observe(.pause) { snapshot in
-                    // Upload paused
-                    print("pause")
-                }
-                
-                uploadTask.observe(.progress) { snapshot in
-                    // Upload reported progress
-                    let percentComplete = 100.0 * Double(snapshot.progress!.completedUnitCount)
-                    / Double(snapshot.progress!.totalUnitCount)
+                if let err = snapshot.error {
                     
-                    print(percentComplete)
-                }
-                
-                uploadTask.observe(.success) { snapshot in
-
-                    block()
-                }
-                
-                
-                uploadTask.observe(.failure) { snapshot in
+                    errBlock(err)
                     
-                    if let err = snapshot.error {
-                        
-                       errBlock(err)
-                        
-                    }
                 }
             }
-
+        }
+        
     }
     //
     //    func labelingImage(data: Data) {

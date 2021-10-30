@@ -18,7 +18,11 @@ class SearchGenresViewController: UIViewController, BindableType {
     var viewModel: SelectGenresVM!
     
    
-    @IBOutlet weak var collectionView: UICollectionView!
+    @IBOutlet weak var addBtn: UIBarButtonItem!
+    @IBOutlet weak var cancelBtn: UIBarButtonItem!
+    @IBOutlet weak var tableView: UITableView!
+    
+//    @IBOutlet weak var collectionView: UICollectionView!
     
     var dataSource: RxCollectionViewSectionedReloadDataSource<SectionOfGenre>!
     
@@ -26,49 +30,114 @@ class SearchGenresViewController: UIViewController, BindableType {
         super.viewDidLoad()
 
         // Do any additional setup after loading the view.
+        tableView.dataSource = self
     }
     
     func bindViewModel() {
-        
+
         setUpcollectionView()
-        
-        viewModel.items
-            .bind(to: collectionView.rx.items(dataSource: self.dataSource))
+      
+        viewModel.searchingQuery
+            .filter { query in
+
+                if query.isEmpty {
+                    
+                    let temp = SectionOfGenre(header: "temp", items: [])
+                    self.viewModel.items.accept([temp])
+                }
+                
+                return !query.isEmpty
+                
+            }
+            .flatMapLatest { [unowned self] in
+                self.viewModel.searchGenres(query: $0)
+            }
+            .subscribe(onNext: { [unowned self] genres in
+               
+                let section = SectionOfGenre(header: "temp", items: genres)
+                
+                self.viewModel.items.accept([section])
+                
+               
+            })
             .disposed(by: viewModel.disposeBag)
         
-        viewModel.diffenceTxtSubject
-            .subscribe(onNext: { text in
+        var searchingQuery = ""
+        
+        viewModel.isNewTagInputs
+            .filter { $0 }
+            .withLatestFrom(viewModel.searchingQuery)
+            .do(onNext: { text in
                 
-                print(text)
+                searchingQuery = text
+                
+            })
+            .flatMapLatest { [unowned self] in
+                self.viewModel.searchGenres(query: $0)
+            }
+            .subscribe(onNext: { [unowned self] genres in
+                
+                self.viewModel.selectGenre(genres: genres, query: searchingQuery)
                 
             })
             .disposed(by: viewModel.disposeBag)
         
+       
+        // addbtn tapped then change text in text view cause the bug that addBtn.rx.tap emit event.
+        // doesn't go inside any function under addBtn.rx.tap
+        
+        
+        addBtn.rx.tap
+            .debug()
+            .flatMapLatest { [unowned self] in
+                self.viewModel.filterSearchedGenres()
+            }
+            .flatMapLatest { genres, notSearchedWords in
+                
+                self.viewModel.searchIsFirebaseKnowsGenre(txts: notSearchedWords, alreadyKnowsGenres: genres)
+                
+            }
+            .flatMapLatest { genres, notSearchedWords in
+            
+                self.viewModel.registerGenres(words: notSearchedWords, genres: genres)
+            
+            }
+            .subscribe (onNext: {  [unowned self] genres in
 
+                self.viewModel.delegate?.addGenre(genres: genres)
+
+            })
+            .disposed(by: viewModel.disposeBag)
+
+        
+        tableView.rx.didScroll
+            .subscribe(onNext: { _ in
+                
+                self.tableView.setEditing(true, animated: true)
+
+            })
+            .disposed(by: viewModel.disposeBag)
         
     }
     
     func setUpcollectionView() {
         
         setUpDataSource()
-        
-        let flowLayout = GenreCollectionViewFlowLayout()
-        
-        flowLayout.headerReferenceSize = CGSize(width: self.view.frame.width, height: 100)
 
-        flowLayout.estimatedItemSize = UICollectionViewFlowLayout.automaticSize
-        
-        flowLayout.sectionInset = UIEdgeInsets(top: 5, left: 8, bottom: 5, right: 8)
-
-        collectionView.collectionViewLayout = flowLayout
-        
-        collectionView.rx.didScroll
-            .subscribe(onNext: { [unowned self] in
-                
-                self.collectionView.endEditing(true)
-                
-            })
-            .disposed(by: viewModel.disposeBag)
+//        if let cell = tableView.cellForRow(at: IndexPath(row: 1, section: 0)) as? SearchedGenresTVCell {
+//
+//            cell.collectionView.rx.didScroll
+//                .subscribe(onNext: { _ in
+//
+//                    cell.collectionView.endEditing(true)
+//
+//                })
+//                .disposed(by: viewModel.disposeBag)
+//
+//
+//
+//        }
+       
     }
 
     func setUpDataSource() {
@@ -78,7 +147,7 @@ class SearchGenresViewController: UIViewController, BindableType {
             let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "genreCell", for: indexPath) as! GenreCVCell
             cell.titleLbl.text = "# \(item.title)"
             
-            if self.viewModel.selectedGenres.value.filter({ $0.id == item.id }).isNotEmpty {
+            if self.viewModel.selectedGenres.value.filter({ $0.id == item.id }).exists {
                 cell.isSelectedGenre = true
             }
             else {
@@ -88,46 +157,52 @@ class SearchGenresViewController: UIViewController, BindableType {
             cell.configure()
             
             return cell
+            
         }, configureSupplementaryView: { [unowned self] dataSource, collectionView, kind, indexPath in
             
-            switch indexPath.section {
-            case 0:
-                
-                if (kind == "UICollectionElementKindSectionHeader") {
-                    let reusableView = collectionView.dequeueReusableSupplementaryView(ofKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: "selectGenresCRV", for: indexPath) as! SelectGenresCRV
-                    
-                    reusableView.txtView.layer.borderWidth = 1
-                    
-                    if !viewModel.isDisplayed {
-                    
-                        reusableView.txtView.text = viewModel.text
-                        viewModel.isDisplayed = true
-                    
-                    }
+//            switch indexPath.section {
+//            case 0:
+//
+//                if (kind == "UICollectionElementKindSectionHeader") {
+//                    let reusableView = collectionView.dequeueReusableSupplementaryView(ofKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: "selectGenresCRV", for: indexPath) as! SelectGenresCRV
+//                    
+//                    reusableView.txtView.layer.borderWidth = 1
+//               
+//                    
+//                    if !viewModel.isDisplayed {
+//                    
+//                        reusableView.txtView.text = viewModel.text
+//
+//                        viewModel.isDisplayed = true
+//    
+//                         reusableView.txtView.rx.text
+//                            .debounce(.milliseconds(300), scheduler: MainScheduler.instance)
+//                             .subscribe(onNext: {  text in
+//
+//                                 if let text = text {
+//                                     
+//                                     self.viewModel.diffenceTxtSubject.onNext(text)
+//                                    
+//                                     let textCount: Int = text.count
+//                                     guard textCount >= 1 else { return }
+//                                     reusableView.txtView.scrollRangeToVisible(NSRange(location: textCount - 1, length: 1))
+//                                 }
+//                                 
+//                               
+//                             })
+//                             .disposed(by: self.viewModel.disposeBag)
+//                        
+//                        
+//                        
+//                    }
                    
-                    
-                    reusableView.txtView.rx.text
-                        .subscribe(onNext: {  text in
 
-                            if let text = text {
-                                
-                                self.viewModel.diffenceTxtSubject.onNext(text)
-                               
-                                let textCount: Int = text.count
-                                guard textCount >= 1 else { return }
-                                reusableView.txtView.scrollRangeToVisible(NSRange(location: textCount - 1, length: 1))
-                            }
-
-                            
-                        })
-                        .disposed(by: self.viewModel.disposeBag)
-
-                    return reusableView
-                }
-                
-            default:
-                break
-            }
+//                    return reusableView
+//                }
+//
+//            default:
+//                break
+//            }
             
             return UICollectionReusableView()
         })
@@ -137,4 +212,81 @@ class SearchGenresViewController: UIViewController, BindableType {
     
    
     
+}
+
+extension SearchGenresViewController: UITableViewDelegate, UITableViewDataSource {
+   
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        return 2
+    }
+   
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        
+        if indexPath.row == 0 {
+           
+            if let cell = tableView.dequeueReusableCell(withIdentifier: "searchGenreTxtViewTVCell", for: indexPath) as? SearchGenreTxtViewTVCell {
+                
+                cell.txtView.layer.borderWidth = 1
+           
+                
+                if !viewModel.isDisplayed {
+                
+                    cell.txtView.text = viewModel.text
+
+                    viewModel.isDisplayed = true
+
+                    cell.txtView.rx.text
+                        .debounce(.milliseconds(300), scheduler: MainScheduler.instance)
+                         .subscribe(onNext: {  text in
+
+                             if let text = text {
+                                 
+                                 self.viewModel.diffenceTxtSubject.onNext(text)
+                                
+                                 let textCount: Int = text.count
+                                 guard textCount >= 1 else { return }
+                                 cell.txtView.scrollRangeToVisible(NSRange(location: textCount - 1, length: 1))
+                             }
+                             
+                           
+                         })
+                         .disposed(by: self.viewModel.disposeBag)
+                    
+                }
+                
+                return cell
+            }
+            
+        }
+        else if indexPath.row == 1 {
+            
+            if let cell = tableView.dequeueReusableCell(withIdentifier: "searchedGenresTVCell", for: indexPath) as? SearchedGenresTVCell {
+                
+                viewModel
+                    .items
+                    .bind(to: cell.collectionView.rx.items(dataSource: self.dataSource))
+                    .disposed(by: viewModel.disposeBag)
+                
+                Observable.combineLatest(cell.collectionView.rx.itemSelected, viewModel.items)
+                    .subscribe(onNext: { [unowned self] collectionViewIndexPath, sections in
+                        
+                        let items = sections[0].items
+                       
+                        var selectedGenres = self.viewModel.selectedGenres.value
+                        selectedGenres.append(items[collectionViewIndexPath.row])
+                        
+                        self.viewModel.selectedGenres.accept(selectedGenres)
+                        
+                    })
+                    .disposed(by: cell.disposeBag)
+                
+                
+                return cell
+            }
+        }
+        
+        return UITableViewCell()
+        
+    }
+   
 }

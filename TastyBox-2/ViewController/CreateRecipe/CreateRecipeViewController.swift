@@ -243,7 +243,7 @@ extension CreateRecipeViewController: UITableViewDelegate, UITableViewDataSource
             if let cell = tableView.dequeueReusableCell(withIdentifier: "selectGenreTVCell", for: indexPath) as? SelectGenreTVCell {
                 
                 
-                cell.setIsSelectedGenre(isSelected: viewModel.selectedGenres.value.isNotEmpty)
+                cell.setIsSelectedGenre(isSelected: viewModel.selectedGenres.value.exists)
                 
                 cell.selectBtn.rx.tap
                     .debounce(.microseconds(1000), scheduler: MainScheduler.instance)
