@@ -288,26 +288,6 @@ class SceneCoordinator: NSObject, SceneCoordinatorType {
             subject.onCompleted()
             
         }
-//        else if let navigationController = currentViewController.navigationController {
-            // challenge 3: we don't need to set ourselves as delegate of the navigation controller again,
-            // as this has been done during the push transition
-            
-            // navigate up the stack
-            // one-off subscription to be notified when pop complete
-//            _ = navigationController.rx.delegate
-//                .sentMessage(#selector(UINavigationControllerDelegate.navigationController(_:didShow:animated:)))
-//                .map { _ in }
-//                .bind(to: subject)
-//            guard navigationController.popViewController(animated: animated) != nil else {
-//                fatalError("can't navigate back from \(currentViewController)")
-//            }
-            
-            // challenge 3: we don't need this line anymore
-            // currentViewController = SceneCoordinator.actualViewController(for: navigationController.viewControllers.last!)
-            
-//        } else {
-//            fatalError("Not a modal, no navigation controller: can't navigate back from \(currentViewController)")
-//        }
         
         return subject.asObservable()
             .take(1)

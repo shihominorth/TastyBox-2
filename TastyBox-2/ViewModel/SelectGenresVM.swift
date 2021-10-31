@@ -41,6 +41,8 @@ class SelectGenresVM: ViewModelBase {
     var isDisplayed = false
     var isEditingSubject = BehaviorRelay<Bool>(value: false)
     
+    var selectedGenreSubject = BehaviorRelay<Genre?>(value: nil)
+    
     var isNewTagInputs: Observable<Bool> {
         
         return Observable.zip(diffenceTxtSubject, diffenceTxtSubject.skip(1)) { previous, current in
@@ -51,7 +53,7 @@ class SelectGenresVM: ViewModelBase {
                 
             }.map { char in
                 
-//                print(char)
+                //                print(char)
                 
                 return String(char)
                 
@@ -80,6 +82,13 @@ class SelectGenresVM: ViewModelBase {
             } }
             
             let compareArr = zip(previousNoHashTagArr, currentNoHashTagArr)
+            
+            if currentNoHashTagArr.count - 1 == previousNoHashTagArr.count {
+                
+                if let item = currentNoHashTagArr.first(where: { !previousNoHashTagArr.contains($0) }) {
+                    return item
+                }
+            }
             
             if let query = compareArr.first(where: { $0.0 != $0.1 })?.1 {
                 
@@ -117,24 +126,26 @@ class SelectGenresVM: ViewModelBase {
         
         super.init()
         
-        let item = Genre(id: "dfjkahfajhkalhfj", title: "Hello!")
+        //        let item = Genre(id: "dfjkahfajhkalhfj", title: "Hello!")
+        //
+        //        var items: [Genre] = []
+        //
+        //        for _ in 0 ..< 5 {
+        //
+        //            items.append(item)
+        //
+        //        }
+        //
+        //        self.text = "# \(item.title)"
         
-        var items: [Genre] = []
         
-        for _ in 0 ..< 5 {
+        genres.forEach { [unowned self] in
             
-            items.append(item)
+            self.text += "# \($0.title) "
             
         }
         
-        self.text = "# \(item.title)"
-        
-        
-        //        items.forEach { [unowned self] in
-        //
-        //            self.text += "# \($0.title)"
-        //
-        //        }
+        selectedGenres.accept(genres)
         
         let temp = SectionOfGenre(header: "temp", items: [])
         //
@@ -189,7 +200,7 @@ class SelectGenresVM: ViewModelBase {
     
     func selectGenre(genres: [Genre], query: String) {
         
-        guard let genre = genres.first(where:  { $0.title == query }) else { return }
+        guard let genre = genres.first(where: { $0.title == query }) else { return }
         var newItems = selectedGenres.value
         
         newItems.append(genre)
@@ -202,7 +213,7 @@ class SelectGenresVM: ViewModelBase {
     
     func filterSearchedGenres() -> Observable<([Genre], [String])> {
         
-            
+        
         return Observable.combineLatest(diffenceTxtSubject, selectedGenres)
             .flatMapLatest { [unowned self] txt, selectedGenres in
                 self.apiType.filterNotSearchedGenres(genres: selectedGenres, txt: txt)
@@ -226,39 +237,42 @@ class SelectGenresVM: ViewModelBase {
             var existGenres: [Genre] = []
             var notExistGenres:[String] = []
             
-            
-            
-            txts.enumerated().forEach { index, txt in
+            if txts.isEmpty {
+                observer.onNext((alreadyKnowsGenres, []))
+            }
+            else  {
                 
-                self.apiType.isFirebaseKnowsGenres(word: txt, completion: { genre in
+                txts.enumerated().forEach { index, txt in
                     
-                    if let genre = genre {
+                    self.apiType.isFirebaseKnowsGenres(word: txt, completion: { genre in
                         
-                        existGenres.append(genre)
+                        if let genre = genre {
+                            
+                            existGenres.append(genre)
+                            
+                        }
+                        else {
+                            notExistGenres.append(txt)
+                        }
                         
-                    }
-                    else {
+                        if existGenres.count + notExistGenres.count == txts.count {
+                            existGenres.append(contentsOf: alreadyKnowsGenres)
+                            observer.onNext((existGenres, notExistGenres))
+                        }
+                        
+                    }, errBlock: { err in
+                        
+                        print(err)
+                        
                         notExistGenres.append(txt)
-                    }
-                    
-                    if existGenres.count + notExistGenres.count == txts.count {
-                        existGenres.append(contentsOf: alreadyKnowsGenres)
-                        observer.onNext((existGenres, notExistGenres))
-                    }
-                    
-                }, errBlock: { err in
-                    
-                    print(err)
-                    
-                    notExistGenres.append(txt)
-                    
-                    if existGenres.count + notExistGenres.count == txts.count {
-                        existGenres.append(contentsOf: alreadyKnowsGenres)
-                        observer.onNext((existGenres, notExistGenres))
-                    }
-                    
-                })
-                
+                        
+                        if existGenres.count + notExistGenres.count == txts.count {
+                            existGenres.append(contentsOf: alreadyKnowsGenres)
+                            observer.onNext((existGenres, notExistGenres))
+                        }
+                        
+                    })
+                }
                 
             }
             
@@ -271,37 +285,21 @@ class SelectGenresVM: ViewModelBase {
     func registerGenres(words: [String], genres: [Genre]) -> Observable<[Genre]> {
         
         let newGenresObservable = registerNewGenres(words: words)
-//        
+        //
         let registerMyGenresObservable = registerAsMyGenres(genres: genres)
         
-//        return newGenresObservable
-//            .flatMapLatest { newGenres in
-//
-//                return registerMyGenresObservable.flatMapLatest { myGenres in
-//
-//                    return Observable.zip(Observable.just(newGenres), Observable.just(myGenres))
-//
-//                }
-//
-//            }
-//            .flatMapLatest { registeredNewGenres, registeredMyGenres -> Observable<[Genre]> in
-//
-//                var result = registeredNewGenres
-//                result.append(contentsOf: registeredMyGenres)
-//
-//                return Observable.just(result)
-//
-//            }
-                
-        
         return Observable.combineLatest(registerNewGenres(words: words).map { $0 }.startWith([]), registerAsMyGenres(genres: genres).map { $0 }.startWith([])) { registeredNewGenres, registeredMyGenres in
-
+            
             var result = registeredNewGenres
             result.append(contentsOf: registeredMyGenres)
-
+            
             return result
         }
         .skip(1)
+        .flatMapLatest{ [unowned self] genres in
+            self.shouldAddGenres(genres: genres)
+        }
+        
         .catch { err in
             
             print(err)
@@ -322,9 +320,32 @@ class SelectGenresVM: ViewModelBase {
         return self.apiType.isUserInterested(genres: genres, user: self.user)
     }
     
-    func addGenres(genres:[[Genre]]) -> Observable<[Genre]> {
+    func shouldAddGenres(genres: [Genre]) -> Observable<[Genre]> {
         
-        return diffenceTxtSubject.skip(1).flatMap { txt in
+        return diffenceTxtSubject
+            .filter { txt in
+                
+                var arr = txt.components(separatedBy: "#").filter { $0 != "" }
+                arr = arr.map { $0.filter { char in
+                    
+                    return char != " "
+                    
+                } }
+                
+                return arr.count == genres.count
+            }
+            .flatMapLatest { _ in
+                return Observable.just(genres)
+            }
+        
+        
+    }
+    
+  
+    
+    func addGenres(genres:[Genre]) -> Observable<[Genre]> {
+        
+        return diffenceTxtSubject.flatMap { txt in
             
             self.sortedGenres(txt: txt, genres: genres)
             
@@ -338,7 +359,7 @@ class SelectGenresVM: ViewModelBase {
         
     }
     
-    func sortedGenres(txt: String, genres: [[Genre]]) -> Observable<[Genre]> {
+    func sortedGenres(txt: String, genres: [Genre]) -> Observable<[Genre]> {
         
         return Observable.create { observer in
             
@@ -351,16 +372,18 @@ class SelectGenresVM: ViewModelBase {
                 }}
             
             var sortedArr: [Genre] = []
-            let flatteddMapArr: [Genre] = genres.flatMap { $0 }
+            let flatteddMapArr: [Genre] = genres.compactMap { $0 }
             
             arr.forEach { txt in
                 
                 if let genre = flatteddMapArr.first(where: { $0.title == txt} ) {
                     
                     sortedArr.append(genre)
-                
+                    
                 }
             }
+            
+            sortedArr = sortedArr.filter { $0.title != "" }
             
             observer.onNext(sortedArr)
             
@@ -369,9 +392,45 @@ class SelectGenresVM: ViewModelBase {
     }
     
     func dismissSelection() {
-
+        
         self.sceneCoordinator.userDissmissed()
-
+        
+    }
+    
+    func convertNewTxt(txt: String, query: String, selectedGenre: Genre?) -> Observable<String> {
+        
+        
+        return .create { observer in
+            
+            var arr = txt.components(separatedBy: "#").filter { $0 != "" }
+            //
+            arr = arr.map { $0.filter { char in
+                
+                return char != " "
+                
+            } }
+            
+            
+            
+            if let title = selectedGenre?.title, let removeIndex = arr.firstIndex(where: { $0 == query }) {
+                
+                arr.insert(title, at: removeIndex)
+                arr.remove(at: removeIndex + 1)
+                
+                var newString = arr.joined(separator: " # ")
+                newString.insert("#", at: newString.startIndex)
+                newString.insert(" ", at: newString.index(after: newString.startIndex))
+                
+                
+                observer.onNext(newString)
+                
+            }
+            
+            
+            
+            return Disposables.create()
+        }
+        
     }
     
     //    func filterSearchedItems(with allItems: [SectionOfGenre], query: String) -> [SectionOfGenre] {

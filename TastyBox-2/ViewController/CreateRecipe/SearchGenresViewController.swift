@@ -61,12 +61,41 @@ class SearchGenresViewController: UIViewController, BindableType {
                 self.viewModel.searchGenres(query: $0)
             }
             .subscribe(onNext: { [unowned self] genres in
-               
-                let section = SectionOfGenre(header: "temp", items: genres)
                 
-                self.viewModel.items.accept([section])
-                
+                if genres.isEmpty {
+
+                    let section = SectionOfGenre(header: "temp", items: [])
+                    self.viewModel.items.accept([section])
+                    
+                }
+                else {
+
+                    let oldItems = self.viewModel.items.value[0].items
+
+                    if oldItems.isEmpty {
+                        
+                        let section = SectionOfGenre(header: "temp", items: genres)
+                        self.viewModel.items.accept([section])
+                        
+                    }
+                    else {
+
+                        let isSameArr = oldItems.allSatisfy { item in
+                            genres.contains { $0.title == item.title }
+                        }
+                        
+                        if !isSameArr {
+                            
+                            let section = SectionOfGenre(header: "temp", items: genres)
+                            self.viewModel.items.accept([section])
+                            
+                        }
+                    }
+                }
                
+              
+                
+                
             })
             .disposed(by: viewModel.disposeBag)
         
@@ -110,9 +139,16 @@ class SearchGenresViewController: UIViewController, BindableType {
                 self.viewModel.registerGenres(words: notSearchedWords, genres: genres)
             
             }
+            .flatMapLatest({ [unowned self] genres in
+                self.viewModel.addGenres(genres: genres)
+            })
             .subscribe (onNext: {  [unowned self] genres in
 
-                self.viewModel.delegate?.addGenre(genres: genres)
+                self.dismiss(animated: true) {
+                    
+                    self.viewModel.delegate?.addGenre(genres: genres)
+
+                }
 
             })
             .disposed(by: viewModel.disposeBag)
@@ -161,14 +197,17 @@ class SearchGenresViewController: UIViewController, BindableType {
         dataSource = RxCollectionViewSectionedReloadDataSource<SectionOfGenre>(configureCell: { dataSource, collectionView, indexPath, item  in
             
             let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "genreCell", for: indexPath) as! GenreCVCell
+
             cell.titleLbl.text = "# \(item.title)"
+
+            collectionView.deselectItem(at: indexPath, animated: true)
             
-            if self.viewModel.selectedGenres.value.filter({ $0.id == item.id }).exists {
-                cell.isSelectedGenre = true
-            }
-            else {
-                cell.isSelectedGenre = false
-            }
+//            if self.viewModel.selectedGenres.value.filter({ $0.id == item.id }).exists {
+//                cell.isSelectedGenre = true
+//            }
+//            else {
+//                cell.isSelectedGenre = false
+//            }
             
             cell.configure()
             
@@ -243,7 +282,7 @@ extension SearchGenresViewController: UITableViewDelegate, UITableViewDataSource
             if let cell = tableView.dequeueReusableCell(withIdentifier: "searchGenreTxtViewTVCell", for: indexPath) as? SearchGenreTxtViewTVCell {
                 
                 cell.txtView.layer.borderWidth = 1
-           
+                cell.selectionStyle = .none
                 
                 if !viewModel.isDisplayed {
                 
@@ -253,7 +292,7 @@ extension SearchGenresViewController: UITableViewDelegate, UITableViewDataSource
 
                     cell.txtView.rx.text
                         .debounce(.milliseconds(300), scheduler: MainScheduler.instance)
-                         .subscribe(onNext: {  text in
+                         .subscribe(onNext: { text in
 
                              if let text = text {
                                  
@@ -278,20 +317,59 @@ extension SearchGenresViewController: UITableViewDelegate, UITableViewDataSource
             
             if let cell = tableView.dequeueReusableCell(withIdentifier: "searchedGenresTVCell", for: indexPath) as? SearchedGenresTVCell {
                 
+                cell.selectionStyle = .none
+                
                 viewModel
                     .items
                     .bind(to: cell.collectionView.rx.items(dataSource: self.dataSource))
                     .disposed(by: viewModel.disposeBag)
                 
-                Observable.combineLatest(cell.collectionView.rx.itemSelected, viewModel.items)
+                self.viewModel.selectedGenreSubject
+                    .share(replay: 1, scope: .forever)
+                    .withLatestFrom(Observable.combineLatest(self.viewModel.selectedGenreSubject, viewModel.searchingQuery, viewModel.diffenceTxtSubject))
+                    .flatMapLatest { [unowned self] selectedGenre, query, txt in
+                        self.viewModel.convertNewTxt(txt: txt, query: query, selectedGenre: selectedGenre)
+                    }
+                    .subscribe(onNext: { newString in
+
+                        if let cell = tableView.cellForRow(at: IndexPath(row: 0, section: 0)) as? SearchGenreTxtViewTVCell {
+                                
+                            cell.txtView.text = newString
+                                
+                        }
+                        
+                    })
+                    .disposed(by: cell.disposeBag)
+                
+                cell.collectionView.rx.itemSelected
+                    .subscribe(onNext: { _ in
+                        print("item selected")
+                    
+                    })
+                    .disposed(by: cell.disposeBag)
+                
+                viewModel.items
+                    .subscribe(onNext: { _ in
+                        print("new item")
+                    
+                    })
+                    .disposed(by: cell.disposeBag)
+
+                cell.collectionView.rx.itemSelected
+                    .withLatestFrom(Observable.combineLatest(cell.collectionView.rx.itemSelected, viewModel.items))
                     .subscribe(onNext: { [unowned self] collectionViewIndexPath, sections in
-                        
+
                         let items = sections[0].items
-                       
+                        let item = items[collectionViewIndexPath.row]
+
+
                         var selectedGenres = self.viewModel.selectedGenres.value
-                        selectedGenres.append(items[collectionViewIndexPath.row])
-                        
+                        selectedGenres.append(item)
+
+                        self.viewModel.selectedGenreSubject.accept(item)
                         self.viewModel.selectedGenres.accept(selectedGenres)
+                        
+
                         
                     })
                     .disposed(by: cell.disposeBag)
