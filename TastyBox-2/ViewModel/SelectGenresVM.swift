@@ -368,6 +368,11 @@ class SelectGenresVM: ViewModelBase {
         }
     }
     
+    func dismissSelection() {
+
+        self.sceneCoordinator.userDissmissed()
+
+    }
     
     //    func filterSearchedItems(with allItems: [SectionOfGenre], query: String) -> [SectionOfGenre] {
     //

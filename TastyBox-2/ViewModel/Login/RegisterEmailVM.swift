@@ -103,7 +103,7 @@ class RegisterEmailVM: ViewModelBase {
         return CocoaAction { this in
             
             let vm = LoginMainVM(sceneCoodinator: self.sceneCoordinator)
-            return self.sceneCoordinator.transition(to: LoginScene.main(vm).viewController(), type: .modal(nil, nil)).asObservable().map { _ in }
+            return self.sceneCoordinator.transition(to: LoginScene.main(vm).viewController(), type: .modal(presentationStyle: nil, modalTransisionStyle: nil, hasNavigationController: false)).asObservable().map { _ in }
         }
     }
     

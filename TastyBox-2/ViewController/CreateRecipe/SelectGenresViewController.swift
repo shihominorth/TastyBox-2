@@ -47,7 +47,7 @@ class SelectGenresViewController: UIViewController, BindableType {
     
     override func viewWillDisappear(_ animated: Bool) {
        
-        self.viewModel.sceneCoordinator.userDissmissed(viewController: self)
+//        self.viewModel.sceneCoordinator.userDissmissed()
     
     }
     

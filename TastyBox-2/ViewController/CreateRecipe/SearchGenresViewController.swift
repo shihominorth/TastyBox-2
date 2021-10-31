@@ -33,6 +33,14 @@ class SearchGenresViewController: UIViewController, BindableType {
         tableView.dataSource = self
     }
     
+    override func viewDidAppear(_ animated: Bool) {
+        
+    }
+    
+    override func viewDidDisappear(_ animated: Bool) {
+//        self.viewModel.dismissSelection()
+    }
+    
     func bindViewModel() {
 
         setUpcollectionView()
@@ -106,6 +114,14 @@ class SearchGenresViewController: UIViewController, BindableType {
 
                 self.viewModel.delegate?.addGenre(genres: genres)
 
+            })
+            .disposed(by: viewModel.disposeBag)
+        
+        cancelBtn.rx.tap
+            .subscribe(onNext: {[unowned self] _ in
+                
+                self.dismiss(animated: true)
+                
             })
             .disposed(by: viewModel.disposeBag)
 

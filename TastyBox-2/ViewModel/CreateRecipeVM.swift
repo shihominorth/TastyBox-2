@@ -441,7 +441,7 @@ class CreateRecipeVM: ViewModelBase {
         
         let vm = SelectGenresVM(sceneCoordinator: self.sceneCoodinator, user: self.user, genres: genres)
         
-        self.sceneCoodinator.modalTransition(to: Scene.createReceipeScene(scene: .selectGenre(vm)), type: .modal(.automatic, .coverVertical))
+        self.sceneCoodinator.modalTransition(to: Scene.createReceipeScene(scene: .selectGenre(vm)), type: .modal(presentationStyle: .automatic, modalTransisionStyle: .coverVertical, hasNavigationController: true))
             .asObservable()
             .subscribe(onError: { err in
                 

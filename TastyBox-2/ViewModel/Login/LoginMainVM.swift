@@ -77,7 +77,7 @@ class LoginMainVM: ViewModelBase {
         if let user = self.user {
             let vm = DiscoveryVM(sceneCoodinator: self.sceneCoodinator, user: user)
             let vc = MainScene.discovery(vm).viewController()
-            self.sceneCoodinator.transition(to: vc, type: .modal(nil, nil))
+            self.sceneCoodinator.transition(to: vc, type: .modal(presentationStyle: nil, modalTransisionStyle: nil, hasNavigationController: false))
         }
     }
     
