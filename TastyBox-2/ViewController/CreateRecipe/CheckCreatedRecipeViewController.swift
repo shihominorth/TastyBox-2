@@ -50,9 +50,7 @@ class CheckCreatedRecipeViewController: UIViewController, BindableType {
         
         
         self.navigationItem.rightBarButtonItem = publishBtn
-        
-        let interval = CMTime(value: 1, timescale: 2)
-        
+                
         
     }
     
@@ -135,22 +133,22 @@ class CheckCreatedRecipeViewController: UIViewController, BindableType {
                     
                     if (isExpanded && cell.bounds.height == 100) || (!isExpanded && cell.bounds.height != 100) {
                         
-                        if (isExpanded && cell.bounds.height <= 100) {
-                            tableView.reloadRows(at: [IndexPath(row: 0, section: 3)], with: .top)
-                        }
-                        else if (!isExpanded && cell.bounds.height > 100)  {
-                            tableView.reloadRows(at: [IndexPath(row: 0, section: 3)], with: .bottom)
+                        UIView.animate(withDuration: 0.0, delay: 0.0, options: [], animations: {
+                            // do not change animation
+                            tableView.reloadRows(at: [IndexPath(row: 0, section: 3)], with: .none)
 
+                        }) { isCompleted in
+                            // do not change animation
+                            tableView.scrollToRow(at: indexPath, at: .middle, animated: true)
                         }
-                      
-                        cell.layoutIfNeeded()
-                        cell.collectionView.reloadData()
+                           
                     
                     }
                  
+            
                 }
 
-                tableView.scrollToRow(at: indexPath, at: .middle, animated: true)
+               
                 
             })
             .disposed(by: viewModel.disposeBag)
@@ -228,17 +226,26 @@ class CheckCreatedRecipeViewController: UIViewController, BindableType {
                     cell.genres = genre
                     cell.selectionStyle = .none
                     
+                    cell.expandBtn.setTitle("", for: .normal)
+
+                    
                     cell.expandBtn.rx.tap
-                        .throttle(.milliseconds(1000), scheduler: MainScheduler.instance)
-                        .debug("tapped")
+                        .throttle(.milliseconds(1000), latest: false, scheduler: MainScheduler.instance)
+                    // when debug rx.tap, if it does not emit subscribed, completed and disposed, it emits mutiple events without take(1)
+                        .take(1)
+                         .debug("tapped")
                         .withLatestFrom(viewModel.isExpandedSubject)
-                        .ifEmpty(default: false)
                         .subscribe(onNext: { isExpanded in
                             
                             viewModel.isExpandedSubject.accept(!isExpanded)
                            
                         })
                         .disposed(by: cell.disposeBag)
+                    
+                    if let img = viewModel.isExpandedSubject.value ? UIImage(systemName: "chevron.up.circle") : UIImage(systemName: "chevron.down.circle"){
+                        cell.expandBtn.setImage(img, for: .normal)
+                    }
+                  
                     
                     return cell
                 }
@@ -345,7 +352,7 @@ extension CheckCreatedRecipeViewController: UITableViewDelegate {
             return 80
             
         case 3:
-//            return viewModel.isExpanded ?  UITableView.automaticDimension : 100
+           
             return viewModel.isExpandedSubject.value ?  UITableView.automaticDimension : 100
 
         case 4:
@@ -370,6 +377,7 @@ extension CheckCreatedRecipeViewController: UITableViewDelegate {
             
         }
     }
+    
 }
 
 

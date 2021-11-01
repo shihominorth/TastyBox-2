@@ -845,8 +845,9 @@
                                                     <constraints>
                                                         <constraint firstAttribute="height" constant="31" id="spw-mK-oNX"/>
                                                     </constraints>
+                                                    <color key="tintColor" red="0.63529411759999999" green="0.51764705879999995" blue="0.36862745099999999" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                     <state key="normal" title="Button"/>
-                                                    <buttonConfiguration key="configuration" style="plain" title="Button"/>
+                                                    <buttonConfiguration key="configuration" style="plain" image="chevron.down.circle" catalog="system"/>
                                                 </button>
                                                 <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="uhE-K0-R50">
                                                     <rect key="frame" x="0.0" y="0.0" width="414" height="61"/>
@@ -1175,6 +1176,7 @@
     </scenes>
     <resources>
         <image name="chevron.backward.circle" catalog="system" width="128" height="121"/>
+        <image name="chevron.down.circle" catalog="system" width="128" height="121"/>
         <image name="chinese" width="2957" height="2366"/>
         <image name="heart" catalog="system" width="128" height="109"/>
         <image name="plus.circle.fill" catalog="system" width="128" height="121"/>
