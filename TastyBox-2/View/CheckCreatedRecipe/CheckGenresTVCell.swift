@@ -18,19 +18,21 @@ class CheckGenresTVCell: UITableViewCell {
     var isShownFullSize = false
     var shownGenreNum = 3
     var disposeBag = DisposeBag()
+    let flowLayout = GenreCollectionViewFlowLayout()
     
     override func awakeFromNib() {
         super.awakeFromNib()
         // Initialization code
+//        collectionView.delegate = self
         collectionView.dataSource = self
-        
-        let flowLayout = GenreCollectionViewFlowLayout()
+        collectionView.isScrollEnabled = false
+       
         
 //        flowLayout.headerReferenceSize = CGSize(width: self.contentView.frame.width, height: 100)
 
         flowLayout.estimatedItemSize = UICollectionViewFlowLayout.automaticSize
         
-        flowLayout.sectionInset = UIEdgeInsets(top: 5, left: 8, bottom: 5, right: 8)
+        flowLayout.sectionInset = UIEdgeInsets(top: 15, left: 8, bottom: 15, right: 8)
 
         collectionView.collectionViewLayout = flowLayout
         
@@ -40,7 +42,8 @@ class CheckGenresTVCell: UITableViewCell {
     override func setSelected(_ selected: Bool, animated: Bool) {
         super.setSelected(selected, animated: animated)
 
-        // Configure the view for the selected state
+     
+
     }
     
     
@@ -74,4 +77,6 @@ extension CheckGenresTVCell: UICollectionViewDataSource {
         
         return UICollectionViewCell()
     }
+    
+
 }

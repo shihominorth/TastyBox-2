@@ -64,7 +64,7 @@ class CheckRecipeVM {
         
         var temp: [Genre] = []
         
-        for _ in 0 ..< 50 {
+        for _ in 0 ..< 1 {
             let genre = Genre(id: "Daaafssgsdg", title: "temp")
             temp.append(genre)
         }

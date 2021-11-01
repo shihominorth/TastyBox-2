@@ -51,9 +51,13 @@ class CheckCreatedRecipeViewController: UIViewController, BindableType {
         
         self.navigationItem.rightBarButtonItem = publishBtn
                 
-        
+//        tableView.performBatchUpdates(nil, completion: { isCompleted in
+//
+//
+//
+//        })
     }
-    
+ 
     
     func bindViewModel() {
         
@@ -246,6 +250,11 @@ class CheckCreatedRecipeViewController: UIViewController, BindableType {
                         cell.expandBtn.setImage(img, for: .normal)
                     }
                   
+                    if cell.collectionView.collectionViewLayout.collectionViewContentSize.height <= 80 {
+                        
+                        cell.expandBtn.isHidden = true
+                        
+                    }
                     
                     return cell
                 }

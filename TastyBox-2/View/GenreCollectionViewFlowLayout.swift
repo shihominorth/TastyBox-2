@@ -9,6 +9,7 @@ import UIKit
 
 class GenreCollectionViewFlowLayout: UICollectionViewFlowLayout, UICollectionViewDelegateFlowLayout {
     
+    var numlines = 0
 
     override func layoutAttributesForElements(in rect: CGRect) -> [UICollectionViewLayoutAttributes]? {
         
@@ -37,6 +38,7 @@ class GenreCollectionViewFlowLayout: UICollectionViewFlowLayout, UICollectionVie
         
         guard indexPath.item > 0 else {
             currentAttributes.frame.origin.x = sectionInsetsLeft
+//            numlines += 1
             return currentAttributes
         }
         
@@ -51,7 +53,10 @@ class GenreCollectionViewFlowLayout: UICollectionViewFlowLayout, UICollectionVie
         let currentColumnRect = CGRect(x: sectionInsetsLeft, y: currentAttributes.frame.origin.y, width: validWidth, height: currentAttributes.frame.height)
         
         guard prevFrame.intersects(currentColumnRect) else {
+
             currentAttributes.frame.origin.x = sectionInsetsLeft
+//            numlines += 1
+
             return currentAttributes
         }
         
