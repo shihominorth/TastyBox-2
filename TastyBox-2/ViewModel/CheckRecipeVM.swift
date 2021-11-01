@@ -9,6 +9,7 @@ import Foundation
 import Firebase
 import UIKit
 import RxSwift
+import RxCocoa
 import RxRelay
 
 class CheckRecipeVM {
@@ -26,6 +27,17 @@ class CheckRecipeVM {
     let instructions: [Instruction]
     var isDisplayed = false
     var isEnded = false
+//    var isExpanded = false
+
+    let isExpandedSubject = BehaviorRelay<Bool>(value: false)
+
+    let isExpandedDiffenreceSubject = ReplaySubject<Bool>.create(bufferSize: 1)
+    var diffenrenceIsExpandedSubject: Observable<Bool> {
+        return Observable.zip(isExpandedDiffenreceSubject, isExpandedDiffenreceSubject.skip(1)) { previous, current in
+            return  previous != current
+        }
+       
+    }
     
     let recipeDataSubject = BehaviorSubject<[String: Any]>(value: [:])
     let ingredientsDataSubject = BehaviorSubject<[[String: Any]]>(value: [])
@@ -45,10 +57,21 @@ class CheckRecipeVM {
         self.mainPhoto = mainPhoto
         self.instructions = instructions
         
+        
         let mainImageSection: RecipeItemSectionModel = .mainImageData(imgData: mainPhoto, videoURL: video)
         let titleSection: RecipeItemSectionModel = .title(title: title)
         let evaluateSection: RecipeItemSectionModel = .evaluate(evaluates: .evaluate(evaluates))
-        let genresSection: RecipeItemSectionModel = .genres(genre: .genres(genres))
+        
+        var temp: [Genre] = []
+        
+        for _ in 0 ..< 50 {
+            let genre = Genre(id: "Daaafssgsdg", title: "temp")
+            temp.append(genre)
+        }
+        
+        temp.append(contentsOf: genres)
+        let genresSection: RecipeItemSectionModel = .genres(genre: .genres(temp))
+//        let genresSection: RecipeItemSectionModel = .genres(genre: .genres(genres))
         
         guard let time = Int(time), let serving = Int(serving) else { return }
         let timeNServingSection: RecipeItemSectionModel = .timeAndServing(time: time, serving: serving)
@@ -70,6 +93,9 @@ class CheckRecipeVM {
         
         self.url = video
         //        super.init()
+        
+        
+//        self.isExpandedDiffenreceSubject.onNext(false)
         
     }
     
@@ -188,6 +214,9 @@ class CheckRecipeVM {
         //        }
         
     }
-    
-    
+   
+}
+
+extension ObservableType {
+
 }

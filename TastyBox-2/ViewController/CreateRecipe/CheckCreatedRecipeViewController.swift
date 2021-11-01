@@ -10,6 +10,7 @@ import AVFoundation
 import RxSwift
 import RxCocoa
 import RxDataSources
+import RxTimelane
 import Lottie
 
 class CheckCreatedRecipeViewController: UIViewController, BindableType {
@@ -122,6 +123,37 @@ class CheckCreatedRecipeViewController: UIViewController, BindableType {
                 
             })
             .disposed(by: viewModel.disposeBag)
+
+        
+        viewModel.isExpandedSubject
+            .skip(1)
+            .subscribe(onNext: { [unowned self] isExpanded in
+
+                let indexPath = IndexPath(row: 0, section: 3)
+                
+                if let cell = tableView.cellForRow(at: IndexPath(row: 0, section: 3)) as? CheckGenresTVCell {
+                    
+                    if (isExpanded && cell.bounds.height == 100) || (!isExpanded && cell.bounds.height != 100) {
+                        
+                        if (isExpanded && cell.bounds.height <= 100) {
+                            tableView.reloadRows(at: [IndexPath(row: 0, section: 3)], with: .top)
+                        }
+                        else if (!isExpanded && cell.bounds.height > 100)  {
+                            tableView.reloadRows(at: [IndexPath(row: 0, section: 3)], with: .bottom)
+
+                        }
+                      
+                        cell.layoutIfNeeded()
+                        cell.collectionView.reloadData()
+                    
+                    }
+                 
+                }
+
+                tableView.scrollToRow(at: indexPath, at: .middle, animated: true)
+                
+            })
+            .disposed(by: viewModel.disposeBag)
     }
     
     
@@ -195,6 +227,18 @@ class CheckCreatedRecipeViewController: UIViewController, BindableType {
                     
                     cell.genres = genre
                     cell.selectionStyle = .none
+                    
+                    cell.expandBtn.rx.tap
+                        .throttle(.milliseconds(1000), scheduler: MainScheduler.instance)
+                        .debug("tapped")
+                        .withLatestFrom(viewModel.isExpandedSubject)
+                        .ifEmpty(default: false)
+                        .subscribe(onNext: { isExpanded in
+                            
+                            viewModel.isExpandedSubject.accept(!isExpanded)
+                           
+                        })
+                        .disposed(by: cell.disposeBag)
                     
                     return cell
                 }
@@ -299,6 +343,11 @@ extension CheckCreatedRecipeViewController: UITableViewDelegate {
             return 444
         case 2:
             return 80
+            
+        case 3:
+//            return viewModel.isExpanded ?  UITableView.automaticDimension : 100
+            return viewModel.isExpandedSubject.value ?  UITableView.automaticDimension : 100
+
         case 4:
             return 60
             

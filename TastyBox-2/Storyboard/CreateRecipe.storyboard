@@ -852,8 +852,7 @@
                                                     <rect key="frame" x="0.0" y="0.0" width="414" height="61"/>
                                                     <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                     <constraints>
-                                                        <constraint firstAttribute="height" relation="greaterThanOrEqual" constant="40" id="QRA-e6-odd"/>
-                                                        <constraint firstAttribute="height" constant="61" id="bdh-ii-qmc"/>
+                                                        <constraint firstAttribute="height" relation="greaterThanOrEqual" priority="999" constant="40" id="QRA-e6-odd"/>
                                                     </constraints>
                                                     <collectionViewFlowLayout key="collectionViewLayout" automaticEstimatedItemSize="YES" minimumLineSpacing="10" minimumInteritemSpacing="10" id="J2A-5W-PKf">
                                                         <size key="itemSize" width="128" height="128"/>
@@ -862,7 +861,7 @@
                                                         <inset key="sectionInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
                                                     </collectionViewFlowLayout>
                                                     <cells>
-                                                        <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" id="LVp-DH-dm7">
+                                                        <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="checkGenreCVCell" id="LVp-DH-dm7" customClass="CheckGenresCVCell" customModule="TastyBox_2" customModuleProvider="target">
                                                             <rect key="frame" x="0.0" y="0.0" width="57.5" height="36.5"/>
                                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                             <collectionViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" id="8f6-np-niM">
@@ -885,23 +884,27 @@
                                                                     <constraint firstAttribute="bottom" secondItem="Owm-i9-Tin" secondAttribute="bottom" constant="8" id="yBy-Ip-2Au"/>
                                                                 </constraints>
                                                             </collectionViewCellContentView>
+                                                            <connections>
+                                                                <outlet property="titleLbl" destination="Owm-i9-Tin" id="fbh-K1-oo7"/>
+                                                            </connections>
                                                         </collectionViewCell>
                                                     </cells>
                                                 </collectionView>
                                             </subviews>
                                             <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                             <constraints>
-                                                <constraint firstItem="HPp-rN-UIN" firstAttribute="top" secondItem="uhE-K0-R50" secondAttribute="bottom" constant="8" symbolic="YES" id="2Jj-c4-sLs"/>
                                                 <constraint firstAttribute="trailing" secondItem="HPp-rN-UIN" secondAttribute="trailing" id="Gfd-vD-Uvg"/>
                                                 <constraint firstItem="uhE-K0-R50" firstAttribute="top" secondItem="EhU-3C-JwE" secondAttribute="top" id="HGd-Qf-YgJ"/>
                                                 <constraint firstItem="uhE-K0-R50" firstAttribute="leading" secondItem="EhU-3C-JwE" secondAttribute="leading" id="SGa-E6-Bgr"/>
                                                 <constraint firstAttribute="bottom" secondItem="HPp-rN-UIN" secondAttribute="bottom" id="STe-SQ-q14"/>
+                                                <constraint firstItem="HPp-rN-UIN" firstAttribute="top" secondItem="uhE-K0-R50" secondAttribute="bottom" constant="8" symbolic="YES" id="aVq-x8-tuG"/>
                                                 <constraint firstItem="HPp-rN-UIN" firstAttribute="leading" secondItem="EhU-3C-JwE" secondAttribute="leading" id="bzh-rd-92D"/>
                                                 <constraint firstAttribute="trailing" secondItem="uhE-K0-R50" secondAttribute="trailing" id="dOf-BK-47z"/>
                                             </constraints>
                                         </tableViewCellContentView>
                                         <connections>
                                             <outlet property="collectionView" destination="uhE-K0-R50" id="rm8-fi-f3D"/>
+                                            <outlet property="collectionViewHeight" destination="QRA-e6-odd" id="Ak5-zT-mT3"/>
                                             <outlet property="expandBtn" destination="HPp-rN-UIN" id="InT-RG-8kk"/>
                                         </connections>
                                     </tableViewCell>

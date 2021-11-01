@@ -6,6 +6,8 @@
 //
 
 import UIKit
+import RxSwift
+import RxCocoa
 
 class PublishRecipeOptionsViewController: UIViewController, BindableType {
    
@@ -33,6 +35,7 @@ class PublishRecipeOptionsViewController: UIViewController, BindableType {
         
         collectionView.rx.itemSelected
             .share(replay: 1, scope: .forever)
+            .skip(1)
             .subscribe(onNext: { [unowned self] indexPath in
                 
                 if indexPath.row == 0 {

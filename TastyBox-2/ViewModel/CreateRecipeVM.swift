@@ -73,6 +73,8 @@ class CreateRecipeVM: ViewModelBase {
     
     var pickingImgIndexSubject = PublishSubject<Int>()
     
+    var isExpanded = false
+    
     init(sceneCoodinator: SceneCoordinator, user: Firebase.User, apiType: CreateRecipeDMProtocol.Type = CreateRecipeDM.self) {
         
         self.sceneCoodinator = sceneCoodinator

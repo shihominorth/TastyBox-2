@@ -284,10 +284,6 @@ class SelectGenresVM: ViewModelBase {
     
     func registerGenres(words: [String], genres: [Genre]) -> Observable<[Genre]> {
         
-        let newGenresObservable = registerNewGenres(words: words)
-        //
-        let registerMyGenresObservable = registerAsMyGenres(genres: genres)
-        
         return Observable.combineLatest(registerNewGenres(words: words).map { $0 }.startWith([]), registerAsMyGenres(genres: genres).map { $0 }.startWith([])) { registeredNewGenres, registeredMyGenres in
             
             var result = registeredNewGenres

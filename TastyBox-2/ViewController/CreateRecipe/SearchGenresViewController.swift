@@ -12,8 +12,7 @@ import RxDataSources
 
 
 class SearchGenresViewController: UIViewController, BindableType {
-    
-    
+ 
     typealias ViewModelType = SelectGenresVM
     var viewModel: SelectGenresVM!
     
@@ -21,9 +20,7 @@ class SearchGenresViewController: UIViewController, BindableType {
     @IBOutlet weak var addBtn: UIBarButtonItem!
     @IBOutlet weak var cancelBtn: UIBarButtonItem!
     @IBOutlet weak var tableView: UITableView!
-    
-//    @IBOutlet weak var collectionView: UICollectionView!
-    
+        
     var dataSource: RxCollectionViewSectionedReloadDataSource<SectionOfGenre>!
     
     override func viewDidLoad() {
@@ -31,14 +28,6 @@ class SearchGenresViewController: UIViewController, BindableType {
 
         // Do any additional setup after loading the view.
         tableView.dataSource = self
-    }
-    
-    override func viewDidAppear(_ animated: Bool) {
-        
-    }
-    
-    override func viewDidDisappear(_ animated: Bool) {
-//        self.viewModel.dismissSelection()
     }
     
     func bindViewModel() {
@@ -175,20 +164,6 @@ class SearchGenresViewController: UIViewController, BindableType {
     func setUpcollectionView() {
         
         setUpDataSource()
-
-//        if let cell = tableView.cellForRow(at: IndexPath(row: 1, section: 0)) as? SearchedGenresTVCell {
-//
-//            cell.collectionView.rx.didScroll
-//                .subscribe(onNext: { _ in
-//
-//                    cell.collectionView.endEditing(true)
-//
-//                })
-//                .disposed(by: viewModel.disposeBag)
-//
-//
-//
-//        }
        
     }
 
@@ -202,64 +177,10 @@ class SearchGenresViewController: UIViewController, BindableType {
 
             collectionView.deselectItem(at: indexPath, animated: true)
             
-//            if self.viewModel.selectedGenres.value.filter({ $0.id == item.id }).exists {
-//                cell.isSelectedGenre = true
-//            }
-//            else {
-//                cell.isSelectedGenre = false
-//            }
-            
             cell.configure()
             
             return cell
             
-        }, configureSupplementaryView: { [unowned self] dataSource, collectionView, kind, indexPath in
-            
-//            switch indexPath.section {
-//            case 0:
-//
-//                if (kind == "UICollectionElementKindSectionHeader") {
-//                    let reusableView = collectionView.dequeueReusableSupplementaryView(ofKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: "selectGenresCRV", for: indexPath) as! SelectGenresCRV
-//                    
-//                    reusableView.txtView.layer.borderWidth = 1
-//               
-//                    
-//                    if !viewModel.isDisplayed {
-//                    
-//                        reusableView.txtView.text = viewModel.text
-//
-//                        viewModel.isDisplayed = true
-//    
-//                         reusableView.txtView.rx.text
-//                            .debounce(.milliseconds(300), scheduler: MainScheduler.instance)
-//                             .subscribe(onNext: {  text in
-//
-//                                 if let text = text {
-//                                     
-//                                     self.viewModel.diffenceTxtSubject.onNext(text)
-//                                    
-//                                     let textCount: Int = text.count
-//                                     guard textCount >= 1 else { return }
-//                                     reusableView.txtView.scrollRangeToVisible(NSRange(location: textCount - 1, length: 1))
-//                                 }
-//                                 
-//                               
-//                             })
-//                             .disposed(by: self.viewModel.disposeBag)
-//                        
-//                        
-//                        
-//                    }
-                   
-
-//                    return reusableView
-//                }
-//
-//            default:
-//                break
-//            }
-            
-            return UICollectionReusableView()
         })
         
         
@@ -338,20 +259,6 @@ extension SearchGenresViewController: UITableViewDelegate, UITableViewDataSource
                                 
                         }
                         
-                    })
-                    .disposed(by: cell.disposeBag)
-                
-                cell.collectionView.rx.itemSelected
-                    .subscribe(onNext: { _ in
-                        print("item selected")
-                    
-                    })
-                    .disposed(by: cell.disposeBag)
-                
-                viewModel.items
-                    .subscribe(onNext: { _ in
-                        print("new item")
-                    
                     })
                     .disposed(by: cell.disposeBag)
 
