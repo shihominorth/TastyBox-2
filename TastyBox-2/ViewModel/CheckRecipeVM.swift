@@ -64,10 +64,10 @@ class CheckRecipeVM {
         
         var temp: [Genre] = []
         
-        for _ in 0 ..< 1 {
-            let genre = Genre(id: "Daaafssgsdg", title: "temp")
-            temp.append(genre)
-        }
+//        for _ in 0 ..< 1 {
+//            let genre = Genre(id: "Daaafssgsdg", title: "temp")
+//            temp.append(genre)
+//        }
         
         temp.append(contentsOf: genres)
         let genresSection: RecipeItemSectionModel = .genres(genre: .genres(temp))

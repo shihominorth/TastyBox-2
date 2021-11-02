@@ -59,23 +59,146 @@ class PublishRecipeVM: ViewModelBase {
             self.options = [(publishBtnData, publishTitle), (cancelBtnData, "Cancel")]
         }
         
-    
+        super.init()
+        
+        uploadRecipe()
+        
     }
     
     // upload image and video
-    func uploadRecipe() {
+//    func uploadRecipe() {
+//
+//       let updateRecipe = tappedPublishSubject
+////            .share(replay: 1, scope: .forever)
+//            .flatMapLatest { [unowned self] in
+//                self.apiType.updateRecipe(recipeData: recipeData, ingredientsData: ingredientsData, instructionsData: instructionsData, user: self.user)
+//            }
+//
+//        let updateGenres = tappedPublishSubject
+////            .share(replay: 1, scope: .forever)
+//            .flatMapLatest { [unowned self] in
+//                self.apiType.generateGenresIDs(genresData: genresData, user: self.user)
+//            }
+//            .flatMapLatest { [unowned self] data in
+//                self.apiType.updateUserInterestedGenres(ids: data, user: self.user)
+//            }
+//            .catch { err in
+//
+//                print(err)
+//
+//                return .empty()
+//            }
+//
+//        let updateImages = tappedPublishSubject
+////            .share(replay: 1, scope: .forever)
+//            .flatMapLatest { [unowned self] in
+//                self.apiType.compressData(imgData: [mainImage])
+//            }
+//            .map { $0[0] }
+//            .flatMapLatest { [unowned self] in
+//                self.apiType.uploadImages(mainPhoto: $0, videoURL: self.videoURL, user: self.user, recipeID: self.recipeData["id"] as! String)
+//            }
+//            .catch { err in
+//
+//                if let reason = err.handleStorageError()  {
+//
+//                    SCLAlertView().showTitle(
+//                        reason.reason, // Title of view
+//                        subTitle: reason.solution,
+//                        timeout: .none, // String of view
+//                        completeText: "Done", // Optional button value, default: ""
+//                        style: .error, // Styles - see below.
+//                        colorStyle: 0xA429FF,
+//                        colorTextButton: 0xFFFFFF
+//                    )
+//
+//                }
+//
+//                return .empty()
+//            }
+//
+//        let updateInstructionsImages = tappedPublishSubject
+////            .share(replay: 1, scope: .forever)
+//            .flatMapLatest { [unowned self] in
+//                self.apiType.startUpload(instructions: instructions, user: self.user, recipeID: self.recipeData["id"] as! String)
+//            }
+////            .catch { err in
+////
+////                if let reason = err.handleStorageError()  {
+////
+////                    SCLAlertView().showTitle(
+////                        reason.reason, // Title of view
+////                        subTitle: reason.solution,
+////                        timeout: .none, // String of view
+////                        completeText: "Done", // Optional button value, default: ""
+////                        style: .error, // Styles - see below.
+////                        colorStyle: 0xA429FF,
+////                        colorTextButton: 0xFFFFFF
+////                    )
+////
+////                }
+////
+////                return .empty()
+////            }
+//
+//    updateRecipe
+//            .subscribe(onNext: { data in
+//
+//                print("succeed to update recipe")
+//
+//            }, onError: { err in
+//
+//                print(err)
+//
+//            })
+//            .disposed(by: disposeBag)
+//
+//        updateGenres
+//            .subscribe(onNext: { data in
+//
+//                print("succeed to update genres")
+//
+//            }, onError: { err in
+//
+//                print(err)
+//
+//            })
+//            .disposed(by: disposeBag)
+//
+//        updateImages
+//            .subscribe(onNext: { data in
+//
+//                print("succeed to update images")
+//
+//            }, onError: { err in
+//
+//                print(err)
+//
+//            })
+//            .disposed(by: disposeBag)
+//
+//        updateInstructionsImages
+//            .subscribe(onNext: { data in
+//
+//                print("succeed to update instructions images")
+//
+//            }, onError: { err in
+//
+//                print(err)
+//
+//            })
+//            .disposed(by: disposeBag)
+//
+//    }
+    
+    
+    func uploadRecipe() -> Observable<Bool> {
         
-       let updateRecipe = tappedPublishSubject
-//            .share(replay: 1, scope: .forever)
-            .flatMapLatest { [unowned self] in
-                self.apiType.updateRecipe(recipeData: recipeData, ingredientsData: ingredientsData, instructionsData: instructionsData, user: self.user)
-            }
-            
-        let updateGenres = tappedPublishSubject
-//            .share(replay: 1, scope: .forever)
-            .flatMapLatest { [unowned self] in
-                self.apiType.generateGenresIDs(genresData: genresData, user: self.user)
-            }
+        var currentInstructionUPloadedNum = 0
+        
+        let uploadRecipeFieldValues = self.apiType.updateRecipe(recipeData: recipeData, ingredientsData: ingredientsData, instructionsData: instructionsData, user: self.user)
+        
+        let uploadGenres = self.apiType.generateGenresIDs(genresData: genresData, user: self.user)
             .flatMapLatest { [unowned self] data in
                 self.apiType.updateUserInterestedGenres(ids: data, user: self.user)
             }
@@ -86,11 +209,7 @@ class PublishRecipeVM: ViewModelBase {
                 return .empty()
             }
         
-        let updateImages = tappedPublishSubject
-//            .share(replay: 1, scope: .forever)
-            .flatMapLatest { [unowned self] in
-                self.apiType.compressData(imgData: [mainImage])
-            }
+        let uploadImages = self.apiType.compressData(imgData: [mainImage])
             .map { $0[0] }
             .flatMapLatest { [unowned self] in
                 self.apiType.uploadImages(mainPhoto: $0, videoURL: self.videoURL, user: self.user, recipeID: self.recipeData["id"] as! String)
@@ -114,79 +233,16 @@ class PublishRecipeVM: ViewModelBase {
                 return .empty()
             }
         
-        let updateInstructionsImages = tappedPublishSubject
-//            .share(replay: 1, scope: .forever)
-            .flatMapLatest { [unowned self] in
-                self.apiType.startUpload(instructions: instructions, user: self.user, recipeID: self.recipeData["id"] as! String)
-            }
-//            .catch { err in
-//
-//                if let reason = err.handleStorageError()  {
-//
-//                    SCLAlertView().showTitle(
-//                        reason.reason, // Title of view
-//                        subTitle: reason.solution,
-//                        timeout: .none, // String of view
-//                        completeText: "Done", // Optional button value, default: ""
-//                        style: .error, // Styles - see below.
-//                        colorStyle: 0xA429FF,
-//                        colorTextButton: 0xFFFFFF
-//                    )
-//
-//                }
-//
-//                return .empty()
-//            }
-    
-    updateRecipe
-            .subscribe(onNext: { data in
-                
-                print("succeed to update recipe")
-                
-            }, onError: { err in
-                
-                print(err)
-                
-            })
-            .disposed(by: disposeBag)
-        
-        updateGenres
-            .subscribe(onNext: { data in
-                
-                print("succeed to update genres")
-                
-            }, onError: { err in
-                
-                print(err)
-                
-            })
-            .disposed(by: disposeBag)
-        
-        updateImages
-            .subscribe(onNext: { data in
-                
-                print("succeed to update images")
-                
-            }, onError: { err in
-                
-                print(err)
-                
-            })
-            .disposed(by: disposeBag)
-        
-        updateInstructionsImages
-            .subscribe(onNext: { data in
-                
-                print("succeed to update instructions images")
-                
-            }, onError: { err in
-                
-                print(err)
-                
-            })
-            .disposed(by: disposeBag)
+        let uploadInstructionsImages = self.apiType.startUpload(instructions: instructions, user: self.user, recipeID: self.recipeData["id"] as! String)
+       
+        return Observable.zip(uploadRecipeFieldValues, uploadGenres, uploadImages, uploadInstructionsImages) { [unowned self] _, _, _, index in
+            
+            currentInstructionUPloadedNum += 1
+            
+            return self.instructions.count == currentInstructionUPloadedNum
+        }
+            
         
     }
-    
 }
 

@@ -50,12 +50,7 @@ class CheckCreatedRecipeViewController: UIViewController, BindableType {
         
         
         self.navigationItem.rightBarButtonItem = publishBtn
-                
-//        tableView.performBatchUpdates(nil, completion: { isCompleted in
-//
-//
-//
-//        })
+
     }
  
     
@@ -129,6 +124,7 @@ class CheckCreatedRecipeViewController: UIViewController, BindableType {
         
         viewModel.isExpandedSubject
             .skip(1)
+            .distinctUntilChanged()  // check if it's needed later.
             .subscribe(onNext: { [unowned self] isExpanded in
 
                 let indexPath = IndexPath(row: 0, section: 3)
@@ -198,6 +194,13 @@ class CheckCreatedRecipeViewController: UIViewController, BindableType {
                         
                     }
                     
+                    if viewModel.url == nil {
+                        cell.slider.isHidden = true
+                    }
+                    else {
+                        cell.slider.isHidden = false
+                    }
+                    
                     cell.selectionStyle = .none
                     
                     return cell
@@ -250,7 +253,8 @@ class CheckCreatedRecipeViewController: UIViewController, BindableType {
                         cell.expandBtn.setImage(img, for: .normal)
                     }
                   
-                    if cell.collectionView.collectionViewLayout.collectionViewContentSize.height <= 80 {
+                    //?
+                    if cell.collectionView.collectionViewLayout.collectionViewContentSize.height <= 70 {
                         
                         cell.expandBtn.isHidden = true
                         
