@@ -18,7 +18,10 @@ extension Scene {
         case let .createReceipeScene(scene):
             
             return createViewController(scene: scene)
+            
+        case let .profileScene(scene):
 
+            return profileViewController(scene: scene)
         }
         
         
@@ -351,4 +354,24 @@ extension VideoScene {
         }
         
     }
+}
+
+extension Scene {
+    
+    func profileViewController(scene: ProfileScene) -> UIViewController {
+        
+        let storyboard = UIStoryboard(name: "Profile", bundle: nil)
+
+        switch scene {
+        case .myprofile(let viewModel):
+           
+            var vc = storyboard.instantiateViewController(withIdentifier: "myProfile") as! MyProfileViewController
+            vc.bindViewModel(to: viewModel)
+            
+            return vc
+            
+        }
+        
+    }
+    
 }

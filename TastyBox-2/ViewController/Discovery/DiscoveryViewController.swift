@@ -169,11 +169,6 @@ class DiscoveryViewController: UIViewController, BindableType {
         NotificationCenter.default.post(name: NSNotification.Name("ShowSearch"), object: nil)
     }
     
-    @IBAction func AddNewRecipe(_ sender: Any) {
-        print("Tab Add Button")
-        NotificationCenter.default.post(name: NSNotification.Name("AddRecipe"), object: nil)
-    }
-    
     
     func initialContentView(){
         
@@ -272,6 +267,7 @@ class DiscoveryViewController: UIViewController, BindableType {
         guard let identifier = segue.identifier else { return }
         
         if identifier == "addRecipe" {
+            
             let navigationBar = UINavigationBar()
             let height = UIScreen.main.bounds.height / 2 - navigationBar.frame.size.height - 50
             let indicator = UIActivityIndicatorView(frame: CGRect(x: 0, y: 0, width: 50, height: 50))

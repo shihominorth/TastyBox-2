@@ -12,8 +12,12 @@ enum Scene {
     enum CreateRecipeScene {
         case createRecipe(CreateRecipeVM), selectGenre(SelectGenresVM), checkRecipe(CheckRecipeVM), publishRecipe(PublishRecipeVM)
     }
+    
+    enum ProfileScene {
+        case myprofile(MyProfileVM)
+    }
    
-    case createReceipeScene(scene: CreateRecipeScene)
+    case createReceipeScene(scene: CreateRecipeScene), profileScene(scene: ProfileScene)
 }
 
 enum LoadingScene {

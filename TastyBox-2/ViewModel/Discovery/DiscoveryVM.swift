@@ -38,6 +38,10 @@ class DiscoveryVM: ViewModelBase {
                 presenter.sideMenuVC?.tableView.deselectRow(at: indexPath, animated: true)
                
                 switch indexPath.row {
+                    
+                case 0:
+                    
+                    self.toMyProfile()
                 
                 case 2:
                     self.toRefrigerator()
@@ -83,6 +87,13 @@ class DiscoveryVM: ViewModelBase {
         self.sceneCoodinator.modalTransition(to: .createReceipeScene(scene: .createRecipe(vm)), type: .modal(presentationStyle: .none, modalTransisionStyle: .coverVertical, hasNavigationController: true))
     }
     
+    func toMyProfile() {
+        
+        let vm = MyProfileVM()
+        
+        self.sceneCoodinator.modalTransition(to: .profileScene(scene: .myprofile(vm)), type: .push)
+        
+    }
     
     func toRefrigerator() {
         
@@ -92,6 +103,7 @@ class DiscoveryVM: ViewModelBase {
         
         self.sceneCoodinator.transition(to:vc, type: .push)
     }
+    
     
     func toShoppinglist() {
         
