@@ -574,15 +574,15 @@
                                             <outlet property="txtView" destination="X39-36-D3a" id="JH9-hy-ZNA"/>
                                         </connections>
                                     </tableViewCell>
-                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="searchedGenresTVCell" rowHeight="722" id="0hE-EI-aNO" customClass="SearchedGenresTVCell" customModule="TastyBox_2" customModuleProvider="target">
-                                        <rect key="frame" x="0.0" y="162.5" width="414" height="722"/>
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="searchedGenresTVCell" rowHeight="236" id="0hE-EI-aNO" customClass="SearchedGenresTVCell" customModule="TastyBox_2" customModuleProvider="target">
+                                        <rect key="frame" x="0.0" y="162.5" width="414" height="236"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="0hE-EI-aNO" id="wiE-MU-KUw">
-                                            <rect key="frame" x="0.0" y="0.0" width="414" height="722"/>
+                                            <rect key="frame" x="0.0" y="0.0" width="414" height="236"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="CGA-0P-Q31">
-                                                    <rect key="frame" x="0.0" y="0.0" width="414" height="722"/>
+                                                    <rect key="frame" x="0.0" y="0.0" width="414" height="236"/>
                                                     <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                                                     <collectionViewFlowLayout key="collectionViewLayout" automaticEstimatedItemSize="YES" minimumLineSpacing="10" minimumInteritemSpacing="10" id="NGZ-0Z-cDp">
                                                         <size key="itemSize" width="128" height="128"/>

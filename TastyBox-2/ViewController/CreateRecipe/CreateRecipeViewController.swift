@@ -506,9 +506,6 @@ extension CreateRecipeViewController: UITableViewDelegate, UITableViewDataSource
             
         case 0:
             return tableView.frame.width
-            //
-            //        case 6:
-            //            return UITableView.automaticDimension
         
             
         default:

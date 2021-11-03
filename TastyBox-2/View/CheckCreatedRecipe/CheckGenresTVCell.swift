@@ -23,13 +23,10 @@ class CheckGenresTVCell: UITableViewCell {
     override func awakeFromNib() {
         super.awakeFromNib()
         // Initialization code
-//        collectionView.delegate = self
         collectionView.dataSource = self
         collectionView.isScrollEnabled = false
        
-        
-//        flowLayout.headerReferenceSize = CGSize(width: self.contentView.frame.width, height: 100)
-
+    
         flowLayout.estimatedItemSize = UICollectionViewFlowLayout.automaticSize
         
         flowLayout.sectionInset = UIEdgeInsets(top: 15, left: 8, bottom: 15, right: 8)

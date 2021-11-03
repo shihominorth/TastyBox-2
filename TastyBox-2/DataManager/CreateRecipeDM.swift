@@ -161,7 +161,7 @@ class CreateRecipeDM: CreateRecipeDMProtocol {
         
         return .create { observer in
             
-            var query = db.collection("genres").limit(to: 1)
+            var query = db.collection("genres").limit(to: 100)
             let arr = Array(searchWord.lowercased())
             
             arr.forEach {

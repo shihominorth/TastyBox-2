@@ -37,6 +37,12 @@ class SearchedGenresTVCell: UITableViewCell {
         // Configure the view for the selected state
     }
 
-    
+    override func systemLayoutSizeFitting(_ targetSize: CGSize, withHorizontalFittingPriority horizontalFittingPriority: UILayoutPriority, verticalFittingPriority: UILayoutPriority) -> CGSize {
+            //TableViewCellのlayoutIfNeeded()
+            self.layoutIfNeeded()
+     
+            let contentSize = self.collectionView.collectionViewLayout.collectionViewContentSize
+            return CGSize(width: contentSize.width, height: contentSize.height + 39)
+    }
     
 }

@@ -37,6 +37,19 @@ class SearchGenresViewController: UIViewController, BindableType {
     func bindViewModel() {
 
         setUpcollectionView()
+        
+        viewModel.getMyGenre()
+            .subscribe(onNext: { [unowned self] in
+                
+                let sectionOfGenres = SectionOfGenre(header: "", items: $0)
+            
+//                 self.differenceSubject.onNext([sectionOfGenres])
+                self.viewModel.items.accept([sectionOfGenres])
+                
+                self.tableView.reloadRows(at: [IndexPath(row: 1, section: 0)], with: .automatic)
+           
+            })
+            .disposed(by: viewModel.disposeBag)
       
         viewModel.searchingQuery
             .filter { query in
@@ -163,12 +176,14 @@ class SearchGenresViewController: UIViewController, BindableType {
             })
             .disposed(by: viewModel.disposeBag)
         
+        
     }
     
     func setUpcollectionView() {
         
         setUpDataSource()
        
+        
     }
 
     func setUpDataSource() {
@@ -186,6 +201,7 @@ class SearchGenresViewController: UIViewController, BindableType {
             return cell
             
         })
+        
         
         
     }
@@ -294,4 +310,7 @@ extension SearchGenresViewController: UITableViewDelegate, UITableViewDataSource
         
     }
    
+    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        return UITableView.automaticDimension
+    }
 }
