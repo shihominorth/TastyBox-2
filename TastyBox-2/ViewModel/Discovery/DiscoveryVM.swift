@@ -89,7 +89,7 @@ class DiscoveryVM: ViewModelBase {
     
     func toMyProfile() {
         
-        let vm = MyProfileVM()
+        let vm = MyProfileVM(sceneCoordinator: self.sceneCoodinator, user: self.user)
         
         self.sceneCoodinator.modalTransition(to: .profileScene(scene: .myprofile(vm)), type: .push)
         

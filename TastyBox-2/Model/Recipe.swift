@@ -10,24 +10,78 @@ import Firebase
 import FirebaseFirestore
 import MessageUI
 import RxDataSources
+import DifferenceKit
 
 struct Recipe {
     
     let recipeID: String
-    let imageData: Data?
-    let video: URL?
+    let imageData: Data
+//    let video: URL?
     var title: String
-    let updatedDate: Timestamp
+    let updateDate: Timestamp
     var cookingTime: Int
     //    var image: String?
     var likes: Int
     var serving: Int
     let userID:String
-    var genres: [String] = []
-    var isVIPRecipe: Bool?
+    var genresIDs: [String] = []
+    var isVIP: Bool?
+    
+    init?(recipeData:  QueryDocumentSnapshot, imageData: Data) {
+        
+        let data = recipeData.data()
+        
+        guard let id = data["id"] as? String,
+              let title = data["title"] as? String,
+              let updateDate = data["updateDate"] as? Timestamp,
+              let time = data["time"] as? Int,
+              let serving = data["serving"] as? Int,
+              let isVIP = data["isVIP"] as? Bool,
+              let publisherID = data["publisherID"] as? String,
+              let genresData = data["genres"] as? [String: Bool]
+        else { return nil }
+        
+      
+        self.recipeID = id
+        self.title = title
+        self.updateDate = updateDate
+        self.cookingTime = time
+        self.likes = data["likes"] as? Int ?? 0
+        self.userID = publisherID
+        self.serving = serving
+        self.isVIP = isVIP
+        self.genresIDs = [String](genresData.keys)
+       
+        self.imageData = imageData
+
+    }
+    
+//    init?(documentSnapshot:  DocumentSnapshot) {
+//
+//        guard let data = documentSnapshot.data() else { return nil }
+//
+//        guard let id = data["id"] as? String, let title = data["title"] as? String else { return nil }
+//
+//        self.id = id
+//        self.title = title
+//
+//    }
+    
+  
 }
 
-
+extension Recipe: Differentiable {
+    
+    var differenceIdentifier: String {
+        return self.recipeID
+    }
+    
+    func isContentEqual(to source: Recipe) -> Bool {
+        
+        return self.recipeID == source.recipeID
+        
+    }
+}
 
 struct Instruction {
     var index: Int
@@ -55,26 +109,12 @@ enum RecipeDetailSectionItem {
 
 enum RecipeItemSectionModel {
     
-//    case mainImageData(content: [RecipeDetailSectionItem])
-//    case videoURL(content: [RecipeDetailSectionItem])
-//    case title(content: [RecipeDetailSectionItem])
-//    case evaluate(content: [RecipeDetailSectionItem])
-//    case timeAndServing(content: [RecipeDetailSectionItem])
-//    case likes(content: [RecipeDetailSectionItem])
-//    case serving(content: [RecipeDetailSectionItem])
-//    case user(content: [RecipeDetailSectionItem])
-//    case genresSection(content: [RecipeDetailSectionItem])
-//    case isVIP(content: [RecipeDetailSectionItem])
-//    case ingredientSection(content: [RecipeDetailSectionItem])
-//    case instructionSection(content: [RecipeDetailSectionItem])
-    
     case mainImageData(imgData: Data, videoURL: URL?)
     case title(title: String)
     case evaluate(evaluates: RecipeDetailSectionItem)
     case timeAndServing(time: Int, serving: Int)
     case user(user: User)
     case genres(genre: RecipeDetailSectionItem)
-//    case isVIP(isVIP: Bool)
     case ingredients(ingredient: [RecipeDetailSectionItem])
     case instructions(instruction: [RecipeDetailSectionItem])
     
@@ -121,46 +161,6 @@ extension RecipeItemSectionModel: SectionModelType {
 
             return instructions.map { $0 }
         }
-        
-//        switch self {
-            
-//        case let .mainImageData(data):
-//            return data
-            
-//        case let .videoURL(url):
-//            return url
-            
-//        case let .title(title):
-//            return title
-//
-//        case let .evaluate(data):
-//            return data
-//
-//        case let .timeAndServing(data):
-        
-//            return data
-            
-//        case let .serving(serving):
-//            return serving
-            
-//        case let .likes(likes):
-//            return likes
-//
-//        case let .genresSection(genres):
-//            return genres
-            
-//        case let .user(user):
-//            return user
-//
-//        case let .isVIP(isVIP):
-//            return isVIP
-            
-//        case let .ingredientSection(ingredients):
-//            return ingredients
-//
-//        case let .instructionSection(instructions):
-//            return instructions
-//        }
     }
     
     var title: String {
