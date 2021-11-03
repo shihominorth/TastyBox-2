@@ -43,7 +43,6 @@ class SearchGenresViewController: UIViewController, BindableType {
                 
                 let sectionOfGenres = SectionOfGenre(header: "", items: $0)
             
-//                 self.differenceSubject.onNext([sectionOfGenres])
                 self.viewModel.items.accept([sectionOfGenres])
                 
                 self.tableView.reloadRows(at: [IndexPath(row: 1, section: 0)], with: .automatic)

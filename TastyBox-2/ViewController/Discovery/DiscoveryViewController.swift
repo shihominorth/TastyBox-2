@@ -70,7 +70,15 @@ class DiscoveryViewController: UIViewController, BindableType {
         super.viewDidLoad()
         
         self.title = "TastyBox"
-        self.navigationController?.navigationBar.titleTextAttributes = [NSAttributedString.Key.foregroundColor: UIColor.orange ]
+        
+        let appearance = UINavigationBarAppearance()
+        appearance.backgroundColor = #colorLiteral(red: 0.9994645715, green: 0.9797875285, blue: 0.7697802186, alpha: 1)
+        appearance.titleTextAttributes = [.foregroundColor: UIColor.orange]
+
+        navigationController?.navigationBar.standardAppearance = appearance
+        navigationController?.navigationBar.compactAppearance = appearance
+        navigationController?.navigationBar.scrollEdgeAppearance = appearance
+ 
         
         CreateMenuLabel()
         

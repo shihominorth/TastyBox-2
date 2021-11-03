@@ -52,9 +52,7 @@ class SelectGenresVM: ViewModelBase {
                 !previous.contains(where: { $0 == char })
                 
             }.map { char in
-                
-                //                print(char)
-                
+                                
                 return String(char)
                 
             }.contains(where: { $0 == "#" })
@@ -100,22 +98,6 @@ class SelectGenresVM: ViewModelBase {
         
     }
     
-    //    var shouldAddNewGenre: Observable<Bool> {
-    //
-    //        return Observable.zip(differenceSubject, differenceSubject.skip(1)) { previous, current in
-    //
-    //            if current.count == previous.count {
-    //                return true
-    //            }
-    //            else if current.count == previous.count {
-    //                return false
-    //            }
-    //
-    //            return false
-    //        }
-    //        .asObservable()
-    //    }
-    
     //MARK: Genre should capitlized when searching and registering
     
     init(sceneCoordinator: SceneCoordinator, user: Firebase.User, genres: [Genre], apiType: CreateRecipeDMProtocol.Type = CreateRecipeDM.self) {
@@ -126,78 +108,16 @@ class SelectGenresVM: ViewModelBase {
         
         super.init()
         
-        //        let item = Genre(id: "dfjkahfajhkalhfj", title: "Hello!")
-        //
-        //        var items: [Genre] = []
-        //
-        //        for _ in 0 ..< 5 {
-        //
-        //            items.append(item)
-        //
-        //        }
-        //
-        //        self.text = "# \(item.title)"
-        
-        
         genres.forEach { [unowned self] in
             
             self.text += "# \($0.title) "
             
         }
         
-//        selectedGenres.accept(genres)
-        
-//        let temp = SectionOfGenre(header: "temp", items: [])
-        //
-        //
-        
-//        self.items.accept([temp])
-        
         
         self.diffenceTxtSubject.onNext(text)
-        //        var items = self.selectedGenres.value
-        //
-        //        items.append(contentsOf: genres)
-        //
-        //        self.selectedGenres.accept(items)
-        
-        
-        
-        
-        
+ 
     }
-    //
-//    func getMyGenre() {
-//
-//        self.apiType.getMyGenresIDs(user: self.user)
-//            .flatMap { self.apiType.getMyGenres(ids: $0, user: self.user) }
-//            .catch { err in
-//
-//                print(err)
-//
-//                return .empty()
-//
-//            }
-//            .subscribe(onNext: { [unowned self] genres, isLast in
-//
-//                if isLast {
-//
-//                    genres.forEach {
-//
-//                        print($0.id)
-//                        print($0.title)
-//
-//                    }
-//
-//                    let sectionOfGenres = SectionOfGenre(header: "", items: genres)
-//
-//                    self.differenceSubject.onNext([sectionOfGenres])
-//                    self.items.accept([sectionOfGenres])
-//                }
-//
-//            })
-//            .disposed(by: disposeBag)
-//    }
     
     func getMyGenre() -> Observable<[Genre]> {
   
@@ -212,21 +132,7 @@ class SelectGenresVM: ViewModelBase {
             }
             .filter { $0.1 == true }
             .map { $0.0 }
-//            .do(onNext: {
-                
-//                $0.forEach {
-//                    
-//                    print($0.id)
-//                    print($0.title)
-//                    
-//                }
-//               //
-//                let sectionOfGenres = SectionOfGenre(header: "", items: $0)
-//               //
-//                self.differenceSubject.onNext([sectionOfGenres])
-//                self.items.accept([sectionOfGenres])
-//            })
- 
+
       }
     
     
