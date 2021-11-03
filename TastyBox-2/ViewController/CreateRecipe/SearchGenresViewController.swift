@@ -30,6 +30,10 @@ class SearchGenresViewController: UIViewController, BindableType {
         tableView.dataSource = self
     }
     
+    override func viewDidDisappear(_ animated: Bool) {
+        self.viewModel.sceneCoordinator.userDissmissed()
+    }
+    
     func bindViewModel() {
 
         setUpcollectionView()

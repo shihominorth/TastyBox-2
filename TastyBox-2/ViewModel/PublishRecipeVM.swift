@@ -61,7 +61,6 @@ class PublishRecipeVM: ViewModelBase {
         
         super.init()
         
-        uploadRecipe()
         
     }
     

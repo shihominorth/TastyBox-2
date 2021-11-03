@@ -22,8 +22,9 @@ class CreateRecipeViewController: UIViewController, BindableType {
     
     @IBOutlet weak var tableView: UITableView!
     
-    var addGenresBtn = UIBarButtonItem()
-    
+    var nextBtn = UIBarButtonItem()
+    var cancelBtn = UIBarButtonItem()
+
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -36,14 +37,18 @@ class CreateRecipeViewController: UIViewController, BindableType {
         
         setUpTableView()
         
-        addGenresBtn.title = "Next"
-        self.navigationItem.rightBarButtonItem = addGenresBtn
+        nextBtn.title = "Next"
+        cancelBtn.title = "Cancel"
+        
+        self.navigationItem.rightBarButtonItem = nextBtn
+        self.navigationItem.leftBarButtonItem = cancelBtn
+        
     }
     
     
     func bindViewModel() {
         
-        addGenresBtn.rx.tap
+        nextBtn.rx.tap
             .debounce(.microseconds(1000), scheduler: MainScheduler.instance)
             .asDriver(onErrorJustReturn: ())
             .asObservable()
@@ -62,11 +67,20 @@ class CreateRecipeViewController: UIViewController, BindableType {
             }
             .filter { $0 }
             .subscribe(onNext: { [unowned self] isFilled in
+  
+                self.viewModel.goToNext()
                
-//                if viewModel.ingredients[0].name.isNotEmpty && viewModel.ingredients[0].amount.isNotEmpty &&  viewModel.instructions[0].text.isNotEmpty && isFilled {
-                    self.viewModel.goToNext()
-//                }
-               
+            })
+            .disposed(by: viewModel.disposeBag)
+        
+        cancelBtn.rx.tap
+            .debounce(.microseconds(1000), scheduler: MainScheduler.instance)
+            .asDriver(onErrorJustReturn: ())
+            .asObservable()
+            .subscribe(onNext: { _ in
+                
+                self.viewModel.sceneCoodinator.pop(animated: true)
+                
             })
             .disposed(by: viewModel.disposeBag)
         
@@ -464,33 +478,16 @@ extension CreateRecipeViewController: UITableViewDelegate, UITableViewDataSource
                               
                                 strongSelf.tableView.scrollToRow(at: indexPath, at: .bottom, animated: true)
                                 
-//                                let cellRect = tableView.rectForRow(at: indexPath)
-//                                let cellRectInView = tableView.convert(cellRect, to: self?.navigationController?.view)
-//
-//
-//
-//                                if cellRectInView.origin.y + cellRect.height >= viewHeight - keyboardSize.height {
-//
-//                                    tableView.setContentOffset(CGPoint(x: 0.0, y: keyboardSize.height), animated: true)
-//
-//                                }
                             }
                             
                         }
                     })
                     .disposed(by: cell.disposeBag)
                 
-//                cell.txtView.rx.text.subscribe(onNext: { text in
-//
-//                    tableView.reloadRows(at: [indexPath], with: .automatic)
-//
-//                }).disposed(by: cell.disposeBag)
-                
-                        cell.tapped
-                        .flatMapLatest { [unowned self] in self.viewModel.instructionsToImagePicker(index: indexPath.row) }
-                        .debug()
-                        .bind(to: cell.imgSubject)
-                        .disposed(by: cell.disposeBag)
+                cell.tapped
+                    .flatMapLatest { [unowned self] in self.viewModel.instructionsToImagePicker(index: indexPath.row) }
+                    .bind(to: cell.imgSubject)
+                    .disposed(by: cell.disposeBag)
                 
                 return cell
             }
@@ -520,22 +517,7 @@ extension CreateRecipeViewController: UITableViewDelegate, UITableViewDataSource
         
         
     }
-    
-//    func tableView(_ tableView: UITableView, estimatedHeightForRowAt indexPath: IndexPath) -> CGFloat {
-//
-//        if indexPath.section == 4 {
-//            return 70
-//        }
-//        else if indexPath.section == 6 {
-//
-//            return 120
-//        }
-//
-//        return UITableView.automaticDimension
-//
-//    }
-    
-    
+
     func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
         
         if self.viewModel.isEditableIngredientsRelay.value && self.viewModel.isEditInstructionsRelay.value {
@@ -599,3 +581,4 @@ extension CreateRecipeViewController: UITableViewDelegate, UITableViewDataSource
         return UISwipeActionsConfiguration(actions: [deleteAction])
     }
 }
+

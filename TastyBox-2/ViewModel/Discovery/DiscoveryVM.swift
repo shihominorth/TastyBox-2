@@ -80,7 +80,7 @@ class DiscoveryVM: ViewModelBase {
 //
 //        self.sceneCoodinator.transition(to: vc, type: .push)
         
-        self.sceneCoodinator.modalTransition(to: .createReceipeScene(scene: .createRecipe(vm)), type: .push)
+        self.sceneCoodinator.modalTransition(to: .createReceipeScene(scene: .createRecipe(vm)), type: .modal(presentationStyle: .none, modalTransisionStyle: .coverVertical, hasNavigationController: true))
     }
     
     

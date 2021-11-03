@@ -33,48 +33,43 @@ class PublishRecipeOptionsViewController: UIViewController, BindableType {
     
     func bindViewModel() {
         
-//        collectionView.rx.itemSelected
-//            .share(replay: 1, scope: .forever)
-//            .filter { $0.row == 0 }
-//            .map { _ in }
-//            .bind(to: viewModel.tappedPublishSubject)
-//            .disposed(by: viewModel.disposeBag)
-        
         collectionView.rx.itemSelected
-//            .skip(1)
-//            .share(replay: 1, scope: .forever)
             .debug("item indexpath row 0")
             .filter { $0.row == 0 }
-//            .take(1)
             .flatMapLatest { [unowned self]  _ in
                 self.viewModel.uploadRecipe()
             }
             .subscribe(onNext: { [unowned self] isCompleted in
              
-//                if isCompleted {
-//                    self.dismiss(animated: true)
-//                    self.navigationController?.popToRootViewController(animated: true)
-//                }
+                if isCompleted {
+
+                    self.presentingViewController?.presentingViewController?.dismiss(animated: true) {
+                        
+                        self.viewModel.sceneCoodinator.userDissmissed()
+                        
+                    }
+                }
                 
             })
             .disposed(by: viewModel.disposeBag)
         
         collectionView.rx.itemSelected
-//            .share(replay: 1, scope: .forever)
-//            .skip(1)
-//            .take(1)
             .filter { $0.row == 1 }
             .subscribe(onNext: { [unowned self] indexPath in
 
                 if indexPath.row == 1 {
 
-                    self.dismiss(animated: true)
+                    self.dismiss(animated: true) {
+                      
+                        self.viewModel.sceneCoodinator.userDissmissed()
+
+                    }
 
                 }
 
             })
             .disposed(by: viewModel.disposeBag)
-//
+
     }
     
     
