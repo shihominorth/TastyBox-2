@@ -350,34 +350,37 @@ class SelectGenresVM: ViewModelBase {
                 
             } }
             
-            if arr.isEmpty {
+            if let title = selectedGenre?.title {
                 
-                if let selectedGenre = selectedGenre {
-                    let newString = "# \(selectedGenre.title)"
+                if arr.isEmpty {
                     
-                    observer.onNext(newString)
-                }
-               
-            }
-            else {
-                
-                if let title = selectedGenre?.title, let removeIndex = arr.firstIndex(where: { $0 == query }) {
-                    
-                    arr.insert(title, at: removeIndex)
-                    arr.remove(at: removeIndex + 1)
-                    
-                    var newString = arr.joined(separator: " # ")
-                    newString.insert("#", at: newString.startIndex)
-                    newString.insert(" ", at: newString.index(after: newString.startIndex))
-                    
-                    
+                    let newString = "# \(title)"
+                        
                     observer.onNext(newString)
                     
+                   
                 }
-                
-                
-                
+                else {
+                    
+                    if let removeIndex = arr.firstIndex(where: { $0 == query }) {
+                        
+                        arr.insert(title, at: removeIndex)
+                        arr.remove(at: removeIndex + 1)
+                        
+                        var newString = arr.joined(separator: " # ")
+                        newString.insert("#", at: newString.startIndex)
+                        newString.insert(" ", at: newString.index(after: newString.startIndex))
+                        
+                        
+                        observer.onNext(newString)
+                        
+                    }
+                    
+                    
+                    
+                }
             }
+         
           
             
             return Disposables.create()
