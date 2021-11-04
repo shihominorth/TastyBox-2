@@ -761,16 +761,18 @@ class CreateRecipeDM: CreateRecipeDMProtocol {
                 case let .genres(genres):
                     
                     genres.forEach {
-                        genresDic[$0.title.capitalized] = true
+//                        genresDic[$0.title.capitalized] = true
+                        genresDic[$0.id] = true
                     }
                     
                     //                    data["genres"] = genresDic
                     
                 case let .ingredients(ingredient):
                     
-                    
-                    ingredientsDic[ingredient.name] = true
-                    genresDic[ingredient.name] = true
+                    ingredientsDic[ingredient.id] = true
+                    genresDic[ingredient.id] = true
+//                    ingredientsDic[ingredient.name] = true
+//                    genresDic[ingredient.name] = true
                     
                 default:
                     break

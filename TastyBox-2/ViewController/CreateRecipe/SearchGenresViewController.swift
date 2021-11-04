@@ -28,6 +28,7 @@ class SearchGenresViewController: UIViewController, BindableType {
 
         // Do any additional setup after loading the view.
         tableView.dataSource = self
+        tableView.allowsSelection = false
     }
     
     override func viewDidDisappear(_ animated: Bool) {
@@ -41,12 +42,22 @@ class SearchGenresViewController: UIViewController, BindableType {
         viewModel.getMyGenre()
             .subscribe(onNext: { [unowned self] in
                 
+                self.viewModel.diffenceTxtSubject.onNext("")
+                self.viewModel.diffenceTxtSubject.onNext("")
+
+                
                 let sectionOfGenres = SectionOfGenre(header: "", items: $0)
             
                 self.viewModel.items.accept([sectionOfGenres])
                 
                 self.tableView.reloadRows(at: [IndexPath(row: 1, section: 0)], with: .automatic)
-           
+//
+//                if let cell = tableView.cellForRow(at: IndexPath(row: 1, section: 0)) as? SearchedGenresTVCell {
+//
+//                    cell.layoutIfNeeded()
+//                    cell.collectionView.reloadData()
+//
+//                }
             })
             .disposed(by: viewModel.disposeBag)
       
@@ -259,6 +270,7 @@ extension SearchGenresViewController: UITableViewDelegate, UITableViewDataSource
                 
                 cell.selectionStyle = .none
                 
+                
                 viewModel
                     .items
                     .bind(to: cell.collectionView.rx.items(dataSource: self.dataSource))
@@ -266,7 +278,7 @@ extension SearchGenresViewController: UITableViewDelegate, UITableViewDataSource
                 
                 self.viewModel.selectedGenreSubject
                     .share(replay: 1, scope: .forever)
-                    .withLatestFrom(Observable.combineLatest(self.viewModel.selectedGenreSubject, viewModel.searchingQuery, viewModel.diffenceTxtSubject))
+                    .withLatestFrom(Observable.combineLatest(self.viewModel.selectedGenreSubject, viewModel.searchingQuery.ifEmpty(default: ""), viewModel.diffenceTxtSubject.ifEmpty(default: "")))
                     .flatMapLatest { [unowned self] selectedGenre, query, txt in
                         self.viewModel.convertNewTxt(txt: txt, query: query, selectedGenre: selectedGenre)
                     }
@@ -311,5 +323,9 @@ extension SearchGenresViewController: UITableViewDelegate, UITableViewDataSource
    
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         return UITableView.automaticDimension
+    }
+    
+    func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
+        return false
     }
 }

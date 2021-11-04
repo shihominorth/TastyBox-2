@@ -350,23 +350,38 @@ class SelectGenresVM: ViewModelBase {
                 
             } }
             
-            
-            
-            if let title = selectedGenre?.title, let removeIndex = arr.firstIndex(where: { $0 == query }) {
+            if let title = selectedGenre?.title {
                 
-                arr.insert(title, at: removeIndex)
-                arr.remove(at: removeIndex + 1)
-                
-                var newString = arr.joined(separator: " # ")
-                newString.insert("#", at: newString.startIndex)
-                newString.insert(" ", at: newString.index(after: newString.startIndex))
-                
-                
-                observer.onNext(newString)
-                
+                if arr.isEmpty {
+                    
+                    let newString = "# \(title)"
+                        
+                    observer.onNext(newString)
+                    
+                   
+                }
+                else {
+                    
+                    if let removeIndex = arr.firstIndex(where: { $0 == query }) {
+                        
+                        arr.insert(title, at: removeIndex)
+                        arr.remove(at: removeIndex + 1)
+                        
+                        var newString = arr.joined(separator: " # ")
+                        newString.insert("#", at: newString.startIndex)
+                        newString.insert(" ", at: newString.index(after: newString.startIndex))
+                        
+                        
+                        observer.onNext(newString)
+                        
+                    }
+                    
+                    
+                    
+                }
             }
-            
-            
+         
+          
             
             return Disposables.create()
         }

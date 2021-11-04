@@ -29,6 +29,9 @@ class SearchedGenresTVCell: UITableViewCell {
         collectionView.collectionViewLayout = flowLayout
         
         disposeBag = DisposeBag()
+        
+//        collectionView.delegate = nil
+//        collectionView.dataSource = nil
     }
 
     override func setSelected(_ selected: Bool, animated: Bool) {
