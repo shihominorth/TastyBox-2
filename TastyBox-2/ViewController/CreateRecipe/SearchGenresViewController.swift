@@ -27,8 +27,11 @@ class SearchGenresViewController: UIViewController, BindableType {
         super.viewDidLoad()
 
         // Do any additional setup after loading the view.
-        tableView.dataSource = self
+//        tableView.dataSource = self
         tableView.allowsSelection = false
+        tableView.rx.setDelegate(self).disposed(by: viewModel.disposeBag)
+        tableView.rx.setDataSource(self).disposed(by: viewModel.disposeBag)
+        
     }
     
     override func viewDidDisappear(_ animated: Bool) {
@@ -39,11 +42,13 @@ class SearchGenresViewController: UIViewController, BindableType {
 
         setUpcollectionView()
         
+        
+        self.viewModel.differenceTxtSubject.onNext("")
+        self.viewModel.differenceTxtSubject.onNext("")
+        
         viewModel.getMyGenre()
             .subscribe(onNext: { [unowned self] in
-                
-                self.viewModel.diffenceTxtSubject.onNext("")
-                self.viewModel.diffenceTxtSubject.onNext("")
+               
 
                 
                 let sectionOfGenres = SectionOfGenre(header: "", items: $0)
@@ -145,16 +150,19 @@ class SearchGenresViewController: UIViewController, BindableType {
             .flatMapLatest { [unowned self] in
                 self.viewModel.filterSearchedGenres()
             }
+            .debug("filterSearchedGenres")
             .flatMapLatest { genres, notSearchedWords in
                 
                 self.viewModel.searchIsFirebaseKnowsGenre(txts: notSearchedWords, alreadyKnowsGenres: genres)
                 
             }
+            .debug("searchIsFirebaseKnowsGenre")
             .flatMapLatest { genres, notSearchedWords in
             
                 self.viewModel.registerGenres(words: notSearchedWords, genres: genres)
             
             }
+            .debug("registerGenres")
             .flatMapLatest({ [unowned self] genres in
                 self.viewModel.addGenres(genres: genres)
             })
@@ -247,7 +255,7 @@ extension SearchGenresViewController: UITableViewDelegate, UITableViewDataSource
 
                              if let text = text {
                                  
-                                 self.viewModel.diffenceTxtSubject.onNext(text)
+                                 self.viewModel.differenceTxtSubject.onNext(text)
                                 
                                  let textCount: Int = text.count
                                  guard textCount >= 1 else { return }
@@ -270,6 +278,9 @@ extension SearchGenresViewController: UITableViewDelegate, UITableViewDataSource
                 
                 cell.selectionStyle = .none
                 
+                cell.collectionView.delegate = nil
+                cell.collectionView.dataSource = nil
+                
                 
                 viewModel
                     .items
@@ -278,7 +289,7 @@ extension SearchGenresViewController: UITableViewDelegate, UITableViewDataSource
                 
                 self.viewModel.selectedGenreSubject
                     .share(replay: 1, scope: .forever)
-                    .withLatestFrom(Observable.combineLatest(self.viewModel.selectedGenreSubject, viewModel.searchingQuery.ifEmpty(default: ""), viewModel.diffenceTxtSubject.ifEmpty(default: "")))
+                    .withLatestFrom(Observable.combineLatest(self.viewModel.selectedGenreSubject, viewModel.searchingQuery.ifEmpty(default: ""), viewModel.differenceTxtSubject.ifEmpty(default: "")))
                     .flatMapLatest { [unowned self] selectedGenre, query, txt in
                         self.viewModel.convertNewTxt(txt: txt, query: query, selectedGenre: selectedGenre)
                     }
@@ -328,4 +339,6 @@ extension SearchGenresViewController: UITableViewDelegate, UITableViewDataSource
     func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
         return false
     }
+    
+    
 }
