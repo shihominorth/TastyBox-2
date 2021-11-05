@@ -228,24 +228,7 @@ class SelectGenresVM: ViewModelBase {
     }
     
     func registerGenres(words: [String], genres: [Genre]) -> Observable<[Genre]> {
-        
-//        return Observable.combineLatest(registerNewGenres(words: words).map { $0 }.startWith([]), registerAsMyGenres(genres: genres).map { $0 }.startWith([])) { registeredNewGenres, registeredMyGenres in
-//
-//            var result = registeredNewGenres
-//            result.append(contentsOf: registeredMyGenres)
-//
-//            return result
-//        }
-////        .skip(1)
-//        .flatMapLatest{ [unowned self] genres in
-//            self.shouldAddGenres(genres: genres)
-//        }
-//        .catch { err in
-//
-//            print(err)
-//
-//            return .empty()
-//        }
+
         
         return Observable.zip(registerNewGenres(words: words), registerAsMyGenres(genres: genres))
             .map { registeredNewGenres, registeredMyGenres -> [Genre] in
@@ -304,30 +287,6 @@ class SelectGenresVM: ViewModelBase {
         }
         
     }
-//    func shouldAddGenres(genres: [Genre]) -> Observable<[Genre]> {
-    
-        
-//        return diffenceTxtSubject
-//            .skip(1) //追加
-//            .filter { txt in
-//
-//                print(txt)
-//                var arr = txt.components(separatedBy: "#").filter { $0 != "" }
-//                arr = arr.map { $0.filter { char in
-//
-//                    return char != " "
-//
-//                } }
-//
-//                return arr.count == genres.count
-//            }
-//            .flatMapLatest { _ in
-//                return Observable.just(genres)
-//            }
-        
-//    }
-    
-  
     
     func addGenres(genres:[Genre]) -> Observable<[Genre]> {
         

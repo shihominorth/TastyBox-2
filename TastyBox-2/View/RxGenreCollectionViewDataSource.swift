@@ -16,13 +16,14 @@ class RxGenreCollectionViewDataSource<E: Differentiable, Cell: UICollectionViewC
 
     let identifier: String
     let configure: (Int, E, Cell) -> Void
+    let reloadTableView: () -> Void
     var values: Element = []
 
-    init(identifier: String, configure: @escaping (Int,  E, Cell) -> Void) {
+    init(identifier: String, configure: @escaping (Int,  E, Cell) -> Void, reloadTableView: @escaping () -> Void) {
         
         self.identifier = identifier
         self.configure = configure
-        
+        self.reloadTableView = reloadTableView
     }
     
     func collectionView(_ collectionView: UICollectionView, observedEvent: Event<[E]>) {
@@ -35,6 +36,8 @@ class RxGenreCollectionViewDataSource<E: Differentiable, Cell: UICollectionViewC
         
         collectionView.reload(using: changeset) { data in
             self.values = data
+            
+            reloadTableView()
         }
         
     }

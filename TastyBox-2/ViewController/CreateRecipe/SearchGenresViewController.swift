@@ -26,9 +26,9 @@ class SearchGenresViewController: UIViewController, BindableType {
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        // Do any additional setup after loading the view.
-//        tableView.dataSource = self
+
         tableView.allowsSelection = false
+
         tableView.rx.setDelegate(self).disposed(by: viewModel.disposeBag)
         tableView.rx.setDataSource(self).disposed(by: viewModel.disposeBag)
         
@@ -43,26 +43,18 @@ class SearchGenresViewController: UIViewController, BindableType {
         setUpcollectionView()
         
         
-        self.viewModel.differenceTxtSubject.onNext("")
+//        self.viewModel.differenceTxtSubject.onNext("")
         self.viewModel.differenceTxtSubject.onNext("")
         
         viewModel.getMyGenre()
             .subscribe(onNext: { [unowned self] in
-               
 
-                
                 let sectionOfGenres = SectionOfGenre(header: "", items: $0)
             
                 self.viewModel.items.accept([sectionOfGenres])
                 
                 self.tableView.reloadRows(at: [IndexPath(row: 1, section: 0)], with: .automatic)
-//
-//                if let cell = tableView.cellForRow(at: IndexPath(row: 1, section: 0)) as? SearchedGenresTVCell {
-//
-//                    cell.layoutIfNeeded()
-//                    cell.collectionView.reloadData()
-//
-//                }
+
             })
             .disposed(by: viewModel.disposeBag)
       
