@@ -31,7 +31,6 @@
 		6F0E6960271F98FF002BD547 /* RxPHPickerViewControllerDelegateProxy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F0E695F271F98FE002BD547 /* RxPHPickerViewControllerDelegateProxy.swift */; };
 		6F0E6962272022FB002BD547 /* CreateRecipeDM.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F0E6961272022FB002BD547 /* CreateRecipeDM.swift */; };
 		6F0E6964272024E6002BD547 /* CGImage+.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F0E6963272024E6002BD547 /* CGImage+.swift */; };
-		6F0E696627208183002BD547 /* SelectGenresViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F0E696527208183002BD547 /* SelectGenresViewController.swift */; };
 		6F0E6968272082B8002BD547 /* GenresTableHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F0E6967272082B8002BD547 /* GenresTableHeaderView.swift */; };
 		6F0E696A272082DC002BD547 /* GenresTableViewHeaderView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 6F0E6969272082DC002BD547 /* GenresTableViewHeaderView.xib */; };
 		6F0E696C27208870002BD547 /* SelectGenresVM.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F0E696B27208870002BD547 /* SelectGenresVM.swift */; };
@@ -190,7 +189,6 @@
 		6F0E695F271F98FE002BD547 /* RxPHPickerViewControllerDelegateProxy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RxPHPickerViewControllerDelegateProxy.swift; sourceTree = "<group>"; };
 		6F0E6961272022FB002BD547 /* CreateRecipeDM.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateRecipeDM.swift; sourceTree = "<group>"; };
 		6F0E6963272024E6002BD547 /* CGImage+.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CGImage+.swift"; sourceTree = "<group>"; };
-		6F0E696527208183002BD547 /* SelectGenresViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SelectGenresViewController.swift; sourceTree = "<group>"; };
 		6F0E6967272082B8002BD547 /* GenresTableHeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GenresTableHeaderView.swift; sourceTree = "<group>"; };
 		6F0E6969272082DC002BD547 /* GenresTableViewHeaderView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = GenresTableViewHeaderView.xib; sourceTree = "<group>"; };
 		6F0E696B27208870002BD547 /* SelectGenresVM.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SelectGenresVM.swift; sourceTree = "<group>"; };
@@ -627,7 +625,6 @@
 			isa = PBXGroup;
 			children = (
 				6F74C4282719DC61007BB9E6 /* CreateRecipeViewController.swift */,
-				6F0E696527208183002BD547 /* SelectGenresViewController.swift */,
 				6FB970B22724FA7A00350F84 /* CheckCreatedRecipeViewController.swift */,
 				6F01F3CF27296D7F003CA769 /* PublishRecipeOptionsViewController.swift */,
 				6F01F3D3272BB29C003CA769 /* SearchGenresViewController.swift */,
@@ -1035,7 +1032,6 @@
 				6F512A2426F4169800826657 /* LoadingViewController.swift in Sources */,
 				6F77D487272825C800F1FCD9 /* CheckEvaluateRecipeCVCell.swift in Sources */,
 				6FB970AE2724358300350F84 /* SelectGenreTVCell.swift in Sources */,
-				6F0E696627208183002BD547 /* SelectGenresViewController.swift in Sources */,
 				6FE9EB5026F9A6E1000AF9D4 /* RefrigeratorVM.swift in Sources */,
 				6F9BE63926D7CD9D005DD80B /* UserdataManager.swift in Sources */,
 				6F9E04182700A113005DCEF4 /* ShoppinglistViewController.swift in Sources */,

@@ -26,7 +26,7 @@ class SelectGenresVM: ViewModelBase {
     
     var text = ""
     var selectedArrGenres = ReplaySubject<[String]>.create(bufferSize: 1)
-    var items = BehaviorRelay<[SectionOfGenre]>(value: [])
+    var items = BehaviorRelay<[Genre]>(value: [])
     //    var searchedItems: [SectionOfGenre] = []
     var searchedItems:[Genre] = []
     var selectedGenres = BehaviorRelay<[Genre]>(value: [])
@@ -36,7 +36,7 @@ class SelectGenresVM: ViewModelBase {
     
     let differenceSubject = ReplaySubject<[SectionOfGenre]>.create(bufferSize: 1)
     
-    let diffenceTxtSubject = ReplaySubject<String>.create(bufferSize: 1)
+    let differenceTxtSubject = ReplaySubject<String>.create(bufferSize: 1)
     
     var isDisplayed = false
     var isEditingSubject = BehaviorRelay<Bool>(value: false)
@@ -45,7 +45,7 @@ class SelectGenresVM: ViewModelBase {
     
     var isNewTagInputs: Observable<Bool> {
         
-        return Observable.zip(diffenceTxtSubject, diffenceTxtSubject.skip(1)) { previous, current in
+        return Observable.zip(differenceTxtSubject, differenceTxtSubject.skip(1)) { previous, current in
             
             let isNewHashTagInputs = current.filter { $0 != " " } .filter { char in
                 
@@ -63,7 +63,7 @@ class SelectGenresVM: ViewModelBase {
     
     var searchingQuery: Observable<String> {
         
-        return Observable.zip(diffenceTxtSubject, diffenceTxtSubject.skip(1)) { previous, current in
+        return Observable.zip(differenceTxtSubject, differenceTxtSubject.skip(1)) { previous, current in
             
             var previousNoHashTagArr = previous.components(separatedBy: "#").filter { $0 != "" }
             previousNoHashTagArr = previousNoHashTagArr.map { $0.filter { char in
@@ -115,7 +115,7 @@ class SelectGenresVM: ViewModelBase {
         }
         
         
-        self.diffenceTxtSubject.onNext(text)
+        self.differenceTxtSubject.onNext(text)
  
     }
     
@@ -159,7 +159,7 @@ class SelectGenresVM: ViewModelBase {
     func filterSearchedGenres() -> Observable<([Genre], [String])> {
         
         
-        return Observable.combineLatest(diffenceTxtSubject, selectedGenres)
+        return Observable.zip(differenceTxtSubject, selectedGenres)
             .flatMapLatest { [unowned self] txt, selectedGenres in
                 self.apiType.filterNotSearchedGenres(genres: selectedGenres, txt: txt)
             }
@@ -228,24 +228,31 @@ class SelectGenresVM: ViewModelBase {
     }
     
     func registerGenres(words: [String], genres: [Genre]) -> Observable<[Genre]> {
+
         
-        return Observable.combineLatest(registerNewGenres(words: words).map { $0 }.startWith([]), registerAsMyGenres(genres: genres).map { $0 }.startWith([])) { registeredNewGenres, registeredMyGenres in
+        return Observable.zip(registerNewGenres(words: words), registerAsMyGenres(genres: genres))
+            .map { registeredNewGenres, registeredMyGenres -> [Genre] in
+                
+                var arr:[Genre] = []
+                arr.append(contentsOf: registeredNewGenres)
+                arr.append(contentsOf: registeredMyGenres)
+                
+                return arr
+            }
+            .flatMap { [unowned self] in
+                
+                return Observable.combineLatest(Observable.just($0), self.differenceTxtSubject)
+            }
+            .flatMapLatest { [unowned self] gernes, txt in
             
-            var result = registeredNewGenres
-            result.append(contentsOf: registeredMyGenres)
+                self.shouldAddGenres(genres: genres, txt: txt)
+            }
+            .catch { err in
             
-            return result
-        }
-        .skip(1)
-        .flatMapLatest{ [unowned self] genres in
-            self.shouldAddGenres(genres: genres)
-        }
-        .catch { err in
+                print(err)
             
-            print(err)
-            
-            return .empty()
-        }
+                return .empty()
+            }
         
     }
     
@@ -260,32 +267,30 @@ class SelectGenresVM: ViewModelBase {
         return self.apiType.isUserInterested(genres: genres, user: self.user)
     }
     
-    func shouldAddGenres(genres: [Genre]) -> Observable<[Genre]> {
+    
+    func shouldAddGenres(genres: [Genre], txt: String) -> Observable<[Genre]> {
         
-        return diffenceTxtSubject
-            .filter { txt in
+        return .create { observer in
+            
+            var arr = txt.components(separatedBy: "#").filter { $0 != "" }
+            arr = arr.map { $0.filter { char in
+           
+                return char != " "
                 
-                var arr = txt.components(separatedBy: "#").filter { $0 != "" }
-                arr = arr.map { $0.filter { char in
-                    
-                    return char != " "
-                    
-                } }
-                
-                return arr.count == genres.count
+            } }
+            
+            if arr.count == genres.count {
+                observer.onNext(genres)
             }
-            .flatMapLatest { _ in
-                return Observable.just(genres)
-            }
-        
+            
+            return Disposables.create()
+        }
         
     }
     
-  
-    
     func addGenres(genres:[Genre]) -> Observable<[Genre]> {
         
-        return diffenceTxtSubject.flatMap { txt in
+        return differenceTxtSubject.flatMap { txt in
             
             self.sortedGenres(txt: txt, genres: genres)
             
@@ -343,7 +348,7 @@ class SelectGenresVM: ViewModelBase {
         return .create { observer in
             
             var arr = txt.components(separatedBy: "#").filter { $0 != "" }
-            //
+            
             arr = arr.map { $0.filter { char in
                 
                 return char != " "
@@ -375,7 +380,18 @@ class SelectGenresVM: ViewModelBase {
                         observer.onNext(newString)
                         
                     }
-                    
+                    else {
+                        
+                        arr.append(title)
+                            
+                        var newString = arr.joined(separator: " # ")
+                        newString.insert("#", at: newString.startIndex)
+                        newString.insert(" ", at: newString.index(after: newString.startIndex))
+                        
+                        observer.onNext(newString)
+                        
+                     
+                    }
                     
                     
                 }

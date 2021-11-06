@@ -18,6 +18,8 @@ class SearchedGenresTVCell: UITableViewCell {
     override func awakeFromNib() {
         super.awakeFromNib()
         // Initialization code
+        
+        
         let flowLayout = GenreCollectionViewFlowLayout()
         
 //        flowLayout.headerReferenceSize = CGSize(width: self.contentView.frame.width, height: 100)
@@ -30,8 +32,7 @@ class SearchedGenresTVCell: UITableViewCell {
         
         disposeBag = DisposeBag()
         
-//        collectionView.delegate = nil
-//        collectionView.dataSource = nil
+
     }
 
     override func setSelected(_ selected: Bool, animated: Bool) {

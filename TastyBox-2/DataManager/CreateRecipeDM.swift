@@ -74,7 +74,7 @@ class CreateRecipeDM: CreateRecipeDMProtocol {
         return Observable.create { observer in
             
             db.collection("users").document(user.uid).collection("genres")
-                .addSnapshotListener { snapShot, err in
+                .getDocuments { snapShot, err in
                     
                     if let err = err {
                         
@@ -327,31 +327,39 @@ class CreateRecipeDM: CreateRecipeDMProtocol {
             
             var finishedGenres: [Genre] = []
             
-            genres.enumerated().forEach { index, genre in
+            if genres.isEmpty {
+            
+                observer.onNext([])
+            
+            } else {
                 
-                registerUserInterestedGenres(genre: genre, user: user, completion: {
+                genres.enumerated().forEach { index, genre in
                     
-                    finishedGenres.append(genre)
-                    
-                    if genres.count == finishedGenres.count {
+                    registerUserInterestedGenres(genre: genre, user: user, completion: {
                         
-                        observer.onNext(finishedGenres)
-                    }
-                    
-                }, errBlock: { err in
-                    
-                    print(err)
-                    
-                    if genres.count == finishedGenres.count {
+                        finishedGenres.append(genre)
                         
-                        observer.onNext(finishedGenres)
+                        if genres.count == finishedGenres.count {
+                            
+                            observer.onNext(finishedGenres)
+                        }
                         
-                    }
+                    }, errBlock: { err in
+                        
+                        print(err)
+                        
+                        if genres.count == finishedGenres.count {
+                            
+                            observer.onNext(finishedGenres)
+                            
+                        }
+                        
+                    })
                     
-                })
+                }
                 
             }
-            
+ 
             return Disposables.create()
             
         }
@@ -427,47 +435,68 @@ class CreateRecipeDM: CreateRecipeDMProtocol {
             var finishedGenres: [String] = []
             var registeredGenres: [Genre] = []
             
-            genres.enumerated().forEach { index, txt in
-                
-                
-                let uuid = UUID()
-                let uniqueIdString = uuid.uuidString.replacingOccurrences(of: "-", with: "")
-                
-                let arrGenre = Array(txt.lowercased())
-                var dicGenre:[String: Bool] = [:]
-                
-                arrGenre.forEach {
-                    
-                    let key = String($0)
-                    dicGenre[key] = true
-                    
-                }
-                
-                
-                let data: [String : Any] = [
-                    
-                    "id": uniqueIdString,
-                    "title": txt,
-                    "count": FieldValue.increment(Int64(1)),
-                    "usedLatestDate": Date(),
-                    "searchChar": dicGenre
-                ]
-                
-                let genre = Genre(id: uniqueIdString, title: txt)
-                
-                registerUnderGenres(data: data, user: user, completion: {
+            if genres.isEmpty {
+            
+                observer.onNext([])
+          
+            } else {
+              
+                genres.enumerated().forEach { index, txt in
                     
                     
-                    registerUserInterestedGenres(genre: genre, user: user, completion: {
+                    let uuid = UUID()
+                    let uniqueIdString = uuid.uuidString.replacingOccurrences(of: "-", with: "")
+                    
+                    let arrGenre = Array(txt.lowercased())
+                    var dicGenre:[String: Bool] = [:]
+                    
+                    arrGenre.forEach {
                         
-                        finishedGenres.append(txt)
-                        registeredGenres.append(genre)
+                        let key = String($0)
+                        dicGenre[key] = true
                         
-                        if genres.count == finishedGenres.count {
+                    }
+                    
+                    
+                    let data: [String : Any] = [
+                        
+                        "id": uniqueIdString,
+                        "title": txt,
+                        "count": FieldValue.increment(Int64(1)),
+                        "usedLatestDate": Date(),
+                        "searchChar": dicGenre
+                    ]
+                    
+                    let genre = Genre(id: uniqueIdString, title: txt)
+                    
+                    registerUnderGenres(data: data, user: user, completion: {
+                        
+                        
+                        registerUserInterestedGenres(genre: genre, user: user, completion: {
                             
-                            observer.onNext(registeredGenres)
-                        }
-                        
+                            finishedGenres.append(txt)
+                            registeredGenres.append(genre)
+                            
+                            if genres.count == finishedGenres.count {
+                                
+                                observer.onNext(registeredGenres)
+                            }
+                            
+                            
+                        }, errBlock: { err in
+                            
+                            print(err)
+                            
+                            finishedGenres.append(txt)
+                            registeredGenres.append(genre)
+                            
+                            if genres.count == finishedGenres.count {
+                                
+                                observer.onNext(registeredGenres)
+                            }
+                            
+                            
+                        })
                         
                     }, errBlock: { err in
                         
@@ -484,24 +513,9 @@ class CreateRecipeDM: CreateRecipeDMProtocol {
                         
                     })
                     
-                }, errBlock: { err in
-                    
-                    print(err)
-                    
-                    finishedGenres.append(txt)
-                    registeredGenres.append(genre)
-                    
-                    if genres.count == finishedGenres.count {
-                        
-                        observer.onNext(registeredGenres)
-                    }
-                    
-                    
-                })
+                }
                 
             }
-            
-            
             
             return Disposables.create()
             
@@ -761,18 +775,14 @@ class CreateRecipeDM: CreateRecipeDMProtocol {
                 case let .genres(genres):
                     
                     genres.forEach {
-//                        genresDic[$0.title.capitalized] = true
                         genresDic[$0.id] = true
                     }
-                    
-                    //                    data["genres"] = genresDic
-                    
+                                        
                 case let .ingredients(ingredient):
                     
                     ingredientsDic[ingredient.id] = true
                     genresDic[ingredient.id] = true
-//                    ingredientsDic[ingredient.name] = true
-//                    genresDic[ingredient.name] = true
+
                     
                 default:
                     break
