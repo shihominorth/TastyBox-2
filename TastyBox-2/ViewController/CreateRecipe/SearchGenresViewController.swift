@@ -21,7 +21,8 @@ class SearchGenresViewController: UIViewController, BindableType {
     @IBOutlet weak var cancelBtn: UIBarButtonItem!
     @IBOutlet weak var tableView: UITableView!
         
-    var dataSource: RxCollectionViewSectionedReloadDataSource<SectionOfGenre>!
+//    var dataSource: RxCollectionViewSectionedReloadDataSource<SectionOfGenre>!
+    var dataSource: RxGenreCollectionViewDataSource<Genre, GenreCVCell>!
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -49,22 +50,23 @@ class SearchGenresViewController: UIViewController, BindableType {
         viewModel.getMyGenre()
             .subscribe(onNext: { [unowned self] in
 
-                let sectionOfGenres = SectionOfGenre(header: "", items: $0)
+//                let sectionOfGenres = SectionOfGenre(header: "", items: $0)
             
-                self.viewModel.items.accept([sectionOfGenres])
+                self.viewModel.items.accept($0)
                 
-                self.tableView.reloadRows(at: [IndexPath(row: 1, section: 0)], with: .automatic)
+//                self.tableView.reloadRows(at: [IndexPath(row: 1, section: 0)], with: .automatic)
 
             })
             .disposed(by: viewModel.disposeBag)
       
         viewModel.searchingQuery
+            .skip(1)
             .filter { query in
 
                 if query.isEmpty {
                     
-                    let temp = SectionOfGenre(header: "temp", items: [])
-                    self.viewModel.items.accept([temp])
+//                    let temp = SectionOfGenre(header: "temp", items: [])
+                    self.viewModel.items.accept([])
                 }
                 
                 return !query.isEmpty
@@ -77,33 +79,57 @@ class SearchGenresViewController: UIViewController, BindableType {
                 
                 if genres.isEmpty {
 
-                    let section = SectionOfGenre(header: "temp", items: [])
-                    self.viewModel.items.accept([section])
+//                    let section = SectionOfGenre(header: "temp", items: [])
+                    self.viewModel.items.accept([])
                     
                 }
                 else {
 
-                    let oldItems = self.viewModel.items.value[0].items
+//                    let oldItems = self.viewModel.items.value[0].items
+//
+//                    if oldItems.isEmpty {
+//
+//                        let section = SectionOfGenre(header: "temp", items: genres)
+//                        self.viewModel.items.accept([])
+//
+//                    }
+//                    else {
 
+                    
+//                        let isSameArr = oldItems.allSatisfy { item in
+//                            genres.contains { $0.title == item.title }
+//                        }
+//
+//                        if !isSameArr {
+//
+//                            let section = SectionOfGenre(header: "temp", items: genres)
+//                            self.viewModel.items.accept([])
+//
+//                        }
+//                    }
+                    
+                    
+                    let oldItems = self.viewModel.items.value
+                    
                     if oldItems.isEmpty {
-                        
-                        let section = SectionOfGenre(header: "temp", items: genres)
-                        self.viewModel.items.accept([section])
-                        
-                    }
-                    else {
-
+                    
+                        self.viewModel.items.accept(genres)
+                   
+                    } else {
+                       
                         let isSameArr = oldItems.allSatisfy { item in
+                           
                             genres.contains { $0.title == item.title }
+                       
                         }
                         
                         if !isSameArr {
                             
-                            let section = SectionOfGenre(header: "temp", items: genres)
-                            self.viewModel.items.accept([section])
+                            self.viewModel.items.accept(genres)
                             
                         }
                     }
+                    
                 }
                
               
@@ -198,20 +224,35 @@ class SearchGenresViewController: UIViewController, BindableType {
 
     func setUpDataSource() {
         
-        dataSource = RxCollectionViewSectionedReloadDataSource<SectionOfGenre>(configureCell: { dataSource, collectionView, indexPath, item  in
+//        dataSource = RxCollectionViewSectionedReloadDataSource<SectionOfGenre>(configureCell: { dataSource, collectionView, indexPath, item  in
+//
+//            let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "genreCell", for: indexPath) as! GenreCVCell
+//
+//            cell.titleLbl.text = "# \(item.title)"
+//
+//            collectionView.deselectItem(at: indexPath, animated: true)
+//
+//            cell.configure()
+//
+//            return cell
+//
+//        })
+        
+        
+        dataSource = RxGenreCollectionViewDataSource(identifier: "genreCell", configure: { indexPath, item, cell  in
             
-            let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "genreCell", for: indexPath) as! GenreCVCell
-
             cell.titleLbl.text = "# \(item.title)"
-
-            collectionView.deselectItem(at: indexPath, animated: true)
-            
+                        
             cell.configure()
             
-            return cell
+            
+        }, reloadTableView: { [unowned self] in
+            
+//            self.tableView.reloadRows(at: [IndexPath(row: 1, section: 0)], with: .automatic)
+            self.tableView.beginUpdates()
+            self.tableView.endUpdates()
             
         })
-        
         
         
     }
@@ -298,11 +339,12 @@ extension SearchGenresViewController: UITableViewDelegate, UITableViewDataSource
 
                 cell.collectionView.rx.itemSelected
                     .withLatestFrom(Observable.combineLatest(cell.collectionView.rx.itemSelected, viewModel.items))
-                    .subscribe(onNext: { [unowned self] collectionViewIndexPath, sections in
-
-                        let items = sections[0].items
+//                    .subscribe(onNext: { [unowned self] collectionViewIndexPath, sections in
+                    .subscribe(onNext: { [unowned self] collectionViewIndexPath, items in
+//                        let items = sections[0].items
+//                        let item = items[collectionViewIndexPath.row]
+                        
                         let item = items[collectionViewIndexPath.row]
-
 
                         var selectedGenres = self.viewModel.selectedGenres.value
                         selectedGenres.append(item)
@@ -325,7 +367,9 @@ extension SearchGenresViewController: UITableViewDelegate, UITableViewDataSource
     }
    
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        
         return UITableView.automaticDimension
+        
     }
     
     func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {

@@ -26,7 +26,7 @@ class SelectGenresVM: ViewModelBase {
     
     var text = ""
     var selectedArrGenres = ReplaySubject<[String]>.create(bufferSize: 1)
-    var items = BehaviorRelay<[SectionOfGenre]>(value: [])
+    var items = BehaviorRelay<[Genre]>(value: [])
     //    var searchedItems: [SectionOfGenre] = []
     var searchedItems:[Genre] = []
     var selectedGenres = BehaviorRelay<[Genre]>(value: [])
@@ -380,7 +380,18 @@ class SelectGenresVM: ViewModelBase {
                         observer.onNext(newString)
                         
                     }
-                    
+                    else {
+                        
+                        arr.append(title)
+                            
+                        var newString = arr.joined(separator: " # ")
+                        newString.insert("#", at: newString.startIndex)
+                        newString.insert(" ", at: newString.index(after: newString.startIndex))
+                        
+                        observer.onNext(newString)
+                        
+                     
+                    }
                     
                     
                 }

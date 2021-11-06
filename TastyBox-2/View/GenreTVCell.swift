@@ -16,11 +16,11 @@ class GenreTVCell: UITableViewCell {
     
     
     let flowLayout = GenreCollectionViewFlowLayout()
-    let dataSource = RxGenreCollectionViewDataSource<Genre, RecipeGenresCVCell>(identifier: "RecipeGenre") { index, element, cell in
-        
-        cell.nameLbl.text = "# \(element.title)"
-        
-    }
+//    let dataSource = RxGenreCollectionViewDataSource<Genre, RecipeGenresCVCell>(identifier: "RecipeGenre") { index, element, cell in
+//
+//        cell.nameLbl.text = "# \(element.title)"
+//
+//    }
 
     
     let genres = PublishSubject<[Genre]>()
@@ -48,13 +48,13 @@ class GenreTVCell: UITableViewCell {
         
 
 
-        genres
-//                    .lane("genre uploading")
-            .debug()
-//            .asDriver(onErrorJustReturn: [])
-            .observe(on: MainScheduler.instance)
-            .bind(to: collectionView.rx.items(dataSource: dataSource))
-            .disposed(by: disposeBag)
+//        genres
+////                    .lane("genre uploading")
+//            .debug()
+////            .asDriver(onErrorJustReturn: [])
+//            .observe(on: MainScheduler.instance)
+//            .bind(to: collectionView.rx.items(dataSource: dataSource))
+//            .disposed(by: disposeBag)
         
         
         

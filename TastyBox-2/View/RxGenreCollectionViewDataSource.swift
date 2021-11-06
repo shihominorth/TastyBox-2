@@ -34,12 +34,18 @@ class RxGenreCollectionViewDataSource<E: Differentiable, Cell: UICollectionViewC
         
         let changeset = StagedChangeset(source: source, target: target)
         
-        collectionView.reload(using: changeset) { data in
-            self.values = data
+        guard changeset.isEmpty else {
+ 
+            collectionView.reload(using: changeset) { data in
+                
+                self.values = data
+            }
             
             reloadTableView()
+            
+            return
         }
-        
+  
     }
    
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
