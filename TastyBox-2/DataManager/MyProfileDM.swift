@@ -25,11 +25,47 @@ class MyProfileDM: MyProfileDMProtocol {
 
             db.collection("recipes").whereField("publisherID", isEqualTo: user.uid).addSnapshotListener { snapShot, err in
                 
+                var recipes: [Recipe] = []
+                
                 if let err = err {
+          
                     observer.onError(err)
+          
                 }
                 else {
                     
+                    
+                    if let snapShot = snapShot {
+                        
+                        let documents = snapShot.documents
+                        var implementedNum = 0
+                        
+                        documents.enumerated().forEach { index, doc in
+                            
+                            implementedNum += 1
+                            
+                            
+                            if let recipe = Recipe(queryDoc: doc, user: user) {
+                            
+                                recipes.append(recipe)
+                           
+                            }
+                           
+                            if documents.count == implementedNum {
+                                
+                                observer.onNext(recipes)
+                                
+                            }
+                            
+                        }
+                        
+                    }
+                    else {
+                       
+                        observer.onNext([])
+                    
+                    }
+  
                 }
             }
             
@@ -37,4 +73,35 @@ class MyProfileDM: MyProfileDMProtocol {
         }
         
     }
+    
+
+//    func getMyImage(recipeID: String, user: Firebase.User) -> Observable<Data> {
+//        
+//        return .create { observer in
+//           
+//            let storage = Storage.storage().reference()
+//            
+//            storage.child("users/\(user.uid)/\(recipeID)/mainPhoto.jpg").getData(maxSize: 1 * 1024 * 1024) { data, err in
+//               
+//                if let err = err {
+//                    
+//                    observer.onError(err)
+//                    
+//                } else {
+//               
+//                    if let data = data {
+//                        
+//                        observer.onNext(data)
+//                    }
+//                    
+//                }
+//                
+//            }
+//            
+//            return Disposables.create()
+//        }
+//        
+//    }
+    
+    
 }

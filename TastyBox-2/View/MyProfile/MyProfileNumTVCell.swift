@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import RxSwift
 
 class MyProfileNumTVCell: UITableViewCell {
 
@@ -14,9 +15,13 @@ class MyProfileNumTVCell: UITableViewCell {
     @IBOutlet weak var myFollowingNumBtn: UIButton!
     @IBOutlet weak var myFollowedNumBtn: UIButton!
     
+    let postedRecipesSubject = BehaviorSubject<Int>(value: 0)
+    var disposeBag = DisposeBag()
     
     override func awakeFromNib() {
         super.awakeFromNib()
+        
+        disposeBag = DisposeBag()
        
         myPosetedRecipeNumBtn.titleLabel?.numberOfLines = 0
         myPosetedRecipeNumBtn.titleLabel?.textAlignment = NSTextAlignment.center
@@ -29,6 +34,14 @@ class MyProfileNumTVCell: UITableViewCell {
         
         myFollowedNumBtn.titleLabel?.numberOfLines = 0
         myFollowedNumBtn.titleLabel?.textAlignment = NSTextAlignment.center
+        
+        postedRecipesSubject
+            .subscribe(onNext: { [unowned self] count in
+                
+                self.myPosetedRecipeNumBtn.setTitle("\(count)\nposted", for: .normal)
+                
+            })
+            .disposed(by: disposeBag)
     }
 
     override func setSelected(_ selected: Bool, animated: Bool) {

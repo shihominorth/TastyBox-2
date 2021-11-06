@@ -9,13 +9,14 @@ import UIKit
 import Firebase
 import FirebaseFirestore
 import MessageUI
+import RxSwift
 import RxDataSources
 import DifferenceKit
 
-struct Recipe {
+class Recipe {
     
     let recipeID: String
-    let imageData: Data
+    var imageData: Data
 //    let video: URL?
     var title: String
     let updateDate: Timestamp
@@ -27,9 +28,9 @@ struct Recipe {
     var genresIDs: [String] = []
     var isVIP: Bool?
     
-    init?(recipeData:  QueryDocumentSnapshot, imageData: Data) {
+    init?(queryDoc:  QueryDocumentSnapshot, user: Firebase.User) {
         
-        let data = recipeData.data()
+        let data = queryDoc.data()
         
         guard let id = data["id"] as? String,
               let title = data["title"] as? String,
@@ -52,8 +53,64 @@ struct Recipe {
         self.isVIP = isVIP
         self.genresIDs = [String](genresData.keys)
        
-        self.imageData = imageData
+//        self.imageData = imageData
+        self.imageData = Data()
+        
+        let getImageObservable = getMyImage(recipeID: self.recipeID, user: user)
 
+        getImageObservable
+            .retry { errors in
+               
+                return errors.enumerated().flatMap { retryIndex, error -> Observable<Int64> in
+                   
+                    let e = error as NSError
+                    
+                    if 400..<500 ~= e.code && retryIndex < 3 {
+                    
+                        return .timer(.milliseconds(3000), scheduler: MainScheduler.instance)
+                    
+                    }
+                    
+                    return Observable.error(error)
+
+                }
+            }
+            .subscribe(onNext: {  [unowned self] data in
+                
+                self.imageData = data
+
+            })
+            .disposed(by: DisposeBag())
+       
+    }
+    
+    
+    func getMyImage(recipeID: String, user: Firebase.User) -> Observable<Data> {
+        
+        return .create { observer in
+           
+            let storage = Storage.storage().reference()
+            
+            storage.child("users/\(user.uid)/\(recipeID)/mainPhoto.jpg").getData(maxSize: 1 * 1024 * 1024) { data, err in
+               
+                if let err = err {
+                    
+                    observer.onError(err)
+                    
+                } else {
+               
+                    if let data = data {
+                        
+                        observer.onNext(data)
+                    }
+                    
+                }
+                
+            }
+            
+            return Disposables.create()
+        }
+        
     }
     
 //    init?(documentSnapshot:  DocumentSnapshot) {
@@ -67,7 +124,7 @@ struct Recipe {
 //
 //    }
     
-  
+ 
 }
 
 extension Recipe: Differentiable {

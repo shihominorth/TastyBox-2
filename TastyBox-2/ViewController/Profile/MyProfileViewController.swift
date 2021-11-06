@@ -28,6 +28,7 @@ class MyProfileViewController: UIViewController, BindableType {
     
     func bindViewModel() {
         
+        self.viewModel.getMyPostedRecipes()
     }
     
     func setUpTableView() {
@@ -42,7 +43,7 @@ class MyProfileViewController: UIViewController, BindableType {
         
         dataSource = RxPostedRecipeCollectionViewDataSource<Recipe, MyPostedRecipeCVCell>(identifier: MyPostedRecipeCVCell.identifier, configure: { row, recipe, cell in
             
-            if let data = recipe.imageData, let img = UIImage(data: data) {
+            if let img = UIImage(data: recipe.imageData) {
                 cell.imgView.image = img
             }
             
@@ -77,7 +78,13 @@ extension MyProfileViewController: UITableViewDelegate, UITableViewDataSource {
             
             if let cell = tableView.dequeueReusableCell(withIdentifier: "myProfileNum") as? MyProfileNumTVCell {
                
-                
+                viewModel.postedRecipesSubject
+                    .flatMap { recipes in
+                        
+                        return Observable.just(recipes.count)
+                    }
+                    .bind(to: cell.postedRecipesSubject)
+                    .disposed(by: cell.disposeBag)
                 
                 return cell
             }
