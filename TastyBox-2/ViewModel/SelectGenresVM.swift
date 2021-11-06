@@ -348,7 +348,7 @@ class SelectGenresVM: ViewModelBase {
         return .create { observer in
             
             var arr = txt.components(separatedBy: "#").filter { $0 != "" }
-            //
+            
             arr = arr.map { $0.filter { char in
                 
                 return char != " "
