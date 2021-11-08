@@ -277,6 +277,9 @@ extension Recipe: Differentiable {
 }
 
 struct Instruction {
+    
+    
+    var id: String
     var index: Int
     var imageData: Data
     var text: String
