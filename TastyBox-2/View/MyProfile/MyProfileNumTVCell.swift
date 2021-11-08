@@ -23,15 +23,20 @@ class MyProfileNumTVCell: UITableViewCell {
         
         disposeBag = DisposeBag()
        
+        myPosetedRecipeNumBtn.setTitle("no post\nfounded", for: .normal)
+        myPosetedRecipeNumBtn.tintColor = #colorLiteral(red: 1, green: 0.5763723254, blue: 0, alpha: 1)
         myPosetedRecipeNumBtn.titleLabel?.numberOfLines = 0
         myPosetedRecipeNumBtn.titleLabel?.textAlignment = NSTextAlignment.center
         
+        mySavedRecipesBtn.tintColor = #colorLiteral(red: 1, green: 0.5763723254, blue: 0, alpha: 1)
         mySavedRecipesBtn.titleLabel?.numberOfLines = 0
         mySavedRecipesBtn.titleLabel?.textAlignment = NSTextAlignment.center
         
+        myFollowingNumBtn.tintColor = #colorLiteral(red: 1, green: 0.5763723254, blue: 0, alpha: 1)
         myFollowingNumBtn.titleLabel?.numberOfLines = 0
         myFollowingNumBtn.titleLabel?.textAlignment = NSTextAlignment.center
         
+        myFollowedNumBtn.tintColor = #colorLiteral(red: 1, green: 0.5763723254, blue: 0, alpha: 1)
         myFollowedNumBtn.titleLabel?.numberOfLines = 0
         myFollowedNumBtn.titleLabel?.textAlignment = NSTextAlignment.center
         

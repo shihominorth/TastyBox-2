@@ -11,7 +11,6 @@ import RxSwift
 
 protocol MyProfileDMProtocol: AnyObject {
     static func getMyPostedRecipes(user: Firebase.User) -> Observable<[Recipe]>
-    
 }
 
 class MyProfileDM: MyProfileDMProtocol {
@@ -21,11 +20,19 @@ class MyProfileDM: MyProfileDMProtocol {
     
     static func getMyPostedRecipes(user: Firebase.User) -> Observable<[Recipe]> {
         
+        return getMyPostedRecipesDocuments(user: user)
+//            .observe(on: MainScheduler.instance)
+            .flatMap { docs in
+                generateNewRecipes(queryDocs: docs, user: user)
+            }
+    }
+    
+    static func getMyPostedRecipesDocuments(user: Firebase.User) -> Observable<[QueryDocumentSnapshot]> {
+        
         return .create { observer in
 
             db.collection("recipes").whereField("publisherID", isEqualTo: user.uid).addSnapshotListener { snapShot, err in
                 
-                var recipes: [Recipe] = []
                 
                 if let err = err {
           
@@ -38,26 +45,8 @@ class MyProfileDM: MyProfileDMProtocol {
                     if let snapShot = snapShot {
                         
                         let documents = snapShot.documents
-                        var implementedNum = 0
-                        
-                        documents.enumerated().forEach { index, doc in
-                            
-                            implementedNum += 1
-                            
-                            
-                            if let recipe = Recipe(queryDoc: doc, user: user) {
-                            
-                                recipes.append(recipe)
-                           
-                            }
-                           
-                            if documents.count == implementedNum {
-                                
-                                observer.onNext(recipes)
-                                
-                            }
-                            
-                        }
+                       
+                        observer.onNext(documents)
                         
                     }
                     else {
@@ -74,6 +63,234 @@ class MyProfileDM: MyProfileDMProtocol {
         
     }
     
+    static func generateNewRecipes(queryDocs: [QueryDocumentSnapshot], user: Firebase.User) -> Observable<[Recipe]> {
+        
+        return .create { observer in
+            
+            
+            
+            var implementNum = 0
+            var recipes: [Recipe] = []
+            let disposeBag = DisposeBag()
+            
+//            DispatchQueue.global(qos: .background).async  {
+            
+            queryDocs.enumerated().forEach { index, doc in
+                
+                implementNum += 1
+                
+                generateNewRecipe(queryDoc: doc, user: user)
+                    .debug("recipe gotten")
+                    .catch { err in
+                        
+                        print(err)
+                        
+                        if implementNum == queryDocs.count {
+                            observer.onNext(recipes)
+                        }
+                        
+                        return .empty()
+                    }
+                    .subscribe(onNext: { recipe in
+                        
+                        if let recipe = recipe {
+                            recipes.append(recipe)
+                        }
+                        
+                        if implementNum == queryDocs.count {
+                            observer.onNext(recipes)
+                        }
+                        
+                    })
+                    .disposed(by: disposeBag)
+                                
+            }
+//            }
+            
+            return Disposables.create()
+        }
+    }
+    
+//    static func generateNewRecipe(queryDoc: QueryDocumentSnapshot, user: Firebase.User) -> Observable<Recipe> {
+//
+//        let imageData = <#value#>
+//
+//
+//            let documentID = queryDoc.documentID
+//
+////            let getImageObservable = getMyPostedRecipeImage(recipeID: documentID, user: user)
+//
+//            return .create { observer in
+//
+//                getMyPostedRecipeImage(recipeID: queryDoc.documentID, user: user, completion: { data in
+//
+////                    observer.onNext(data)
+//
+//                    if let recipe = Recipe(queryDoc: queryDoc, imageData: data) {
+//
+//                        observer.onNext(recipe)
+//
+//                    }
+//
+//                }, errBlock: { err in
+//
+//                    observer.onError(err)
+//
+//                })
+//
+//            .map { data in
+//
+//                if let recipe = Recipe(queryDoc: queryDoc, imageData: data) {
+//
+//                    return recipe
+//
+//                }
+//
+//                return nil
+//            }
+                
+//                    .subscribe(onNext: { data in
+//
+//                        if let recipe = Recipe(queryDoc: queryDoc, imageData: data) {
+//
+//                            observer.onNext(recipe)
+//
+//                        }
+//                        else {
+//
+//                            observer.onNext(nil)
+//
+//                        }
+//
+//                    }, onError: { err in
+//
+//                        observer.onError(err)
+//
+//                    })
+//                    .disposed(by: DisposeBag())
+//
+//                return Disposables.create()
+//            }
+//
+//        }
+    
+    static func generateNewRecipe(queryDoc: QueryDocumentSnapshot, user: Firebase.User) -> Observable<Recipe?> {
+//
+        return getMyPostedRecipeImage(recipeID: queryDoc.documentID, user: user)
+//            .observe(on: MainScheduler.instance)
+            .debug("image gotten")
+//            .flatMapLatest { data -> Observable<Recipe> in
+//
+//                let recipeObservable = Observable<Recipe>.create { observer in
+//
+//                    if let recipe = Recipe(queryDoc: queryDoc, imageData: data) {
+//
+//                        observer.onNext(recipe)
+//                    }
+//                    return Disposables.create()
+//                }
+//
+//                return recipeObservable
+//
+//            }
+            .retry { errors in
+
+                return errors.enumerated().flatMap { retryIndex, error -> Observable<Int64> in
+
+                    print("got error")
+                    print(error)
+
+                    let e = error as NSError
+
+                    if 400..<500 ~= e.code && retryIndex < 3 {
+
+                        return .timer(.milliseconds(3000), scheduler: MainScheduler.instance)
+
+                    }
+
+                    return Observable.error(error)
+
+                }
+            }
+            .flatMap { data -> Observable<Recipe?> in
+
+                let newRecipe = Observable<Recipe?>.create { observer in
+
+                    if let recipe = Recipe(queryDoc: queryDoc, imageData: data) {
+
+                        observer.onNext(recipe)
+
+                    }
+                    else {
+
+                        observer.onNext(nil)
+
+                    }
+
+                    return Disposables.create()
+                }
+
+                return newRecipe
+            }
+      
+                
+    }
+//
+   
+//    static func getMyPostedRecipeImage(recipeID: String, user: Firebase.User, completion: @escaping (Data) -> Void, errBlock: @escaping (Error) -> Void) {
+//
+//            let storage = Storage.storage().reference()
+//
+//            storage.child("users/\(user.uid)/\(recipeID)/mainPhoto.jpg").getData(maxSize: 1 * 1024 * 1024) { data, err in
+//
+//                if let err = err {
+//
+//                    errBlock(err)
+//
+//                } else {
+//
+//                    if let data = data {
+//
+//                       completion(data)
+//                    }
+//
+//                }
+//
+//            }
+//
+//
+//
+//    }
+    
+
+    static func getMyPostedRecipeImage(recipeID: String, user: Firebase.User) -> Observable<Data> {
+
+        return .create { observer in
+
+            let storage = Storage.storage().reference()
+
+            storage.child("users/\(user.uid)/\(recipeID)/mainPhoto.jpg").getData(maxSize: 1 * 1024 * 1024) { data, err in
+
+                if let err = err {
+
+                    observer.onError(err)
+
+                } else {
+
+                    if let data = data {
+
+                        observer.onNext(data)
+                    }
+
+                }
+
+            }
+
+            return Disposables.create()
+        }
+
+
+    }
 
 //    func getMyImage(recipeID: String, user: Firebase.User) -> Observable<Data> {
 //        

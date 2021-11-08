@@ -93,7 +93,9 @@ extension MyProfileViewController: UITableViewDelegate, UITableViewDataSource {
             
             if let cell = tableView.dequeueReusableCell(withIdentifier: "myPostedRecipesTVCell") as? MyPostedRecipesTVCell {
                
-                
+//                viewModel.postedRecipesSubject
+//                    .bind(to: cell.recipesSubject)
+//                    .disposed(by: cell.disposeBag)
                 
                 return cell
             }
@@ -117,7 +119,7 @@ extension MyProfileViewController: UITableViewDelegate, UITableViewDataSource {
             return 43.5
             
         case 2:
-            return UITableView.automaticDimension
+            return self.tableView.frame.height - 135 - 43.5
             
         default:
             break

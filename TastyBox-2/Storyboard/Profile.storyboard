@@ -165,18 +165,29 @@
                                                                     <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="GK8-Aw-sIh">
                                                                         <rect key="frame" x="0.0" y="0.0" width="150" height="150"/>
                                                                     </imageView>
+                                                                    <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="bookmark.circle" catalog="system" translatesAutoresizingMaskIntoConstraints="NO" id="jjh-BF-fbH">
+                                                                        <rect key="frame" x="102" y="8.5" width="40" height="39"/>
+                                                                        <color key="tintColor" systemColor="systemOrangeColor"/>
+                                                                        <constraints>
+                                                                            <constraint firstAttribute="height" constant="40" id="GfC-T9-p9I"/>
+                                                                            <constraint firstAttribute="width" secondItem="jjh-BF-fbH" secondAttribute="height" multiplier="1:1" id="SX3-q7-WRU"/>
+                                                                            <constraint firstAttribute="width" constant="40" id="WvC-BB-GoG"/>
+                                                                        </constraints>
+                                                                    </imageView>
                                                                 </subviews>
                                                                 <constraints>
                                                                     <constraint firstItem="GK8-Aw-sIh" firstAttribute="width" secondItem="aNG-RD-dom" secondAttribute="width" id="3dY-tm-cey"/>
                                                                     <constraint firstItem="GK8-Aw-sIh" firstAttribute="centerY" secondItem="aNG-RD-dom" secondAttribute="centerY" id="EHP-cw-MBR"/>
                                                                     <constraint firstItem="GK8-Aw-sIh" firstAttribute="height" secondItem="aNG-RD-dom" secondAttribute="height" id="Tu2-NW-DIS"/>
+                                                                    <constraint firstAttribute="trailing" secondItem="jjh-BF-fbH" secondAttribute="trailing" constant="8" id="gm8-1F-fWC"/>
+                                                                    <constraint firstItem="jjh-BF-fbH" firstAttribute="top" secondItem="aNG-RD-dom" secondAttribute="top" constant="8" id="gz3-Jn-DlE"/>
                                                                     <constraint firstItem="GK8-Aw-sIh" firstAttribute="centerX" secondItem="aNG-RD-dom" secondAttribute="centerX" id="u8K-hd-F63"/>
                                                                 </constraints>
                                                             </collectionViewCellContentView>
                                                             <size key="customSize" width="150" height="150"/>
                                                             <connections>
-                                                                <outlet property="imageView" destination="GK8-Aw-sIh" id="AoG-wF-gJ1"/>
                                                                 <outlet property="imgView" destination="GK8-Aw-sIh" id="6LD-ha-ubj"/>
+                                                                <outlet property="vipImgView" destination="jjh-BF-fbH" id="VB1-0o-iVu"/>
                                                             </connections>
                                                         </collectionViewCell>
                                                     </cells>
@@ -215,9 +226,13 @@
         </scene>
     </scenes>
     <resources>
+        <image name="bookmark.circle" catalog="system" width="128" height="121"/>
         <image name="defaultUserImage" width="308" height="308"/>
         <systemColor name="systemBackgroundColor">
             <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+        </systemColor>
+        <systemColor name="systemOrangeColor">
+            <color red="1" green="0.58431372549019611" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </systemColor>
     </resources>
 </document>

@@ -14,5 +14,6 @@ class MyPostedRecipeCVCell: UICollectionViewCell {
     }
     
     @IBOutlet weak var imgView: UIImageView!
-    
+    @IBOutlet weak var vipImgView: UIImageView!
+
 }

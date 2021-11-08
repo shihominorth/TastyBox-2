@@ -30,27 +30,37 @@ class MyProfileVM: ViewModelBase {
     
     func getMyPostedRecipes(){
         
-        self.apiType.getMyPostedRecipes(user: self.user)
-            .subscribe(onNext: { [unowned self] recipes in
+        DispatchQueue.global(qos: .background).async { [unowned self] in
+            
+            DispatchQueue.main.async {
                 
-                self.postedRecipesSubject.onNext(recipes)
+                self.apiType.getMyPostedRecipes(user: self.user)
+                    .subscribe(onNext: { recipes in
+                        
+                        self.postedRecipesSubject.onNext(recipes)
+                        
+                    }, onError: { err in
+                        
+                        guard let reason = err.handleStorageError() else { return }
+                        
+                        SCLAlertView().showTitle(
+                            reason.reason, // Title of view
+                            subTitle: reason.solution,
+                            timeout: .none, // String of view
+                            completeText: "Done", // Optional button value, default: ""
+                            style: .error, // Styles - see below.
+                            colorStyle: 0xA429FF,
+                            colorTextButton: 0xFFFFFF
+                        )
+                        
+                    })
+                    .disposed(by: self.disposeBag)
                 
-            }, onError: { err in
-                
-                guard let reason = err.handleStorageError() else { return }
-                
-                SCLAlertView().showTitle(
-                    reason.reason, // Title of view
-                    subTitle: reason.solution,
-                    timeout: .none, // String of view
-                    completeText: "Done", // Optional button value, default: ""
-                    style: .error, // Styles - see below.
-                    colorStyle: 0xA429FF,
-                    colorTextButton: 0xFFFFFF
-                )
-                
-            })
-            .disposed(by: disposeBag)
+            }
+        }
+        
         
     }
+    
+    
 }
