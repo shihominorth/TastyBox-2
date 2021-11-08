@@ -325,7 +325,7 @@ class CreateRecipeVM: ViewModelBase {
         let uuid = UUID()
         let uniqueIdString = uuid.uuidString.replacingOccurrences(of: "-", with: "")
         
-        let instruction = Instruction(index: self.instructions.count, imageData: Data(), text: "")
+        let instruction = Instruction(id: uniqueIdString, index: self.instructions.count, imageData: Data(), text: "")
         
         self.instructions.append(instruction)
         self.instructionsSubject.onNext(self.instructions)

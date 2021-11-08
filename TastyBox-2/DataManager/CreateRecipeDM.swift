@@ -262,63 +262,63 @@ class CreateRecipeDM: CreateRecipeDMProtocol {
     
     static func isFirebaseKnowsGenres(word: String, completion: @escaping (Genre?) -> Void, errBlock: @escaping (Error) -> Void) {
         
-//        words.forEach { word in
-//            query doesn't work
+        //        words.forEach { word in
+        //            query doesn't work
         var query = db.collection("genres").limit(to: 30)
         let arr = Array(Set(word.lowercased()))
-
-
-            arr.forEach {
-                query = query.whereField("searchChar.\($0)", isEqualTo: true)
+        
+        
+        arr.forEach {
+            query = query.whereField("searchChar.\($0)", isEqualTo: true)
+        }
+        
+        //        var query = db.collection("genres").whereField("searchChar.H", isEqualTo: true)
+        query.getDocuments { snapShot, err in
+            
+            if let err = err {
+                
+                errBlock(err)
+                
             }
             
-//        var query = db.collection("genres").whereField("searchChar.H", isEqualTo: true)
-            query.getDocuments { snapShot, err in
+            else {
                 
-                if let err = err {
+                if let docs = snapShot?.documents {
                     
-                    errBlock(err)
-                    
-                }
-                
-                else {
-                    
-                    if let docs = snapShot?.documents {
+                    if docs.exists {
                         
-                        if docs.exists {
+                        let genres = docs.compactMap { doc -> Genre? in
                             
-                            let genres = docs.compactMap { doc -> Genre? in
+                            if let genre = Genre(document: doc) {
                                 
-                                if let genre = Genre(document: doc) {
-                                    
-                                    return genre
-                                    
-                                }
-                                else {
-                                    return nil
-                                }
+                                return genre
                                 
-                            }
-                            
-                            if let genre = genres.first(where: { $0.title == word} ) {
-                                
-                                completion(genre)
                             }
                             else {
-                                completion(nil)
+                                return nil
                             }
                             
                         }
+                        
+                        if let genre = genres.first(where: { $0.title == word} ) {
+                            
+                            completion(genre)
+                        }
                         else {
-                            
                             completion(nil)
-                            
                         }
                         
                     }
+                    else {
+                        
+                        completion(nil)
+                        
+                    }
+                    
                 }
             }
-//        }
+        }
+        //        }
     }
     
     static func isUserInterested(genres: [Genre], user: Firebase.User) -> Observable<[Genre]> {
@@ -328,9 +328,9 @@ class CreateRecipeDM: CreateRecipeDMProtocol {
             var finishedGenres: [Genre] = []
             
             if genres.isEmpty {
-            
+                
                 observer.onNext([])
-            
+                
             } else {
                 
                 genres.enumerated().forEach { index, genre in
@@ -359,7 +359,7 @@ class CreateRecipeDM: CreateRecipeDMProtocol {
                 }
                 
             }
- 
+            
             return Disposables.create()
             
         }
@@ -391,12 +391,12 @@ class CreateRecipeDM: CreateRecipeDMProtocol {
                         
                     }
                     else {
-                    
+                        
                         if let data = snapShot?.data(), let value = data["genres"] as? [String: Bool] {
                             
                             var newDic = value
                             newDic[genre.id] = true
-    
+                            
                             db.collection("users").document(user.uid).updateData([
                                 
                                 "genres": newDic
@@ -416,7 +416,7 @@ class CreateRecipeDM: CreateRecipeDMProtocol {
                             }
                         }
                         
-                       
+                        
                         
                     }
                     
@@ -436,11 +436,11 @@ class CreateRecipeDM: CreateRecipeDMProtocol {
             var registeredGenres: [Genre] = []
             
             if genres.isEmpty {
-            
+                
                 observer.onNext([])
-          
+                
             } else {
-              
+                
                 genres.enumerated().forEach { index, txt in
                     
                     
@@ -777,12 +777,12 @@ class CreateRecipeDM: CreateRecipeDMProtocol {
                     genres.forEach {
                         genresDic[$0.id] = true
                     }
-                                        
+                    
                 case let .ingredients(ingredient):
                     
                     ingredientsDic[ingredient.id] = true
                     genresDic[ingredient.id] = true
-
+                    
                     
                 default:
                     break
@@ -918,13 +918,13 @@ class CreateRecipeDM: CreateRecipeDMProtocol {
                 switch item {
                 case let .instructions(instruction):
                     
-                    let uuid = UUID()
-                    let uniqueIdString = uuid.uuidString.replacingOccurrences(of: "-", with: "")
+                    //                    let uuid = UUID()
+                    //                    let uniqueIdString = uuid.uuidString.replacingOccurrences(of: "-", with: "")
                     
-                    data["id"] = uniqueIdString
+                    data["id"] = instruction.id
                     data["index"] = instruction.index
                     data["text"] = instruction.text
-                    data["imageURL"] = "users/\(user.uid)/recipes/\(recipeID)/\(uniqueIdString)/\(instruction.index).jpg"
+                    //                    data["imageURL"] = "users/\(user.uid)/recipes/\(recipeID)/\(uniqueIdString)/\(instruction.index).jpg"
                     
                     result.append(data)
                     
@@ -1233,54 +1233,126 @@ class CreateRecipeDM: CreateRecipeDMProtocol {
                     
                 } else {
                     
-                    if let videoURL = videoURL {
-                        let metadata = StorageMetadata()
-                        //specify MIME type
-                        metadata.contentType = "video/quicktime"
+                    self.storage.child("users/\(user.uid)/\(recipeID)/mainPhoto.jpg").downloadURL { imgURL, err in
                         
-                        //convert video url to data
-                        if let videoData = NSData(contentsOf: videoURL) as Data? {
-                            //use 'putData' instead
-                            let uploadTask = self.storage.child("users/\(user.uid)/\(recipeID)/movie.mov").putData(videoData, metadata: metadata)
+                        if let err = err {
                             
-                            // Listen for state changes, errors, and completion of the upload.
-                            uploadTask.observe(.resume) { snapshot in
-                                // Upload resumed, also fires when the upload starts
-                                print("resume")
-                            }
+                            observer.onError(err)
                             
-                            uploadTask.observe(.pause) { snapshot in
-                                // Upload paused
-                                print("pause")
-                            }
+                        } else {
                             
-                            uploadTask.observe(.progress) { snapshot in
-                                // Upload reported progress
-                                let percentComplete = 100.0 * Double(snapshot.progress!.completedUnitCount)
-                                / Double(snapshot.progress!.totalUnitCount)
+                            if let imgURL = imgURL?.absoluteString {
                                 
-                                print(percentComplete)
-                            }
-                            
-                            uploadTask.observe(.success) { snapshot in
-                                // Upload completed successfully
-                                observer.onNext(())
-                            }
-                            
-                            
-                            uploadTask.observe(.failure) { snapshot in
                                 
-                                if let err = snapshot.error {
+                                self.db.collection("recipes").document(recipeID).updateData([
                                     
-                                    observer.onError(err)
+                                    "imgURL": imgURL
                                     
+                                ]) { err in
+                                    
+                                    if let err = err {
+                                        
+                                        observer.onError(err)
+                                        
+                                    }
+                                    else {
+                                        
+                                        
+                                        if let videoURL = videoURL {
+                                            
+                                            let metadata = StorageMetadata()
+                                            //specify MIME type
+                                            metadata.contentType = "video/quicktime"
+                                            
+                                            //convert video url to data
+                                            if let videoData = NSData(contentsOf: videoURL) as Data? {
+                                                //use 'putData' instead
+                                                let uploadTask = self.storage.child("users/\(user.uid)/\(recipeID)/movie.mov").putData(videoData, metadata: metadata)
+                                                
+                                                // Listen for state changes, errors, and completion of the upload.
+                                                uploadTask.observe(.resume) { snapshot in
+                                                    // Upload resumed, also fires when the upload starts
+                                                    print("resume")
+                                                }
+                                                
+                                                uploadTask.observe(.pause) { snapshot in
+                                                    // Upload paused
+                                                    print("pause")
+                                                }
+                                                
+                                                uploadTask.observe(.progress) { snapshot in
+                                                    // Upload reported progress
+                                                    let percentComplete = 100.0 * Double(snapshot.progress!.completedUnitCount)
+                                                    / Double(snapshot.progress!.totalUnitCount)
+                                                    
+                                                    print(percentComplete)
+                                                }
+                                                
+                                                uploadTask.observe(.success) { snapshot in
+                                                    // Upload completed successfully
+                                                    self.storage.child("users/\(user.uid)/\(recipeID)/movie.mov").downloadURL { downloadedVideoURL, err in
+                                                        
+                                                        if let err = err {
+                                                            observer.onError(err)
+                                                        }
+                                                        else {
+                                                            
+                                                            if let downloadedVideoURL = downloadedVideoURL?.absoluteString {
+                                                                
+                                                                self.db.collection("recipes").document(recipeID).updateData([
+                                                                                                                      
+                                                                    "videoURL": downloadedVideoURL
+                                                                                                                      
+                                                                ]) { err in
+                                                                                                                      
+                                                                    if let err = err {
+                                                                                                                          
+                                                                        observer.onError(err)
+                                                                                                                          
+                                                                    }
+                                                                    else {
+                                                                                                                         
+                                                                        observer.onNext(())
+                                                                                                                      
+                                                                    }
+                                                                                                                  
+                                                                }
+                                                                
+                                                            }
+                                                            
+                                                        }
+                                                        
+                                                    }
+                                                    
+                                                  
+                                                }
+                                                
+                                                
+                                                uploadTask.observe(.failure) { snapshot in
+                                                    
+                                                    if let err = snapshot.error {
+                                                        
+                                                        observer.onError(err)
+                                                        
+                                                    }
+                                                }
+                                            }
+                                            
+                                        } else {
+                                            
+                                            observer.onNext(())
+                                        
+                                        }
+                                        
+                                        
+                                    }
                                 }
+                                
                             }
                         }
-                        
-                    } else {
-                        observer.onNext(())
                     }
+                    
+                    
                     
                 }
             }
@@ -1344,11 +1416,44 @@ class CreateRecipeDM: CreateRecipeDMProtocol {
                 / Double(snapshot.progress!.totalUnitCount)
                 
                 print(percentComplete)
+                
+                
             }
             
             uploadTask.observe(.success) { snapshot in
                 
-                block()
+                self.storage.child("users/\(user.uid)/\(recipeID)/\(instruction.index).jpg").downloadURL { url, err in
+                    
+                    if let err = err {
+                        errBlock(err)
+                    }
+                    else {
+                        
+                        if let url = url {
+                            
+                            self.db.collection("recipes").document(recipeID).collection("instructions").document(instruction.id).updateData([
+                                
+                                "imgURL": url
+                                
+                            ]) { err in
+                                
+                                if let err = err {
+                                    
+                                    errBlock(err)
+                                    
+                                }
+                                else {
+                                    
+                                    block()
+                                    
+                                }
+                            }
+                        }
+                        
+                    }
+                }
+                
+                
             }
             
             
