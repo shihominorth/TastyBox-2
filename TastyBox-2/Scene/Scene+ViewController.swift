@@ -22,6 +22,10 @@ extension Scene {
         case let .profileScene(scene):
 
             return profileViewController(scene: scene)
+            
+        case let .recipeScene(scene: scene):
+            
+            return recipeViewController(scene: scene)
         }
         
         
@@ -294,7 +298,26 @@ extension Scene {
             return vc
         }
     }
+    
+    func recipeViewController(scene: RecipeDetailScene) -> UIViewController {
+        
+        let storyBoard = UIStoryboard(name: "RecipeDetail", bundle: nil)
+        
+        
+        switch scene {
+        case .recipe(let viewModel):
+            
+            var vc = storyBoard.instantiateViewController(withIdentifier: "recipeDetail") as! RecipeViewController
+            
+            vc.bindViewModel(to: viewModel)
+            
+            return vc
+            
+        }
+    }
 }
+
+
 
 extension ImagePickScene {
     
