@@ -117,6 +117,17 @@ extension MyProfileViewController: UITableViewDelegate, UITableViewDataSource {
                     .bind(to: cell.recipesSubject)
                     .disposed(by: cell.disposeBag)
                 
+                Observable.combineLatest(cell.collectionView.rx.itemSelected, viewModel.postedRecipesSubject) { indexPath, recipes in
+                    
+                    return recipes[indexPath.row]
+                    
+                }
+                .subscribe(onNext: { [unowned self] recipe in
+                    
+                    self.viewModel.toRecipeDetail(recipe: recipe)
+                    
+                })
+                .disposed(by: cell.disposeBag)
                 
                 return cell
             }
@@ -137,10 +148,10 @@ extension MyProfileViewController: UITableViewDelegate, UITableViewDataSource {
             return 135
         
         case 1:
-            return 43.5
+            return 50.5
             
         case 2:
-            return self.tableView.frame.height - 135 - 43.5
+            return self.tableView.frame.height - 135 - 50.5
             
         default:
             break

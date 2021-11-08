@@ -63,4 +63,11 @@ class MyProfileVM: ViewModelBase {
     }
     
     
+    func toRecipeDetail(recipe: Recipe) {
+        
+        print(recipe)
+        
+    }
+    
+    
 }

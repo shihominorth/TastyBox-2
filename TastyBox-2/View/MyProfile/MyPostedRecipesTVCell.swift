@@ -49,12 +49,12 @@ extension MyPostedRecipesTVCell {
                     switch result {
                     case let .success(value):
                         
-                        print("showed: \(url), value: \(value)")
+                        print("showed: \(value)")
                         
                         
                     case let .failure(value):
                       
-                        print("failed: \(url), value: \(value)")
+                        print("failed: \(value)")
 
                     }
                     
