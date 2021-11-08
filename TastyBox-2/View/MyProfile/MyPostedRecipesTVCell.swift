@@ -20,21 +20,8 @@ class MyPostedRecipesTVCell: UITableViewCell {
     override func awakeFromNib() {
         super.awakeFromNib()
         // Initialization code
-        disposeBag = DisposeBag()
-        
-        dataSource = RxPostedRecipeCollectionViewDataSource<Recipe, MyPostedRecipeCVCell>(identifier: MyPostedRecipeCVCell.identifier, configure: { row, recipe, cell in
-            
-//            if let img = UIImage(data: recipe.imageData) {
-//                cell.imgView.image = img
-//            }
-            
-            cell.vipImgView.isHidden = recipe.isVIP ? false : true
-            
-        })
-
-//        recipesSubject
-//            .bind(to: collectionView.rx.items(dataSource: dataSource))
-//            .disposed(by: disposeBag)
+       
+        setUpCollectionView()
     }
 
     override func setSelected(_ selected: Bool, animated: Bool) {
@@ -43,4 +30,44 @@ class MyPostedRecipesTVCell: UITableViewCell {
         // Configure the view for the selected state
     }
 
+}
+
+extension MyPostedRecipesTVCell {
+    
+    func setUpCollectionView() {
+        
+        disposeBag = DisposeBag()
+        
+        dataSource = RxPostedRecipeCollectionViewDataSource<Recipe, MyPostedRecipeCVCell>(identifier: MyPostedRecipeCVCell.identifier, configure: { row, recipe, cell in
+            
+            if let url = URL(string: recipe.imgURL) {
+               
+                cell.imgView.kf.setImage(with: url, options: [.transition(.fade(1))]) { result in
+                    
+//                    cell.stopSkeletonAnimation()
+                    
+                    switch result {
+                    case let .success(value):
+                        
+                        print("showed: \(url), value: \(value)")
+                        
+                        
+                    case let .failure(value):
+                      
+                        print("failed: \(url), value: \(value)")
+
+                    }
+                    
+                }
+            }
+         
+            cell.vipImgView.isHidden = recipe.isVIP ? false : true
+            
+        })
+
+        recipesSubject
+            .bind(to: collectionView.rx.items(dataSource: dataSource))
+            .disposed(by: disposeBag)
+        
+    }
 }

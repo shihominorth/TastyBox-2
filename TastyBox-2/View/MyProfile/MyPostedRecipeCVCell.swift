@@ -6,6 +6,8 @@
 //
 
 import UIKit
+import SkeletonView
+
 
 class MyPostedRecipeCVCell: UICollectionViewCell {
 
@@ -15,5 +17,12 @@ class MyPostedRecipeCVCell: UICollectionViewCell {
     
     @IBOutlet weak var imgView: UIImageView!
     @IBOutlet weak var vipImgView: UIImageView!
+    
+    override func awakeFromNib() {
+
+//        imgView.isSkeletonable = true
+        
+//        imgView.showAnimatedSkeleton()
+    }
 
 }

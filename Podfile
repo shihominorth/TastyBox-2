@@ -52,4 +52,9 @@ pod 'SCLAlertView'
 #Lottie
 pod 'lottie-ios'
 
+pod 'Kingfisher'
+
+pod 'SkeletonView'
+
+
 end

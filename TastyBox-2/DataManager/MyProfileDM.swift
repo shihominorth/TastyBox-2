@@ -20,11 +20,15 @@ class MyProfileDM: MyProfileDMProtocol {
     
     static func getMyPostedRecipes(user: Firebase.User) -> Observable<[Recipe]> {
         
+        
         return getMyPostedRecipesDocuments(user: user)
-//            .observe(on: MainScheduler.instance)
             .flatMap { docs in
-                generateNewRecipes(queryDocs: docs, user: user)
+                Recipe.generateNewRecipes(queryDocs: docs)
             }
+//            .observe(on: MainScheduler.instance)
+//            .flatMap { docs in
+//                generateNewRecipes(queryDocs: docs, user: user)
+//            }
     }
     
     static func getMyPostedRecipesDocuments(user: Firebase.User) -> Observable<[QueryDocumentSnapshot]> {
@@ -69,15 +73,15 @@ class MyProfileDM: MyProfileDMProtocol {
             
             
             
-            var implementNum = 0
-            var recipes: [Recipe] = []
-            let disposeBag = DisposeBag()
+//            var implementNum = 0
+//            var recipes: [Recipe] = []
+//            let disposeBag = DisposeBag()
             
 //            DispatchQueue.global(qos: .background).async  {
             
-            queryDocs.enumerated().forEach { index, doc in
+//            queryDocs.enumerated().forEach { index, doc in
                 
-                implementNum += 1
+//                implementNum += 1
                 
 //                generateNewRecipe(queryDoc: doc, user: user)
 //                    .debug("recipe gotten")
@@ -104,7 +108,7 @@ class MyProfileDM: MyProfileDMProtocol {
 //                    })
 //                    .disposed(by: disposeBag)
                                 
-            }
+//            }
 //            }
             
             return Disposables.create()

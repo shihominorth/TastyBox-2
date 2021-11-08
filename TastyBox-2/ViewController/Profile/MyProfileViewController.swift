@@ -6,8 +6,10 @@
 //
 
 import UIKit
+import Kingfisher
 import RxSwift
 import RxCocoa
+import SkeletonView
 
 class MyProfileViewController: UIViewController, BindableType {
     
@@ -16,14 +18,14 @@ class MyProfileViewController: UIViewController, BindableType {
 
     @IBOutlet weak var tableView: UITableView!
     
-    var dataSource: RxPostedRecipeCollectionViewDataSource<Recipe, MyPostedRecipeCVCell>!
+//    var dataSource: RxPostedRecipeCollectionViewDataSource<Recipe, MyPostedRecipeCVCell>!
     
     
     override func viewDidLoad() {
         super.viewDidLoad()
 
         setUpTableView()
-        setUpCollectionView()
+//        setUpCollectionView()
     }
     
     func bindViewModel() {
@@ -39,16 +41,34 @@ class MyProfileViewController: UIViewController, BindableType {
         
     }
 
-    func setUpCollectionView() {
-        
-        dataSource = RxPostedRecipeCollectionViewDataSource<Recipe, MyPostedRecipeCVCell>(identifier: MyPostedRecipeCVCell.identifier, configure: { row, recipe, cell in
-            
-//            if let img = UIImage(data: recipe.imageData) {
-//                cell.imgView.image = img
+//    func setUpCollectionView() {
+//
+//        dataSource = RxPostedRecipeCollectionViewDataSource<Recipe, MyPostedRecipeCVCell>(identifier: MyPostedRecipeCVCell.identifier, configure: { row, recipe, cell in
+//
+//            if let url = URL(string: recipe.imgURL) {
+//
+//                cell.imgView.kf.setImage(with: url, options: [.transition(.fade(1))]) { result in
+//
+//                    cell.stopSkeletonAnimation()
+//
+//                    switch result {
+//                    case let .success(value):
+//
+//                        print("showed: \(url), value: \(value)")
+//
+//
+//                    case let .failure(value):
+//
+//                        print("failed: \(url), value: \(value)")
+//
+//                    }
+//
+//                }
 //            }
-            
-        })
-    }
+//
+//
+//        })
+//    }
     
 }
 
@@ -93,9 +113,10 @@ extension MyProfileViewController: UITableViewDelegate, UITableViewDataSource {
             
             if let cell = tableView.dequeueReusableCell(withIdentifier: "myPostedRecipesTVCell") as? MyPostedRecipesTVCell {
                
-//                viewModel.postedRecipesSubject
-//                    .bind(to: cell.recipesSubject)
-//                    .disposed(by: cell.disposeBag)
+                viewModel.postedRecipesSubject
+                    .bind(to: cell.recipesSubject)
+                    .disposed(by: cell.disposeBag)
+                
                 
                 return cell
             }

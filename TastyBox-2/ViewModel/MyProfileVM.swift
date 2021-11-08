@@ -30,9 +30,9 @@ class MyProfileVM: ViewModelBase {
     
     func getMyPostedRecipes(){
         
-        DispatchQueue.global(qos: .background).async { [unowned self] in
-            
-            DispatchQueue.main.async {
+//        DispatchQueue.global(qos: .background).async { [unowned self] in
+//
+//            DispatchQueue.main.async {
                 
                 self.apiType.getMyPostedRecipes(user: self.user)
                     .subscribe(onNext: { recipes in
@@ -56,9 +56,9 @@ class MyProfileVM: ViewModelBase {
                     })
                     .disposed(by: self.disposeBag)
                 
-            }
-        }
-        
+//            }
+//        }
+//        
         
     }
     

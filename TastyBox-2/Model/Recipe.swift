@@ -66,47 +66,18 @@ class Recipe {
             self.videoURL = nil
         
         }
-//        self.imgURL = Storage.storage().reference().child("users/\(user.uid)/\(self.recipeID)/mainPhoto.jpg")
         
     }
     
-    static func generateNewRecipes(queryDocs: [QueryDocumentSnapshot], user: Firebase.User) -> Observable<[Recipe]> {
+    static func generateNewRecipes(queryDocs: [QueryDocumentSnapshot]) -> Observable<[Recipe]> {
         
         return .create { observer in
             
-            var implementNum = 0
-            var recipes: [Recipe] = []
-            let disposeBag = DisposeBag()
+            let recipes = queryDocs.compactMap({ doc in
+                return Recipe(queryDoc: doc)
+            })
             
-            queryDocs.enumerated().forEach { index, doc in
-                
-                implementNum += 1
-                
-//                generateNewRecipe(queryDoc: doc, user: user)
-//                    .catch { err in
-//                        
-//                        print(err)
-//                        
-//                        if implementNum == queryDocs.count {
-//                            observer.onNext(recipes)
-//                        }
-//                        
-//                        return .empty()
-//                    }
-//                    .subscribe(onNext: { recipe in
-//                        
-//                        if let recipe = recipe {
-//                            recipes.append(recipe)
-//                        }
-//                        
-//                        if implementNum == queryDocs.count {
-//                            observer.onNext(recipes)
-//                        }
-//                        
-//                    })
-//                    .disposed(by: disposeBag)
-                                
-            }
+            observer.onNext(recipes)
             
             return Disposables.create()
         }
