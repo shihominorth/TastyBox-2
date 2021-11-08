@@ -16,7 +16,8 @@ import DifferenceKit
 class Recipe {
     
     let recipeID: String
-    var imageData: Data
+//    let imgURL: URL
+//    var imageData: Data
     //    let video: URL?
     var title: String
     let updateDate: Timestamp
@@ -28,7 +29,7 @@ class Recipe {
     var genresIDs: [String] = []
     var isVIP: Bool
     
-    init?(queryDoc:  QueryDocumentSnapshot, imageData: Data) {
+    init?(queryDoc:  QueryDocumentSnapshot, user: Firebase.User) {
         
         let data = queryDoc.data()
         
@@ -53,7 +54,7 @@ class Recipe {
         self.isVIP = isVIP
         self.genresIDs = [String](genresData.keys)
         
-        self.imageData = imageData
+//        self.imgURL = Storage.storage().reference().child("users/\(user.uid)/\(self.recipeID)/mainPhoto.jpg")
         
     }
     
