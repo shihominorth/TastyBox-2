@@ -79,30 +79,30 @@ class MyProfileDM: MyProfileDMProtocol {
                 
                 implementNum += 1
                 
-                generateNewRecipe(queryDoc: doc, user: user)
-                    .debug("recipe gotten")
-                    .catch { err in
-                        
-                        print(err)
-                        
-                        if implementNum == queryDocs.count {
-                            observer.onNext(recipes)
-                        }
-                        
-                        return .empty()
-                    }
-                    .subscribe(onNext: { recipe in
-                        
-                        if let recipe = recipe {
-                            recipes.append(recipe)
-                        }
-                        
-                        if implementNum == queryDocs.count {
-                            observer.onNext(recipes)
-                        }
-                        
-                    })
-                    .disposed(by: disposeBag)
+//                generateNewRecipe(queryDoc: doc, user: user)
+//                    .debug("recipe gotten")
+//                    .catch { err in
+//
+//                        print(err)
+//
+//                        if implementNum == queryDocs.count {
+//                            observer.onNext(recipes)
+//                        }
+//
+//                        return .empty()
+//                    }
+//                    .subscribe(onNext: { recipe in
+//
+//                        if let recipe = recipe {
+//                            recipes.append(recipe)
+//                        }
+//
+//                        if implementNum == queryDocs.count {
+//                            observer.onNext(recipes)
+//                        }
+//
+//                    })
+//                    .disposed(by: disposeBag)
                                 
             }
 //            }
@@ -174,11 +174,11 @@ class MyProfileDM: MyProfileDMProtocol {
 //
 //        }
     
-    static func generateNewRecipe(queryDoc: QueryDocumentSnapshot, user: Firebase.User) -> Observable<Recipe?> {
+//    static func generateNewRecipe(queryDoc: QueryDocumentSnapshot, user: Firebase.User) -> Observable<Recipe?> {
 //
-        return getMyPostedRecipeImage(recipeID: queryDoc.documentID, user: user)
+//        return getMyPostedRecipeImage(recipeID: queryDoc.documentID, user: user)
 //            .observe(on: MainScheduler.instance)
-            .debug("image gotten")
+//            .debug("image gotten")
 //            .flatMapLatest { data -> Observable<Recipe> in
 //
 //                let recipeObservable = Observable<Recipe>.create { observer in
@@ -193,48 +193,48 @@ class MyProfileDM: MyProfileDMProtocol {
 //                return recipeObservable
 //
 //            }
-            .retry { errors in
-
-                return errors.enumerated().flatMap { retryIndex, error -> Observable<Int64> in
-
-                    print("got error")
-                    print(error)
-
-                    let e = error as NSError
-
-                    if 400..<500 ~= e.code && retryIndex < 3 {
-
-                        return .timer(.milliseconds(3000), scheduler: MainScheduler.instance)
-
-                    }
-
-                    return Observable.error(error)
-
-                }
-            }
-            .flatMap { data -> Observable<Recipe?> in
-
-                let newRecipe = Observable<Recipe?>.create { observer in
-
-                    if let recipe = Recipe(queryDoc: queryDoc, imageData: data) {
-
-                        observer.onNext(recipe)
-
-                    }
-                    else {
-
-                        observer.onNext(nil)
-
-                    }
-
-                    return Disposables.create()
-                }
-
-                return newRecipe
-            }
+//            .retry { errors in
+//
+//                return errors.enumerated().flatMap { retryIndex, error -> Observable<Int64> in
+//
+//                    print("got error")
+//                    print(error)
+//
+//                    let e = error as NSError
+//
+//                    if 400..<500 ~= e.code && retryIndex < 3 {
+//
+//                        return .timer(.milliseconds(3000), scheduler: MainScheduler.instance)
+//
+//                    }
+//
+//                    return Observable.error(error)
+//
+//                }
+//            }
+//            .flatMap { data -> Observable<Recipe?> in
+//
+//                let newRecipe = Observable<Recipe?>.create { observer in
+//
+//                    if let recipe = Recipe(queryDoc: queryDoc, user: data) {
+//
+//                        observer.onNext(recipe)
+//
+//                    }
+//                    else {
+//
+//                        observer.onNext(nil)
+//
+//                    }
+//
+//                    return Disposables.create()
+//                }
+//
+//                return newRecipe
+//            }
       
                 
-    }
+//    }
 //
    
 //    static func getMyPostedRecipeImage(recipeID: String, user: Firebase.User, completion: @escaping (Data) -> Void, errBlock: @escaping (Error) -> Void) {
@@ -263,34 +263,34 @@ class MyProfileDM: MyProfileDMProtocol {
 //    }
     
 
-    static func getMyPostedRecipeImage(recipeID: String, user: Firebase.User) -> Observable<Data> {
-
-        return .create { observer in
-
-            let storage = Storage.storage().reference()
-
-            storage.child("users/\(user.uid)/\(recipeID)/mainPhoto.jpg").getData(maxSize: 1 * 1024 * 1024) { data, err in
-
-                if let err = err {
-
-                    observer.onError(err)
-
-                } else {
-
-                    if let data = data {
-
-                        observer.onNext(data)
-                    }
-
-                }
-
-            }
-
-            return Disposables.create()
-        }
-
-
-    }
+//    static func getMyPostedRecipeImage(recipeID: String, user: Firebase.User) -> Observable<Data> {
+//
+//        return .create { observer in
+//
+//            let storage = Storage.storage().reference()
+//
+//            storage.child("users/\(user.uid)/\(recipeID)/mainPhoto.jpg").getData(maxSize: 1 * 1024 * 1024) { data, err in
+//
+//                if let err = err {
+//
+//                    observer.onError(err)
+//
+//                } else {
+//
+//                    if let data = data {
+//
+//                        observer.onNext(data)
+//                    }
+//
+//                }
+//
+//            }
+//
+//            return Disposables.create()
+//        }
+//
+//
+//    }
 
 //    func getMyImage(recipeID: String, user: Firebase.User) -> Observable<Data> {
 //        

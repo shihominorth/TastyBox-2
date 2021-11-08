@@ -16,9 +16,9 @@ import DifferenceKit
 class Recipe {
     
     let recipeID: String
-//    let imgURL: URL
+    let imgURL: String
 //    var imageData: Data
-    //    let video: URL?
+    let videoURL: String?
     var title: String
     let updateDate: Timestamp
     var cookingTime: Int
@@ -29,7 +29,7 @@ class Recipe {
     var genresIDs: [String] = []
     var isVIP: Bool
     
-    init?(queryDoc:  QueryDocumentSnapshot, user: Firebase.User) {
+    init?(queryDoc:  QueryDocumentSnapshot) {
         
         let data = queryDoc.data()
         
@@ -40,7 +40,8 @@ class Recipe {
               let serving = data["serving"] as? Int,
               let isVIP = data["isVIP"] as? Bool,
               let publisherID = data["publisherID"] as? String,
-              let genresData = data["genres"] as? [String: Bool]
+              let genresData = data["genres"] as? [String: Bool],
+              let imgURL = data["imgURL"] as? String
         else { return nil }
         
         
@@ -53,7 +54,18 @@ class Recipe {
         self.serving = serving
         self.isVIP = isVIP
         self.genresIDs = [String](genresData.keys)
+        self.imgURL = imgURL
         
+        if let videoURL = data["videoURL"] as? String {
+        
+            self.videoURL = videoURL
+        
+        }
+        else {
+        
+            self.videoURL = nil
+        
+        }
 //        self.imgURL = Storage.storage().reference().child("users/\(user.uid)/\(self.recipeID)/mainPhoto.jpg")
         
     }
@@ -70,29 +82,29 @@ class Recipe {
                 
                 implementNum += 1
                 
-                generateNewRecipe(queryDoc: doc, user: user)
-                    .catch { err in
-                        
-                        print(err)
-                        
-                        if implementNum == queryDocs.count {
-                            observer.onNext(recipes)
-                        }
-                        
-                        return .empty()
-                    }
-                    .subscribe(onNext: { recipe in
-                        
-                        if let recipe = recipe {
-                            recipes.append(recipe)
-                        }
-                        
-                        if implementNum == queryDocs.count {
-                            observer.onNext(recipes)
-                        }
-                        
-                    })
-                    .disposed(by: disposeBag)
+//                generateNewRecipe(queryDoc: doc, user: user)
+//                    .catch { err in
+//                        
+//                        print(err)
+//                        
+//                        if implementNum == queryDocs.count {
+//                            observer.onNext(recipes)
+//                        }
+//                        
+//                        return .empty()
+//                    }
+//                    .subscribe(onNext: { recipe in
+//                        
+//                        if let recipe = recipe {
+//                            recipes.append(recipe)
+//                        }
+//                        
+//                        if implementNum == queryDocs.count {
+//                            observer.onNext(recipes)
+//                        }
+//                        
+//                    })
+//                    .disposed(by: disposeBag)
                                 
             }
             
@@ -154,29 +166,29 @@ class Recipe {
     //
     //    }
     
-    static func generateNewRecipe(queryDoc: QueryDocumentSnapshot, user: Firebase.User) -> Observable<Recipe?> {
-        
-        return getMyPostedRecipeImage(recipeID: queryDoc.documentID, user: user)
-            .do(onNext: { data in
+//    static func generateNewRecipe(queryDoc: QueryDocumentSnapshot, user: Firebase.User) -> Observable<Recipe?> {
+//
+//        return getMyPostedRecipeImage(recipeID: queryDoc.documentID, user: user)
+//            .do(onNext: { data in
                 
 //                guard let recipe = Recipe(queryDoc: queryDoc, imageData: data) else {
 //                    return
 //                }
                 
 //                print(recipe)
-                
-                print(data)
-                
-            })
-            .map { data -> Recipe? in
-
-                guard let recipe = Recipe(queryDoc: queryDoc, imageData: data) else {
-                    return nil
-                }
-
-                return recipe
-
-            }
+//
+//                print(data)
+//
+//            })
+//            .map { data -> Recipe? in
+//
+//                guard let recipe = Recipe(queryDoc: queryDoc, imageData: data) else {
+//                    return nil
+//                }
+//
+//                return recipe
+//
+//            }
 //            .retry { errors in
 //
 //                return errors.enumerated().flatMap { retryIndex, error -> Observable<Int64> in
@@ -218,36 +230,36 @@ class Recipe {
 //            }
       
                 
-    }
+//    }
     
-    static func getMyPostedRecipeImage(recipeID: String, user: Firebase.User) -> Observable<Data> {
-        
-        return .create { observer in
-            
-            let storage = Storage.storage().reference()
-            
-            storage.child("users/\(user.uid)/\(recipeID)/mainPhoto.jpg").getData(maxSize: 1 * 1024 * 1024) { data, err in
-                
-                if let err = err {
-                    
-                    observer.onError(err)
-                    
-                } else {
-                    
-                    if let data = data {
-                        
-                        observer.onNext(data)
-                    }
-                    
-                }
-                
-            }
-            
-            return Disposables.create()
-        }
-        
-        
-    }
+//    static func getMyPostedRecipeImage(recipeID: String, user: Firebase.User) -> Observable<Data> {
+//
+//        return .create { observer in
+//
+//            let storage = Storage.storage().reference()
+//
+//            storage.child("users/\(user.uid)/\(recipeID)/mainPhoto.jpg").getData(maxSize: 1 * 1024 * 1024) { data, err in
+//
+//                if let err = err {
+//
+//                    observer.onError(err)
+//
+//                } else {
+//
+//                    if let data = data {
+//
+//                        observer.onNext(data)
+//                    }
+//
+//                }
+//
+//            }
+//
+//            return Disposables.create()
+//        }
+//
+//
+//    }
     
     
     //    init?(documentSnapshot:  DocumentSnapshot) {

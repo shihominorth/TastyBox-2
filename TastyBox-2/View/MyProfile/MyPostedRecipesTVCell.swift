@@ -24,9 +24,9 @@ class MyPostedRecipesTVCell: UITableViewCell {
         
         dataSource = RxPostedRecipeCollectionViewDataSource<Recipe, MyPostedRecipeCVCell>(identifier: MyPostedRecipeCVCell.identifier, configure: { row, recipe, cell in
             
-            if let img = UIImage(data: recipe.imageData) {
-                cell.imgView.image = img
-            }
+//            if let img = UIImage(data: recipe.imageData) {
+//                cell.imgView.image = img
+//            }
             
             cell.vipImgView.isHidden = recipe.isVIP ? false : true
             
