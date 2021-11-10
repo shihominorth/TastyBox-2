@@ -167,6 +167,7 @@ class EditInstructionTVCell: UITableViewCell {
             .observe(on: MainScheduler.instance)
             .subscribe(onNext: { [unowned self] data in
                     
+                
                 if let image = UIImage(data: data) {
                     self.imgViewBtn.setBackgroundImage(image, for: .normal)
                         

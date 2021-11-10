@@ -8,21 +8,60 @@
 import Foundation
 import DifferenceKit
 import Firebase
+import RxSwift
 
 class Ingredient  {
     
     var id: String
     var name: String
     var amount: String
-    var order: Int
+    var index: Int
     
     init(key: String, name: String, amount: String, order: Int) {
+       
         self.id = key
         self.name = name
         self.amount = amount
-        self.order = order
+        self.index = order
+    
     }
     
+    init?(queryDoc: QueryDocumentSnapshot) {
+        
+        let data = queryDoc.data()
+        
+        guard let id = data["id"] as? String,
+              let index = data["index"] as? Int,
+              let name = data["name"] as? String,
+              let amount = data["amount"] as? String
+        else { return nil }
+
+        self.id = id
+        self.index = index
+        self.name = name
+        self.amount = amount
+        
+    }
+    
+    
+    static func generateNewIngredients(queryDocs: [QueryDocumentSnapshot]) -> Observable<[Ingredient]> {
+        
+        return .create { observer in
+            
+            let ingredients = queryDocs.compactMap { doc in
+
+                return Ingredient(queryDoc: doc)
+
+            }
+            
+            observer.onNext(ingredients)
+            
+            return Disposables.create()
+
+        }
+        
+        
+    }
 }
 
 

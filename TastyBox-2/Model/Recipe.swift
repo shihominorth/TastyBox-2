@@ -265,8 +265,54 @@ struct Instruction {
     
     var id: String
     var index: Int
-    var imageData: Data
+    var imageURL: String?
     var text: String
+    
+    init(id: String, index: Int, imageURL: String?, text: String) {
+        
+        self.id = id
+        self.index = index
+        self.imageURL = imageURL
+        self.text = text
+        
+    }
+    
+    init?(queryDoc: QueryDocumentSnapshot) {
+        
+        let data = queryDoc.data()
+        
+        guard let id = data["id"] as? String,
+        let index = data["index"] as? Int,
+        let text = data["text"] as? String
+        else { return nil }
+        
+        let imageURL = data["imageURL"] as? String
+        
+        self.id = id
+        self.index = index
+        self.imageURL = imageURL
+        self.text = text
+        
+    }
+    
+    static func generateNewInstructions(queryDocs: [QueryDocumentSnapshot]) -> Observable<[Instruction]> {
+        
+        return .create { observer in
+            
+            let instructions = queryDocs.compactMap { doc in
+
+                return Instruction(queryDoc: doc)
+
+            }
+            
+            observer.onNext(instructions)
+            
+            return Disposables.create()
+
+        }
+        
+        
+    }
 }
 
 struct Comment {

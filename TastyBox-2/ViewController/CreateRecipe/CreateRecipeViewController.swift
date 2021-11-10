@@ -460,7 +460,16 @@ extension CreateRecipeViewController: UITableViewDelegate, UITableViewDataSource
                 
                 cell.imgSubject.bind(onNext: { data in
                     
-                    self.viewModel.instructions[indexPath.row].imageData = data
+//                    let string = String(decoding: data, as: UTF8.self)
+                    let string = data.base64EncodedString()
+                    
+//                    let url = URL(string: string)
+//
+//                    let urlString = url?.absoluteString
+                    self.viewModel.instructions[indexPath.row].imageURL = string
+
+                    
+                    
                 })
                     .disposed(by: cell.disposeBag)
                 

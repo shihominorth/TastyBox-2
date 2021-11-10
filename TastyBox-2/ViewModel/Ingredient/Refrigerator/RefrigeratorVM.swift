@@ -101,7 +101,7 @@ class RefrigeratorVM: ViewModelBase {
                 
                 if let refrigeratorItems = items as? [RefrigeratorItem] {
                     
-                    self.items = refrigeratorItems.sorted { $0.order < $1.order }
+                    self.items = refrigeratorItems.sorted { $0.index < $1.index }
                     self.observableItems.onNext(self.items)
                     relay.accept(true)
                     

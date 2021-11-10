@@ -143,8 +143,8 @@ class RefrigeratorDM: RefrigeratorProtocol {
             
             let movedItems:[Ingredient] = items.enumerated().compactMap { index, item -> Ingredient? in
                 
-                if index != item.order {
-                    item.order = index
+                if index != item.index {
+                    item.index = index
                     return item
                 }
                 else {
@@ -157,7 +157,7 @@ class RefrigeratorDM: RefrigeratorProtocol {
                 
                 db.document(userID).collection(listName.rawValue).document(item.id).updateData([
                     
-                    "order": item.order
+                    "order": item.index
                     
                 ]) { err in
                     
@@ -198,8 +198,8 @@ class RefrigeratorDM: RefrigeratorProtocol {
             
             let movedItems:[Ingredient] = removedItems.enumerated().compactMap { index, item -> Ingredient? in
                 
-                if index != item.order {
-                    item.order = index
+                if index != item.index {
+                    item.index = index
                     return item
                 }
                 else {
@@ -221,8 +221,8 @@ class RefrigeratorDM: RefrigeratorProtocol {
             print("move after delete \(deletingItem.name)")
             let movedItems:[Ingredient] = items.enumerated().compactMap { index, item -> Ingredient? in
                 
-                if index != item.order {
-                    item.order = index
+                if index != item.index {
+                    item.index = index
                     return item
                 }
                 else {
@@ -247,7 +247,7 @@ class RefrigeratorDM: RefrigeratorProtocol {
                     
                     db.document(userID).collection(listName.rawValue).document(item.id).updateData([
                         
-                        "order": item.order
+                        "order": item.index
                         
                     ]) { err in
                         
@@ -369,7 +369,7 @@ class RefrigeratorDM: RefrigeratorProtocol {
                     
                     if let shoppinglist = shoppinglist {
                         ingredients.append(contentsOf: shoppinglist)
-                        ingredients = ingredients.sorted { $0.order < $1.order }
+                        ingredients = ingredients.sorted { $0.index < $1.index }
                     }
                     
                     if let docs = querySnapshot?.documents {
@@ -405,7 +405,7 @@ class RefrigeratorDM: RefrigeratorProtocol {
                                 
                                 if let shoppinglist = shoppinglist {
                                     ingredients.append(contentsOf: shoppinglist)
-                                    ingredients = ingredients.sorted { $0.order < $1.order }
+                                    ingredients = ingredients.sorted { $0.index < $1.index }
                                     
                                 }
                                 
@@ -580,7 +580,7 @@ class RefrigeratorDM: RefrigeratorProtocol {
                 return ShoppingItem(name: "", amount: "", key: "", isBought: false, order: 0)
             }
             .filter { $0.name != "" && $0.amount != "" && $0.id != "" }
-            .sorted { $0.order < $1.order }
+            .sorted { $0.index < $1.index }
             
             // isBoughtの値が変わった要素のみ取り出す。
             // compactMapはnilで返すとその要素は新しい配列に入らない。

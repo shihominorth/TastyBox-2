@@ -1392,13 +1392,15 @@ class CreateRecipeDM: CreateRecipeDMProtocol {
     static func uploadInstructionsImages(instruction: Instruction, user: Firebase.User, recipeID: String, index: Int, block: @escaping () -> Void, errBlock: @escaping (Error) -> Void) {
         
         
-        if let img = UIImage(data: instruction.imageData), let compressedData = img.jpegData(compressionQuality: 0.7) {
+//        if let urlString = instruction.imageURL, let url = URL(string: urlString), let img = UIImage(data: NSData(url: url)), let compressedData = img.jpegData(compressionQuality: 0.7) {
+            
+        if let urlString = instruction.imageURL, let url = URL(string: urlString) {
             
             let metaData = StorageMetadata()
             metaData.contentType = "image/jpg"
             
-            let uploadTask = self.storage.child("users/\(user.uid)/\(recipeID)/\(instruction.index).jpg").putData(compressedData, metadata: metaData)
-            
+//            let uploadTask = self.storage.child("users/\(user.uid)/\(recipeID)/\(instruction.index).jpg").putData(compressedData, metadata: metaData)
+            let uploadTask = self.storage.child("users/\(user.uid)/\(recipeID)/\(instruction.index).jpg").putFile(from: url, metadata: metaData)
             // Listen for state changes, errors, and completion of the upload.
             uploadTask.observe(.resume) { snapshot in
                 // Upload resumed, also fires when the upload starts

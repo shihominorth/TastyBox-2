@@ -251,7 +251,7 @@ class CreateRecipeVM: ViewModelBase {
                     .map { index, value -> Ingredient in
                         
                         let newElement = value
-                        newElement.order = index
+                        newElement.index = index
                         
                         return newElement
                     }
@@ -325,7 +325,7 @@ class CreateRecipeVM: ViewModelBase {
         let uuid = UUID()
         let uniqueIdString = uuid.uuidString.replacingOccurrences(of: "-", with: "")
         
-        let instruction = Instruction(id: uniqueIdString, index: self.instructions.count, imageData: Data(), text: "")
+        let instruction = Instruction(id: uniqueIdString, index: self.instructions.count, imageURL: "", text: "")
         
         self.instructions.append(instruction)
         self.instructionsSubject.onNext(self.instructions)
@@ -369,7 +369,9 @@ class CreateRecipeVM: ViewModelBase {
             }
             .do(onNext: { [unowned self] data in
                 
-                self.instructions[index].imageData = data
+                let str = String(decoding: data, as: UTF8.self)
+                
+                self.instructions[index].imageURL =  URL(string: str)?.absoluteString
                 
             })
         

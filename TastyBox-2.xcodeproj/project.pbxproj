@@ -53,6 +53,7 @@
 		6F3BF4D227331789005C24A5 /* MyProfileDM.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F3BF4D127331789005C24A5 /* MyProfileDM.swift */; };
 		6F3BF4D427394F79005C24A5 /* RecipeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F3BF4D327394F78005C24A5 /* RecipeViewController.swift */; };
 		6F3BF4D727395195005C24A5 /* RecipeVM.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F3BF4D627395195005C24A5 /* RecipeVM.swift */; };
+		6F3BF4D927397143005C24A5 /* RecipeDetailDM.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F3BF4D827397142005C24A5 /* RecipeDetailDM.swift */; };
 		6F40F82826F03375004B69DD /* AlertGenerator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F40F82726F03375004B69DD /* AlertGenerator.swift */; };
 		6F512A2226F3FA5100826657 /* Tutorial.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 6F512A2126F3FA5100826657 /* Tutorial.storyboard */; };
 		6F512A2426F4169800826657 /* LoadingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F512A2326F4169800826657 /* LoadingViewController.swift */; };
@@ -213,6 +214,7 @@
 		6F3BF4D127331789005C24A5 /* MyProfileDM.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyProfileDM.swift; sourceTree = "<group>"; };
 		6F3BF4D327394F78005C24A5 /* RecipeViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecipeViewController.swift; sourceTree = "<group>"; };
 		6F3BF4D627395195005C24A5 /* RecipeVM.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecipeVM.swift; sourceTree = "<group>"; };
+		6F3BF4D827397142005C24A5 /* RecipeDetailDM.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecipeDetailDM.swift; sourceTree = "<group>"; };
 		6F40F82726F03375004B69DD /* AlertGenerator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlertGenerator.swift; sourceTree = "<group>"; };
 		6F512A2126F3FA5100826657 /* Tutorial.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = Tutorial.storyboard; sourceTree = "<group>"; };
 		6F512A2326F4169800826657 /* LoadingViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoadingViewController.swift; sourceTree = "<group>"; };
@@ -843,6 +845,7 @@
 				6FE9EB5426F9A9F2000AF9D4 /* Ingredient */,
 				6F0E6961272022FB002BD547 /* CreateRecipeDM.swift */,
 				6F3BF4D127331789005C24A5 /* MyProfileDM.swift */,
+				6F3BF4D827397142005C24A5 /* RecipeDetailDM.swift */,
 			);
 			path = DataManager;
 			sourceTree = "<group>";
@@ -1088,6 +1091,7 @@
 				6F9E041F2700C169005DCEF4 /* EditShoppingListViewController.swift in Sources */,
 				6FBCB92A26D7CBD500C050B2 /* RegisterMyInfoProfileTableViewController.swift in Sources */,
 				6FEF088726F2A8CB00C02CDD /* PopularRecipeViewController.swift in Sources */,
+				6F3BF4D927397143005C24A5 /* RecipeDetailDM.swift in Sources */,
 				6F77D4852726DF8D00F1FCD9 /* CheckTimeNServingTVCell.swift in Sources */,
 				6FB970C527250C3F00350F84 /* CheckUserTVCell.swift in Sources */,
 				6F3BF4C8273302A2005C24A5 /* MainMyProfileTVCell.swift in Sources */,

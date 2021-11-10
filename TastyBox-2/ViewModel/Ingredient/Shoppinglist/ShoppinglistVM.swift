@@ -432,7 +432,7 @@ class ShoppinglistVM: ViewModelBase {
                 
                 print("Document successfully deleted")
                 
-                self.items = self.items.filter { $0.id != deletingItem.id }.sorted { $0.order < $1.order }
+                self.items = self.items.filter { $0.id != deletingItem.id }.sorted { $0.index < $1.index }
                 
                 if let isLast = isLast {
                     
