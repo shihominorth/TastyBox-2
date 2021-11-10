@@ -1394,13 +1394,13 @@ class CreateRecipeDM: CreateRecipeDMProtocol {
         
 //        if let urlString = instruction.imageURL, let url = URL(string: urlString), let img = UIImage(data: NSData(url: url)), let compressedData = img.jpegData(compressionQuality: 0.7) {
             
-        if let urlString = instruction.imageURL, let url = URL(string: urlString) {
+        if let urlString = instruction.imageURL, let data = Data(base64Encoded: urlString, options: .ignoreUnknownCharacters) {
             
             let metaData = StorageMetadata()
             metaData.contentType = "image/jpg"
             
-//            let uploadTask = self.storage.child("users/\(user.uid)/\(recipeID)/\(instruction.index).jpg").putData(compressedData, metadata: metaData)
-            let uploadTask = self.storage.child("users/\(user.uid)/\(recipeID)/\(instruction.index).jpg").putFile(from: url, metadata: metaData)
+            let uploadTask = self.storage.child("users/\(user.uid)/\(recipeID)/\(instruction.index).jpg").putData(data, metadata: metaData)
+//            let uploadTask = self.storage.child("users/\(user.uid)/\(recipeID)/\(instruction.index).jpg").putFile(from: url, metadata: metaData)
             // Listen for state changes, errors, and completion of the upload.
             uploadTask.observe(.resume) { snapshot in
                 // Upload resumed, also fires when the upload starts
@@ -1435,7 +1435,7 @@ class CreateRecipeDM: CreateRecipeDMProtocol {
                             
                             self.db.collection("recipes").document(recipeID).collection("instructions").document(instruction.id).updateData([
                                 
-                                "imgURL": url
+                                "imgURL": url.absoluteString
                                 
                             ]) { err in
                                 
