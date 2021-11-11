@@ -17,15 +17,12 @@ class MyProfileViewController: UIViewController, BindableType {
     var viewModel: MyProfileVM!
 
     @IBOutlet weak var tableView: UITableView!
-    
-//    var dataSource: RxPostedRecipeCollectionViewDataSource<Recipe, MyPostedRecipeCVCell>!
-    
-    
+        
     override func viewDidLoad() {
         super.viewDidLoad()
 
         setUpTableView()
-//        setUpCollectionView()
+
     }
     
     func bindViewModel() {
@@ -40,35 +37,6 @@ class MyProfileViewController: UIViewController, BindableType {
         
         
     }
-
-//    func setUpCollectionView() {
-//
-//        dataSource = RxPostedRecipeCollectionViewDataSource<Recipe, MyPostedRecipeCVCell>(identifier: MyPostedRecipeCVCell.identifier, configure: { row, recipe, cell in
-//
-//            if let url = URL(string: recipe.imgURL) {
-//
-//                cell.imgView.kf.setImage(with: url, options: [.transition(.fade(1))]) { result in
-//
-//                    cell.stopSkeletonAnimation()
-//
-//                    switch result {
-//                    case let .success(value):
-//
-//                        print("showed: \(url), value: \(value)")
-//
-//
-//                    case let .failure(value):
-//
-//                        print("failed: \(url), value: \(value)")
-//
-//                    }
-//
-//                }
-//            }
-//
-//
-//        })
-//    }
     
 }
 
@@ -118,16 +86,18 @@ extension MyProfileViewController: UITableViewDelegate, UITableViewDataSource {
                     .disposed(by: cell.disposeBag)
                 
                 Observable.combineLatest(cell.collectionView.rx.itemSelected, viewModel.postedRecipesSubject) { indexPath, recipes in
-                    
+
                     return recipes[indexPath.row]
-                    
+
                 }
                 .subscribe(onNext: { [unowned self] recipe in
-                    
+
                     self.viewModel.toRecipeDetail(recipe: recipe)
-                    
+
                 })
                 .disposed(by: cell.disposeBag)
+                
+      
                 
                 return cell
             }

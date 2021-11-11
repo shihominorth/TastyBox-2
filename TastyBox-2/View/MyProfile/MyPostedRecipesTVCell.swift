@@ -21,10 +21,7 @@ class MyPostedRecipesTVCell: UITableViewCell {
             collectionView.collectionViewLayout = flowLayout
             
             collectionView.delegate = self
-            
-            collectionView.isSkeletonable = true
-            collectionView.showAnimatedSkeleton()
-            collectionView.showSkeleton()
+
             
         }
     }
@@ -55,23 +52,18 @@ extension MyPostedRecipesTVCell {
         
         disposeBag = DisposeBag()
         
-        dataSource = RxPostedRecipeCollectionViewDataSource<Recipe, MyPostedRecipeCVCell>(identifier: MyPostedRecipeCVCell.identifier, configure: { [unowned self] row, recipe, cell in
+        dataSource = RxPostedRecipeCollectionViewDataSource<Recipe, MyPostedRecipeCVCell>(identifier: MyPostedRecipeCVCell.identifier, configure: { row, recipe, cell in
             
             cell.vipImgView.isHidden = true
-           
+            let placeHolder = SkeltonView()
+            
 
             if let url = URL(string: recipe.imgURL) {
             
-                cell.imgView.kf.setImage(with: url, options: [.transition(.fade(1))])
+                cell.imgView.kf.setImage(with: url, placeholder: placeHolder, options: [.transition(.fade(1))])
 
                 cell.vipImgView.isHidden = recipe.isVIP ? false : true
 
-            }
-         
-            if row == recipesSubject.value.count {
-                
-                collectionView.stopSkeletonAnimation()
-                
             }
             
         })
