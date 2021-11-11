@@ -57,6 +57,9 @@
 		6F3BF4DB273BCE11005C24A5 /* SkeltonView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F3BF4DA273BCE0F005C24A5 /* SkeltonView.swift */; };
 		6F3BF4DD273C2080005C24A5 /* ThereeCellsFlowLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F3BF4DC273C207E005C24A5 /* ThereeCellsFlowLayout.swift */; };
 		6F40F82826F03375004B69DD /* AlertGenerator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F40F82726F03375004B69DD /* AlertGenerator.swift */; };
+		6F4EA982273CF55100A4B9F4 /* FollowingUsersViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F4EA981273CF55100A4B9F4 /* FollowingUsersViewController.swift */; };
+		6F4EA984273CF63B00A4B9F4 /* FollowedUsersViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F4EA983273CF63B00A4B9F4 /* FollowedUsersViewController.swift */; };
+		6F4EA986273CF8C800A4B9F4 /* MyFollowingFolloweredUsersViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F4EA985273CF8C800A4B9F4 /* MyFollowingFolloweredUsersViewController.swift */; };
 		6F512A2226F3FA5100826657 /* Tutorial.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 6F512A2126F3FA5100826657 /* Tutorial.storyboard */; };
 		6F512A2426F4169800826657 /* LoadingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F512A2326F4169800826657 /* LoadingViewController.swift */; };
 		6F512A2926F417CD00826657 /* TutorialVM.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F512A2826F417CD00826657 /* TutorialVM.swift */; };
@@ -220,6 +223,9 @@
 		6F3BF4DA273BCE0F005C24A5 /* SkeltonView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SkeltonView.swift; sourceTree = "<group>"; };
 		6F3BF4DC273C207E005C24A5 /* ThereeCellsFlowLayout.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThereeCellsFlowLayout.swift; sourceTree = "<group>"; };
 		6F40F82726F03375004B69DD /* AlertGenerator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlertGenerator.swift; sourceTree = "<group>"; };
+		6F4EA981273CF55100A4B9F4 /* FollowingUsersViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FollowingUsersViewController.swift; sourceTree = "<group>"; };
+		6F4EA983273CF63B00A4B9F4 /* FollowedUsersViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FollowedUsersViewController.swift; sourceTree = "<group>"; };
+		6F4EA985273CF8C800A4B9F4 /* MyFollowingFolloweredUsersViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyFollowingFolloweredUsersViewController.swift; sourceTree = "<group>"; };
 		6F512A2126F3FA5100826657 /* Tutorial.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = Tutorial.storyboard; sourceTree = "<group>"; };
 		6F512A2326F4169800826657 /* LoadingViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoadingViewController.swift; sourceTree = "<group>"; };
 		6F512A2826F417CD00826657 /* TutorialVM.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TutorialVM.swift; sourceTree = "<group>"; };
@@ -415,6 +421,9 @@
 			isa = PBXGroup;
 			children = (
 				6F3BF4BF2732FA80005C24A5 /* MyProfileViewController.swift */,
+				6F4EA981273CF55100A4B9F4 /* FollowingUsersViewController.swift */,
+				6F4EA983273CF63B00A4B9F4 /* FollowedUsersViewController.swift */,
+				6F4EA985273CF8C800A4B9F4 /* MyFollowingFolloweredUsersViewController.swift */,
 			);
 			path = Profile;
 			sourceTree = "<group>";
@@ -1042,9 +1051,11 @@
 				6F0E6960271F98FF002BD547 /* RxPHPickerViewControllerDelegateProxy.swift in Sources */,
 				6F3BF4D727395195005C24A5 /* RecipeVM.swift in Sources */,
 				6FEF088B26F2AA0B00C02CDD /* CuisineViewController.swift in Sources */,
+				6F4EA986273CF8C800A4B9F4 /* MyFollowingFolloweredUsersViewController.swift in Sources */,
 				6FEF088326F2A7FD00C02CDD /* IngredientsViewController.swift in Sources */,
 				6FB970B32724FA7B00350F84 /* CheckCreatedRecipeViewController.swift in Sources */,
 				6F018BA226DB7F18006416D3 /* Scene+ViewController.swift in Sources */,
+				6F4EA984273CF63B00A4B9F4 /* FollowedUsersViewController.swift in Sources */,
 				6FF66B9C26D7AF430024495E /* LoginMainVM.swift in Sources */,
 				6FB970AC272417FD00350F84 /* GenreCVCell.swift in Sources */,
 				6F3BF4DB273BCE11005C24A5 /* SkeltonView.swift in Sources */,
@@ -1071,6 +1082,7 @@
 				6FE15ED3271AA6B50047D3D8 /* EditMainImageTVCell.swift in Sources */,
 				6F07816B27209CDC00C01833 /* GenreCRV.swift in Sources */,
 				6F9BE63E26D7D63C005DD80B /* ResetPasswordDM.swift in Sources */,
+				6F4EA982273CF55100A4B9F4 /* FollowingUsersViewController.swift in Sources */,
 				6FEF087E26F2A40A00C02CDD /* FollowingRecipeViewController.swift in Sources */,
 				6FB970C127250B2400350F84 /* CheckInstructionTVCell.swift in Sources */,
 				6FE9EB5326F9A9DF000AF9D4 /* RefrigeratorDM.swift in Sources */,
