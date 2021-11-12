@@ -18,9 +18,9 @@ class RecipeVM: ViewModelBase {
     
     let sceneCoordinator: SceneCoordinator
     let user: Firebase.User
-    let apiType: MyProfileDMProtocol.Type
+    let apiType: RecipeDetailProtocol.Type
     let recipe: Recipe
-    let sections: [Section]
+    var sections: [Section]
     
     
     var isDisplayed = false
@@ -28,70 +28,90 @@ class RecipeVM: ViewModelBase {
     
     let isExpandedSubject = BehaviorRelay<Bool>(value: false)
     
-    init(sceneCoordinator: SceneCoordinator, user: Firebase.User, apiType: MyProfileDMProtocol.Type = MyProfileDM.self, recipe: Recipe) {
+    init(sceneCoordinator: SceneCoordinator, user: Firebase.User, apiType: RecipeDetailProtocol.Type = RecipeDetailDM.self, recipe: Recipe) {
         
         self.sceneCoordinator = sceneCoordinator
         self.user = user
         self.apiType = apiType
         self.recipe = recipe
-        
-        self.sections = generateSections(recipe: recipe)
+        self.sections = []
+
+    }
+    
+    func getRecipeDetailInfo(recipe: Recipe) -> Observable<[Section]> {
+               
+        return self.apiType.getDetailInfo(recipe: recipe)
+            .flatMapLatest { [unowned self] publisher, ingredients, instructions in
+                self.generateSections(recipe: recipe, publisher: publisher, ingredients: ingredients, instructions: instructions)
+            }
         
     }
     
-    func generateSections(recipe: Recipe) -> [Section] {
+    func generateSections(recipe: Recipe, publisher: User, ingredients: [Ingredient], instructions: [Instruction]) -> Observable<[Section]> {
         
-        var resultSections: [Section] = []
+        
+        return .create { observer in
+            
+            var resultSections: [Section] = []
 
-        let imageElement: RecipeDetailSectionItem = .imageData(recipe.imgURL, recipe.videoURL)
-        let imageSection = Section(model: imageElement.rawValue, elements: [imageElement])
+            let imageElement: RecipeDetailSectionItem = .imageData(recipe.imgString, recipe.videoURL)
+            let imageSection = Section(model: imageElement.rawValue, elements: [imageElement])
+            
+            resultSections.append(imageSection)
+            
+            let titleElement: RecipeDetailSectionItem = .title(recipe.title)
+            let titleSection = Section(model: titleElement.rawValue, elements: [titleElement])
+            
+            resultSections.append(titleSection)
+            
+            
+            
+            let evaluatesElement: RecipeDetailSectionItem = .evaluates([])
+            let evaluatesSection = Section(model: evaluatesElement.rawValue, elements: [evaluatesElement])
+            
+            resultSections.append(evaluatesSection)
+            
+            // get genres from recipe.genresIDs
+            let genresElement: RecipeDetailSectionItem = .genres([])
+            let genresSection = Section(model: genresElement.rawValue, elements: [genresElement])
+            
+            resultSections.append(genresSection)
+            
+            // get publishers from recipe.publisherID
+            let publisherElement: RecipeDetailSectionItem = .publisher(publisher)
+            let publisherSection = Section(model: publisherElement.rawValue, elements: [publisherElement])
+
+            resultSections.append(publisherSection)
+            
+            
+            let timeAndServingElement: RecipeDetailSectionItem = .timeAndServing(recipe.cookingTime, recipe.serving)
+            let timeAndServingSection = Section(model: timeAndServingElement.rawValue, elements: [timeAndServingElement])
+            
+            resultSections.append(timeAndServingSection)
+            
+            let ingredientElements: [RecipeDetailSectionItem] = ingredients.map { ingredient in
+                return .ingredients(ingredient)
+            }
+                
+            let ingredientSection = Section(model: "ingredients", elements: ingredientElements)
+
+            resultSections.append(ingredientSection)
+            
         
-        resultSections.append(imageElement)
-        
-        let titleElement: RecipeDetailSectionItem = .title(recipe.title)
-        let titleSection = Section(model: titleElement.rawValue, elements: [titleElement])
-        
-        resultSections.append(titleSection)
-        
-        
-        
-        let evaluatesElement: RecipeDetailSectionItem = .evaluates([])
-        let evaluatesSection = Section(model: evaluatesElement.rawValue, elements: [evaluatesElement])
-        
-        resultSections.append(evaluatesSection)
-        
-        // get genres from recipe.genresIDs
-        let genresElement: RecipeDetailSectionItem = .genres([])
-        let genresSection = Section(model: genresElement.rawValue, elements: [genresElement])
-        
-        resultSections.append(genresSection)
-        
-        // get publishers from recipe.publisherID
-        let publisherElement: RecipeDetailSectionItem = .publisher(<#T##User#>)
-        let publisherSection = Section(model: publisherElement.rawValue, elements: [publisherElement])
-        
-        resultSections.append(publisherSection)
-        
-        
-        let timeAndServingElement: RecipeDetailSectionItem = .timeAndServing(recipe.cookingTime, recipe.serving)
-        let timeAndServingSection = Section(model: timeAndServingElement.rawValue, elements: [timeAndServingElement])
-        
-        resultSections.append(timeAndServingSection)
+            let instructionElement: [RecipeDetailSectionItem] = instructions.map { instruction in
+                return .instructions(instruction)
+            }
+            
+            let instructionSection = Section(model: "instructions", elements: instructionElement)
+
+            resultSections.append(instructionSection)
+            
+            observer.onNext(resultSections)
+            
+            return Disposables.create()
+        }
         
        
-        let ingredientElement: [RecipeDetailSectionItem] = []
-        let ingredientSection = Section(model: RecipeDetailSectionItem.ingredients.rawValue, elements: ingredientElement)
-        
-        resultSections.append(ingredientSection)
-        
-    
-        let instructionElement: [RecipeDetailSectionItem] = []
-        let instructionSection = Section(model: RecipeDetailSectionItem.instructions.rawValue, elements: instructionElement)
-        
-        resultSections.append(ingredientSection)
-        
-        
-        return resultSections
     }
     
     

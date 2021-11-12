@@ -1,30 +1,37 @@
 //
-//  CheckMainImageTVCell.swift
+//  RecipeMainTVCell.swift
 //  TastyBox-2
 //
-//  Created by 北島　志帆美 on 2021-10-24.
+//  Created by 北島　志帆美 on 2021-11-13.
 //
 
 import UIKit
 import AVFoundation
+import Kingfisher
 import RxSwift
 
-class CheckMainImageTVCell: UITableViewCell {
+class RecipeMainImageTVCell: UITableViewCell {
 
-    @IBOutlet weak var slider: UISlider!
     @IBOutlet weak var playVideoView: PlayVideoInsideTVCellView!
-       
-    var imgData: String! {
+    @IBOutlet weak var slider: UISlider!
+    
+    let placeHolder = SkeltonView()
+    
+    var imgString: String! {
        
         didSet {
 
-            if let data = Data(base64Encoded: imgData, options: .ignoreUnknownCharacters), let img = UIImage(data: data) {
-                self.playVideoView.imgView.image = img
+            if let url = URL(string: imgString) {
+
+                self.playVideoView.imgView.kf.setImage(with: url, placeholder: placeHolder, options: [.transition(.fade(1))])
+
             }
         
         }
     }
-    
+
+    var videoURL: URL!
+
     var videoString: String? {
         didSet {
             if let videoString = videoString, let url = URL(string: videoString) {
@@ -33,22 +40,13 @@ class CheckMainImageTVCell: UITableViewCell {
             
         }
     }
-    var videoURL: URL!
-    
-    var tap: UITapGestureRecognizer!
 
-    var playerItem: AVPlayerItem!
-    var playerLooper: AVPlayerLooper!
-    var player: AVQueuePlayer!
-    var layerPlayer: AVPlayerLayer!
     
     var disposeBag = DisposeBag()
 
     override func awakeFromNib() {
         super.awakeFromNib()
-        
         // Initialization code
-        
         self.playVideoView.backgroundColor = #colorLiteral(red: 0.9994645715, green: 0.9797875285, blue: 0.7697802186, alpha: 1)
        
         self.playVideoView.playerLayer.frame = self.playVideoView.frame
@@ -57,9 +55,6 @@ class CheckMainImageTVCell: UITableViewCell {
         self.slider.value = 0.0
         
         disposeBag = DisposeBag()
-
-//        self.playVideoView.playerLayer.player?.play()
-        
     }
 
     override func setSelected(_ selected: Bool, animated: Bool) {
@@ -67,34 +62,7 @@ class CheckMainImageTVCell: UITableViewCell {
 
         // Configure the view for the selected state
     }
-    
-    func setUpImageView(data: Data) {
-        
-        let imgView = UIImageView()
-       
-        self.playVideoView.addSubview(imgView)
-        
-        imgView.topAnchor.constraint(equalTo: self.playVideoView.topAnchor).isActive = true
-        imgView.bottomAnchor.constraint(equalTo: self.playVideoView.bottomAnchor).isActive = true
-        imgView.leadingAnchor.constraint(equalTo: self.playVideoView.leadingAnchor).isActive = true
-        imgView.trailingAnchor.constraint(equalTo: self.playVideoView.trailingAnchor).isActive = true
-        imgView.widthAnchor.constraint(equalToConstant: 80.0).isActive = true
-        imgView.heightAnchor.constraint(equalToConstant: 80.0).isActive = true
 
-//        if let image = UIImage(data: imgData), let temp = UIImage(systemName: "suit.heart.fill") {
-//
-//            imgView.image = image
-//
-//        }
-       
-        guard let temp = UIImage(systemName: "suit.heart.fill") else { return }
-        guard let imgView = self.playVideoView.subviews.first as? UIImageView else { return }
-        imgView.image = temp
-      
-    }
-    
-   
-    
     func setSlider() {
       
         let interval = CMTime(value: 1, timescale: 2)
@@ -131,5 +99,4 @@ class CheckMainImageTVCell: UITableViewCell {
             })
             .disposed(by: disposeBag)
     }
-
 }

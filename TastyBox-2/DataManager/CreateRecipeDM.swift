@@ -679,27 +679,30 @@ class CreateRecipeDM: CreateRecipeDMProtocol {
                 }
                 else {
                     
-                    self.storage.child("users/\(user.uid)/userImage.jpg").getData(maxSize: 1 * 1024 * 1024) { data, err in
+//                    self.storage.child("users/\(user.uid)/userImage.jpg").getData(maxSize: 1 * 1024 * 1024) { data, err in
                         
-                        if let err = err {
+//                        if let err = err {
+//
+//                            observer.onError(err)
+//
+//                        }
+//                        else {
                             
-                            observer.onError(err)
-                            
-                        }
-                        else {
-                            
-                            if let data = data {
+//                            if let data = data {
                                 
-                                if let doc = doc, let user = User(document: doc, imgData: data) {
+                    if let doc = doc, let user = User(document: doc) {
                                     
-                                    observer.onNext(user)
+                        observer.onNext(user)
                                     
-                                }
-                            }
-                        }
+                    }
+                    else {
+                        observer.onNext(User(id: "", name: "Publisher could not get", isVIP: false, imgURLString: ""))
+                    }
+//                            }
+//                        }
                         
                     }
-                }
+//                }
                 
             }
             
@@ -1246,7 +1249,7 @@ class CreateRecipeDM: CreateRecipeDMProtocol {
                                 
                                 self.db.collection("recipes").document(recipeID).updateData([
                                     
-                                    "imgURL": imgURL
+                                    "imgString": imgURL
                                     
                                 ]) { err in
                                     
@@ -1435,7 +1438,7 @@ class CreateRecipeDM: CreateRecipeDMProtocol {
                             
                             self.db.collection("recipes").document(recipeID).collection("instructions").document(instruction.id).updateData([
                                 
-                                "imgURL": url.absoluteString
+                                "imgString": url.absoluteString
                                 
                             ]) { err in
                                 

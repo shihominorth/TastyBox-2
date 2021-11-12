@@ -8,30 +8,32 @@
 import Foundation
 import Firebase
 
-struct User {
+class User {
+   
     var userID: String
     var name: String
-    var imageData: Data
+    var imageURLString: String
     var cuisineType: String?
     var familySize: Int?
     var isVIP: Bool?
     
-    init(id: String, name: String, isVIP: Bool, imgData: Data) {
+    init(id: String, name: String, isVIP: Bool, imgURLString: String) {
        
         self.userID = id
         self.name = name
         self.isVIP = isVIP
-        self.imageData = imgData
+        self.imageURLString = imgURLString
     
     }
     
-    init?(document:  DocumentSnapshot, imgData: Data) {
+    init?(document:  DocumentSnapshot) {
         
         guard let data = document.data() else { return nil }
         
         guard let id = data["id"] as? String,
-              let name = data["name"] as? String,
-              let isVIP = data["isVIP"] as? Bool
+              let name = data["userName"] as? String,
+              let isVIP = data["isVIP"] as? Bool,
+              let imgURL = data["imgString"] as? String
         else {
             return nil
         }
@@ -39,7 +41,8 @@ struct User {
         self.userID = id
         self.name = name
         self.isVIP = isVIP
-        self.imageData = imgData
+        self.imageURLString = imgURL
+
     }
 //    var followersID: [String]
 //    var followingID: [String]

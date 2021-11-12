@@ -60,6 +60,16 @@
 		6F4EA982273CF55100A4B9F4 /* FollowingUsersViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F4EA981273CF55100A4B9F4 /* FollowingUsersViewController.swift */; };
 		6F4EA984273CF63B00A4B9F4 /* FollowedUsersViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F4EA983273CF63B00A4B9F4 /* FollowedUsersViewController.swift */; };
 		6F4EA986273CF8C800A4B9F4 /* MyFollowingFolloweredUsersViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F4EA985273CF8C800A4B9F4 /* MyFollowingFolloweredUsersViewController.swift */; };
+		6F4EA988273EABEC00A4B9F4 /* RxRecipeTableViewDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F4EA987273EABEB00A4B9F4 /* RxRecipeTableViewDataSource.swift */; };
+		6F4EA98B273EC3F200A4B9F4 /* RecipeMainImageTVCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F4EA98A273EC3F200A4B9F4 /* RecipeMainImageTVCell.swift */; };
+		6F4EA98E273EC99700A4B9F4 /* RecipeTitleTVCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F4EA98D273EC99600A4B9F4 /* RecipeTitleTVCell.swift */; };
+		6F4EA990273ECAD500A4B9F4 /* RecipeEvaluatesTVCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F4EA98F273ECAD500A4B9F4 /* RecipeEvaluatesTVCell.swift */; };
+		6F4EA992273ECC3100A4B9F4 /* RecipeEvaluateCVCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F4EA991273ECC3100A4B9F4 /* RecipeEvaluateCVCell.swift */; };
+		6F4EA996273ECD5300A4B9F4 /* RecipeGenresTVCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F4EA995273ECD5300A4B9F4 /* RecipeGenresTVCell.swift */; };
+		6F4EA998273ECE6B00A4B9F4 /* RecipePublisherTVCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F4EA997273ECE6B00A4B9F4 /* RecipePublisherTVCell.swift */; };
+		6F4EA99A273ECF5F00A4B9F4 /* RecipeTimeNServingTVCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F4EA999273ECF5F00A4B9F4 /* RecipeTimeNServingTVCell.swift */; };
+		6F4EA99C273ED08D00A4B9F4 /* RecipeIngredientTVCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F4EA99B273ED08D00A4B9F4 /* RecipeIngredientTVCell.swift */; };
+		6F4EA99E273ED11D00A4B9F4 /* RecipeInstructionTVCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F4EA99D273ED11D00A4B9F4 /* RecipeInstructionTVCell.swift */; };
 		6F512A2226F3FA5100826657 /* Tutorial.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 6F512A2126F3FA5100826657 /* Tutorial.storyboard */; };
 		6F512A2426F4169800826657 /* LoadingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F512A2326F4169800826657 /* LoadingViewController.swift */; };
 		6F512A2926F417CD00826657 /* TutorialVM.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F512A2826F417CD00826657 /* TutorialVM.swift */; };
@@ -123,7 +133,7 @@
 		6FB970BF27250A9800350F84 /* CheckGenresTVCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FB970BE27250A9800350F84 /* CheckGenresTVCell.swift */; };
 		6FB970C127250B2400350F84 /* CheckInstructionTVCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FB970C027250B2400350F84 /* CheckInstructionTVCell.swift */; };
 		6FB970C327250BE600350F84 /* CheckIngredientTVCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FB970C227250BE600350F84 /* CheckIngredientTVCell.swift */; };
-		6FB970C527250C3F00350F84 /* CheckUserTVCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FB970C427250C3F00350F84 /* CheckUserTVCell.swift */; };
+		6FB970C527250C3F00350F84 /* CheckPublisherTVCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FB970C427250C3F00350F84 /* CheckPublisherTVCell.swift */; };
 		6FB970CA2725674200350F84 /* CheckRecipeVM.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FB970C92725674200350F84 /* CheckRecipeVM.swift */; };
 		6FBCB91226D7B5F200C050B2 /* User.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FBCB91126D7B5F200C050B2 /* User.swift */; };
 		6FBCB92A26D7CBD500C050B2 /* RegisterMyInfoProfileTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FBCB92626D7CBD500C050B2 /* RegisterMyInfoProfileTableViewController.swift */; };
@@ -226,6 +236,16 @@
 		6F4EA981273CF55100A4B9F4 /* FollowingUsersViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FollowingUsersViewController.swift; sourceTree = "<group>"; };
 		6F4EA983273CF63B00A4B9F4 /* FollowedUsersViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FollowedUsersViewController.swift; sourceTree = "<group>"; };
 		6F4EA985273CF8C800A4B9F4 /* MyFollowingFolloweredUsersViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyFollowingFolloweredUsersViewController.swift; sourceTree = "<group>"; };
+		6F4EA987273EABEB00A4B9F4 /* RxRecipeTableViewDataSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RxRecipeTableViewDataSource.swift; sourceTree = "<group>"; };
+		6F4EA98A273EC3F200A4B9F4 /* RecipeMainImageTVCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecipeMainImageTVCell.swift; sourceTree = "<group>"; };
+		6F4EA98D273EC99600A4B9F4 /* RecipeTitleTVCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecipeTitleTVCell.swift; sourceTree = "<group>"; };
+		6F4EA98F273ECAD500A4B9F4 /* RecipeEvaluatesTVCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecipeEvaluatesTVCell.swift; sourceTree = "<group>"; };
+		6F4EA991273ECC3100A4B9F4 /* RecipeEvaluateCVCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecipeEvaluateCVCell.swift; sourceTree = "<group>"; };
+		6F4EA995273ECD5300A4B9F4 /* RecipeGenresTVCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecipeGenresTVCell.swift; sourceTree = "<group>"; };
+		6F4EA997273ECE6B00A4B9F4 /* RecipePublisherTVCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecipePublisherTVCell.swift; sourceTree = "<group>"; };
+		6F4EA999273ECF5F00A4B9F4 /* RecipeTimeNServingTVCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecipeTimeNServingTVCell.swift; sourceTree = "<group>"; };
+		6F4EA99B273ED08D00A4B9F4 /* RecipeIngredientTVCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecipeIngredientTVCell.swift; sourceTree = "<group>"; };
+		6F4EA99D273ED11D00A4B9F4 /* RecipeInstructionTVCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecipeInstructionTVCell.swift; sourceTree = "<group>"; };
 		6F512A2126F3FA5100826657 /* Tutorial.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = Tutorial.storyboard; sourceTree = "<group>"; };
 		6F512A2326F4169800826657 /* LoadingViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoadingViewController.swift; sourceTree = "<group>"; };
 		6F512A2826F417CD00826657 /* TutorialVM.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TutorialVM.swift; sourceTree = "<group>"; };
@@ -292,7 +312,7 @@
 		6FB970BE27250A9800350F84 /* CheckGenresTVCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CheckGenresTVCell.swift; sourceTree = "<group>"; };
 		6FB970C027250B2400350F84 /* CheckInstructionTVCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CheckInstructionTVCell.swift; sourceTree = "<group>"; };
 		6FB970C227250BE600350F84 /* CheckIngredientTVCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CheckIngredientTVCell.swift; sourceTree = "<group>"; };
-		6FB970C427250C3F00350F84 /* CheckUserTVCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CheckUserTVCell.swift; sourceTree = "<group>"; };
+		6FB970C427250C3F00350F84 /* CheckPublisherTVCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CheckPublisherTVCell.swift; sourceTree = "<group>"; };
 		6FB970C92725674200350F84 /* CheckRecipeVM.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CheckRecipeVM.swift; sourceTree = "<group>"; };
 		6FBCB91126D7B5F200C050B2 /* User.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = User.swift; sourceTree = "<group>"; };
 		6FBCB92626D7CBD500C050B2 /* RegisterMyInfoProfileTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RegisterMyInfoProfileTableViewController.swift; sourceTree = "<group>"; };
@@ -451,6 +471,32 @@
 				6F0E696B27208870002BD547 /* SelectGenresVM.swift */,
 			);
 			path = CreateRecipe;
+			sourceTree = "<group>";
+		};
+		6F4EA989273EACA200A4B9F4 /* RxDataSource */ = {
+			isa = PBXGroup;
+			children = (
+				6FE9EB5C26FC8268000AF9D4 /* RxRefrigeratorTableViewDataSource.swift */,
+				6F71EBF327237536001BF538 /* RxGenreCollectionViewDataSource.swift */,
+				6F4EA987273EABEB00A4B9F4 /* RxRecipeTableViewDataSource.swift */,
+			);
+			path = RxDataSource;
+			sourceTree = "<group>";
+		};
+		6F4EA98C273EC8E600A4B9F4 /* RecipeDetail */ = {
+			isa = PBXGroup;
+			children = (
+				6F4EA98A273EC3F200A4B9F4 /* RecipeMainImageTVCell.swift */,
+				6F4EA98D273EC99600A4B9F4 /* RecipeTitleTVCell.swift */,
+				6F4EA98F273ECAD500A4B9F4 /* RecipeEvaluatesTVCell.swift */,
+				6F4EA991273ECC3100A4B9F4 /* RecipeEvaluateCVCell.swift */,
+				6F4EA995273ECD5300A4B9F4 /* RecipeGenresTVCell.swift */,
+				6F4EA997273ECE6B00A4B9F4 /* RecipePublisherTVCell.swift */,
+				6F4EA999273ECF5F00A4B9F4 /* RecipeTimeNServingTVCell.swift */,
+				6F4EA99B273ED08D00A4B9F4 /* RecipeIngredientTVCell.swift */,
+				6F4EA99D273ED11D00A4B9F4 /* RecipeInstructionTVCell.swift */,
+			);
+			path = RecipeDetail;
 			sourceTree = "<group>";
 		};
 		6F512A2626F416BD00826657 /* Tutorial */ = {
@@ -645,7 +691,7 @@
 				6FB970BE27250A9800350F84 /* CheckGenresTVCell.swift */,
 				6FB970C027250B2400350F84 /* CheckInstructionTVCell.swift */,
 				6FB970C227250BE600350F84 /* CheckIngredientTVCell.swift */,
-				6FB970C427250C3F00350F84 /* CheckUserTVCell.swift */,
+				6FB970C427250C3F00350F84 /* CheckPublisherTVCell.swift */,
 				6F77D488272853FD00F1FCD9 /* PlayVideoInsideTVCellView.swift */,
 				6F01F3CD27296D29003CA769 /* PublishRecipeOptionCVCell.swift */,
 				6F9CFCAF272F06070008C2F8 /* CheckGenresCVCell.swift */,
@@ -739,7 +785,7 @@
 				6F512A2F26F45BF200826657 /* TutorialCVCell.swift */,
 				6FE9EB5B26F9E7CC000AF9D4 /* StartCVCell */,
 				6FE9EB5526F9BA30000AF9D4 /* RefrigeratorTVCell.swift */,
-				6FE9EB5C26FC8268000AF9D4 /* RxRefrigeratorTableViewDataSource.swift */,
+				6F4EA989273EACA200A4B9F4 /* RxDataSource */,
 				6F9E04222700CAE0005DCEF4 /* ShoppinglistTVCell.swift */,
 				6F9E042A27017B91005DCEF4 /* ShoppinglistHeaderView.swift */,
 				6F9E042C2701DCE8005DCEF4 /* BalloonView.swift */,
@@ -755,7 +801,6 @@
 				6F71EBED2722B1CB001BF538 /* GenreCollectionViewFlowLayout.swift */,
 				6F71EBEF27234E68001BF538 /* EmptySelectedGenreTVCell.swift */,
 				6F71EBF127237082001BF538 /* GenreTVCell.swift */,
-				6F71EBF327237536001BF538 /* RxGenreCollectionViewDataSource.swift */,
 				6FB970A92724147000350F84 /* RecipeGenresCVCell.swift */,
 				6FB970AB272417FC00350F84 /* GenreCVCell.swift */,
 				6FB970AD2724358300350F84 /* SelectGenreTVCell.swift */,
@@ -764,6 +809,7 @@
 				6F01F3DB272C31CE003CA769 /* SearchGenres */,
 				6F3BF4C6273301F6005C24A5 /* MyProfile */,
 				6F3BF4DA273BCE0F005C24A5 /* SkeltonView.swift */,
+				6F4EA98C273EC8E600A4B9F4 /* RecipeDetail */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -1038,6 +1084,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				6F74C4292719DC61007BB9E6 /* CreateRecipeViewController.swift in Sources */,
+				6F4EA996273ECD5300A4B9F4 /* RecipeGenresTVCell.swift in Sources */,
 				6F0E6964272024E6002BD547 /* CGImage+.swift in Sources */,
 				6F2BBA8A26EDDA6B003B0D5F /* RxAppleDelegateProxy.swift in Sources */,
 				6F74C42B2719DEE7007BB9E6 /* CreateRecipeVM.swift in Sources */,
@@ -1045,6 +1092,7 @@
 				6FE9EB5A26F9C01A000AF9D4 /* EditItemRefrigeratorVM.swift in Sources */,
 				6F018BA526DB8327006416D3 /* SceneCoordinatorType.swift in Sources */,
 				6F06EBE326F5F28D00F2218B /* StartCVCell.swift in Sources */,
+				6F4EA990273ECAD500A4B9F4 /* RecipeEvaluatesTVCell.swift in Sources */,
 				6FF66B9726D7AEC20024495E /* BindableType.swift in Sources */,
 				6FC062C426ECC9B00016B990 /* LoginErrors.swift in Sources */,
 				6F6D0AEE26EED71500CD27AE /* RxFaceBookLoginDelegateProxy.swift in Sources */,
@@ -1053,6 +1101,7 @@
 				6FEF088B26F2AA0B00C02CDD /* CuisineViewController.swift in Sources */,
 				6F4EA986273CF8C800A4B9F4 /* MyFollowingFolloweredUsersViewController.swift in Sources */,
 				6FEF088326F2A7FD00C02CDD /* IngredientsViewController.swift in Sources */,
+				6F4EA992273ECC3100A4B9F4 /* RecipeEvaluateCVCell.swift in Sources */,
 				6FB970B32724FA7B00350F84 /* CheckCreatedRecipeViewController.swift in Sources */,
 				6F018BA226DB7F18006416D3 /* Scene+ViewController.swift in Sources */,
 				6F4EA984273CF63B00A4B9F4 /* FollowedUsersViewController.swift in Sources */,
@@ -1097,6 +1146,7 @@
 				6F06EBE926F6B3D100F2218B /* LoadingVM.swift in Sources */,
 				6F71EBF027234E68001BF538 /* EmptySelectedGenreTVCell.swift in Sources */,
 				6F9E041C2700A196005DCEF4 /* ShoppinglistVM.swift in Sources */,
+				6F4EA988273EABEC00A4B9F4 /* RxRecipeTableViewDataSource.swift in Sources */,
 				6FF66B9E26D7AF430024495E /* RegisterEmailVM.swift in Sources */,
 				6F01F3D6272BC79E003CA769 /* GenreTxtView.swift in Sources */,
 				6FB970C327250BE600350F84 /* CheckIngredientTVCell.swift in Sources */,
@@ -1112,7 +1162,7 @@
 				6FEF088726F2A8CB00C02CDD /* PopularRecipeViewController.swift in Sources */,
 				6F3BF4D927397143005C24A5 /* RecipeDetailDM.swift in Sources */,
 				6F77D4852726DF8D00F1FCD9 /* CheckTimeNServingTVCell.swift in Sources */,
-				6FB970C527250C3F00350F84 /* CheckUserTVCell.swift in Sources */,
+				6FB970C527250C3F00350F84 /* CheckPublisherTVCell.swift in Sources */,
 				6F3BF4C8273302A2005C24A5 /* MainMyProfileTVCell.swift in Sources */,
 				6FC062C226ECA3D90016B990 /* Notification.swift in Sources */,
 				6FE9EB5826F9BEF1000AF9D4 /* EditItemRefrigeratorViewController.swift in Sources */,
@@ -1132,6 +1182,7 @@
 				6F01F3D4272BB29D003CA769 /* SearchGenresViewController.swift in Sources */,
 				6FEF088526F2A85A00C02CDD /* MainPageViewController.swift in Sources */,
 				6F9E04212700C3C0005DCEF4 /* EditShoppinglistVM.swift in Sources */,
+				6F4EA98B273EC3F200A4B9F4 /* RecipeMainImageTVCell.swift in Sources */,
 				6F71EBF227237082001BF538 /* GenreTVCell.swift in Sources */,
 				6F9A0D1A27101F6D00DABB45 /* SemiModalPresentationController.swift in Sources */,
 				6F194CBC271C7F190084F829 /* UploadingVideoViewController.swift in Sources */,
@@ -1151,16 +1202,19 @@
 				6F018BA026DB7E5F006416D3 /* SceneCoordinator.swift in Sources */,
 				6FE15ED5271AB7B20047D3D8 /* EditMainImageCVCell.swift in Sources */,
 				6FBCB92C26D7CBD500C050B2 /* EmailRegisterViewController.swift in Sources */,
+				6F4EA98E273EC99700A4B9F4 /* RecipeTitleTVCell.swift in Sources */,
 				6FEF087B26F2A2DF00C02CDD /* DiscoveryViewController.swift in Sources */,
 				6F114E01271C8A7900B3BE63 /* UploadingVideoVM.swift in Sources */,
 				6F3BF4DD273C2080005C24A5 /* ThereeCellsFlowLayout.swift in Sources */,
 				6F3BF4C32732FBE2005C24A5 /* MyProfileVM.swift in Sources */,
+				6F4EA99E273ED11D00A4B9F4 /* RecipeInstructionTVCell.swift in Sources */,
 				6F26D4EA26DFBDF60050BA84 /* DiscoveryVM.swift in Sources */,
 				6FF66B9F26D7AF430024495E /* ResetPasswordVM.swift in Sources */,
 				6F9A0D1027101B1400DABB45 /* SemiModalIndicatorView.swift in Sources */,
 				6F9E04232700CAE0005DCEF4 /* ShoppinglistTVCell.swift in Sources */,
 				6F114E0D271D71F800B3BE63 /* UIView.swift in Sources */,
 				6F01F3D227296EAA003CA769 /* PublishRecipeVM.swift in Sources */,
+				6F4EA99A273ECF5F00A4B9F4 /* RecipeTimeNServingTVCell.swift in Sources */,
 				6F3BF4D0273309F3005C24A5 /* RxPostedRecipeCollectionViewDataSource.swift in Sources */,
 				6FA70A9926E7A1FF00474FE5 /* SetPasswordViewController.swift in Sources */,
 				6F512A2926F417CD00826657 /* TutorialVM.swift in Sources */,
@@ -1174,9 +1228,11 @@
 				6FEA391726DA98D7002F81A3 /* RxGIDSignInDelegateProxy.swift in Sources */,
 				6FC062C026EAE4020016B990 /* Error+.swift in Sources */,
 				6FEA391126D8D1E4002F81A3 /* ViewModelBase.swift in Sources */,
+				6F4EA998273ECE6B00A4B9F4 /* RecipePublisherTVCell.swift in Sources */,
 				6F9A0D1627101E7C00DABB45 /* SemiModalOverlayView.swift in Sources */,
 				6F9CFCB0272F06080008C2F8 /* CheckGenresCVCell.swift in Sources */,
 				6FB970AA2724147000350F84 /* RecipeGenresCVCell.swift in Sources */,
+				6F4EA99C273ED08D00A4B9F4 /* RecipeIngredientTVCell.swift in Sources */,
 				6FB970BF27250A9800350F84 /* CheckGenresTVCell.swift in Sources */,
 				6F3BF4C02732FA80005C24A5 /* MyProfileViewController.swift in Sources */,
 				6F0E696C27208870002BD547 /* SelectGenresVM.swift in Sources */,

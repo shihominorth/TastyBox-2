@@ -7,21 +7,25 @@
 
 import UIKit
 import AVFoundation
+import DifferenceKit
+import Firebase
 import RxSwift
 import RxCocoa
-import RxDataSources
+//import RxDataSources
 import RxTimelane
 import Lottie
 
 class RecipeViewController: UIViewController, BindableType {
 
+    typealias Section = ArraySection<RecipeDetailSectionItem.RawValue, RecipeDetailSectionItem>
+    
     typealias ViewModelType = RecipeVM
     var viewModel: RecipeVM!
 
 
     @IBOutlet weak var tableView: UITableView!
     
-    var dataSource: RxTableViewSectionedReloadDataSource<RecipeItemSectionModel>!
+    var dataSource: RxRecipeTableViewDataSource<Section>!
     
     var playerItem: AVPlayerItem!
     var player: AVPlayer!
@@ -50,6 +54,7 @@ class RecipeViewController: UIViewController, BindableType {
         
         
         self.navigationItem.rightBarButtonItem = publishBtn
+
 
     }
  
@@ -109,7 +114,11 @@ class RecipeViewController: UIViewController, BindableType {
             })
             .disposed(by: viewModel.disposeBag)
         
-       
+        setUpDataSource()
+        
+        viewModel.getRecipeDetailInfo(recipe: viewModel.recipe)
+            .bind(to: tableView.rx.items(dataSource: dataSource))
+            .disposed(by: viewModel.disposeBag)
 
         
         viewModel.isExpandedSubject
@@ -149,17 +158,17 @@ class RecipeViewController: UIViewController, BindableType {
     
     func setUpDataSource() {
         
-        dataSource = RxTableViewSectionedReloadDataSource<RecipeItemSectionModel> { [unowned self] dataSource, tableView, indexPath, element in
+        dataSource = RxRecipeTableViewDataSource<Section> { [unowned self] tableView, indexPath, section in
             
-            switch dataSource[indexPath] {
+            switch section.elements[indexPath.row] {
                 
             case let .imageData(data, url):
                 
                 
-                if let cell = tableView.dequeueReusableCell(withIdentifier: "checkMainTVCell", for: indexPath) as? CheckMainImageTVCell {
+                if let cell = tableView.dequeueReusableCell(withIdentifier: "recipeMainTVCell", for: indexPath) as? RecipeMainImageTVCell {
                     
-                    cell.imgData = data
-                    cell.videoURL = url
+                    cell.imgString = data
+                    cell.videoString = url
                     
                     if viewModel.isDisplayed == false && viewModel.recipe.videoURL != nil {
                         
@@ -202,7 +211,7 @@ class RecipeViewController: UIViewController, BindableType {
                 
             case let .title(title):
                 
-                if let cell = tableView.dequeueReusableCell(withIdentifier: "checkTitleTVCell", for: indexPath) as? CheckTitleTVCell {
+                if let cell = tableView.dequeueReusableCell(withIdentifier: "recipeTitleTVCell", for: indexPath) as? RecipeTitleTVCell {
                     
                     cell.titleLbl.text = title
                     cell.selectionStyle = .none
@@ -212,7 +221,7 @@ class RecipeViewController: UIViewController, BindableType {
                 
             case let .evaluates(evaluates):
                 
-                if let cell = tableView.dequeueReusableCell(withIdentifier: "checkEvaluateRecipeTVCell", for: indexPath) as? CheckEvaluateRecipeTVCell {
+                if let cell = tableView.dequeueReusableCell(withIdentifier: "recipeEvaluatesTVCell", for: indexPath) as? RecipeEvaluatesTVCell {
                     
                     cell.evaluates = evaluates
                     cell.selectionStyle = .none
@@ -222,7 +231,7 @@ class RecipeViewController: UIViewController, BindableType {
                 
             case let .genres(genre):
                 
-                if let cell = tableView.dequeueReusableCell(withIdentifier: "checkGenresTVCell", for: indexPath) as? CheckGenresTVCell {
+                if let cell = tableView.dequeueReusableCell(withIdentifier: "recipeGenresTVCell", for: indexPath) as? RecipeGenresTVCell {
                     
                     cell.genres = genre
                     cell.selectionStyle = .none
@@ -259,7 +268,7 @@ class RecipeViewController: UIViewController, BindableType {
                 
             case let .publisher(user):
                 
-                if let cell = tableView.dequeueReusableCell(withIdentifier: "checkUserTVCell", for: indexPath) as? CheckUserTVCell {
+                if let cell = tableView.dequeueReusableCell(withIdentifier: "recipePublisherTVCell", for: indexPath) as? RecipePublisherTVCell {
                     
                     cell.user = user
                     cell.selectionStyle = .none
@@ -269,10 +278,10 @@ class RecipeViewController: UIViewController, BindableType {
                 
             case let .timeAndServing(time, serving):
                 
-                if let cell = tableView.dequeueReusableCell(withIdentifier: "checkTimeNServingTVCell", for: indexPath) as? CheckTimeNServingTVCell {
+                if let cell = tableView.dequeueReusableCell(withIdentifier: "recipeTimeNServingTVCell", for: indexPath) as? RecipeTimeNServingTVCell {
                     
                     cell.timeLbl.text = "\(time) mins"
-                    cell.serveLbl.text = "\(serving) serving"
+                    cell.servingLbl.text = "\(serving) serving"
                     cell.selectionStyle = .none
                     
                     return cell
@@ -280,7 +289,7 @@ class RecipeViewController: UIViewController, BindableType {
                 
             case let .ingredients(ingredient):
                 
-                if let cell = tableView.dequeueReusableCell(withIdentifier: "checkIngredientTVCell", for: indexPath) as? CheckIngredientTVCell {
+                if let cell = tableView.dequeueReusableCell(withIdentifier: "recipeIngredientTVCell", for: indexPath) as? RecipeIngredientTVCell {
                     
                     cell.ingredient = ingredient
                     cell.configure(ingredient: ingredient)
@@ -292,7 +301,7 @@ class RecipeViewController: UIViewController, BindableType {
                 
             case let .instructions(instruction):
                 
-                if let cell = tableView.dequeueReusableCell(withIdentifier: "checkInstructionTVCell", for: indexPath) as? CheckInstructionTVCell {
+                if let cell = tableView.dequeueReusableCell(withIdentifier: "recipeInstructionTVCell", for: indexPath) as? RecipeInstructionTVCell {
                     
                     cell.instruction = instruction
                     cell.configure(instruction: instruction)
@@ -302,14 +311,9 @@ class RecipeViewController: UIViewController, BindableType {
                 }
                 
             }
-            
+               
+               
             return UITableViewCell()
-            
-        }
-        
-        dataSource.titleForHeaderInSection = { ds, section -> String? in
-            return ds[section].title
-            
         }
         
     }

@@ -58,7 +58,7 @@ extension MyPostedRecipesTVCell {
             let placeHolder = SkeltonView()
             
 
-            if let url = URL(string: recipe.imgURL) {
+            if let url = URL(string: recipe.imgString) {
             
                 cell.imgView.kf.setImage(with: url, placeholder: placeHolder, options: [.transition(.fade(1))])
 

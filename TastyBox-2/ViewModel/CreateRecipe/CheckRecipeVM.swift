@@ -57,10 +57,12 @@ class CheckRecipeVM {
         self.mainPhoto = mainPhoto
         self.instructions = instructions
         
+        let imgString = mainPhoto.base64EncodedString()
+        let videoString = video?.absoluteString
         
-        let mainImageSection: RecipeItemSectionModel = .mainImageData(imgData: mainPhoto, videoURL: video)
+        let mainImageSection: RecipeItemSectionModel = .mainImageData(imgURLString: imgString, videoURLString: videoString)
         let titleSection: RecipeItemSectionModel = .title(title: title)
-        let evaluateSection: RecipeItemSectionModel = .evaluate(evaluates: .evaluate(evaluates))
+        let evaluateSection: RecipeItemSectionModel = .evaluate(evaluates: .evaluates(evaluates))
         
         var temp: [Genre] = []
         
@@ -118,7 +120,9 @@ class CheckRecipeVM {
             
             if let name = user.displayName {
                 
-                let user = User(id: user.uid, name: name, isVIP: false, imgData: data)
+                let imgString = data.base64EncodedString()
+                
+                let user = User(id: user.uid, name: name, isVIP: false, imgURLString: imgString)
                 
                 observer.onNext(user)
             }

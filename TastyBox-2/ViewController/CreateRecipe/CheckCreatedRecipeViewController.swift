@@ -152,6 +152,7 @@ class CheckCreatedRecipeViewController: UIViewController, BindableType {
                 
             })
             .disposed(by: viewModel.disposeBag)
+        
     }
     
     
@@ -163,13 +164,13 @@ class CheckCreatedRecipeViewController: UIViewController, BindableType {
             
             switch dataSource[indexPath] {
                 
-            case let .imageData(data, url):
+            case let .imageData(imgString, url):
                 
                 
                 if let cell = tableView.dequeueReusableCell(withIdentifier: "checkMainTVCell", for: indexPath) as? CheckMainImageTVCell {
                     
-                    cell.imgData = data
-                    cell.videoURL = url
+                    cell.imgData = imgString
+                    cell.videoString = url
                     
                     if viewModel.isDisplayed == false && viewModel.url != nil {
                         
@@ -178,7 +179,7 @@ class CheckCreatedRecipeViewController: UIViewController, BindableType {
                         
                         cell.setSlider()
                         
-                        UIView.animate(withDuration: 0.2, delay: 2.0, options: [], animations: {
+                        UIView.animate(withDuration: 0.0, delay: 2.0, options: [], animations: {
                             
                             cell.playVideoView.imgView.alpha = 0.0
                             
@@ -216,7 +217,7 @@ class CheckCreatedRecipeViewController: UIViewController, BindableType {
                     return cell
                 }
                 
-            case let .evaluate(evaluates):
+            case let .evaluates(evaluates):
                 
                 if let cell = tableView.dequeueReusableCell(withIdentifier: "checkEvaluateRecipeTVCell", for: indexPath) as? CheckEvaluateRecipeTVCell {
                     
@@ -263,9 +264,9 @@ class CheckCreatedRecipeViewController: UIViewController, BindableType {
                     return cell
                 }
                 
-            case let .user(user):
+            case let .publisher(user):
                 
-                if let cell = tableView.dequeueReusableCell(withIdentifier: "checkUserTVCell", for: indexPath) as? CheckUserTVCell {
+                if let cell = tableView.dequeueReusableCell(withIdentifier: "checkUserTVCell", for: indexPath) as? CheckPublisherTVCell {
                     
                     cell.user = user
                     cell.selectionStyle = .none

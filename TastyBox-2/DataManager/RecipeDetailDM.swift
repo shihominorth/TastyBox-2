@@ -10,20 +10,22 @@ import Firebase
 import RxSwift
 
 protocol RecipeDetailProtocol: AnyObject {
-    static func getIngredients(recipeID: String) -> Observable<[Ingredient]>
+    static func getDetailInfo(recipe: Recipe) -> Observable<(User, [Ingredient], [Instruction])>
 }
 
 class RecipeDetailDM: RecipeDetailProtocol {
     
     static let db = Firestore.firestore()
     
-    static func getDetailInfo(recipeID: String) -> Observable<([Ingredient], [Instruction])> {
+    static func getDetailInfo(recipe: Recipe) -> Observable<(User, [Ingredient], [Instruction])> {
         
-        return Observable.zip(getIngredients(recipeID: recipeID), getInstructions(recipeID: recipeID)) { ingredients, instructions in
-            
-            return (ingredients, instructions)
-        }
+        return Observable.zip(getPublisher(publisherID: recipe.userID), getIngredients(recipeID: recipe.recipeID), getInstructions(recipeID: recipe.recipeID))
         
+//        { ingredients, instructions, user -> Observable<(User, [Ingredient], [Instruction])> in
+//            
+//            return (user, ingredients, instructions)
+//        }
+//        
     }
     
   
@@ -111,6 +113,30 @@ class RecipeDetailDM: RecipeDetailProtocol {
             return Disposables.create()
         }
         
+    }
+    
+    static func getPublisher(publisherID: String) -> Observable<User> {
+        
+        return .create { observer in
+            
+            db.collection("users").document(publisherID).getDocument { doc, err in
+                
+                if let err = err {
+                    
+                    observer.onError(err)
+                
+                }
+                else {
+                    
+                    if let doc = doc, let user = User(document: doc) {
+                        observer.onNext(user)
+                    }
+                    
+                }
+            }
+            
+            return Disposables.create()
+        }
     }
     
 }

@@ -16,7 +16,7 @@ import RxDataSources
 class Recipe {
     
     let recipeID: String
-    let imgURL: String
+    let imgString: String
 //    var imageData: Data
     let videoURL: String?
     var title: String
@@ -54,7 +54,7 @@ class Recipe {
         self.serving = serving
         self.isVIP = isVIP
         self.genresIDs = [String](genresData.keys)
-        self.imgURL = imgURL
+        self.imgString = imgURL
         
         if let videoURL = data["videoURL"] as? String {
         
@@ -168,7 +168,7 @@ struct Evaluate {
 
 enum RecipeDetailSectionItem {
         
-    case imageData(Data, URL?)
+    case imageData(String, String?)
     case title(String)
     case evaluates([Evaluate])
     case timeAndServing(Int, Int)
@@ -186,7 +186,7 @@ extension RecipeDetailSectionItem: RawRepresentable {
         switch rawValue {
         
         case "image":
-            self = .imageData(Data(), nil)
+            self = .imageData("", nil)
         
         case "title":
             self = .title("")
@@ -198,7 +198,7 @@ extension RecipeDetailSectionItem: RawRepresentable {
             self = .timeAndServing(0, 0)
 
         case "publisher":
-            self = .publisher(User(id: "", name: "", isVIP: false, imgData: Data()))
+            self = .publisher(User(id: "", name: "", isVIP: false, imgURLString: ""))
             
         case "genres":
             self = .genres([])
@@ -250,7 +250,7 @@ extension RecipeDetailSectionItem: Differentiable {
 
 enum RecipeItemSectionModel {
     
-    case mainImageData(imgData: Data, videoURL: URL?)
+    case mainImageData(imgURLString: String, videoURLString: String?)
     case title(title: String)
     case evaluate(evaluates: RecipeDetailSectionItem)
     case timeAndServing(time: Int, serving: Int)
@@ -270,8 +270,8 @@ extension RecipeItemSectionModel: SectionModelType {
         
         switch self {
             
-        case .mainImageData(let imgData, let videoURL):
-            return [RecipeDetailSectionItem.imageData(imgData, videoURL)]
+        case .mainImageData(let imgString, let videoURL):
+            return [RecipeDetailSectionItem.imageData(imgString, videoURL)]
             
         case .title(let title):
             
@@ -320,9 +320,9 @@ extension RecipeItemSectionModel: SectionModelType {
         
         switch original {
             
-        case let .mainImageData(imgData, videoURL):
+        case let .mainImageData(imgURLString, videoURL):
             
-            self = .mainImageData(imgData: imgData, videoURL: videoURL)
+            self = .mainImageData(imgURLString: imgURLString, videoURLString: videoURL)
             
         case let .title(title):
             
