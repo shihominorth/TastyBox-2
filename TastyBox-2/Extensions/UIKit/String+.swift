@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import DifferenceKit
 
 extension String {
     func convertToInt() -> Int? {
@@ -19,6 +20,8 @@ extension String {
         return !self.isEmpty
     }
 }
+
+extension String: Differentiable {}
 
 
 extension Array {

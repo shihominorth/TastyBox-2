@@ -210,7 +210,7 @@ class RecipeViewController: UIViewController, BindableType {
                     return cell
                 }
                 
-            case let .evaluate(evaluates):
+            case let .evaluates(evaluates):
                 
                 if let cell = tableView.dequeueReusableCell(withIdentifier: "checkEvaluateRecipeTVCell", for: indexPath) as? CheckEvaluateRecipeTVCell {
                     
@@ -257,7 +257,7 @@ class RecipeViewController: UIViewController, BindableType {
                     return cell
                 }
                 
-            case let .user(user):
+            case let .publisher(user):
                 
                 if let cell = tableView.dequeueReusableCell(withIdentifier: "checkUserTVCell", for: indexPath) as? CheckUserTVCell {
                     

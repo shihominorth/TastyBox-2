@@ -6,12 +6,12 @@
 //
 
 import UIKit
+import DifferenceKit
 import Firebase
 import FirebaseFirestore
 import MessageUI
 import RxSwift
 import RxDataSources
-import DifferenceKit
 
 class Recipe {
     
@@ -82,169 +82,6 @@ class Recipe {
             return Disposables.create()
         }
     }
-    
-    //    static func generateNewRecipe(queryDoc: QueryDocumentSnapshot, user: Firebase.User) -> Observable<Recipe?> {
-    //
-    //
-    //        let documentID = queryDoc.documentID
-    //
-    //        let getImageObservable = getMyImage(recipeID: documentID, user: user)
-    //
-    //        return .create { observer in
-    //
-    //            getImageObservable
-    //                .retry { errors in
-    //
-    //                    return errors.enumerated().flatMap { retryIndex, error -> Observable<Int64> in
-    //
-    //                        print("got error")
-    //                        print(error)
-    //
-    //                        let e = error as NSError
-    //
-    //                        if 400..<500 ~= e.code && retryIndex < 3 {
-    //
-    //                            return .timer(.milliseconds(3000), scheduler: MainScheduler.instance)
-    //
-    //                        }
-    //
-    //                        return Observable.error(error)
-    //
-    //                    }
-    //                }
-    //                .subscribe(onNext: { data in
-    //
-    //                    if let recipe = Recipe(queryDoc: queryDoc, imageData: data) {
-    //
-    //                        observer.onNext(recipe)
-    //
-    //                    }
-    //                    else {
-    //
-    //                        observer.onNext(nil)
-    //
-    //                    }
-    //
-    //                }, onError: { err in
-    //
-    //                    observer.onError(err)
-    //
-    //                })
-    //                .disposed(by: DisposeBag())
-    //
-    //            return Disposables.create()
-    //        }
-    //
-    //    }
-    
-//    static func generateNewRecipe(queryDoc: QueryDocumentSnapshot, user: Firebase.User) -> Observable<Recipe?> {
-//
-//        return getMyPostedRecipeImage(recipeID: queryDoc.documentID, user: user)
-//            .do(onNext: { data in
-                
-//                guard let recipe = Recipe(queryDoc: queryDoc, imageData: data) else {
-//                    return
-//                }
-                
-//                print(recipe)
-//
-//                print(data)
-//
-//            })
-//            .map { data -> Recipe? in
-//
-//                guard let recipe = Recipe(queryDoc: queryDoc, imageData: data) else {
-//                    return nil
-//                }
-//
-//                return recipe
-//
-//            }
-//            .retry { errors in
-//
-//                return errors.enumerated().flatMap { retryIndex, error -> Observable<Int64> in
-//
-//                    print("got error")
-//                    print(error)
-//
-//                    let e = error as NSError
-//
-//                    if 400..<500 ~= e.code && retryIndex < 3 {
-//
-//                        return .timer(.milliseconds(3000), scheduler: MainScheduler.instance)
-//
-//                    }
-//
-//                    return Observable.error(error)
-//
-//                }
-//            }
-//            .flatMap { data -> Observable<Recipe?> in
-//
-//                let newRecipe = Observable<Recipe?>.create { observer in
-//
-//                    if let recipe = Recipe(queryDoc: queryDoc, imageData: data) {
-//
-//                        observer.onNext(recipe)
-//
-//                    }
-//                    else {
-//
-//                        observer.onNext(nil)
-//
-//                    }
-//
-//                    return Disposables.create()
-//                }
-//
-//                return newRecipe
-//            }
-      
-                
-//    }
-    
-//    static func getMyPostedRecipeImage(recipeID: String, user: Firebase.User) -> Observable<Data> {
-//
-//        return .create { observer in
-//
-//            let storage = Storage.storage().reference()
-//
-//            storage.child("users/\(user.uid)/\(recipeID)/mainPhoto.jpg").getData(maxSize: 1 * 1024 * 1024) { data, err in
-//
-//                if let err = err {
-//
-//                    observer.onError(err)
-//
-//                } else {
-//
-//                    if let data = data {
-//
-//                        observer.onNext(data)
-//                    }
-//
-//                }
-//
-//            }
-//
-//            return Disposables.create()
-//        }
-//
-//
-//    }
-    
-    
-    //    init?(documentSnapshot:  DocumentSnapshot) {
-    //
-    //        guard let data = documentSnapshot.data() else { return nil }
-    //
-    //        guard let id = data["id"] as? String, let title = data["title"] as? String else { return nil }
-    //
-    //        self.id = id
-    //        self.title = title
-    //
-    //    }
-    
-    
 }
 
 extension Recipe: Differentiable {
@@ -330,7 +167,85 @@ struct Evaluate {
 
 
 enum RecipeDetailSectionItem {
-    case imageData(Data, URL?), title(String), evaluate([Evaluate]), timeAndServing(Int, Int), user(User), genres([Genre]), ingredients(Ingredient), instructions(Instruction) //likes(Int), serving(Int), videoURL(URL),
+        
+    case imageData(Data, URL?)
+    case title(String)
+    case evaluates([Evaluate])
+    case timeAndServing(Int, Int)
+    case publisher(User)
+    case genres([Genre])
+    case ingredients(Ingredient)
+    case instructions(Instruction) //likes(Int), serving(Int), videoURL(URL),
+}
+
+extension RecipeDetailSectionItem: RawRepresentable {
+ 
+    public typealias RawValue = String
+    
+    init?(rawValue: String) {
+        switch rawValue {
+        
+        case "image":
+            self = .imageData(Data(), nil)
+        
+        case "title":
+            self = .title("")
+            
+        case "evaluates":
+            self = .evaluates([])
+            
+        case "timeAndServing":
+            self = .timeAndServing(0, 0)
+
+        case "publisher":
+            self = .publisher(User(id: "", name: "", isVIP: false, imgData: Data()))
+            
+        case "genres":
+            self = .genres([])
+            
+        case "ingredients":
+            self = .ingredients(Ingredient(key: "", name: "", amount: "", order: 0))
+            
+        case "instructions":
+            self = .instructions(Instruction(id: "", index: 0, imageURL: nil, text: ""))
+            
+        default:
+            return nil
+        }
+    }
+
+    var rawValue: String {
+        switch self {
+        case .imageData:
+            return "image"
+        case .title:
+            return "title"
+        case .evaluates:
+            return "evaluates"
+        case .timeAndServing:
+            return "timeAndServing"
+        case .publisher:
+            return "publisher"
+        case .genres:
+            return "genres"
+        case .ingredients:
+            return "ingredients"
+        case .instructions:
+            return "instructions"
+        }
+    }
+    
+}
+
+extension RecipeDetailSectionItem: Differentiable {
+
+    var differenceIdentifier: String {
+        return self.rawValue
+    }
+    
+    func isContentEqual(to source: RecipeDetailSectionItem) -> Bool {
+        return self.rawValue == source.rawValue
+    }
 }
 
 enum RecipeItemSectionModel {
@@ -373,7 +288,7 @@ extension RecipeItemSectionModel: SectionModelType {
             
         case .user(let user):
             
-            return [RecipeDetailSectionItem.user(user)]
+            return [RecipeDetailSectionItem.publisher(user)]
             
         case .genres(let genres):
             
