@@ -61,7 +61,7 @@ extension RecipeGenresTVCell: UICollectionViewDataSource {
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         
-        if let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "checkGenreCVCell", for: indexPath) as? CheckGenresCVCell {
+        if let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "recipeGenreCVCell", for: indexPath) as? RecipeGenreCVCell {
             
             cell.titleLbl.text = "# \(genres[indexPath.row].title)"
             cell.layer.borderWidth = 1

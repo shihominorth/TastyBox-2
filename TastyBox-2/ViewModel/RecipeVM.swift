@@ -41,13 +41,13 @@ class RecipeVM: ViewModelBase {
     func getRecipeDetailInfo(recipe: Recipe) -> Observable<[Section]> {
                
         return self.apiType.getDetailInfo(recipe: recipe)
-            .flatMapLatest { [unowned self] publisher, ingredients, instructions in
-                self.generateSections(recipe: recipe, publisher: publisher, ingredients: ingredients, instructions: instructions)
+            .flatMapLatest { [unowned self] genres, publisher, ingredients, instructions in
+                self.generateSections(recipe: recipe, genres: genres, publisher: publisher, ingredients: ingredients, instructions: instructions)
             }
         
     }
     
-    func generateSections(recipe: Recipe, publisher: User, ingredients: [Ingredient], instructions: [Instruction]) -> Observable<[Section]> {
+    func generateSections(recipe: Recipe, genres: [Genre],  publisher: User, ingredients: [Ingredient], instructions: [Instruction]) -> Observable<[Section]> {
         
         
         return .create { observer in
@@ -72,7 +72,7 @@ class RecipeVM: ViewModelBase {
             resultSections.append(evaluatesSection)
             
             // get genres from recipe.genresIDs
-            let genresElement: RecipeDetailSectionItem = .genres([])
+            let genresElement: RecipeDetailSectionItem = .genres(genres)
             let genresSection = Section(model: genresElement.rawValue, elements: [genresElement])
             
             resultSections.append(genresSection)

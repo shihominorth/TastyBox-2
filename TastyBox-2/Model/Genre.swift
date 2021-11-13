@@ -44,6 +44,21 @@ struct Genre {
     }
     
     
+    static func generateGenres(documents: [DocumentSnapshot]) -> Observable<[Genre]> {
+        
+        return .create { observer in
+            
+            let recipes = documents.compactMap { doc in
+                
+                return Genre(documentSnapshot: doc)
+            
+            }
+            
+            observer.onNext(recipes)
+            
+            return Disposables.create()
+        }
+    }
     
 }
 

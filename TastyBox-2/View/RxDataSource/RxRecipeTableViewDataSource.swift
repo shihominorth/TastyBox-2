@@ -33,7 +33,7 @@ class RxRecipeTableViewDataSource<E: DifferentiableSection>: NSObject, RxTableVi
         let target = observedEvent.element ?? []
         let changeset = StagedChangeset(source: source, target: target)
         
-        tableView.reload(using: changeset, with: animation) { data in
+        tableView.reload(using: changeset, with: .fade) { data in
             self.values = data
         }
         
@@ -47,18 +47,18 @@ class RxRecipeTableViewDataSource<E: DifferentiableSection>: NSObject, RxTableVi
         return values[section].elements.count
     }
     
-    func tableView(_ tableView: UITableView, titleForFooterInSection section: Int) -> String? {
-       
-        switch section {
-        case 6:
-            return "Ingredients"
-            
-        case 7:
-            return "Instructions"
-        default:
-            return nil
-        }
-    }
+//    func tableView(_ tableView: UITableView, titleForFooterInSection section: Int) -> String? {
+//       
+//        switch section {
+//        case 5:
+//            return "Ingredients"
+//            
+//        case 6:
+//            return "Instructions"
+//        default:
+//            return nil
+//        }
+//    }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         

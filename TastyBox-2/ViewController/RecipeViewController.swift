@@ -30,7 +30,6 @@ class RecipeViewController: UIViewController, BindableType {
     var playerItem: AVPlayerItem!
     var player: AVPlayer!
     
-    let publishBtn = UIBarButtonItem()
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -48,14 +47,7 @@ class RecipeViewController: UIViewController, BindableType {
             NotificationCenter.default.addObserver(self, selector: #selector(playerDidFinishPlaying), name: .AVPlayerItemDidPlayToEndTime, object: nil)
             
         }
-        
-        
-        publishBtn.title = "Publish"
-        
-        
-        self.navigationItem.rightBarButtonItem = publishBtn
-
-
+    
     }
  
     
@@ -63,11 +55,11 @@ class RecipeViewController: UIViewController, BindableType {
         
         setUpDataSource()
         
-//        viewModel.completeSections()
-//            .bind(to: tableView.rx.items(dataSource: dataSource))
-//            .disposed(by: viewModel.disposeBag)
+        tableView.tableFooterView = UIView()
         
-        
+        tableView.register(IngredientsHeaderView.self, forHeaderFooterViewReuseIdentifier: "ingredientsHeader")
+        tableView.register(IngredientsHeaderView.self, forHeaderFooterViewReuseIdentifier: "instructionsHeader")
+
         tableView.rx.setDelegate(self).disposed(by: viewModel.disposeBag)
         
         tableView.rx.didScroll
@@ -114,7 +106,6 @@ class RecipeViewController: UIViewController, BindableType {
             })
             .disposed(by: viewModel.disposeBag)
         
-        setUpDataSource()
         
         viewModel.getRecipeDetailInfo(recipe: viewModel.recipe)
             .bind(to: tableView.rx.items(dataSource: dataSource))
@@ -354,11 +345,70 @@ class RecipeViewController: UIViewController, BindableType {
 
 extension RecipeViewController: UITableViewDelegate {
     
+    func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
+       
+        switch section {
+        case 6:
+            
+            let view = tableView.dequeueReusableHeaderFooterView(withIdentifier: "ingredientsHeader") as! IngredientsHeaderView
+            
+            let label = UILabel()
+
+            label.translatesAutoresizingMaskIntoConstraints = false
+
+            label.textColor = #colorLiteral(red: 0.6352941176, green: 0.5176470588, blue: 0.368627451, alpha: 1)
+            label.font = UIFont.boldSystemFont(ofSize: 17.0)
+                    
+            view.addSubview(label)
+            
+            
+            label.leadingAnchor.constraint(equalTo: view.layoutMarginsGuide.leadingAnchor).isActive = true
+            label.topAnchor.constraint(equalTo: view.layoutMarginsGuide.topAnchor).isActive = true
+            label.trailingAnchor.constraint(equalTo: view.layoutMarginsGuide.trailingAnchor).isActive = true
+            label.bottomAnchor.constraint(equalTo: view.layoutMarginsGuide.bottomAnchor).isActive = true
+            
+            label.text = "Ingredients"
+
+            
+            return view
+            
+        case 7:
+            
+            let view = tableView.dequeueReusableHeaderFooterView(withIdentifier: "instructionsHeader") as! IngredientsHeaderView
+
+            let label = UILabel()
+
+            label.translatesAutoresizingMaskIntoConstraints = false
+            
+            label.textColor = #colorLiteral(red: 0.6352941176, green: 0.5176470588, blue: 0.368627451, alpha: 1)
+            label.font = UIFont.boldSystemFont(ofSize: 17.0)
+                    
+            view.addSubview(label)
+            
+            
+            label.leadingAnchor.constraint(equalTo: view.layoutMarginsGuide.leadingAnchor).isActive = true
+            label.topAnchor.constraint(equalTo: view.layoutMarginsGuide.topAnchor).isActive = true
+            label.trailingAnchor.constraint(equalTo: view.layoutMarginsGuide.trailingAnchor).isActive = true
+            label.bottomAnchor.constraint(equalTo: view.layoutMarginsGuide.bottomAnchor).isActive = true
+            
+            label.text = "Instructions"
+            
+
+            return view
+            
+        default:
+            break
+        }
+        
+        return nil
+        
+    }
+    
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         
         switch indexPath.section {
         case 0:
-            return 444
+            return 461
         case 2:
             return 80
             
@@ -374,6 +424,17 @@ extension RecipeViewController: UITableViewDelegate {
         }
     }
     
+    func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
+        
+        switch section {
+        case 6, 7:
+            return 87.0
+        default:
+            break
+        }
+        
+        return CGFloat.zero
+    }
     
     func tableView(_ tableView: UITableView, didEndDisplaying cell: UITableViewCell, forRowAt indexPath: IndexPath) {
         

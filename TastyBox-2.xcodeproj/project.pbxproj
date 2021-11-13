@@ -70,6 +70,8 @@
 		6F4EA99A273ECF5F00A4B9F4 /* RecipeTimeNServingTVCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F4EA999273ECF5F00A4B9F4 /* RecipeTimeNServingTVCell.swift */; };
 		6F4EA99C273ED08D00A4B9F4 /* RecipeIngredientTVCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F4EA99B273ED08D00A4B9F4 /* RecipeIngredientTVCell.swift */; };
 		6F4EA99E273ED11D00A4B9F4 /* RecipeInstructionTVCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F4EA99D273ED11D00A4B9F4 /* RecipeInstructionTVCell.swift */; };
+		6F4EA9A0273EFE4F00A4B9F4 /* RecipeGenreCVCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F4EA99F273EFE4F00A4B9F4 /* RecipeGenreCVCell.swift */; };
+		6F4EA9A2273FADD600A4B9F4 /* IngredientsHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F4EA9A1273FADD500A4B9F4 /* IngredientsHeaderView.swift */; };
 		6F512A2226F3FA5100826657 /* Tutorial.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 6F512A2126F3FA5100826657 /* Tutorial.storyboard */; };
 		6F512A2426F4169800826657 /* LoadingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F512A2326F4169800826657 /* LoadingViewController.swift */; };
 		6F512A2926F417CD00826657 /* TutorialVM.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F512A2826F417CD00826657 /* TutorialVM.swift */; };
@@ -246,6 +248,8 @@
 		6F4EA999273ECF5F00A4B9F4 /* RecipeTimeNServingTVCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecipeTimeNServingTVCell.swift; sourceTree = "<group>"; };
 		6F4EA99B273ED08D00A4B9F4 /* RecipeIngredientTVCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecipeIngredientTVCell.swift; sourceTree = "<group>"; };
 		6F4EA99D273ED11D00A4B9F4 /* RecipeInstructionTVCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecipeInstructionTVCell.swift; sourceTree = "<group>"; };
+		6F4EA99F273EFE4F00A4B9F4 /* RecipeGenreCVCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecipeGenreCVCell.swift; sourceTree = "<group>"; };
+		6F4EA9A1273FADD500A4B9F4 /* IngredientsHeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IngredientsHeaderView.swift; sourceTree = "<group>"; };
 		6F512A2126F3FA5100826657 /* Tutorial.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = Tutorial.storyboard; sourceTree = "<group>"; };
 		6F512A2326F4169800826657 /* LoadingViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoadingViewController.swift; sourceTree = "<group>"; };
 		6F512A2826F417CD00826657 /* TutorialVM.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TutorialVM.swift; sourceTree = "<group>"; };
@@ -495,6 +499,8 @@
 				6F4EA999273ECF5F00A4B9F4 /* RecipeTimeNServingTVCell.swift */,
 				6F4EA99B273ED08D00A4B9F4 /* RecipeIngredientTVCell.swift */,
 				6F4EA99D273ED11D00A4B9F4 /* RecipeInstructionTVCell.swift */,
+				6F4EA99F273EFE4F00A4B9F4 /* RecipeGenreCVCell.swift */,
+				6F4EA9A1273FADD500A4B9F4 /* IngredientsHeaderView.swift */,
 			);
 			path = RecipeDetail;
 			sourceTree = "<group>";
@@ -1214,6 +1220,7 @@
 				6F9E04232700CAE0005DCEF4 /* ShoppinglistTVCell.swift in Sources */,
 				6F114E0D271D71F800B3BE63 /* UIView.swift in Sources */,
 				6F01F3D227296EAA003CA769 /* PublishRecipeVM.swift in Sources */,
+				6F4EA9A0273EFE4F00A4B9F4 /* RecipeGenreCVCell.swift in Sources */,
 				6F4EA99A273ECF5F00A4B9F4 /* RecipeTimeNServingTVCell.swift in Sources */,
 				6F3BF4D0273309F3005C24A5 /* RxPostedRecipeCollectionViewDataSource.swift in Sources */,
 				6FA70A9926E7A1FF00474FE5 /* SetPasswordViewController.swift in Sources */,
@@ -1238,6 +1245,7 @@
 				6F0E696C27208870002BD547 /* SelectGenresVM.swift in Sources */,
 				6FF66BA426D7B0800024495E /* LoginMainDM.swift in Sources */,
 				6F01F3D027296D7F003CA769 /* PublishRecipeOptionsViewController.swift in Sources */,
+				6F4EA9A2273FADD600A4B9F4 /* IngredientsHeaderView.swift in Sources */,
 				6FEA390E26D8C35B002F81A3 /* CustomPickerView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

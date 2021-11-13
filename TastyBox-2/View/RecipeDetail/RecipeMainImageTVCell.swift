@@ -47,7 +47,6 @@ class RecipeMainImageTVCell: UITableViewCell {
     override func awakeFromNib() {
         super.awakeFromNib()
         // Initialization code
-        self.playVideoView.backgroundColor = #colorLiteral(red: 0.9994645715, green: 0.9797875285, blue: 0.7697802186, alpha: 1)
        
         self.playVideoView.playerLayer.frame = self.playVideoView.frame
         self.playVideoView.playerLayer.videoGravity = .resizeAspect

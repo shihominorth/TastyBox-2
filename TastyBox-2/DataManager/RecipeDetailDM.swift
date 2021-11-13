@@ -10,23 +10,76 @@ import Firebase
 import RxSwift
 
 protocol RecipeDetailProtocol: AnyObject {
-    static func getDetailInfo(recipe: Recipe) -> Observable<(User, [Ingredient], [Instruction])>
+    static func getDetailInfo(recipe: Recipe) -> Observable<([Genre], User, [Ingredient], [Instruction])>
 }
 
 class RecipeDetailDM: RecipeDetailProtocol {
     
     static let db = Firestore.firestore()
     
-    static func getDetailInfo(recipe: Recipe) -> Observable<(User, [Ingredient], [Instruction])> {
+    static func getDetailInfo(recipe: Recipe) -> Observable<([Genre], User, [Ingredient], [Instruction])> {
         
-        return Observable.zip(getPublisher(publisherID: recipe.userID), getIngredients(recipeID: recipe.recipeID), getInstructions(recipeID: recipe.recipeID))
-        
-//        { ingredients, instructions, user -> Observable<(User, [Ingredient], [Instruction])> in
-//            
-//            return (user, ingredients, instructions)
-//        }
-//        
+        return Observable.zip(getGenres(genresIDs: recipe.genresIDs), getPublisher(publisherID: recipe.userID), getIngredients(recipeID: recipe.recipeID), getInstructions(recipeID: recipe.recipeID))
+
     }
+    
+    static func getGenres(genresIDs: [String]) -> Observable<[Genre]> {
+        
+        return getGenreDocuments(genresIDs: genresIDs)
+            .flatMapLatest { docs in
+                Genre.generateGenres(documents: docs)
+            }
+    
+    }
+    
+    static func getGenreDocuments(genresIDs: [String]) -> Observable<[DocumentSnapshot]> {
+        
+        return .create { observer in
+            
+            var implementedCount = 0
+            var docs:[DocumentSnapshot?] = []
+            
+            if genresIDs.isEmpty {
+        
+                observer.onNext([])
+                
+            } else {
+                
+                genresIDs.enumerated().forEach { index, id in
+                   
+                    db.collection("genres").document(id).getDocument { doc, err in
+                        
+                        implementedCount += 1
+                        
+                        if let err = err {
+                        
+                            observer.onError(err)
+                        
+                        }
+                        else {
+                            
+                            docs.append(doc)
+                            
+                            if implementedCount == genresIDs.count - 1 {
+                                
+                                let result = docs.compactMap { $0 }
+                                
+                                observer.onNext(result)
+                            }
+
+                        }
+                    }
+               
+                }
+            }
+            
+        
+            
+            return Disposables.create()
+        }
+        
+    }
+    
     
   
     static func getIngredients(recipeID: String) -> Observable<[Ingredient]> {

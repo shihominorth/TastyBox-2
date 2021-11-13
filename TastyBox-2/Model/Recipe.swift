@@ -123,7 +123,7 @@ struct Instruction {
         let text = data["text"] as? String
         else { return nil }
         
-        let imageURL = data["imageURL"] as? String
+        let imageURL = data["imgURL"] as? String
         
         self.id = id
         self.index = index
