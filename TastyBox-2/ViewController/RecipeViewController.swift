@@ -49,7 +49,13 @@ class RecipeViewController: UIViewController, BindableType {
         }
     
     }
- 
+    
+    override func viewDidLayoutSubviews() {
+    
+        super.viewDidLayoutSubviews()
+        self.view.layoutIfNeeded()
+    
+    }
     
     func bindViewModel() {
         
@@ -353,22 +359,28 @@ extension RecipeViewController: UITableViewDelegate {
             let view = tableView.dequeueReusableHeaderFooterView(withIdentifier: "ingredientsHeader") as! IngredientsHeaderView
             
             let label = UILabel()
+            label.text = "Ingredients"
 
             label.translatesAutoresizingMaskIntoConstraints = false
-
+            label.numberOfLines = 0
             label.textColor = #colorLiteral(red: 0.6352941176, green: 0.5176470588, blue: 0.368627451, alpha: 1)
             label.font = UIFont.boldSystemFont(ofSize: 17.0)
+            label.sizeToFit()
+
                     
             view.addSubview(label)
             
             
             label.leadingAnchor.constraint(equalTo: view.layoutMarginsGuide.leadingAnchor).isActive = true
-            label.topAnchor.constraint(equalTo: view.layoutMarginsGuide.topAnchor).isActive = true
             label.trailingAnchor.constraint(equalTo: view.layoutMarginsGuide.trailingAnchor).isActive = true
             label.bottomAnchor.constraint(equalTo: view.layoutMarginsGuide.bottomAnchor).isActive = true
             
-            label.text = "Ingredients"
+           
+            if let subview = view.subviews[0] as? UILabel {
+               
+                label.heightAnchor.constraint(equalToConstant: subview.frame.height).isActive = true
 
+            }
             
             return view
             
@@ -378,21 +390,25 @@ extension RecipeViewController: UITableViewDelegate {
 
             let label = UILabel()
 
+            label.text = "Instructions"
             label.translatesAutoresizingMaskIntoConstraints = false
-            
+            label.numberOfLines = 0
             label.textColor = #colorLiteral(red: 0.6352941176, green: 0.5176470588, blue: 0.368627451, alpha: 1)
             label.font = UIFont.boldSystemFont(ofSize: 17.0)
-                    
+            label.sizeToFit()
+            
             view.addSubview(label)
             
             
             label.leadingAnchor.constraint(equalTo: view.layoutMarginsGuide.leadingAnchor).isActive = true
-            label.topAnchor.constraint(equalTo: view.layoutMarginsGuide.topAnchor).isActive = true
             label.trailingAnchor.constraint(equalTo: view.layoutMarginsGuide.trailingAnchor).isActive = true
             label.bottomAnchor.constraint(equalTo: view.layoutMarginsGuide.bottomAnchor).isActive = true
             
-            label.text = "Instructions"
-            
+            if let subview = view.subviews[0] as? UILabel {
+               
+                label.heightAnchor.constraint(equalToConstant: subview.frame.height).isActive = true
+
+            }
 
             return view
             
