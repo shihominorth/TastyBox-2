@@ -11,11 +11,7 @@ import AVFoundation
 
 class PlayVideoInsideTVCellView: UIView {
 
-    @IBOutlet weak var imgView: UIImageView! {
-        didSet {
-            imgView.backgroundColor = #colorLiteral(red: 0.9994645715, green: 0.9797875285, blue: 0.7697802186, alpha: 1)
-        }
-    }
+    @IBOutlet weak var imgView: UIImageView!
     
     override static var layerClass: AnyClass {
         

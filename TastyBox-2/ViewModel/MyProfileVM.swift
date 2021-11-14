@@ -61,6 +61,7 @@ class MyProfileVM: ViewModelBase {
         let vm = RecipeVM(sceneCoordinator: self.sceneCoordinator, user: self.user, recipe: recipe)
         
         self.sceneCoordinator.modalTransition(to: .recipeScene(scene: .recipe(vm)), type: .push)
+            
         
     }
     

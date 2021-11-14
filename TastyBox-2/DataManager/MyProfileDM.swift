@@ -25,17 +25,27 @@ class MyProfileDM: MyProfileDMProtocol {
             .flatMap { docs in
                 Recipe.generateNewRecipes(queryDocs: docs)
             }
-//            .observe(on: MainScheduler.instance)
-//            .flatMap { docs in
-//                generateNewRecipes(queryDocs: docs, user: user)
-//            }
+
     }
     
     static func getMyPostedRecipesDocuments(user: Firebase.User) -> Observable<[QueryDocumentSnapshot]> {
         
         return .create { observer in
 
-            db.collection("recipes").whereField("publisherID", isEqualTo: user.uid).addSnapshotListener { snapShot, err in
+            // addSnapshotlistener cause pushing recipe detail vc when liked recipe.
+            // should be useful below.
+            
+//            let listener = db.collection("cities").addSnapshotListener { querySnapshot, error in
+//                // ...
+//            }
+//
+//            // ...
+//
+//            // Stop listening to changes
+//            listener.remove()
+            
+            
+            db.collection("recipes").whereField("publisherID", isEqualTo: user.uid).getDocuments { snapShot, err in
                 
                 
                 if let err = err {

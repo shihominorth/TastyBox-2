@@ -21,12 +21,17 @@ class RecipeVM: ViewModelBase {
     let apiType: RecipeDetailProtocol.Type
     let recipe: Recipe
     var sections: [Section]
+    var evaluations:[Evaluate]
+    
     
     
     var isDisplayed = false
     var isEnded = false
     
     let isExpandedSubject = BehaviorRelay<Bool>(value: false)
+    let selectedEvaluationSubject = PublishSubject<Int>()
+    let isLikedRecipeSubject = BehaviorSubject<Bool>(value: false)
+    
     
     init(sceneCoordinator: SceneCoordinator, user: Firebase.User, apiType: RecipeDetailProtocol.Type = RecipeDetailDM.self, recipe: Recipe) {
         
@@ -35,6 +40,9 @@ class RecipeVM: ViewModelBase {
         self.apiType = apiType
         self.recipe = recipe
         self.sections = []
+        
+        evaluations = [Evaluate(title: "\(recipe.likes)\nLikes", imgName: "suit.heart"), Evaluate(title: "Report", imgName: "flag.circle")]
+//        evaluations = [Evaluate(title: "\(recipe.likes)\nlikes", imgName: "suit.heart"), Evaluate(title: "Comments", imgName: "text.bubble"), Evaluate(title: "Save", imgName: "bookmark"), Evaluate(title: "Report", imgName: "flag.circle")]
 
     }
     
@@ -66,7 +74,7 @@ class RecipeVM: ViewModelBase {
             
             
             
-            let evaluatesElement: RecipeDetailSectionItem = .evaluates([])
+            let evaluatesElement: RecipeDetailSectionItem = .evaluates(self.evaluations)
             let evaluatesSection = Section(model: evaluatesElement.rawValue, elements: [evaluatesElement])
             
             resultSections.append(evaluatesSection)
@@ -112,6 +120,55 @@ class RecipeVM: ViewModelBase {
         }
         
        
+    }
+    
+    func isLikedRecipe(resultSetions: [Section]) -> Observable<[Section]> {
+        
+        return self.apiType.isLikedRecipe(user: self.user, recipe: self.recipe)
+            .catch { err in
+                
+                print(err)
+                
+                return Observable.just(false)
+            }
+            .flatMapLatest { isLiked -> Observable<[Section]> in
+               
+                let newSections = Observable<[Section]>.create { [unowned self] observer in
+                    
+                    let imgName = isLiked ? "suit.heart.fill": "suit.heart"
+                    
+                    self.evaluations[0] = Evaluate(title: "\(self.recipe.likes)\nLikes", imgName: imgName)
+                    
+                    let evaluatesElement: RecipeDetailSectionItem = .evaluates(self.evaluations)
+                    let evaluatesSection = Section(model: evaluatesElement.rawValue, elements: [evaluatesElement])
+                    
+                    
+                    var result = resultSetions
+                    result.insert(evaluatesSection, at: 2)
+                    
+                    result.remove(at: 3)
+                    
+                    
+                    observer.onNext(result)
+                    
+                    return Disposables.create()
+                }
+            
+                return newSections
+            }
+    }
+    
+    
+    func evaluateRecipe(isLiked: Bool) -> Observable<Bool> {
+        
+        return self.apiType.likeRecipe(user: self.user, recipe: self.recipe, isLiked: isLiked)
+        
+    }
+    
+    func addNewMyLikedRecipes() -> Observable<Bool> {
+        
+        return self.apiType.addNewMyLikedRecipe(user: self.user, recipe: self.recipe)
+    
     }
     
     

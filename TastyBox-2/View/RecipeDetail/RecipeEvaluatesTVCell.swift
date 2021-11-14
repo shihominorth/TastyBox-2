@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import RxSwift
 
 class RecipeEvaluatesTVCell: UITableViewCell {
 
@@ -13,6 +14,8 @@ class RecipeEvaluatesTVCell: UITableViewCell {
     
     var evaluates: [Evaluate]!
     var likes: Int!
+    
+    var disposeBag = DisposeBag()
     
     override func awakeFromNib() {
         super.awakeFromNib()
@@ -26,6 +29,7 @@ class RecipeEvaluatesTVCell: UITableViewCell {
 
         collectionView.collectionViewLayout = flowLayout
         
+        disposeBag = DisposeBag()
     }
 
     override func setSelected(_ selected: Bool, animated: Bool) {
@@ -43,10 +47,9 @@ extension RecipeEvaluatesTVCell: UICollectionViewDataSource, UICollectionViewDel
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "recipeEvaluationCVCell", for: indexPath) as! CheckEvaluateRecipeCVCell
+        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "recipeEvaluationCVCell", for: indexPath) as! RecipeEvaluateCVCell
         
         cell.imgView.image = UIImage(systemName: evaluates[indexPath.row].imgName)
-        cell.imgView.backgroundColor = #colorLiteral(red: 0.9994645715, green: 0.9797875285, blue: 0.7697802186, alpha: 1)
         cell.imgView.tintColor = #colorLiteral(red: 0.6352941176, green: 0.5176470588, blue: 0.368627451, alpha: 1)
         cell.titleLbl.text = evaluates[indexPath.row].title
         
