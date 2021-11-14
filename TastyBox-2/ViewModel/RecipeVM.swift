@@ -21,7 +21,7 @@ class RecipeVM: ViewModelBase {
     let apiType: RecipeDetailProtocol.Type
     let recipe: Recipe
     var sections: [Section]
-    var evaluations:[Evaluate]
+    var evaluations:[Evaluation]
     
     
     
@@ -41,7 +41,7 @@ class RecipeVM: ViewModelBase {
         self.recipe = recipe
         self.sections = []
         
-        evaluations = [Evaluate(title: "\(recipe.likes)\nLikes", imgName: "suit.heart"), Evaluate(title: "Report", imgName: "flag.circle")]
+        evaluations = [.like, .report]
 //        evaluations = [Evaluate(title: "\(recipe.likes)\nlikes", imgName: "suit.heart"), Evaluate(title: "Comments", imgName: "text.bubble"), Evaluate(title: "Save", imgName: "bookmark"), Evaluate(title: "Report", imgName: "flag.circle")]
 
     }
@@ -122,7 +122,43 @@ class RecipeVM: ViewModelBase {
        
     }
     
-    func isLikedRecipe(resultSetions: [Section]) -> Observable<[Section]> {
+//    func isLikedRecipe(resultSetions: [Section]) -> Observable<[Section]> {
+//
+//        return self.apiType.isLikedRecipe(user: self.user, recipe: self.recipe)
+//            .catch { err in
+//
+//                print(err)
+//
+//                return Observable.just(false)
+//            }
+//            .flatMapLatest { isLiked -> Observable<[Section]> in
+//
+//                let newSections = Observable<[Section]>.create { [unowned self] observer in
+//
+////                    let imgName = isLiked ? "suit.heart.fill": "suit.heart"
+//
+////                    self.evaluations[0] = Evaluate(title: "\(self.recipe.likes)\nLikes", imgName: imgName)
+//
+//                    let evaluatesElement: RecipeDetailSectionItem = .evaluates(self.evaluations)
+//                    let evaluatesSection = Section(model: evaluatesElement.rawValue, elements: [evaluatesElement])
+//
+//
+//                    var result = resultSetions
+//                    result.insert(evaluatesSection, at: 2)
+//
+//                    result.remove(at: 3)
+//
+//
+//                    observer.onNext(result)
+//
+//                    return Disposables.create()
+//                }
+//
+//                return newSections
+//            }
+//    }
+    
+    func isLikedRecipe() -> Observable<Bool> {
         
         return self.apiType.isLikedRecipe(user: self.user, recipe: self.recipe)
             .catch { err in
@@ -131,31 +167,7 @@ class RecipeVM: ViewModelBase {
                 
                 return Observable.just(false)
             }
-            .flatMapLatest { isLiked -> Observable<[Section]> in
-               
-                let newSections = Observable<[Section]>.create { [unowned self] observer in
-                    
-                    let imgName = isLiked ? "suit.heart.fill": "suit.heart"
-                    
-                    self.evaluations[0] = Evaluate(title: "\(self.recipe.likes)\nLikes", imgName: imgName)
-                    
-                    let evaluatesElement: RecipeDetailSectionItem = .evaluates(self.evaluations)
-                    let evaluatesSection = Section(model: evaluatesElement.rawValue, elements: [evaluatesElement])
-                    
-                    
-                    var result = resultSetions
-                    result.insert(evaluatesSection, at: 2)
-                    
-                    result.remove(at: 3)
-                    
-                    
-                    observer.onNext(result)
-                    
-                    return Disposables.create()
-                }
-            
-                return newSections
-            }
+         
     }
     
     

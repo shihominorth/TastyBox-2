@@ -22,7 +22,7 @@ class CheckRecipeVM {
     var mainPhoto: Data
     var url: URL? = nil
     var sections: [RecipeItemSectionModel] = []
-    let evaluations: [Evaluate]
+    let evaluations: [Evaluation]
     let isVIP: Bool
     let instructions: [Instruction]
     var isDisplayed = false
@@ -53,7 +53,7 @@ class CheckRecipeVM {
         self.apiType = apiType
         
         self.isVIP = isVIP
-        self.evaluations = [Evaluate(title: "0\nlikes", imgName: "suit.heart"), Evaluate(title: "Report", imgName: "flag.circle")]
+        evaluations = [.like, .report]
 //        evaluations = [Evaluate(title: "\(recipe.likes)\nlikes", imgName: "suit.heart"), Evaluate(title: "Comments", imgName: "text.bubble"), Evaluate(title: "Save", imgName: "bookmark"), Evaluate(title: "Report", imgName: "flag.circle")]
         self.mainPhoto = mainPhoto
         self.instructions = instructions

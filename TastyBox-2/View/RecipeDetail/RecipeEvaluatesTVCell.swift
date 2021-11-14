@@ -12,9 +12,9 @@ class RecipeEvaluatesTVCell: UITableViewCell {
 
     @IBOutlet weak var collectionView: UICollectionView!
     
-    var evaluates: [Evaluate]!
+    var evaluations: [Evaluation]!
     var likes: Int!
-    
+    var isLikedSubject: BehaviorSubject<Bool>!
     var disposeBag = DisposeBag()
     
     override func awakeFromNib() {
@@ -29,6 +29,10 @@ class RecipeEvaluatesTVCell: UITableViewCell {
 
         collectionView.collectionViewLayout = flowLayout
         
+        evaluations = []
+        likes = 0
+        
+        isLikedSubject = BehaviorSubject<Bool>(value: false)
         disposeBag = DisposeBag()
     }
 
@@ -43,15 +47,50 @@ class RecipeEvaluatesTVCell: UITableViewCell {
 extension RecipeEvaluatesTVCell: UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
    
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return evaluates.count
+        return evaluations.count
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+       
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "recipeEvaluationCVCell", for: indexPath) as! RecipeEvaluateCVCell
+       
+
+        switch evaluations[indexPath.row] {
+        case .like:
+            
+            isLikedSubject
+                .subscribe(onNext: { [unowned self] isLiked in
+                    
+                    if let img = isLiked ? UIImage(systemName: "suit.heart.fill") : UIImage(systemName: self.evaluations[indexPath.row].imgName) {
+                       
+                        cell.imgView.image = img
+
+                    }
+ 
+                    if isLiked || (!isLiked && likes <= 0) {
+                        
+                        cell.titleLbl.text = "\(likes ?? 0)\nLikes"
+                    }
+                    else if !isLiked && likes > 0 {
+                        
+                        cell.titleLbl.text = "\(likes - 1)\nLikes"
+                   
+                    }
+                   
+                  
+                    
+                })
+                .disposed(by: disposeBag)
+     
+           
+            
+        default:
+            
+            cell.imgView.image = UIImage(systemName: evaluations[indexPath.row].imgName)
+            cell.titleLbl.text = evaluations[indexPath.row].rawValue
+        }
         
-        cell.imgView.image = UIImage(systemName: evaluates[indexPath.row].imgName)
-        cell.imgView.tintColor = #colorLiteral(red: 0.6352941176, green: 0.5176470588, blue: 0.368627451, alpha: 1)
-        cell.titleLbl.text = evaluates[indexPath.row].title
+      
         
         return cell
         

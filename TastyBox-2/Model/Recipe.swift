@@ -158,10 +158,28 @@ struct Comment {
     var time: Timestamp
 }
 
-struct Evaluate {
+//struct Evaluate {
+//
+//    var title: String
+//    var imgName: String
+//
+//}
+
+enum Evaluation: String {
     
-    var title: String
-    var imgName: String
+    case like, report = "Report", comment = "Comment"
+    
+    var imgName: String {
+       
+        switch self {
+        case .like:
+            return "suit.heart"
+        case .report:
+            return "flag.circle"
+        case .comment:
+            return "text.bubble"
+        }
+    }
     
 }
 
@@ -170,7 +188,7 @@ enum RecipeDetailSectionItem {
         
     case imageData(String, String?)
     case title(String)
-    case evaluates([Evaluate])
+    case evaluates([Evaluation])
     case timeAndServing(Int, Int)
     case publisher(User)
     case genres([Genre])

@@ -115,9 +115,9 @@ class RecipeViewController: UIViewController, BindableType {
         
         
         viewModel.getRecipeDetailInfo(recipe: viewModel.recipe)
-            .flatMapLatest({ [unowned self] sections in
-                self.viewModel.isLikedRecipe(resultSetions: sections)
-            })
+//            .flatMapLatest({ [unowned self] sections in
+//                self.viewModel.isLikedRecipe(resultSetions: sections)
+//            })
             .bind(to: tableView.rx.items(dataSource: dataSource))
             .disposed(by: viewModel.disposeBag)
 
@@ -209,7 +209,9 @@ class RecipeViewController: UIViewController, BindableType {
         })
         .disposed(by: viewModel.disposeBag)
 
-        
+        viewModel.isLikedRecipe()
+            .bind(to: viewModel.isLikedRecipeSubject)
+            .disposed(by: viewModel.disposeBag)
         
 //        gotIsLiked.bind(to: viewModel.isLikedRecipeSubject).disposed(by: viewModel.disposeBag)
 //        noDocFound.bind(to: viewModel.isLikedRecipeSubject).disposed(by: viewModel.disposeBag)
@@ -294,11 +296,11 @@ class RecipeViewController: UIViewController, BindableType {
                     return cell
                 }
                 
-            case let .evaluates(evaluates):
+            case let .evaluates(evaluations):
                 
                 if let cell = tableView.dequeueReusableCell(withIdentifier: "recipeEvaluatesTVCell", for: indexPath) as? RecipeEvaluatesTVCell {
-                    
-                    cell.evaluates = evaluates
+
+                    cell.evaluations = evaluations
                     cell.selectionStyle = .none
                     
                     cell.collectionView.rx.itemSelected
@@ -307,7 +309,12 @@ class RecipeViewController: UIViewController, BindableType {
                         .map { $0.row }
                         .bind(to: viewModel.selectedEvaluationSubject)
                         .disposed(by: cell.disposeBag)
+                   
+                    viewModel.isLikedRecipeSubject
+                        .bind(to: cell.isLikedSubject)
+                        .disposed(by: cell.disposeBag)
                     
+                    cell.likes = viewModel.recipe.likes
                    
                     
                     return cell

@@ -217,11 +217,11 @@ class CheckCreatedRecipeViewController: UIViewController, BindableType {
                     return cell
                 }
                 
-            case let .evaluates(evaluates):
+            case let .evaluates(evaluations):
                 
                 if let cell = tableView.dequeueReusableCell(withIdentifier: "checkEvaluateRecipeTVCell", for: indexPath) as? CheckEvaluateRecipeTVCell {
                     
-                    cell.evaluates = evaluates
+                    cell.evaluations = evaluations
                     cell.selectionStyle = .none
                     
                     return cell
