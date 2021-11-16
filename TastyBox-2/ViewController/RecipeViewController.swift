@@ -180,7 +180,10 @@ class RecipeViewController: UIViewController, BindableType {
             .do(onNext: { [unowned self] isLiked in
 
                 if isLiked {
+                    
                     self.viewModel.recipe.likes += 1
+                    
+                    tableView.reloadSections(IndexSet(integer: 2), with: .none)
                 }
 
             })
