@@ -447,9 +447,6 @@ extension CreateRecipeViewController: UITableViewDelegate, UITableViewDataSource
                         self.viewModel.instructionsSubject.onNext(self.viewModel.instructions)
                     })
                     .bind(onNext: { [unowned self] text in
-                       
-                     
-                        
 
                         self.tableView.beginUpdates()
                         self.tableView.endUpdates()
@@ -458,23 +455,17 @@ extension CreateRecipeViewController: UITableViewDelegate, UITableViewDataSource
                     })
                     .disposed(by: cell.disposeBag)
                 
-                cell.imgSubject.bind(onNext: { data in
+                cell.imgSubject
+                    .bind(onNext: { data in
                     
-//                    let string = String(decoding: data, as: UTF8.self)
-                    let string = data.base64EncodedString()
-                    
-//                    let url = URL(string: string)
-//
-//                    let urlString = url?.absoluteString
-                    self.viewModel.instructions[indexPath.row].imageURL = string
+                        let string = data.base64EncodedString()
 
+                        self.viewModel.instructions[indexPath.row].imageURL = string
                     
                     
-                })
+                    })
                     .disposed(by: cell.disposeBag)
-                
-//                cell.imgSubject.onNext(data)
-               
+                               
                 viewModel.keyboardOpen
                     .subscribe(onNext: { [weak self] notification in
                         if let keyboardSize = (notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue)?.cgRectValue, let strongSelf =  self {

@@ -106,6 +106,8 @@ class PublishRecipeVM: ViewModelBase {
             }
         
         let uploadInstructionsImages = self.apiType.startUpload(instructions: instructions, user: self.user, recipeID: self.recipeData["id"] as! String)
+        
+        
        
         return Observable.zip(uploadRecipeFieldValues, uploadGenres, uploadImages, uploadInstructionsImages) { [unowned self] _, _, _, index in
             

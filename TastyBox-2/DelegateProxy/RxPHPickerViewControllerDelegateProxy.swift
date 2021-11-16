@@ -31,21 +31,19 @@ class RxPHPickerViewControllerDelegateProxy: DelegateProxy<PHPickerViewControlle
         guard let provider = results.first?.itemProvider else { return }
         
         if provider.hasItemConformingToTypeIdentifier(UTType.image.identifier) {
-            
-            provider.loadObject(ofClass: UIImage.self) { [unowned self] image, err in
-                
+
+            provider.loadDataRepresentation(forTypeIdentifier: "public.image") { data, err in
+               
                 if let err = err {
-                    
-                    print(err)
-                    
+
+                    self.imageSubject.onError(err)
+
                 }
-                else if let image = image as? UIImage, let data = image.convertToData() {
-                    
-                    
+                else if let data = data {
+
                     self.imageSubject.onNext(data)
-                    
+
                 }
-                
             }
             
         }

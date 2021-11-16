@@ -105,7 +105,7 @@ class CreateRecipeVM: ViewModelBase {
             .share(replay: 1, scope: .forever)
         
         self.instructionValidation = self.instructionsSubject.map { $0[0] }
-        .debug()
+//        .debug()
         .map { !$0.text.isEmpty }
         .share(replay: 1, scope: .forever)
         
@@ -375,7 +375,7 @@ class CreateRecipeVM: ViewModelBase {
                 
             })
         
-                }
+    }
     
     func toImagePicker() {
         
@@ -390,6 +390,8 @@ class CreateRecipeVM: ViewModelBase {
                 
                 print(err)
                 
+                
+                
                 return .empty()
             }
             .do(onNext: { [unowned self] in
@@ -397,7 +399,8 @@ class CreateRecipeVM: ViewModelBase {
                 self.mainImgDataSubject.onNext($0)
                 
             })
-                }
+                
+    }
     
     func toVideoPicker() {
         
