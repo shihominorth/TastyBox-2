@@ -41,7 +41,7 @@ class Recipe {
               let isVIP = data["isVIP"] as? Bool,
               let publisherID = data["publisherID"] as? String,
               let genresData = data["genres"] as? [String: Bool],
-              let imgURL = data["imgURL"] as? String
+              let imgURL = data["imgString"] as? String
         else { return nil }
         
         
