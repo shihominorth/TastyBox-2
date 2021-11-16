@@ -12,7 +12,8 @@ import RxSwift
 protocol RecipeDetailProtocol: AnyObject {
     static func getDetailInfo(recipe: Recipe) -> Observable<([Genre], User, [Ingredient], [Instruction])>
     static func likeRecipe(user: Firebase.User, recipe: Recipe, isLiked: Bool) -> Observable<Bool>
-    static func addNewMyLikedRecipe(user: Firebase.User, recipe: Recipe) -> Observable<Bool> 
+    static func addNewMyLikedRecipe(user: Firebase.User, recipe: Recipe) -> Observable<Bool>
+    static func getLikedNum(recipe: Recipe) -> Observable<Int> 
     static func isLikedRecipe(user: Firebase.User, recipe: Recipe) -> Observable<Bool> 
 }
 
@@ -191,6 +192,37 @@ class RecipeDetailDM: RecipeDetailProtocol {
                     }
                     
                 }
+            }
+            
+            return Disposables.create()
+        }
+    }
+    
+    static func getLikedNum(recipe: Recipe) -> Observable<Int> {
+        
+        return .create { observer in
+            
+            db.collection("recipes").document(recipe.recipeID).getDocument { doc, err in
+                
+                if let err = err {
+                    
+                    observer.onError(err)
+                    
+                }
+                else {
+                    
+                    if let data = doc?.data(), let likes = data["likes"] as? Int {
+                    
+                        observer.onNext(likes)
+                    
+                    }
+                    else {
+                        
+                        observer.onNext(0)
+                    
+                    }
+                }
+                
             }
             
             return Disposables.create()

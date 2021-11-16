@@ -167,6 +167,16 @@ class RecipeVM: ViewModelBase {
          
     }
     
+    func getLikedNum() -> Observable<Int> {
+        return self.apiType.getLikedNum(recipe: recipe)
+            .catch { err in
+                
+                print(err)
+                
+                return Observable.just(0)
+            }
+    }
+    
     
     func evaluateRecipe(isLiked: Bool) -> Observable<Bool> {
         

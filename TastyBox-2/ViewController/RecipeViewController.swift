@@ -166,6 +166,19 @@ class RecipeViewController: UIViewController, BindableType {
     
         let gotIsLiked: Observable<Bool> = tappedLike
             .compactMap { $0.element }
+            .do(onNext: { [unowned self] isLiked in
+                
+                if isLiked {
+                    self.viewModel.recipe.likes += 1
+                }
+                else {
+                    self.viewModel.recipe.likes -= 1
+                }
+                
+                self.tableView.reloadRows(at: [IndexPath(row: 0, section: 2)], with: .none)
+
+               
+            })
 
         let errFound = tappedLike
             .compactMap { $0.error }
@@ -203,11 +216,21 @@ class RecipeViewController: UIViewController, BindableType {
 
             print(isLiked)
 
+
         })
         .disposed(by: viewModel.disposeBag)
 
         viewModel.isLikedRecipe()
             .bind(to: viewModel.isLikedRecipeSubject)
+            .disposed(by: viewModel.disposeBag)
+        
+        viewModel.getLikedNum()
+            .subscribe(onNext: { [unowned self] likes in
+                
+                self.viewModel.recipe.likes = likes
+//                tableView.reloadSections(IndexSet(integer: 2), with: .none)
+                
+            })
             .disposed(by: viewModel.disposeBag)
         
     }
