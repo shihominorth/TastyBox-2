@@ -155,56 +155,50 @@ class RecipeViewController: UIViewController, BindableType {
         
         
         let tappedLike = viewModel.selectedEvaluationSubject
-//            .share(replay: 1, scope: .forever)
             .debounce(.milliseconds(1000), scheduler: MainScheduler.instance)
             .debug("observe like emitted")
             .withLatestFrom(viewModel.isLikedRecipeSubject)
             .flatMapLatest { [unowned self] in
                 self.viewModel.evaluateRecipe(isLiked: $0)
+                    .materialize() // 中じゃないとisDisposedされる
             }
-            .materialize()
             .share(replay: 1, scope: .forever)
-          
-        
+    
         let gotIsLiked: Observable<Bool> = tappedLike
             .compactMap { $0.element }
-           
-        
+
         let errFound = tappedLike
             .compactMap { $0.error }
             .map { $0 as NSError }
-        
-          
+
+
         let noDocFound: Observable<Bool> = errFound
             .filter { $0.code == 5 }
             .flatMapLatest { _ in
                 self.viewModel.addNewMyLikedRecipes()
             }
+            .do(onNext: { [unowned self] isLiked in
+
+                if isLiked {
+                    self.viewModel.recipe.likes += 1
+                }
+
+            })
         
         let otherErrFound: Observable<Bool> = errFound
             .filter { $0.code != 5 }
             .map { err in
                 print(err)
-                
+
                 return false
             }
         
-//        let likeSubject = PublishSubject<Bool>()
-//
-//        gotIsLiked.bind(to: likeSubject).disposed(by: viewModel.disposeBag)
-//        noDocFound.bind(to: likeSubject).disposed(by: viewModel.disposeBag)
-//        otherErrFound.bind(to: likeSubject).disposed(by: viewModel.disposeBag)
-
-//        let likeSubject = PublishSubject<Bool>()
-        
         let likedMergedObservables = Observable.merge(gotIsLiked, noDocFound, otherErrFound)
-        
+
         likedMergedObservables
             .subscribe(onNext: { isLiked in
-            
+
             print(isLiked)
-
-
 
         })
         .disposed(by: viewModel.disposeBag)
@@ -213,21 +207,6 @@ class RecipeViewController: UIViewController, BindableType {
             .bind(to: viewModel.isLikedRecipeSubject)
             .disposed(by: viewModel.disposeBag)
         
-//        gotIsLiked.bind(to: viewModel.isLikedRecipeSubject).disposed(by: viewModel.disposeBag)
-//        noDocFound.bind(to: viewModel.isLikedRecipeSubject).disposed(by: viewModel.disposeBag)
-//        otherErrFound.bind(to: viewModel.isLikedRecipeSubject).disposed(by: viewModel.disposeBag)
-        
-//        viewModel.isLikedRecipeSubject
-//            .debug("should be one")
-//            .subscribe(onNext: { isLiked in
-//
-//                print(isLiked)
-//
-//
-//
-//            })
-//            .disposed(by: viewModel.disposeBag)
-    
     }
     
     

@@ -23,8 +23,6 @@ class RecipeVM: ViewModelBase {
     var sections: [Section]
     var evaluations:[Evaluation]
     
-    
-    
     var isDisplayed = false
     var isEnded = false
     
@@ -42,7 +40,6 @@ class RecipeVM: ViewModelBase {
         self.sections = []
         
         evaluations = [.like, .report]
-//        evaluations = [Evaluate(title: "\(recipe.likes)\nlikes", imgName: "suit.heart"), Evaluate(title: "Comments", imgName: "text.bubble"), Evaluate(title: "Save", imgName: "bookmark"), Evaluate(title: "Report", imgName: "flag.circle")]
 
     }
     

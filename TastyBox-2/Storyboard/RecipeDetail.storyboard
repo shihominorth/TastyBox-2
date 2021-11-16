@@ -121,17 +121,17 @@
                                                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                                 <subviews>
                                                                     <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="8" translatesAutoresizingMaskIntoConstraints="NO" id="tEC-Mg-A34">
-                                                                        <rect key="frame" x="15" y="5" width="50" height="70"/>
+                                                                        <rect key="frame" x="20" y="10" width="40" height="60"/>
                                                                         <subviews>
                                                                             <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="Mgq-wA-JOn">
-                                                                                <rect key="frame" x="0.0" y="0.0" width="50" height="50"/>
+                                                                                <rect key="frame" x="0.0" y="0.0" width="40" height="40"/>
                                                                                 <constraints>
                                                                                     <constraint firstAttribute="width" constant="40" id="DU1-Se-Eiq"/>
-                                                                                    <constraint firstAttribute="width" secondItem="Mgq-wA-JOn" secondAttribute="height" multiplier="1:1" id="hsr-1g-hZn"/>
+                                                                                    <constraint firstAttribute="width" secondItem="Mgq-wA-JOn" secondAttribute="height" multiplier="1:1" id="Tcc-tk-NxF"/>
                                                                                 </constraints>
                                                                             </imageView>
                                                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="iwG-QE-jYh">
-                                                                                <rect key="frame" x="0.0" y="58" width="50" height="12"/>
+                                                                                <rect key="frame" x="0.0" y="48" width="40" height="12"/>
                                                                                 <fontDescription key="fontDescription" type="system" pointSize="10"/>
                                                                                 <color key="textColor" red="0.63529411759999999" green="0.51764705879999995" blue="0.36862745099999999" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                                                 <nil key="highlightedColor"/>
@@ -141,9 +141,8 @@
                                                                 </subviews>
                                                                 <constraints>
                                                                     <constraint firstItem="tEC-Mg-A34" firstAttribute="centerX" secondItem="jrQ-I6-wpD" secondAttribute="centerX" id="KOD-yT-RII"/>
-                                                                    <constraint firstItem="tEC-Mg-A34" firstAttribute="top" secondItem="jrQ-I6-wpD" secondAttribute="top" constant="5" id="P2Q-MD-eiM"/>
-                                                                    <constraint firstAttribute="bottom" secondItem="tEC-Mg-A34" secondAttribute="bottom" constant="5" id="mrJ-wv-F92"/>
-                                                                    <constraint firstItem="tEC-Mg-A34" firstAttribute="leading" secondItem="jrQ-I6-wpD" secondAttribute="leading" constant="15" id="qdU-ik-m3T"/>
+                                                                    <constraint firstItem="tEC-Mg-A34" firstAttribute="top" secondItem="jrQ-I6-wpD" secondAttribute="top" constant="10" id="b4v-s2-YaE"/>
+                                                                    <constraint firstAttribute="bottom" secondItem="tEC-Mg-A34" secondAttribute="bottom" constant="10" id="evO-c7-jFe"/>
                                                                     <constraint firstItem="tEC-Mg-A34" firstAttribute="centerY" secondItem="jrQ-I6-wpD" secondAttribute="centerY" id="wRg-Hv-rpc"/>
                                                                 </constraints>
                                                             </collectionViewCellContentView>

@@ -330,6 +330,7 @@ class RecipeDetailDM: RecipeDetailProtocol {
         
     }
     
+    
     // dont listen the liked number of recipe. no need to update at real time. if we listen it, we have to update the number every time other user liked or unliked.
 //    static func listenRecipeIfILiked(user: Firebase.User, recipe: Recipe)  -> Observable<Bool> {
 //        

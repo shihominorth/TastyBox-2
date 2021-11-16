@@ -106,9 +106,6 @@
                                                     <state key="normal" title="  Edit Profile  ">
                                                         <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                     </state>
-                                                    <connections>
-                                                        <action selector="editProfile:" destination="56J-0o-QHv" eventType="touchUpInside" id="p3W-qn-T74"/>
-                                                    </connections>
                                                 </button>
                                             </subviews>
                                             <constraints>
@@ -142,9 +139,6 @@
                                                         <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="wordWrap" translatesAutoresizingMaskIntoConstraints="NO" id="7Q6-sC-osW">
                                                             <rect key="frame" x="0.0" y="0.0" width="46" height="30.5"/>
                                                             <state key="normal" title="Button"/>
-                                                            <connections>
-                                                                <action selector="postedButtonAction:" destination="56J-0o-QHv" eventType="touchUpInside" id="TlG-Yl-Lcm"/>
-                                                            </connections>
                                                         </button>
                                                         <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="wordWrap" translatesAutoresizingMaskIntoConstraints="NO" id="pAK-yf-tOf">
                                                             <rect key="frame" x="76" y="0.0" width="46" height="30.5"/>
@@ -254,11 +248,7 @@
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="oAx-Iv-etQ" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
-                <tapGestureRecognizer id="zxK-O9-dkk">
-                    <connections>
-                        <action selector="changeAccountImage:" destination="56J-0o-QHv" id="bOq-Xn-56Z"/>
-                    </connections>
-                </tapGestureRecognizer>
+                <tapGestureRecognizer id="zxK-O9-dkk"/>
             </objects>
             <point key="canvasLocation" x="-1141" y="52"/>
         </scene>
