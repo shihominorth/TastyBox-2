@@ -48,6 +48,8 @@ pod 'RSKImageCropper'
 
 # Alert 
 pod 'SCLAlertView'
+pod 'SwiftMessages'
+
 
 #Lottie
 pod 'lottie-ios'

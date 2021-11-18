@@ -13,6 +13,7 @@ import RxSwift
 import RxCocoa
 //import RxDataSources
 import RxTimelane
+import SwiftMessages
 import Lottie
 
 class RecipeViewController: UIViewController, BindableType {
@@ -155,6 +156,7 @@ class RecipeViewController: UIViewController, BindableType {
         
         
         let tappedLike = viewModel.selectedEvaluationSubject
+            .filter { $0 == 0 }
             .debounce(.milliseconds(1000), scheduler: MainScheduler.instance)
             .debug("observe like emitted")
             .withLatestFrom(viewModel.isLikedRecipeSubject)
@@ -224,6 +226,18 @@ class RecipeViewController: UIViewController, BindableType {
             .bind(to: viewModel.isLikedRecipeSubject)
             .disposed(by: viewModel.disposeBag)
         
+        viewModel.selectedEvaluationSubject
+            .filter{ $0 == 1 }
+            .flatMapLatest { _ in
+                self.showReportAlertView()
+            }
+            .subscribe(onNext: { row in
+                
+                
+                
+            })
+            .disposed(by: viewModel.disposeBag)
+        
         viewModel.getLikedNum()
             .subscribe(onNext: { [unowned self] likes in
                 
@@ -250,41 +264,41 @@ class RecipeViewController: UIViewController, BindableType {
                 if let cell = tableView.dequeueReusableCell(withIdentifier: "recipeMainTVCell", for: indexPath) as? RecipeMainImageTVCell {
                     
                     cell.imgString = data
-                    cell.videoString = url
+//                    cell.videoString = url
                     
-                    if viewModel.isDisplayed == false && viewModel.recipe.videoURL != nil {
-                        
-                        cell.playVideoView.playerLayer.player = self.player
-                        cell.playVideoView.imgView.alpha = 1.0
-                        
-                        cell.setSlider()
-                        
-                        UIView.animate(withDuration: 0.2, delay: 2.0, options: [], animations: {
-                            
-                            cell.playVideoView.imgView.alpha = 0.0
-                            
-                        }) { isCompleted in
-                            
-                            if isCompleted {
-                                cell.playVideoView.imgView.isHidden = true
-                                cell.playVideoView.playerLayer.player?.play()
-                                viewModel.isDisplayed = true
-                            }
-                            
-                        }
-                        
-                    }
-                    
-                    if viewModel.recipe.videoURL == nil {
-                       
+//                    if viewModel.isDisplayed == false && viewModel.recipe.videoURL != nil {
+//
+//                        cell.playVideoView.playerLayer.player = self.player
+//                        cell.playVideoView.imgView.alpha = 1.0
+//
+//                        cell.setSlider()
+//
+//                        UIView.animate(withDuration: 0.2, delay: 2.0, options: [], animations: {
+//
+//                            cell.playVideoView.imgView.alpha = 0.0
+//
+//                        }) { isCompleted in
+//
+//                            if isCompleted {
+//                                cell.playVideoView.imgView.isHidden = true
+//                                cell.playVideoView.playerLayer.player?.play()
+//                                viewModel.isDisplayed = true
+//                            }
+//
+//                        }
+//
+//                    }
+//
+//                    if viewModel.recipe.videoURL == nil {
+//
                         cell.slider.isHidden = true
-                    
-                    }
-                    else {
-                     
-                        cell.slider.isHidden = false
-                   
-                    }
+//
+//                    }
+//                    else {
+//
+//                        cell.slider.isHidden = false
+//
+//                    }
                     
                     cell.selectionStyle = .none
                     
@@ -443,6 +457,34 @@ class RecipeViewController: UIViewController, BindableType {
                 
             }
             
+        }
+    }
+    
+    func showReportAlertView() -> Observable<String> {
+        
+        return .create { observer in
+
+//            let view = ReportAlertView(frame: CGRect(x: 0, y: 0, width: self.view.frame.width * 0.8, height: self.view.frame.height * 0.8))
+            
+            
+             let view: ReportView = UINib(nibName: "ReportView", bundle: nil)
+                .instantiate(withOwner: nil, options: nil)
+                .first as! ReportView
+               
+                var config = SwiftMessages.Config()
+                
+                config.presentationStyle = .center
+                config.presentationContext = .window(windowLevel: .normal)
+                config.duration = .forever
+                config.dimMode = .gray(interactive: true)
+                config.interactiveHide = true
+
+                SwiftMessages.show(config: config, view: view)
+                
+//            }
+            
+            
+            return Disposables.create()
         }
     }
 }

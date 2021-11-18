@@ -6,10 +6,11 @@
 //
 
 import Foundation
+import DifferenceKit
 import Firebase
 import RxSwift
 import RxRelay
-import DifferenceKit
+import SCLAlertView
 import RxDataSources
 
 class RecipeVM: ViewModelBase {
@@ -29,6 +30,8 @@ class RecipeVM: ViewModelBase {
     let isExpandedSubject = BehaviorRelay<Bool>(value: false)
     let selectedEvaluationSubject = PublishSubject<Int>()
     let isLikedRecipeSubject = BehaviorSubject<Bool>(value: false)
+   
+    
     
     
     init(sceneCoordinator: SceneCoordinator, user: Firebase.User, apiType: RecipeDetailProtocol.Type = RecipeDetailDM.self, recipe: Recipe) {
@@ -189,6 +192,12 @@ class RecipeVM: ViewModelBase {
         return self.apiType.addNewMyLikedRecipe(user: self.user, recipe: self.recipe)
     
     }
+    
+//    func selectedReason() -> <#return type#> {
+//    
+//        return
+//        
+//    }
     
     
 //    func completeSections() -> Observable<[RecipeItemSectionModel]> {
