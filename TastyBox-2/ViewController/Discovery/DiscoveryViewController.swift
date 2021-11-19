@@ -28,7 +28,7 @@ class DiscoveryViewController: UIViewController, BindableType {
     @IBOutlet weak var menuNavBtn: UIBarButtonItem!
     @IBOutlet weak var addRecipeNavBtn: UIBarButtonItem!
     
-    @IBOutlet weak var PopularContainerView: UIView!
+    @IBOutlet weak var containerView: UIView!
     @IBOutlet weak var sideMenuContainerView: UIView!
     
     @IBOutlet weak var collectionLayout: UICollectionViewFlowLayout! {
@@ -36,6 +36,7 @@ class DiscoveryViewController: UIViewController, BindableType {
             collectionLayout.estimatedItemSize = UICollectionViewFlowLayout.automaticSize
         }
     }
+    
     
     //    var pageControllView = MainPageViewController()
     var cellUserTappedbefore: UICollectionViewCell?
@@ -46,7 +47,7 @@ class DiscoveryViewController: UIViewController, BindableType {
     //
     //    let FollowingVC = UIStoryboard(name: "followingRecipe", bundle: nil).instantiateViewController(identifier: "followingRecipe") as! FollowingRecipeViewController
     //    let ingredientVC = UIStoryboard(name: "ingredientRecipe", bundle: nil).instantiateViewController(identifier: "ingredientRecipe") as! IngredientsViewController
-    //    let poppularVC = UIStoryboard(name: "popularPage", bundle: nil).instantiateViewController(identifier: "popularPage") as! PopularRecipeViewController
+//    let poppularVC = UIStoryboard(name: "popularPage", bundle: nil).instantiateViewController(identifier: "popularPage") as! PopularRecipeViewController
     //    let editorChoiceVC = UIStoryboard(name: "EditorChoice", bundle: nil).instantiateViewController(identifier: "EditorChoice") as EditorChoiceViewController
     //    let monthlyVC = UIStoryboard(name: "Monthly", bundle: nil).instantiateViewController(identifier: "Monthly") as! CuisineViewController
     //    let VIPVC = UIStoryboard(name: "VIP_page", bundle: nil).instantiateViewController(identifier: "VIP_page") as! VIPViewController
@@ -105,7 +106,8 @@ class DiscoveryViewController: UIViewController, BindableType {
         self.navigationController?.hidesBarsOnTap = false
         
         self.navigationItem.backButtonTitle = ""
-        
+                
+        viewModel.setDefaultViewControllers()
     }
     
     override func viewWillDisappear(_ animated: Bool) {
@@ -172,7 +174,7 @@ class DiscoveryViewController: UIViewController, BindableType {
     
     func initialContentView(){
         
-        self.PopularContainerView.isHidden = false
+        self.containerView.isHidden = false
         
     }
     func CreateMenuLabel() {
@@ -284,6 +286,11 @@ class DiscoveryViewController: UIViewController, BindableType {
         else if identifier == "toSideMenu" {
             
             viewModel.presenter.sideMenuVC = segue.destination as? SideMenuTableViewController
+        }
+        else if identifier == "showPageVC" {
+           
+            viewModel.presenter.pageVC = segue.destination as? UIPageViewController
+
         }
         
     }
@@ -457,10 +464,10 @@ class MenuCollectionViewCell: UICollectionViewCell{
 //    func pageViewController(_ pageViewController: UIPageViewController, didFinishAnimating finished: Bool, previousViewControllers: [UIViewController], transitionCompleted completed: Bool) {
 //
 //        var index: Int = selectedIndex
-//
+
 //        if pageViewController.viewControllers?.first! is FollowingRecipeViewController {
 //            index = 0
-//        }
+////        }
 //        else if pageViewController.viewControllers?.first! is IngredientsViewController {
 //            index = 1
 //        }

@@ -7,6 +7,7 @@
 
 import UIKit
 import AVFoundation
+import Firebase
 import Photos
 import PhotosUI
 import RxSwift
@@ -17,11 +18,12 @@ class SceneCoordinator: NSObject, SceneCoordinatorType {
     
     private var window: UIWindow
     private var currentViewController: UIViewController
-    private var semiModalPresenter = SemiModalPresenter()
+    private var semiModalPresenter: SemiModalPresenter
     
     required init(window: UIWindow) {
         self.window = window
         currentViewController = window.rootViewController!
+        semiModalPresenter = SemiModalPresenter()
     }
     
     static func actualViewController(for viewController: UIViewController) -> UIViewController {
@@ -33,12 +35,12 @@ class SceneCoordinator: NSObject, SceneCoordinatorType {
     }
     
     
-    
     @discardableResult
     func modalTransition(to scene: Scene, type: SceneTransitionType) -> Completable {
         
         let subject = PublishSubject<Void>()
         let viewController = scene.viewController()
+        
         
         switch type {
             

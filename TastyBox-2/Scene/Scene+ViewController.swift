@@ -15,6 +15,7 @@ extension Scene {
 
         switch self {
             
+            
         case let .createReceipeScene(scene):
             
             return createViewController(scene: scene)
@@ -60,6 +61,23 @@ extension Scene {
 //        return result
 //        
 //    }
+}
+
+extension MainScene {
+    
+    func viewController() -> UIViewController {
+        
+        let storyboard = UIStoryboard(name: "Main", bundle: nil)
+
+        switch self {
+        case .ranking(let viewModel):
+            var vc = storyboard.instantiateViewController(withIdentifier: "rankingVC") as! RankingViewController
+            
+            vc.bindViewModel(to: viewModel)
+            
+            return vc
+        }
+    }
 }
 
 extension LoadingScene {
@@ -152,7 +170,7 @@ extension LoginScene {
 }
 
 
-extension MainScene {
+extension DiscoveryScene {
     
     func viewController() -> UIViewController {
         let storyboard = UIStoryboard(name: "Main", bundle: nil)

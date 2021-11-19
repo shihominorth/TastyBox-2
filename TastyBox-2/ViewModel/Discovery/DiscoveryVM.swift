@@ -14,7 +14,7 @@ import RxCocoa
 
 class DiscoveryVM: ViewModelBase {
     
-    let presenter = DiscoveryPresenter()
+    let presenter: DiscoveryPresenter
     let sceneCoodinator: SceneCoordinator
     let user: Firebase.User
     
@@ -25,14 +25,19 @@ class DiscoveryVM: ViewModelBase {
         
         self.sceneCoodinator = sceneCoodinator
         self.user = user
-            
+        self.presenter = DiscoveryPresenter(user: user)
     }
     
+    func setDefaultViewControllers() {
+        
+    
+        presenter.setDefaultViewController()
+        
+    }
     
     func sideMenuTapped() {
         
-        presenter.sideMenuVC?.tableView.rx.itemSelected
-            .debug("item selected")
+        self.presenter.sideMenuVC?.tableView.rx.itemSelected
             .subscribe(onNext: { [unowned self] indexPath in
                 
                 presenter.sideMenuVC?.tableView.deselectRow(at: indexPath, animated: true)
@@ -84,7 +89,7 @@ class DiscoveryVM: ViewModelBase {
 //
 //        self.sceneCoodinator.transition(to: vc, type: .push)
         
-        self.sceneCoodinator.modalTransition(to: .createReceipeScene(scene: .createRecipe(vm)), type: .modal(presentationStyle: .none, modalTransisionStyle: .coverVertical, hasNavigationController: true))
+        self.sceneCoodinator.modalTransition(to: .createReceipeScene(scene: .createRecipe(vm)), type: .modal(presentationStyle: UIModalPresentationStyle.none, modalTransisionStyle: .coverVertical, hasNavigationController: true))
     }
     
     func toMyProfile() {

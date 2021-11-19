@@ -187,7 +187,7 @@ class RecipeDetailDM: RecipeDetailProtocol {
                 }
                 else {
                     
-                    if let doc = doc, let user = User(document: doc) {
+                    if let doc = doc as? QueryDocumentSnapshot, let user = User(document: doc) {
                         observer.onNext(user)
                     }
                     
@@ -312,7 +312,6 @@ class RecipeDetailDM: RecipeDetailProtocol {
             
             db.collection("users").document(user.uid).collection("likedRecipes").document(recipe.recipeID).updateData([
 
-//                "id": recipe.recipeID,
                 "isLiked": isLiked,
                 "lastLikedDate": Date()
                 

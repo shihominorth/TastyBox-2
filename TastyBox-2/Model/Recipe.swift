@@ -69,6 +69,20 @@ class Recipe {
         
     }
     
+//    static func generateNewRecipes(queryDocs: [QueryDocumentSnapshot]) -> Observable<[Recipe]> {
+//
+//        return .create { observer in
+//
+//            let recipes = queryDocs.compactMap({ doc in
+//                return Recipe(queryDoc: doc)
+//            })
+//
+//            observer.onNext(recipes)
+//
+//            return Disposables.create()
+//        }
+//    }
+    
     static func generateNewRecipes(queryDocs: [QueryDocumentSnapshot]) -> Observable<[Recipe]> {
         
         return .create { observer in
