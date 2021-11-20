@@ -76,6 +76,14 @@ extension MainScene {
             vc.bindViewModel(to: viewModel)
             
             return vc
+            
+        case .ingredients(let viewModel):
+           
+            var vc = storyboard.instantiateViewController(withIdentifier: "ingredientsVC") as! IngredientsViewController
+            
+            vc.bindViewModel(to: viewModel)
+            
+            return vc
         }
     }
 }

@@ -16,7 +16,7 @@ class RankingViewController: UIViewController, BindableType {
 
     @IBOutlet weak var collectionView: UICollectionView!
     
-    var dataSource: RxRecipeRankingDataSource!
+    var dataSource: RxRecipeRankingCollectionViewDataSource!
     
     
     override func viewDidLoad() {
@@ -75,7 +75,7 @@ class RankingViewController: UIViewController, BindableType {
   
     func setUpDataSource() {
         
-        dataSource = RxRecipeRankingDataSource(configure: { [unowned self] row, recipe, cell in
+        dataSource = RxRecipeRankingCollectionViewDataSource(configure: { [unowned self] row, recipe, cell in
             
             let placeHolder = SkeltonView()
             

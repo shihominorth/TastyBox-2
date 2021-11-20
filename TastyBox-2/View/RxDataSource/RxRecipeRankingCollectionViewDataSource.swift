@@ -11,7 +11,7 @@ import Kingfisher
 import RxSwift
 import RxCocoa
 
-class RxRecipeRankingDataSource: NSObject, RxCollectionViewDataSourceType, UICollectionViewDataSource  {
+class RxRecipeRankingCollectionViewDataSource: NSObject, RxCollectionViewDataSourceType, UICollectionViewDataSource  {
    
     typealias Element = [Recipe]
     

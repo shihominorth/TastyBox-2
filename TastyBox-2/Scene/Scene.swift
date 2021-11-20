@@ -37,7 +37,7 @@ enum DiscoveryScene {
 }
 
 enum MainScene {
-    case ranking(RankingVM)
+    case ingredients(IngredientsVM), ranking(RankingVM)
 }
 
 enum IngredientScene {

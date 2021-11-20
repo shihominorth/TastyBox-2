@@ -146,6 +146,15 @@ class DiscoveryViewController: UIViewController, BindableType {
             })
             .disposed(by: viewModel.disposeBag)
         
+        
+        self.MenuCollectionView.rx.itemSelected
+            .map {  $0.row }
+            .subscribe(onNext: { [unowned self] row in
+                
+                self.viewModel.selectPageTitle(row: row)
+                
+            })
+            .disposed(by: viewModel.disposeBag)
     }
     
     

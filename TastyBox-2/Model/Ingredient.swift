@@ -64,6 +64,19 @@ class Ingredient  {
     }
 }
 
+extension Ingredient: Differentiable {
+    
+    
+     var differenceIdentifier: String {
+         return self.id
+     }
+     
+     func isContentEqual(to source: ShoppingItem) -> Bool {
+         return name == source.name
+     }
+
+    
+}
 
 extension Ingredient: Hashable {
     static func == (lhs: Ingredient, rhs: Ingredient) -> Bool {
@@ -144,31 +157,6 @@ class RefrigeratorItem: Ingredient {
     }
 }
 
-extension RefrigeratorItem: Differentiable {
-   
-    var differenceIdentifier: String {
-        return self.id
-    }
-    
-    func isContentEqual(to source: RefrigeratorItem) -> Bool {
-        return name == source.name
-    }
-    
-  
-}
-
-extension ShoppingItem: Differentiable {
-   
-    var differenceIdentifier: String {
-        return self.id
-    }
-    
-    func isContentEqual(to source: ShoppingItem) -> Bool {
-        return name == source.name
-    }
-    
-  
-}
 
 struct DeletingIngredient {
     var index: Int

@@ -13,6 +13,7 @@ protocol MainDMProtocol {
     static func getPastTimelines(user: Firebase.User, date: Date, limit: Int) -> Observable<[Recipe]>
     static func getFutureTimelines(user: Firebase.User, date: Date, limit: Int) -> Observable<[Recipe]> 
     static func getRecipesRanking() -> Observable<[Recipe]>
+    static func getRefrigeratorIngredients(user: Firebase.User) -> Observable<[Ingredient]>
     static func getRecipesUsedIngredient(ingredient: Ingredient) -> Observable<[Recipe]>
     static func getRecipesUsedIngredientsInAll(ingredients: [Ingredient]) -> Observable<[Recipe]>
     static func getVIPRecipes(ingredient: Ingredient) -> Observable<[Recipe]>
@@ -20,6 +21,7 @@ protocol MainDMProtocol {
 }
 
 class MainDM: MainDMProtocol {
+  
     
     static let db = Firestore.firestore()
     static let storage = Storage.storage().reference()
@@ -144,6 +146,26 @@ class MainDM: MainDMProtocol {
         }
     }
     
+    static func getRefrigeratorIngredients(user: Firebase.User) -> Observable<[Ingredient]> {
+        
+        return getRefrigeratorIngredientDocuments(user: user)
+            .flatMapLatest {
+                Ingredient.generateNewIngredients(queryDocs: $0)
+            }
+        
+        
+    }
+    
+    static func getRefrigeratorIngredientDocuments(user: Firebase.User) -> Observable<[QueryDocumentSnapshot]> {
+        
+        let query = db.collection("users").document(user.uid).collection("refrigerator")
+        
+        return getDocuments(query: query)
+
+    }
+    
+    
+    
     
     static func getVIPRecipes(ingredient: Ingredient) -> Observable<[Recipe]> {
         
@@ -209,13 +231,13 @@ class MainDM: MainDMProtocol {
     
     static func getRecipes(query: Query) -> Observable<[Recipe]> {
         
-        return getRecipeDocuments(query: query)
+        return getDocuments(query: query)
             .flatMapLatest { docs in
                 Recipe.generateNewRecipes(queryDocs: docs)
             }
     }
     
-    static func getRecipeDocuments(query: Query) -> Observable<[QueryDocumentSnapshot]> {
+    static func getDocuments(query: Query) -> Observable<[QueryDocumentSnapshot]> {
         
         return .create { observer in
             

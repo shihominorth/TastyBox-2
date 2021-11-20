@@ -27,10 +27,14 @@ class DiscoveryPresenter: NSObject {
         self.user = user
         
         
-        let vm = RankingVM(user: self.user)
-        let scene = MainScene.ranking(vm)
-        let rankingVC = scene.viewController()
-        self.viewControllers = [rankingVC, rankingVC, rankingVC, rankingVC, rankingVC]
+        let rankingVM = RankingVM(user: self.user)
+        let rankingVC = MainScene.ranking(rankingVM).viewController()
+        
+        let ingredientsVM = IngredientsVM(user: self.user)
+        let ingredientsVC = MainScene.ingredients(ingredientsVM).viewController()
+        
+        
+        self.viewControllers = [rankingVC, ingredientsVC, rankingVC, rankingVC, rankingVC]
                 
       
     }
@@ -54,14 +58,13 @@ class DiscoveryPresenter: NSObject {
     }
     
     
-    func setViewControllers(scene: MainScene) {
+    func setViewControllers(row: Int) {
        
-        let viewController = scene.viewController()
 
-        pageVC?.setViewControllers([viewController], direction: .forward, animated: true, completion: { [unowned self] isCompleted in
+        pageVC?.setViewControllers([viewControllers[row]], direction: .forward, animated: true, completion: { [unowned self] isCompleted in
             
             if isCompleted {
-                self.currentViewController = viewController
+                self.currentViewController = viewControllers[row]
             }
             
         })
