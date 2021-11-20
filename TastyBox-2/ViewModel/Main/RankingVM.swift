@@ -9,6 +9,10 @@ import Foundation
 import Firebase
 import RxSwift
 
+protocol RankingVMDelegate: AnyObject {
+    func selectedRecipe(recipe: Recipe)
+}
+
 class RankingVM: ViewModelBase {
     
     let user: Firebase.User
@@ -17,13 +21,17 @@ class RankingVM: ViewModelBase {
     var recipesSubject = BehaviorSubject<[Recipe]>(value: [])
     var pubishers: [String: User] = [:]
     var recipeRanking: [(recipeID: String, rank: Int)] = []
+    
+    let selectedRecipeSubject: PublishSubject<Recipe>
 
+    weak var delegate: RankingVMDelegate?
     
     init(user: Firebase.User, apiType: MainDMProtocol.Type = MainDM.self) {
         
         self.user = user
         self.apiType = apiType
-        
+        self.selectedRecipeSubject = PublishSubject<Recipe>()
+
     }
     
     

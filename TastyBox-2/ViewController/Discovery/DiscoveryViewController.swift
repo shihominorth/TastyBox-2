@@ -289,7 +289,11 @@ class DiscoveryViewController: UIViewController, BindableType {
         }
         else if identifier == "showPageVC" {
            
-            viewModel.presenter.pageVC = segue.destination as? UIPageViewController
+            if let pageVC = segue.destination as? UIPageViewController {
+            
+                viewModel.presenter.pageVC = pageVC
+    
+            }
 
         }
         

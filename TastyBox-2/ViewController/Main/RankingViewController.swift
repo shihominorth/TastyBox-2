@@ -7,6 +7,7 @@
 
 import UIKit
 import Kingfisher
+import RxSwift
 
 class RankingViewController: UIViewController, BindableType {
       
@@ -51,6 +52,24 @@ class RankingViewController: UIViewController, BindableType {
             .withLatestFrom(viewModel.recipesSubject)
             .bind(to: collectionView.rx.items(dataSource: dataSource))
             .disposed(by: viewModel.disposeBag)
+        
+        
+        Observable.combineLatest(collectionView.rx.itemSelected, viewModel.recipesSubject) { indexPath, recipes in
+            
+            return recipes[indexPath.row]
+        }
+        .catch { err in
+            
+            print(err)
+            
+            return .empty()
+        }
+        .subscribe(onNext: { [unowned self] recipe in
+            
+            self.viewModel.delegate?.selectedRecipe(recipe: recipe)
+            
+        })
+        .disposed(by: viewModel.disposeBag)
     }
     
   

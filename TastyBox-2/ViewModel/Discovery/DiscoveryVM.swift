@@ -25,7 +25,7 @@ class DiscoveryVM: ViewModelBase {
         
         self.sceneCoodinator = sceneCoodinator
         self.user = user
-        self.presenter = DiscoveryPresenter(user: user)
+        self.presenter = DiscoveryPresenter(user: user, sceneCoordinator: self.sceneCoodinator)
     }
     
     func setDefaultViewControllers() {
@@ -157,3 +157,4 @@ class DiscoveryVM: ViewModelBase {
         
     }
 }
+

@@ -145,6 +145,7 @@
 		6FC062C026EAE4020016B990 /* Error+.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FC062BF26EAE4000016B990 /* Error+.swift */; };
 		6FC062C226ECA3D90016B990 /* Notification.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FC062C126ECA3D70016B990 /* Notification.swift */; };
 		6FC062C426ECC9B00016B990 /* LoginErrors.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FC062C326ECC9AF0016B990 /* LoginErrors.swift */; };
+		6FC26F642748EC9300AE13F9 /* Collection+.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FC26F632748EC9300AE13F9 /* Collection+.swift */; };
 		6FE15ED0271AA3A80047D3D8 /* CreateRecipeTableViewCells.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FE15ECF271AA3A80047D3D8 /* CreateRecipeTableViewCells.swift */; };
 		6FE15ED3271AA6B50047D3D8 /* EditMainImageTVCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FE15ED2271AA6B50047D3D8 /* EditMainImageTVCell.swift */; };
 		6FE15ED5271AB7B20047D3D8 /* EditMainImageCVCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FE15ED4271AB7B20047D3D8 /* EditMainImageCVCell.swift */; };
@@ -334,6 +335,7 @@
 		6FC062BF26EAE4000016B990 /* Error+.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Error+.swift"; sourceTree = "<group>"; };
 		6FC062C126ECA3D70016B990 /* Notification.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Notification.swift; sourceTree = "<group>"; };
 		6FC062C326ECC9AF0016B990 /* LoginErrors.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginErrors.swift; sourceTree = "<group>"; };
+		6FC26F632748EC9300AE13F9 /* Collection+.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Collection+.swift"; sourceTree = "<group>"; };
 		6FE15ECF271AA3A80047D3D8 /* CreateRecipeTableViewCells.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateRecipeTableViewCells.swift; sourceTree = "<group>"; };
 		6FE15ED2271AA6B50047D3D8 /* EditMainImageTVCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditMainImageTVCell.swift; sourceTree = "<group>"; };
 		6FE15ED4271AB7B20047D3D8 /* EditMainImageCVCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditMainImageCVCell.swift; sourceTree = "<group>"; };
@@ -608,6 +610,7 @@
 				6FA70A9C26E8EA5600474FE5 /* ViewController+.swift */,
 				6FC062BF26EAE4000016B990 /* Error+.swift */,
 				6F114E0C271D71F800B3BE63 /* UIView.swift */,
+				6FC26F632748EC9300AE13F9 /* Collection+.swift */,
 			);
 			path = UIKit;
 			sourceTree = "<group>";
@@ -1185,6 +1188,7 @@
 				6FE9EB5326F9A9DF000AF9D4 /* RefrigeratorDM.swift in Sources */,
 				6F40F82826F03375004B69DD /* AlertGenerator.swift in Sources */,
 				6F512A3026F45BF200826657 /* TutorialCVCell.swift in Sources */,
+				6FC26F642748EC9300AE13F9 /* Collection+.swift in Sources */,
 				6F77D489272853FE00F1FCD9 /* PlayVideoInsideTVCellView.swift in Sources */,
 				6F01F3CE27296D2A003CA769 /* PublishRecipeOptionCVCell.swift in Sources */,
 				6F9A0D0B27101A6E00DABB45 /* SemiModalDismissAnimatedTransition.swift in Sources */,
