@@ -187,7 +187,7 @@ class RecipeDetailDM: RecipeDetailProtocol {
                 }
                 else {
                     
-                    if let doc = doc as? QueryDocumentSnapshot, let user = User(document: doc) {
+                    if let doc = doc, let user = User(document: doc) {
                         observer.onNext(user)
                     }
                     
