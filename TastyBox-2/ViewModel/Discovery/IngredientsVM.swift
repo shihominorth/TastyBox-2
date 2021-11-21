@@ -44,7 +44,16 @@ class IngredientsVM: ViewModelBase {
     
     func getRecipeWithMutipleIngredients(ingredients: [Ingredient]) -> Observable<[Recipe]> {
         
-        return self.apiType.getRecipesUsedIngredientsInAll(ingredients: ingredients)
+        if ingredients.isEmpty {
+            
+            return Observable<[Recipe]>.just([])
+            
+        }
+        else {
+           
+            return self.apiType.getRecipesUsedIngredientsInAll(ingredients: ingredients)
+
+        }
         
     }
 }
