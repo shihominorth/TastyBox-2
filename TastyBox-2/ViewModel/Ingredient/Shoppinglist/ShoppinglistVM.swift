@@ -38,7 +38,7 @@ class ShoppinglistVM: ViewModelBase {
     
     let noDifferentBoughtStatusItemsSubject = PublishSubject<Bool>()
     
-    let isBoughtItemssubject = PublishSubject<Bool>()
+    let isBoughtItemsSubject = PublishSubject<Bool>()
     let isNotBoughtItemsSubject = PublishSubject<Bool>()
     
     let isShownBoughtItemsRelay = BehaviorRelay<Bool>(value: false)
@@ -249,7 +249,7 @@ class ShoppinglistVM: ViewModelBase {
             .do(onNext: { [unowned self] items in
                 
                 if items.isEmpty {
-                    self.isBoughtItemssubject.onNext(items.isEmpty)
+                    self.isBoughtItemsSubject.onNext(items.isEmpty)
                 }
                 
             })
@@ -270,7 +270,7 @@ class ShoppinglistVM: ViewModelBase {
             }
             .flatMap { [unowned self] count, item, isLast -> Observable<Bool> in
 
-                return self.addRefrigeratorItem(item: item, isLast: isLast, count: count)
+                return  self.addRefrigeratorItem(item: item, isLast: isLast, count: count)
 
             }
            
@@ -309,7 +309,7 @@ class ShoppinglistVM: ViewModelBase {
         Observable.combineLatest(isBoughtItemsStream, isNotBoughtItemsStream)
             .subscribe(onNext: { [unowned self] isLastBoughtItems, isLastNotBoughtItems in
 
-                self.isBoughtItemssubject.onNext(isLastBoughtItems)
+                self.isBoughtItemsSubject.onNext(isLastBoughtItems)
                 self.isNotBoughtItemsSubject.onNext(isLastNotBoughtItems)
 
             }, onError: { err in
@@ -320,7 +320,7 @@ class ShoppinglistVM: ViewModelBase {
             .disposed(by: disposeBag)
         
         
-        Observable.combineLatest(isBoughtItemssubject, isNotBoughtItemsSubject)
+        Observable.combineLatest(isBoughtItemsSubject, isNotBoughtItemsSubject)
             .debug("subject")
             .asDriver(onErrorJustReturn: (true, true))
             .drive { [unowned self] isLastBoughtItems, isLastNotBoughtItems in
@@ -592,7 +592,7 @@ class ShoppinglistVM: ViewModelBase {
             if items.isEmpty {
                 
                 self.noDifferentBoughtStatusItemsSubject.onNext(true)
-                self.isBoughtItemssubject.onCompleted()
+                self.isBoughtItemsSubject.onCompleted()
                 self.isNotBoughtItemsSubject.onCompleted()
                 
             }
@@ -633,6 +633,8 @@ class ShoppinglistVM: ViewModelBase {
         
         return Observable.create { [unowned self] observer in
             
+            //        self.apiType.askhasIngredient(name: name)はアイテム追加時に呼んであるので、idはdbが知っているのと一緒
+            // よって　上記のfunctionは呼ばなくていい
             self.apiType.addIngredient(id: item.id, name: item.name, amount: item.amount, userID: self.user.uid, lastIndex: count, listName: .refrigerator)
                 .subscribe(onNext: { addedItem in
                     
