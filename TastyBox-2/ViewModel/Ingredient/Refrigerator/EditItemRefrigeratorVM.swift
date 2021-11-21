@@ -41,12 +41,12 @@ class EditItemRefrigeratorVM: ViewModelBase {
     
     func addItem(name: String, amount: String) {
         
-        self.apiType.askhasIngredient(name: name)
-            .flatMapLatest { id in
+//        self.apiType.askhasIngredient(name: name)
+//            .flatMapLatest { id in
                
-                self.apiType.addIngredient(id: id, name: name, amount: amount, userID: self.user.uid, lastIndex: self.lastIndex, listName: .refrigerator)
+                self.apiType.addIngredient(id: nil, name: name, amount: amount, userID: self.user.uid, lastIndex: self.lastIndex, listName: .refrigerator)
            
-            }
+//            }
             .catch { err in
                 
                 print("Error writing document: \(err)")
@@ -54,13 +54,10 @@ class EditItemRefrigeratorVM: ViewModelBase {
                 
                 return .empty()
             }
-            .subscribe(onCompleted: {
-                print("Document successfully written!")
-                
+            .subscribe(onNext: { _ in
+               
                 self.sceneCoodinator.pop(animated: true)
-                
-            }, onDisposed: {
-                print("disposed")
+            
             })
             .disposed(by: self.disposeBag)
         
@@ -76,7 +73,7 @@ class EditItemRefrigeratorVM: ViewModelBase {
                 
                 return .empty()
             }
-            .subscribe(onCompleted: {
+            .subscribe(onNext: { _ in
                 print("Document successfully written!")
                 
                 self.sceneCoodinator.pop(animated: true)
