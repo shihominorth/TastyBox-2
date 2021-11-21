@@ -633,7 +633,7 @@ class ShoppinglistVM: ViewModelBase {
         
         return Observable.create { [unowned self] observer in
             
-            //        self.apiType.askhasIngredient(name: name)はアイテム追加時に呼んであるので、idはdbが知っているのと一緒
+            //        self.apiType.askHasIngredient(name: name)はアイテム追加時に呼んであるので、idはdbが知っているのと一緒
             // よって　上記のfunctionは呼ばなくていい
             self.apiType.addIngredient(id: item.id, name: item.name, amount: item.amount, userID: self.user.uid, lastIndex: count, listName: .refrigerator)
                 .subscribe(onNext: { addedItem in

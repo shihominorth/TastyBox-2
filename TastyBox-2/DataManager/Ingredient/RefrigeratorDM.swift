@@ -15,7 +15,7 @@ protocol RefrigeratorProtocol: AnyObject {
     
     static func getRefrigeratorItems(userID: String) -> Single<[Ingredient]>
     static func getShoppinglist(userID: String) -> Single<([ShoppingItem], [QueryDocumentSnapshot])>
-    static func askhasIngredient(name: String) -> Observable<String?>
+    static func askHasIngredient(name: String) -> Observable<String?>
     static func addIngredient(id: String?, name: String, amount: String, userID: String, lastIndex: Int, listName: List) -> Observable<Ingredient>
     static func editIngredient(edittingItem: Ingredient, name: String, amount: String, userID: String, listName: List) -> Observable<Ingredient>
     static func moveIngredient(userID: String, items: [Ingredient], listName: List) -> Observable<Bool>
@@ -107,11 +107,11 @@ class RefrigeratorDM: RefrigeratorProtocol {
         
     }
     
-    static func askhasIngredient(name: String) -> Observable<String?> {
+    static func askHasIngredient(name: String) -> Observable<String?> {
         
         return .create { observer in
             
-            Firestore.firestore().collection("genres").whereField("title", isEqualTo: name.capitalized).getDocuments { snapShot, err in
+            Firestore.firestore().collection("genres").whereField("title", isEqualTo: name).getDocuments { snapShot, err in
                 
                 
                 if let err = err {

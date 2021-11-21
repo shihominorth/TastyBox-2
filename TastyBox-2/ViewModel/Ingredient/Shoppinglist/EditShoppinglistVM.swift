@@ -40,10 +40,10 @@ class EditShoppinglistVM: ViewModelBase {
     
     func addItem(name: String, amount: String) {
         
-//        self.apiType.askhasIngredient(name: name)
-//            .flatMapLatest { id in
-                self.apiType.addIngredient(id: nil, name: name, amount: amount, userID: self.user.uid, lastIndex: self.lastIndex, listName: .shoppinglist)
-//            }
+        self.apiType.askHasIngredient(name: name)
+            .flatMapLatest { id in
+                self.apiType.addIngredient(id: id, name: name, amount: amount, userID: self.user.uid, lastIndex: self.lastIndex, listName: .shoppinglist)
+            }
             .catch { err in
                 
                 print("Error writing document: \(err)")
