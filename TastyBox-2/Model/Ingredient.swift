@@ -31,7 +31,7 @@ class Ingredient  {
         let data = queryDoc.data()
         
         guard let id = data["id"] as? String,
-              let index = data["index"] as? Int,
+              let index = data["order"] as? Int, // in refrigerator, not index, but order
               let name = data["name"] as? String,
               let amount = data["amount"] as? String
         else { return nil }

@@ -190,7 +190,7 @@ class MainDM: MainDMProtocol {
         return getRecipes(query: query)
 
     }
-    
+      
     static func getRecipesUsedIngredientsInAll(ingredients: [Ingredient]) -> Observable<[Recipe]> {
         
         var query: Query = db.collection("recipes")
@@ -202,9 +202,10 @@ class MainDM: MainDMProtocol {
         for _ in 0 ..< ramdomLimit {
             
             let randomIndex = Int(arc4random_uniform(UInt32(ingredients.count - 1)))
-            let id = ingredients[randomIndex].id
-            
-            query = query.whereField("id", isEqualTo: id)
+//            let name = ingredients[randomIndex].name
+            let name = "Hello!"
+
+            query = query.whereField("name", isEqualTo: name)
         }
         
         return getRecipes(query: query)

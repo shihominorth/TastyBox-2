@@ -324,7 +324,7 @@ class SceneCoordinator: NSObject, SceneCoordinatorType {
     
     
     @discardableResult
-    func userDissmissed() -> Completable {
+    func userDissmissed(completion: ((Bool) -> Void)? = nil) -> Completable {
         
         let subject = PublishSubject<Void>()
         
@@ -342,7 +342,15 @@ class SceneCoordinator: NSObject, SceneCoordinatorType {
             
             subject.onCompleted()
             
+            completion?(true)
+            
         }
+        else {
+        
+            completion?(false)
+        
+        }
+        
         return subject.asObservable()
             .take(1)
             .ignoreElements().asCompletable()

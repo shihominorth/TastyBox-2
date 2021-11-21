@@ -34,7 +34,7 @@ class DiscoveryPresenter: NSObject {
         let ingredientsVC = MainScene.ingredients(ingredientsVM).viewController()
         
         
-        self.viewControllers = [rankingVC, ingredientsVC, rankingVC, rankingVC, rankingVC]
+        self.viewControllers = [rankingVC, ingredientsVC, rankingVC, rankingVC, rankingVC, rankingVC]
                 
       
     }
@@ -71,6 +71,9 @@ class DiscoveryPresenter: NSObject {
     }
     
  
+//    func setCreatedRecipeVM(<#parameters#>) -> <#return type#> {
+//        <#function body#>
+//    }
 }
 
 

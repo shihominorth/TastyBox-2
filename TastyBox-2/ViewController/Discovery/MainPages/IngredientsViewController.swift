@@ -80,10 +80,18 @@ class IngredientsViewController: UIViewController, BindableType {
             
         }
         
+        viewModel.getRefrigeratorIngredients()
+            .subscribe(onNext: { [unowned self] ingredients in
+                
+                self.viewModel.ingredientSubject.onNext(ingredients)
+                
+            })
+            .disposed(by: viewModel.disposeBag)
     }
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
+        
         
     }
     
@@ -105,11 +113,7 @@ class IngredientsViewController: UIViewController, BindableType {
         viewModel.recipesSubject
             .bind(to: recipesCollecitonView.rx.items(dataSource: recipeDataSource))
             .disposed(by: viewModel.disposeBag)
-        
-        viewModel.getRefrigeratorIngredients()
-            .bind(to: viewModel.ingredientSubject)
-            .disposed(by: viewModel.disposeBag)
-            
+   
         
         viewModel.ingredientSubject
             .flatMapLatest { [unowned self] in

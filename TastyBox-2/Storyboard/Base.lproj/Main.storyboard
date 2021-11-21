@@ -759,7 +759,7 @@
                                             </constraints>
                                         </collectionViewCellContentView>
                                         <connections>
-                                            <outlet property="titleLbl" destination="n7k-92-39D" id="JjQ-hc-vbz"/>
+                                            <outlet property="titleLbl" destination="2H7-IB-wN8" id="lv1-LJ-1CU"/>
                                         </connections>
                                     </collectionViewCell>
                                 </cells>

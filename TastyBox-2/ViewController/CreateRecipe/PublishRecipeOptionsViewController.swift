@@ -46,7 +46,6 @@ class PublishRecipeOptionsViewController: UIViewController, BindableType {
                     self.presentingViewController?.presentingViewController?.dismiss(animated: true) {
                         
                         self.viewModel.sceneCoodinator.userDissmissed()
-                        
                     }
                 }
                 
