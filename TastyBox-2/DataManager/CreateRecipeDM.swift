@@ -27,8 +27,11 @@ protocol CreateRecipeDMProtocol: AnyObject {
     static func createUploadingRecipeData(isVIP: Bool, sections: [RecipeItemSectionModel], user: Firebase.User) -> Observable<[String: Any]>
     static func createInstructionsData(section: RecipeItemSectionModel, user: Firebase.User, recipeID: String) -> Observable<[[String: Any]]>
     static func createIngredientsData(section: RecipeItemSectionModel, user: Firebase.User, recipeID: String) -> Observable<[[String: Any]]>
+
+    static func createIngredientsData(ingredients: [Ingredient], user: Firebase.User, recipeID: String) -> Observable<[[String: Any]]>
     static func createGenresData(sections: [RecipeItemSectionModel]) -> Observable<[[String: Any]]>
     static func updateRecipe(recipeData: [String: Any], ingredientsData: [[String: Any]],  instructionsData: [[String: Any]], user: Firebase.User) -> Observable<[String: Any]>
+    static func getIngredientIDs(ingredients: [Ingredient]) -> Observable<[Ingredient]> 
     static func generateGenresIDs(genresData: [[String: Any]], user: Firebase.User) -> Observable<[String: Bool]>
     //    static func updateUserInterestedGenres(ids: [String: Any], user: Firebase.User, completion: @escaping () -> Void, errBlock: @escaping (Error) -> Void)
     
@@ -802,6 +805,57 @@ class CreateRecipeDM: CreateRecipeDMProtocol {
         }
     }
     
+    func createGenresData(genres: [Genre], ingredients: [Ingredient]) -> Observable<[[String: Any]]>  {
+        
+        return .create { observer in
+            
+            let genresdata:[[String: Any]] = genres.map { [unowned self] genre in
+
+                return self.generateGenreDic(id: genre.id, name: genre.title)
+                
+            }
+            
+            let ingredientsdata:[[String: Any]] = ingredients.map { ingredient in
+                                
+                return self.generateGenreDic(id: ingredient.id, name: ingredient.name)
+                
+            }
+            
+            let result = [genresdata, ingredientsdata].flatMap { $0 }
+            
+            observer.onNext(result)
+            
+            return Disposables.create()
+        }
+        
+    }
+    
+    func generateGenreDic(id: String, name: String) -> [String: Any] {
+       
+        var dic:[String: Any] = [:]
+        
+        dic["id"] = id
+        dic["name"] = name
+        dic["usedLatestDate"] = Date()
+        dic["count"] = FieldValue.increment(Int64(1))
+        
+        
+        let nameCharArr = Array(name)
+        var dicSearchingChar:[String: Bool] = [:]
+        
+        nameCharArr.forEach {
+            
+            let key = String($0)
+            dicSearchingChar[key] = true
+            
+        }
+        
+        dic["searchChar"] = dicSearchingChar
+        
+        return dic
+        
+    }
+    
     static func createGenresData(sections: [RecipeItemSectionModel]) -> Observable<[[String: Any]]>  {
         
         return .create { observer in
@@ -893,8 +947,80 @@ class CreateRecipeDM: CreateRecipeDMProtocol {
             
             observer.onNext(result)
             
-            return  Disposables.create()
+            return Disposables.create()
         }
+    }
+    
+    static func getIngredientIDs(ingredients: [Ingredient]) -> Observable<[Ingredient]> {
+        
+        return .create { observer in
+            
+            var result:[Ingredient] = []
+            
+            ingredients.forEach { ingredient in
+                
+                getIngredientID(name: ingredient.name) { id in
+                    
+                    let newIngredient = ingredient
+                   
+                    if let id = id {
+                        
+                        newIngredient.id = id
+                        
+                    }
+                    
+                    result.append(newIngredient)
+                    
+                    if ingredients.count == result.count {
+                        
+                        observer.onNext(result)
+                        
+                    }
+                }
+                
+            }
+            
+            return Disposables.create()
+        }
+    }
+    
+    //MARK: ask if firebase knows ingredient and genres
+    static func getIngredientID(name: String, completion: @escaping (String?) -> Void) {
+        
+        db.collection("genres").whereField("name", isEqualTo: name).getDocuments { snapShot, err in
+            
+            if let err = err {
+                
+                print(err)
+                completion(nil)
+                
+            }
+            else {
+                
+                if let doc = snapShot?.documents.first {
+                    
+                    let data = doc.data()
+                    
+                    if let id = data["id"] as? String {
+                        
+                        completion(id)
+                    }
+                    else {
+                        
+                        completion(nil)
+                        
+                    }
+                }
+                else {
+                    
+                    completion(nil)
+                    
+                }
+                
+            }
+            
+        }
+        
     }
     
     static func createInstructionsData(section: RecipeItemSectionModel, user: Firebase.User, recipeID: String) -> Observable<[[String: Any]]>  {
@@ -921,6 +1047,8 @@ class CreateRecipeDM: CreateRecipeDMProtocol {
                 switch item {
                 case let .instructions(instruction):
                     
+                    
+                    
                     //                    let uuid = UUID()
                     //                    let uniqueIdString = uuid.uuidString.replacingOccurrences(of: "-", with: "")
                     
@@ -943,29 +1071,32 @@ class CreateRecipeDM: CreateRecipeDMProtocol {
     }
     
     
-    static func createIngredientsData(section: RecipeItemSectionModel, user: Firebase.User, recipeID: String) -> Observable<[[String: Any]]> {
-        
+//    static func createIngredientsData(section: RecipeItemSectionModel, user: Firebase.User, recipeID: String) -> Observable<[[String: Any]]> {
+//
+    static func createIngredientsData(ingredients: [Ingredient], user: Firebase.User, recipeID: String) -> Observable<[[String: Any]]> {
         return .create { observer in
             
-            var tempItems:[RecipeDetailSectionItem] = []
+//            var tempItems:[RecipeDetailSectionItem] = []
             var result: [[String: Any]] = []
-            
-            switch section {
-            case let .ingredients(ingredients):
-                
-                tempItems.append(contentsOf: ingredients)
-                
-                
-            default:
-                break
-            }
-            
-            tempItems.enumerated().forEach { index, item in
-                
+//
+//            switch section {
+//            case let .ingredients(ingredients):
+//
+//                tempItems.append(contentsOf: ingredients)
+//
+//
+//            default:
+//                break
+//            }
+//
+//            tempItems.enumerated().forEach { index, item in
+
+            ingredients.enumerated().forEach { index, ingredient in
+
                 var data:[String: Any] = [:]
-                
-                switch item {
-                case let .ingredients(ingredient):
+//
+//                switch item {
+//                case let .ingredients(ingredient):
                     
                     data["id"] = ingredient.id
                     data["name"] = ingredient.name
@@ -974,9 +1105,9 @@ class CreateRecipeDM: CreateRecipeDMProtocol {
                     
                     result.append(data)
                     
-                default:
-                    break
-                }
+//                default:
+//                    break
+//                }
             }
             
             observer.onNext(result)
@@ -1078,7 +1209,7 @@ class CreateRecipeDM: CreateRecipeDMProtocol {
         
         guard let genreID = data["id"] as? String, let name = data["name"] as? String else { return }
         
-        db.collection("genres").whereField("name", isEqualTo: name.capitalized).getDocuments() { snapShot, err in
+        db.collection("genres").whereField("name", isEqualTo: name).getDocuments() { snapShot, err in
             
             if let _ = err {
                 

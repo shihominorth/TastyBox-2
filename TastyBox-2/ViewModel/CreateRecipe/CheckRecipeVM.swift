@@ -19,15 +19,14 @@ class CheckRecipeVM {
     
     let apiType: CreateRecipeDMProtocol.Type
     
-    var mainPhoto: Data
-    var url: URL? = nil
+//    var mainPhoto: Data
+//    var url: URL? = nil
     var sections: [RecipeItemSectionModel] = []
     let evaluations: [Evaluation]
-    let isVIP: Bool
-    let instructions: [Instruction]
+//    let isVIP: Bool
+//    let instructions: [Instruction]
     var isDisplayed = false
     var isEnded = false
-//    var isExpanded = false
 
     let isExpandedSubject = BehaviorRelay<Bool>(value: false)
 
@@ -38,6 +37,16 @@ class CheckRecipeVM {
         }
        
     }
+    
+    let title: String
+    let mainPhotoDataString: Data
+    let videoUrlString: String?
+    let time: Int
+    let serving: Int
+    let isVIP: Bool
+    let genres: [Genre]
+    let ingredients: [Ingredient]
+    let instructions: [Instruction]
     
     let recipeDataSubject = BehaviorSubject<[String: Any]>(value: [:])
     let ingredientsDataSubject = BehaviorSubject<[[String: Any]]>(value: [])
@@ -52,12 +61,22 @@ class CheckRecipeVM {
         self.user = user
         self.apiType = apiType
         
+        self.title = title
+        self.mainPhotoDataString = mainPhoto.base64EncodedData()
+        self.videoUrlString = video?.absoluteString
+        self.genres = genres
         self.isVIP = isVIP
-        evaluations = [.like, .report]
-//        evaluations = [Evaluate(title: "\(recipe.likes)\nlikes", imgName: "suit.heart"), Evaluate(title: "Comments", imgName: "text.bubble"), Evaluate(title: "Save", imgName: "bookmark"), Evaluate(title: "Report", imgName: "flag.circle")]
-        self.mainPhoto = mainPhoto
+        self.ingredients = ingredients
         self.instructions = instructions
+
+        guard let time = Int(time), let serving = Int(serving) else { return }
+        self.time = time
+        self.serving = serving
         
+        
+        evaluations = [.like, .report]
+
+                
         let imgString = mainPhoto.base64EncodedString()
         let videoString = video?.absoluteString
         
@@ -67,16 +86,10 @@ class CheckRecipeVM {
         
         var temp: [Genre] = []
         
-//        for _ in 0 ..< 1 {
-//            let genre = Genre(id: "Daaafssgsdg", title: "temp")
-//            temp.append(genre)
-//        }
         
         temp.append(contentsOf: genres)
         let genresSection: RecipeItemSectionModel = .genres(genre: .genres(temp))
-//        let genresSection: RecipeItemSectionModel = .genres(genre: .genres(genres))
         
-        guard let time = Int(time), let serving = Int(serving) else { return }
         let timeNServingSection: RecipeItemSectionModel = .timeAndServing(time: time, serving: serving)
         
         let ingredientsItems:[RecipeDetailSectionItem] = ingredients.map { .ingredients($0) }
@@ -88,17 +101,6 @@ class CheckRecipeVM {
         
         self.sections = [mainImageSection, titleSection, evaluateSection, genresSection, timeNServingSection, ingredientSection, instructionsSection]
         
-        
-        guard let video = video else {
-            self.url = nil
-            return
-        }
-        
-        self.url = video
-        //        super.init()
-        
-        
-//        self.isExpandedDiffenreceSubject.onNext(false)
         
     }
     
@@ -203,23 +205,54 @@ class CheckRecipeVM {
 
         })
         .disposed(by: disposeBag)
-//
-        //            .flatMap({ [unowned self] in
-        //            self.apiType.updateUserInterestedGenres(genresData: $0, user: self.user)
-        //        })
-        
-        //            .flatMap { _ in[String: Any]
-        //
-        //            return Observable.zip(recipeDataSubject.asObservable(), instructionsDataSubject.asObservable())
-        //        }
-        //        .flatMap { [unowned self] recipeData, instructionData in
-        //
-        //            self.apiType.updateRecipe(recipeData: recipeData, instructionsData: instructionData, user: self.user)
-        //
-        //        }
+
         
     }
    
+    func setIngredientIDs(recipeId: String) -> Observable<[String: Any]> {
+        
+        if case let .ingredients(items) = sections[6] {
+      
+            let ingredients: [Ingredient] = items.compactMap { item in
+                
+                if case let .ingredients(ingredient) = item {
+                    
+                    return ingredient
+                    
+                }
+                else {
+                    
+                    return nil
+                    
+                }
+            }
+            
+            return self.apiType.getIngredientIDs(ingredients: ingredients)
+                .flatMapLatest { [unowned self] in
+                   
+                    let createDataStream = self.apiType.createIngredientsData(ingredients: $0, user: self.user, recipeID: recipeId)
+                    
+                    // 02はingredientsをgenresとしてのデータにする
+                    // self.apiType.createGenresData(sections: [sections[3], sections[6]]) は
+                    // createGenresDataとconvertToGenresDataに分ける。
+                    // 引数の方がGenre/Ingredientと違うため。
+                    // ingredientsはgenresとしても扱う
+                    
+                    return Observable.zip(createDataStream, <#T##O2#>) { ingredientData, genresData in
+                       
+                        self.ingredientsDataSubject.onNext(ingredientData)
+                        
+                        return genresData
+                    }
+
+                }
+            
+        }
+        
+        return Observable<[String: Any]>.just([:])
+        
+    }
+    
 }
 
 extension ObservableType {
