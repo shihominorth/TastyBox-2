@@ -10,18 +10,28 @@ import Firebase
 import UIKit
 import RxSwift
 import SCLAlertView
+import SwiftUI
 
 class PublishRecipeVM: ViewModelBase {
     
     let sceneCoodinator: SceneCoordinator
     let user: Firebase.User
     
-    let recipeData:[String: Any]
-    let instructionsData: [[String: Any]]
-    let ingredientsData: [[String: Any]]
-    let genresData: [[String: Any]]
+    //    let recipeData:[String: Any]
+    //    let instructionsData: [[String: Any]]
+    //    let ingredientsData: [[String: Any]]
+    //    let genresData: [[String: Any]]
+    //    let mainImage: Data
+    
+    let mainImageData: Data
     let videoURL: URL?
-    let mainImage: Data
+    
+    let title: String
+    let time: Int
+    let serving: Int
+    let isVIP: Bool
+    let genres: [Genre]
+    let ingredients: [Ingredient]
     let instructions: [Instruction]
     
     let apiType: CreateRecipeDMProtocol.Type
@@ -30,22 +40,30 @@ class PublishRecipeVM: ViewModelBase {
     
     let tappedPublishSubject = BehaviorSubject<Void>(value: ())
     
-    init(sceneCoodinator: SceneCoordinator, user: Firebase.User, apiType: CreateRecipeDMProtocol.Type = CreateRecipeDM.self, recipeData: [String: Any], ingredientsData: [[String: Any]], instructionsData: [[String: Any]], genresData: [[String: Any]], isVIP: Bool, video: URL?, mainImage: Data, instructions: [Instruction]) {
+    let ingredientsSubject: BehaviorSubject<[Ingredient]>
+    let basicDataSubject: BehaviorSubject<[[String: Any]]>
+    
+    
+    init(sceneCoodinator: SceneCoordinator, user: Firebase.User, apiType: CreateRecipeDMProtocol.Type = CreateRecipeDM.self, title: String, serving: Int, time: Int, isVIP: Bool, video: URL?, mainImageData: Data, genres: [Genre], ingredients: [Ingredient], instructions: [Instruction]) {
         
         self.sceneCoodinator = sceneCoodinator
         self.user = user
         self.apiType = apiType
         self.options = []
         
-        self.recipeData = recipeData
-        self.ingredientsData = ingredientsData
-        self.instructionsData = instructionsData
-        self.genresData = genresData
-        
-        self.mainImage = mainImage
+        self.mainImageData = mainImageData
         self.videoURL = video
+        self.title = title
+        self.time = time
+        self.serving = serving
+        self.isVIP = isVIP
+        self.genres = genres
+        self.ingredients = ingredients
         self.instructions = instructions
-
+        
+        self.ingredientsSubject = BehaviorSubject<[Ingredient]>(value: [])
+        self.basicDataSubject = BehaviorSubject<[[String: Any]]>(value: [])
+        
         if let cancelBtnData = UIImage(systemName: "arrowshape.turn.up.backward")?.convertToData(), let publishNormalBtnData = UIImage(systemName: "square.and.arrow.up")?.convertToData() {
             
             let publishTitle = isVIP ? "Publish VIP Only Recipe" : "Publish Your Recipe"
@@ -61,62 +79,273 @@ class PublishRecipeVM: ViewModelBase {
         
         super.init()
         
-        
     }
-     
+    
+    func getCorrectIngredientIDs() -> Observable<Void> {
+
+        return self.apiType.getIngredientIDs(ingredients: self.ingredients)
+            .do(onNext: { ingredients in
+
+                self.ingredientsSubject.onNext(ingredients)
+
+            })
+                .map { _ in }
+                
+    }
+ 
+    func uploadIngredientAsGenre() -> Observable<Bool> {
+      
+        return ingredientsSubject
+            .flatMapLatest { [unowned self] in
+                self.apiType.convertToGenresData(ingredients: $0)
+            }
+            .flatMapLatest { [unowned self] in
+                self.apiType.uploadIngredientsAsGenres(data: $0, user: self.user)
+            }
+    }
+    
     func uploadRecipe() -> Observable<Bool> {
         
-        var currentInstructionUPloadedNum = 0
-        
-        let uploadRecipeFieldValues = self.apiType.updateRecipe(recipeData: recipeData, ingredientsData: ingredientsData, instructionsData: instructionsData, user: self.user)
-        
-        let uploadGenres = self.apiType.generateGenresIDs(genresData: genresData, user: self.user)
+        return uploadImages()
             .flatMapLatest { [unowned self] data in
-                self.apiType.updateUserInterestedGenres(ids: data, user: self.user)
+                self.zippedUploadRecipeStreams(basicData: data)
             }
-            .catch { err in
-                
-                print(err)
-                
-                return .empty()
+            .flatMapLatest { [unowned self] basicData, ingredientData, instructionData -> Observable<Bool> in
+                self.uploadRecipe(basicData: basicData, ingredientData: ingredientData, instructionData: instructionData)
             }
+            
+           
+    }
+    //MARK: check
+    func zippedUploadRecipeStreams(basicData: [String: Any]) -> Observable<([String: Any], [[String: Any]], [[String: Any]])> {
+       
+        let ingredientDataStream = ingredientsSubject
+            .flatMapLatest { [unowned self] ingredients in
+                self.convertToIngredientsData(ingredients: ingredients)
+            }
+        let instructionDataStream = self.convertToInstructionData(instructions: self.instructions)
+       
+        return .zip(ingredientDataStream, instructionDataStream) { ingredientData, instructionData in
+            return (basicData, ingredientData, instructionData)
+        }
         
-        let uploadImages = self.apiType.compressData(imgData: [mainImage])
-            .map { $0[0] }
-            .flatMapLatest { [unowned self] in
-                self.apiType.uploadImages(mainPhoto: $0, videoURL: self.videoURL, user: self.user, recipeID: self.recipeData["id"] as! String)
+    }
+    
+    func uploadRecipe(basicData: [String: Any], ingredientData: [[String: Any]], instructionData: [[String: Any]]) -> Observable<Bool> {
+
+        return self.uploadData(basicData: basicData, ingredientsData: ingredientData, instructionsData: instructionData)
+            .flatMapLatest { basicData in
+                self.uploadInstructionImages(data: basicData)
             }
-            .catch { err in
+            .flatMapLatest { isCompleted -> Observable<Bool> in
                 
-                if let reason = err.handleStorageError()  {
+                if isCompleted {
                     
-                    SCLAlertView().showTitle(
-                        reason.reason, // Title of view
-                        subTitle: reason.solution,
-                        timeout: .none, // String of view
-                        completeText: "Done", // Optional button value, default: ""
-                        style: .error, // Styles - see below.
-                        colorStyle: 0xA429FF,
-                        colorTextButton: 0xFFFFFF
-                    )
+                   return self.uploadIngredientAsGenre()
+                    
+                }
+                else {
+                    
+                    return Observable<Bool>.empty()
                     
                 }
                 
+            }
+        
+    }
+    
+
+    
+    func uploadImages() -> Observable<[String: Any]> {
+        
+        return convertToUploadBasicData()
+            .flatMapLatest { [unowned self] data -> Observable<[String: Any]> in
+                
+                if let recipeID = data["id"] as? String {
+                    
+                    return tryUploadImages(recipeID)
+                        .map { data }
+                }
+                else {
+                    
+                    let uuid = UUID()
+                    let uniqueIdString = uuid.uuidString.replacingOccurrences(of: "-", with: "")
+                    
+                    return tryUploadImages(uniqueIdString)
+                        .map { data }
+                    
+                }
+            }
+        
+    }
+    
+    
+    fileprivate func tryUploadImages(_ uniqueIdString: String) -> Observable<Void> {
+        
+        return self.apiType.compressData(imgData: [self.mainImageData])
+            .map { $0[0] }
+            .flatMapLatest { [unowned self] in
+                
+                self.apiType.uploadImages(mainPhoto: $0, videoURL: self.videoURL, user: self.user, recipeID: uniqueIdString)
+                
+            }
+            .retry(3)
+            .catch { err in
+                
+                guard let reason = err.handleStorageError() else { return .empty() }
+                
+                reason.showErrNotification()
+                
+                return .empty()
+            }
+    }
+    
+    func convertToUploadBasicData() -> Observable<[String: Any]> {
+        
+        
+        let basicInfoStream = self.apiType.convertToUploadingRecipeData(title: self.title, time: self.time, serving: self.serving, isVIP: self.isVIP, user: self.user)
+        
+        let ingredientsStream = ingredientsSubject
+            .flatMapLatest { ingredients in
+                self.apiType.convertToBasicInfoDic(ingredients: ingredients)
+            }
+        
+        
+        let genresStream = self.apiType.convertToBasicInfoDic(genres: self.genres)
+        
+        return basicInfoStream
+            .flatMapLatest { data -> Observable<[String: Any]> in
+                
+                return ingredientsStream
+                    .map { ingredientData in
+                        
+                        var newData: [String: Any] = data
+
+                        var genresDic: [String: Bool] = [:]
+                        
+                        ingredientData.forEach { key, value in
+                            
+                            genresDic[key] = value
+                            
+                        }
+                        
+                        newData["genres"] = genresDic
+                        
+                        return newData
+                    }
+            }
+            .flatMapLatest { data -> Observable<[String: Any]> in
+                
+                return genresStream
+                    .map { genresData in
+                        
+                        var newData: [String: Any] = data
+
+                        var genresDic: [String: Bool] = [:]
+                        
+                        genresData.forEach { key, value in
+                            
+                            genresDic[key] = value
+                            
+                        }
+                        
+                        if let genres = newData["genres"] as? [String: Bool] {
+                            
+                            genres.forEach { key, value in
+                            
+                                genresDic[key] = value
+                            
+                            }
+                            
+                            newData["genres"] = genresDic
+                        }
+                       
+                        
+                        return newData
+                    }
+                
+            }
+        
+        
+    }
+    
+    
+    func convertToIngredientsData(ingredients: [Ingredient]) -> Observable<[[String: Any]]> {
+        
+        return self.apiType.convertToIngredientsData(ingredients: ingredients)
+        
+    }
+    
+    func convertToInstructionData(instructions: [Instruction]) -> Observable<[[String: Any]]> {
+        
+        return self.apiType.convertToInstructionData(instructions: instructions)
+        
+    }
+    
+    // why separate zippedData and upload data?
+    // shows err if not separated.
+    func zippedData(data: [String: Any], ingredients: [Ingredient]) -> Observable<([String: Any], [[String: Any]], [[String: Any]])> {
+
+        return .zip(convertToIngredientsData(ingredients: ingredients), convertToInstructionData(instructions: self.instructions), resultSelector: {ingredientData, instructionData in
+            
+            return (data, ingredientData, instructionData)
+            
+        })
+        
+    }
+    
+    
+    func uploadData(basicData: [String: Any], ingredientsData: [[String: Any]], instructionsData: [[String: Any]]) -> Observable<[String: Any]> {
+        
+        return self.apiType.updateRecipe(recipeData: basicData, ingredientsData: ingredientsData, instructionsData: instructionsData, user: self.user)
+            .retry(3)
+            .catch { err in
+                
+                guard let reason = err.handleFireStoreError() else { return .empty() }
+                
+                reason.showErrNotification()
+                
                 return .empty()
             }
         
-        let uploadInstructionsImages = self.apiType.startUpload(instructions: instructions, user: self.user, recipeID: self.recipeData["id"] as! String)
-        
-        
+            .retry(3)
+            .catch { err in
+                
+                guard let reason = err.handleFireStoreError() else { return .empty() }
+                
+                reason.showErrNotification()
+                
+                return .empty()
+            }
+    }
+    
+    func uploadInstructionImages(data: [String: Any]) -> Observable<Bool> {
        
-        return Observable.zip(uploadRecipeFieldValues, uploadGenres, uploadImages, uploadInstructionsImages) { [unowned self] _, _, _, index in
-            
-            currentInstructionUPloadedNum += 1
-            
-            return self.instructions.count == currentInstructionUPloadedNum
+        var currentInstructionUploadedNum = 0
+
+        if self.instructions.isEmpty {
+        
+            return .just(true)
+        
         }
-            
+        else {
+           
+            return self.apiType.startUpload(instructions: self.instructions, user: self.user, recipeID: data["id"] as! String)
+                .do(onNext: { index in
+                    
+                    print(index)
+                    
+                    currentInstructionUploadedNum += 1
+                })
+                    .map { _ in
+                        
+                        currentInstructionUploadedNum == self.instructions.count
+                    
+                    }
+
+        }
         
     }
+    
 }
 

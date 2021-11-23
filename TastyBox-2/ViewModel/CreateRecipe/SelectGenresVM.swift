@@ -258,11 +258,19 @@ class SelectGenresVM: ViewModelBase {
     
     func registerNewGenres(words: [String]) -> Observable<[Genre]> {
         
+        if words.isEmpty {
+            return .of([])
+        }
+        
         return self.apiType.registerNewGenres(genres: words, user: self.user)
         
     }
     
     func registerAsMyGenres(genres: [Genre]) -> Observable<[Genre]> {
+        
+        if genres.isEmpty {
+            return .of([])
+        }
         
         return self.apiType.isUserInterested(genres: genres, user: self.user)
     }
@@ -279,10 +287,11 @@ class SelectGenresVM: ViewModelBase {
                 
             } }
             
-            if arr.count == genres.count {
+//            if arr.count == genres.count {
+               
                 observer.onNext(genres)
-            }
-            
+           
+//        }
             return Disposables.create()
         }
         

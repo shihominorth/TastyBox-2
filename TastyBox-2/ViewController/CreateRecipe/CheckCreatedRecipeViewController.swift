@@ -33,7 +33,7 @@ class CheckCreatedRecipeViewController: UIViewController, BindableType {
         
         // Do any additional setup after loading the view.
         
-        if let url = viewModel.url {
+        if let url = viewModel.videoUrl {
             
             self.playerItem = AVPlayerItem(url: url)
             self.player =  AVPlayer(playerItem: self.playerItem)
@@ -77,7 +77,7 @@ class CheckCreatedRecipeViewController: UIViewController, BindableType {
                         
                         if let cell = tableView.visibleCells[0] as? CheckMainImageTVCell {
                             
-                            if viewModel.url != nil  && !viewModel.isEnded {
+                            if viewModel.videoUrl != nil  && !viewModel.isEnded {
                                 
                                 cell.playVideoView.playerLayer.player = self.player
                                 
@@ -172,7 +172,7 @@ class CheckCreatedRecipeViewController: UIViewController, BindableType {
                     cell.imgData = imgString
                     cell.videoString = url
                     
-                    if viewModel.isDisplayed == false && viewModel.url != nil {
+                    if viewModel.isDisplayed == false && viewModel.videoUrl != nil {
                         
                         cell.playVideoView.playerLayer.player = self.player
                         cell.playVideoView.imgView.alpha = 1.0
@@ -195,7 +195,7 @@ class CheckCreatedRecipeViewController: UIViewController, BindableType {
                         
                     }
                     
-                    if viewModel.url == nil {
+                    if viewModel.videoUrl == nil {
                         cell.slider.isHidden = true
                     }
                     else {
@@ -380,7 +380,7 @@ extension CheckCreatedRecipeViewController: UITableViewDelegate {
     
     func tableView(_ tableView: UITableView, didEndDisplaying cell: UITableViewCell, forRowAt indexPath: IndexPath) {
         
-        if viewModel.url != nil {
+        if viewModel.videoUrl != nil {
             
             guard let videoCell = (cell as? CheckMainImageTVCell) else { return }
             

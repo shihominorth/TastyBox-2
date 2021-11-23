@@ -211,10 +211,27 @@ extension CreateRecipeViewController: UITableViewDelegate, UITableViewDataSource
             if let cell = tableView.dequeueReusableCell(withIdentifier: "editTimeNserving", for: indexPath) as? EditTimeNSearvingTVCell {
                 
                 cell.timeTxtField.rx.text.orEmpty
+                    .flatMap { text -> Observable<Int> in
+                        
+                        if let time = Int(text) {
+                            return .just(time)
+                        }
+                      
+                        return .empty()
+                        
+                    }
                     .bind(to: viewModel.timeSubject)
                     .disposed(by: cell.disposeBag)
                 
                 cell.servingTxtField.rx.text.orEmpty
+                    .flatMap { text -> Observable<Int> in
+                        
+                        if let serving = Int(text) {
+                            return .just(serving)
+                        }
+                        
+                        return .empty()
+                    }
                     .bind(to: viewModel.servingSubject)
                     .disposed(by: cell.disposeBag)
                 

@@ -37,6 +37,9 @@ class PublishRecipeOptionsViewController: UIViewController, BindableType {
             .debug("item indexpath row 0")
             .filter { $0.row == 0 }
             .flatMapLatest { [unowned self]  _ in
+                self.viewModel.getCorrectIngredientIDs()
+            }
+            .flatMapLatest { [unowned self]  _ in
                 self.viewModel.uploadRecipe()
             }
             .subscribe(onNext: { [unowned self] isCompleted in

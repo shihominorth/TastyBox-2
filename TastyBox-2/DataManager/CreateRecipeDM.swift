@@ -24,17 +24,28 @@ protocol CreateRecipeDMProtocol: AnyObject {
     static func createGenres(genres: [Genre], user: Firebase.User) -> Observable<([Genre], Bool)>
     static func getUserImage(user: Firebase.User) -> Observable<Data>
     static func getUser(user: Firebase.User) -> Observable<User>
-    static func createUploadingRecipeData(isVIP: Bool, sections: [RecipeItemSectionModel], user: Firebase.User) -> Observable<[String: Any]>
-    static func createInstructionsData(section: RecipeItemSectionModel, user: Firebase.User, recipeID: String) -> Observable<[[String: Any]]>
-    static func createIngredientsData(section: RecipeItemSectionModel, user: Firebase.User, recipeID: String) -> Observable<[[String: Any]]>
 
-    static func createIngredientsData(ingredients: [Ingredient], user: Firebase.User, recipeID: String) -> Observable<[[String: Any]]>
-    static func createGenresData(sections: [RecipeItemSectionModel]) -> Observable<[[String: Any]]>
+    static func convertToIngredientsData(ingredients: [Ingredient]) -> Observable<[[String: Any]]>
+
+    static func convertToGenresData(genres: [Genre]) -> Observable<[[String: Any]]>
+    static func convertToGenresData(ingredients: [Ingredient]) -> Observable<[[String: Any]]>
+    
+    //MARK: convert to basic info
+    static func convertToUploadingRecipeData(title: String, time: Int, serving: Int, isVIP: Bool, user: Firebase.User) -> Observable<[String: Any]>
+    static func convertToBasicInfoDic(genres: [Genre]) -> Observable<[String: Bool]>
+    static func convertToBasicInfoDic(ingredients: [Ingredient]) -> Observable<[String: Bool]>
+    
+//    static func convertToGenresData(sections: [RecipeItemSectionModel]) -> Observable<[[String: Any]]>
+    //    static func createUploadingRecipeData(isVIP: Bool, sections: [RecipeItemSectionModel], user: Firebase.User) -> Observable<[String: Any]>
+//    static func convertToInstructionsData(section: RecipeItemSectionModel, user: Firebase.User) -> Observable<[[String: Any]]>
+    static func convertToInstructionData(instructions: [Instruction]) -> Observable<[[String: Any]]> 
+    //    static func createIngredientsData(section: RecipeItemSectionModel, user: Firebase.User, recipeID: String) -> Observable<[[String: Any]]>
+
     static func updateRecipe(recipeData: [String: Any], ingredientsData: [[String: Any]],  instructionsData: [[String: Any]], user: Firebase.User) -> Observable<[String: Any]>
     static func getIngredientIDs(ingredients: [Ingredient]) -> Observable<[Ingredient]> 
     static func generateGenresIDs(genresData: [[String: Any]], user: Firebase.User) -> Observable<[String: Bool]>
     //    static func updateUserInterestedGenres(ids: [String: Any], user: Firebase.User, completion: @escaping () -> Void, errBlock: @escaping (Error) -> Void)
-    
+    static func uploadIngredientsAsGenres(data: [[String: Any]], user: Firebase.User) -> Observable<Bool> 
     static func updateUserInterestedGenres(ids: [String: Any], user: Firebase.User) -> Observable<Void>
     static func compressData(imgData: [Data]) -> Observable<[Data]>
     static func uploadImages(mainPhoto: Data, videoURL: URL?, user: Firebase.User, recipeID: String) -> Observable<Void>
@@ -44,8 +55,7 @@ protocol CreateRecipeDMProtocol: AnyObject {
 }
 
 class CreateRecipeDM: CreateRecipeDMProtocol {
-    
-    
+
     static let db = Firestore.firestore()
     static let storage = Storage.storage().reference()
     
@@ -340,12 +350,28 @@ class CreateRecipeDM: CreateRecipeDMProtocol {
                     
                     registerUserInterestedGenres(genre: genre, user: user, completion: {
                         
-                        finishedGenres.append(genre)
-                        
-                        if genres.count == finishedGenres.count {
+                        addMyGenreAsID(user: user, id: genre.id) {
                             
-                            observer.onNext(finishedGenres)
+                            finishedGenres.append(genre)
+                            
+                            if genres.count == finishedGenres.count {
+                                
+                                observer.onNext(finishedGenres)
+                            }
+                            
+                        } errBlock: { err in
+                        
+                            print(err)
+                            
+                            finishedGenres.append(genre)
+                            
+                            if genres.count == finishedGenres.count {
+                                
+                                observer.onNext(finishedGenres)
+                            }
+                            
                         }
+
                         
                     }, errBlock: { err in
                         
@@ -371,13 +397,58 @@ class CreateRecipeDM: CreateRecipeDMProtocol {
     
     static func registerUserInterestedGenres(genre: Genre, user: Firebase.User, completion: @escaping () -> Void, errBlock: @escaping (Error) -> Void) {
         
-        db.collection("users").document(user.uid).collection("genres").document(genre.id).setData([
+        db.collection("users").document(user.uid).collection("genres").document(genre.id).updateData([
             
-            "id": genre.id,
+//            "id": genre.id,
             "usedLatestDate": Date(),
             "count": FieldValue.increment(Int64(1))
             
-        ]) { err in
+        ]) { myGenreErr in
+            
+            if let myGenreErr = myGenreErr {
+                
+                if myGenreErr.convertToNSError().code == 5 {
+                    
+                    db.collection("users").document(user.uid).collection("genres").document(genre.id).setData([
+
+                        "id": genre.id,
+                        "usedLatestDate": Date(),
+                        "count": FieldValue.increment(Int64(1))
+
+                    ]) { setDataErr in
+
+                        if let setDataErr = setDataErr {
+
+                            errBlock(setDataErr)
+
+                        }
+                        else {
+                            completion()
+                        }
+
+                    }
+                    
+                }
+                else {
+                    
+                    errBlock(myGenreErr)
+
+                }
+               
+            }
+            else {
+                
+               
+               completion()
+                
+            }
+        }
+        
+    }
+    
+    static func addMyGenreAsID(user: Firebase.User, id: String, completion: @escaping () -> Void, errBlock: @escaping (Error) -> Void) {
+       
+        db.collection("users").document(user.uid).getDocument { snapShot, err in
             
             if let err = err {
                 
@@ -386,49 +457,61 @@ class CreateRecipeDM: CreateRecipeDMProtocol {
             }
             else {
                 
-                db.collection("users").document(user.uid).getDocument { snapShot, err in
+                var newDic:[String: Bool] = [:]
+                
+                if let data = snapShot?.data(), let value = data["genres"] as? [String: Bool] {
                     
-                    if let err = err {
+                    newDic = value
+                    newDic[id] = true
+                   
+                    
+                    db.collection("users").document(user.uid).updateData([
                         
-                        errBlock(err)
+                        "genres": newDic
                         
-                    }
-                    else {
+                    ]){ err in
                         
-                        if let data = snapShot?.data(), let value = data["genres"] as? [String: Bool] {
+                        if let err = err {
                             
-                            var newDic = value
-                            newDic[genre.id] = true
+                            errBlock(err)
                             
-                            db.collection("users").document(user.uid).updateData([
-                                
-                                "genres": newDic
-                                
-                            ]){ err in
-                                
-                                if let err = err {
-                                    
-                                    errBlock(err)
-                                    
-                                }
-                                else {
-                                    
-                                    completion()
-                                    
-                                }
-                            }
                         }
+                        else {
+                            
+                            completion()
+                            
+                        }
+                    }
+                }
+                else {
+                    
+                    newDic[id] = true
+
+                    db.collection("users").document(user.uid).updateData([
                         
+                        "genres": newDic
                         
+                    ]){ err in
                         
+                        if let err = err {
+                            
+                            errBlock(err)
+                            
+                        }
+                        else {
+                            
+                            completion()
+                            
+                        }
                     }
                     
                 }
                 
                 
+                
             }
+            
         }
-        
     }
     
     static func registerNewGenres(genres: [String], user: Firebase.User) -> Observable<[Genre]> {
@@ -525,6 +608,90 @@ class CreateRecipeDM: CreateRecipeDMProtocol {
         }
     }
     
+    static func uploadIngredientsAsGenres(data: [[String: Any]], user: Firebase.User) -> Observable<Bool> {
+        
+        return .create { observer in
+            
+            var finishedDataNum = 0
+            
+            data.forEach { element in
+               
+                updateUnderGenres(data: element, user: user, completion: {
+                    
+                    finishedDataNum += 1
+                    
+                    let isComepleted = data.count == finishedDataNum
+                    
+                    observer.onNext(isComepleted)
+               
+                }, errBlock: { err in
+                    
+                    if err.convertToNSError().code == 5 {
+                        
+                        registerUnderGenres(data: element, user: user) {
+                            
+                            finishedDataNum += 1
+                            
+                            let isComepleted = data.count == finishedDataNum
+                            
+                            observer.onNext(isComepleted)
+                           
+                            
+                        } errBlock: { err in
+                          
+                            finishedDataNum += 1
+                            
+                            print(err)
+                            
+                            let isComepleted = data.count == finishedDataNum
+                            
+                            observer.onNext(isComepleted)
+                        }
+
+                        
+                    }
+                    else {
+                        
+                        finishedDataNum += 1
+                        
+                        print(err)
+                        
+                        let isComepleted = data.count == finishedDataNum
+                        
+                        observer.onNext(isComepleted)
+                        
+                    }
+                    
+                   
+                   
+                })
+            }
+            
+            return Disposables.create()
+        }
+       
+        
+    }
+    
+    static func updateUnderGenres(data: [String: Any], user: Firebase.User, completion: @escaping () -> Void, errBlock: @escaping (Error) -> Void) {
+        
+        guard let id = data["id"] as? String else { return }
+        
+        db.collection("genres").document(id).updateData(data) { err in
+            
+            if let err = err {
+                
+                errBlock(err)
+                
+                
+            }
+            else {
+                
+                completion()
+            }
+        }
+    }
+    
     static func registerUnderGenres(data: [String: Any], user: Firebase.User, completion: @escaping () -> Void, errBlock: @escaping (Error) -> Void) {
         
         guard let id = data["id"] as? String else { return }
@@ -534,6 +701,7 @@ class CreateRecipeDM: CreateRecipeDMProtocol {
             if let err = err {
                 
                 errBlock(err)
+                
                 
             }
             else {
@@ -713,6 +881,34 @@ class CreateRecipeDM: CreateRecipeDMProtocol {
         }
     }
     
+    //MARK: create uploading recipe data
+    static func convertToUploadingRecipeData(title: String, time: Int, serving: Int, isVIP: Bool, user: Firebase.User) -> Observable<[String: Any]> {
+        
+        return .create { observer in
+            
+            var data:[String: Any] = [:]
+        
+            
+            let uuid = UUID()
+            let uniqueIdString = uuid.uuidString.replacingOccurrences(of: "-", with: "")
+            
+            
+            data["id"] = uniqueIdString
+            data["publisherID"] = user.uid
+            data["isVIP"] = isVIP
+            data["updateDate"] = Date()
+            
+            data["title"] = title
+            data["time"] = time
+            data["serving"] = serving
+                    
+            
+            observer.onNext(data)
+                        
+            return Disposables.create()
+        }
+    }
+    
     
     static func createUploadingRecipeData(isVIP: Bool, sections: [RecipeItemSectionModel], user: Firebase.User) -> Observable<[String: Any]> {
         
@@ -805,42 +1001,85 @@ class CreateRecipeDM: CreateRecipeDMProtocol {
         }
     }
     
-    func createGenresData(genres: [Genre], ingredients: [Ingredient]) -> Observable<[[String: Any]]>  {
+    //MARK: convert to genres data
+    
+    static func convertToGenresData(ingredients: [Ingredient]) -> Observable<[[String: Any]]> {
         
         return .create { observer in
             
-            let genresdata:[[String: Any]] = genres.map { [unowned self] genre in
-
-                return self.generateGenreDic(id: genre.id, name: genre.title)
-                
-            }
-            
             let ingredientsdata:[[String: Any]] = ingredients.map { ingredient in
                                 
-                return self.generateGenreDic(id: ingredient.id, name: ingredient.name)
+                return self.generateGenreDic(id: ingredient.id, title: ingredient.name)
                 
             }
             
-            let result = [genresdata, ingredientsdata].flatMap { $0 }
-            
-            observer.onNext(result)
-            
+            observer.onNext(ingredientsdata)
+
             return Disposables.create()
         }
         
     }
     
-    func generateGenreDic(id: String, name: String) -> [String: Any] {
+    static func convertToGenresData(genres: [Genre]) -> Observable<[[String: Any]]> {
+        
+        return .create { observer in
+            
+            let genressdata:[[String: Any]] = genres.map { genre in
+                                
+                return self.generateGenreDic(id: genre.id, title: genre.title)
+                
+            }
+            
+            observer.onNext(genressdata)
+
+            return Disposables.create()
+        }
+        
+    }
+    
+    static func convertToBasicInfoDic(ingredients: [Ingredient]) -> Observable<[String: Bool]> {
+        
+        return .create { observer in
+            
+            var dic:[String: Bool] = [:]
+            
+            ingredients.forEach { ingredient in
+                dic[ingredient.id] = true
+            }
+            
+            observer.onNext(dic)
+            
+            return Disposables.create()
+        }
+    }
+    
+    static func convertToBasicInfoDic(genres: [Genre]) -> Observable<[String: Bool]> {
+        
+        return .create { observer in
+            
+            var dic:[String: Bool] = [:]
+            
+            genres.forEach { genre in
+                dic[genre.id] = true
+            }
+            
+            observer.onNext(dic)
+            
+            return Disposables.create()
+        }
+    }
+    
+    static func generateGenreDic(id: String, title: String) -> [String: Any] {
        
         var dic:[String: Any] = [:]
         
         dic["id"] = id
-        dic["name"] = name
+        dic["title"] = title
         dic["usedLatestDate"] = Date()
         dic["count"] = FieldValue.increment(Int64(1))
         
         
-        let nameCharArr = Array(name)
+        let nameCharArr = Array(title)
         var dicSearchingChar:[String: Bool] = [:]
         
         nameCharArr.forEach {
@@ -856,7 +1095,7 @@ class CreateRecipeDM: CreateRecipeDMProtocol {
         
     }
     
-    static func createGenresData(sections: [RecipeItemSectionModel]) -> Observable<[[String: Any]]>  {
+    static func convertToGenresData(sections: [RecipeItemSectionModel]) -> Observable<[[String: Any]]>  {
         
         return .create { observer in
             
@@ -891,7 +1130,7 @@ class CreateRecipeDM: CreateRecipeDMProtocol {
                         var data:[String: Any] = [:]
                         
                         data["id"] = genre.id
-                        data["name"] = genre.title
+                        data["title"] = genre.title
                         data["usedLatestDate"] =  Date()
                         data["count"] = FieldValue.increment(Int64(1))
                         
@@ -1023,7 +1262,7 @@ class CreateRecipeDM: CreateRecipeDMProtocol {
         
     }
     
-    static func createInstructionsData(section: RecipeItemSectionModel, user: Firebase.User, recipeID: String) -> Observable<[[String: Any]]>  {
+    static func convertToInstructionsData(section: RecipeItemSectionModel, user: Firebase.User, recipeID: String) -> Observable<[[String: Any]]>  {
         
         return .create { observer in
             
@@ -1073,7 +1312,7 @@ class CreateRecipeDM: CreateRecipeDMProtocol {
     
 //    static func createIngredientsData(section: RecipeItemSectionModel, user: Firebase.User, recipeID: String) -> Observable<[[String: Any]]> {
 //
-    static func createIngredientsData(ingredients: [Ingredient], user: Firebase.User, recipeID: String) -> Observable<[[String: Any]]> {
+    static func convertToIngredientsData(ingredients: [Ingredient]) -> Observable<[[String: Any]]> {
         return .create { observer in
             
 //            var tempItems:[RecipeDetailSectionItem] = []
@@ -1116,6 +1355,27 @@ class CreateRecipeDM: CreateRecipeDMProtocol {
         }
     }
     
+    static func convertToInstructionData(instructions: [Instruction]) -> Observable<[[String: Any]]> {
+        
+        return .create { observer in
+                        
+            let data: [[String: Any]] = instructions.map { instruction in
+               
+                var dic:[String: Any] = [:]
+                
+                dic["id"] = instruction.id
+                dic["index"] = instruction.index
+                dic["text"] = instruction.text
+                
+                return dic
+            }
+            
+            observer.onNext(data)
+            
+            return Disposables.create()
+        }
+    }
+    
     static func updateRecipe(recipeData: [String: Any], ingredientsData: [[String: Any]],  instructionsData: [[String: Any]], user: Firebase.User) -> Observable<[String: Any]>  {
         
         return .create { observer in
@@ -1130,38 +1390,129 @@ class CreateRecipeDM: CreateRecipeDMProtocol {
                     observer.onError(err)
                 }
                 else {
+                   
+                    var ingredientNum = 0
                     
-                    ingredientsData.forEach {
+                    ingredientsData.forEach { ingredientData in
                         
-                        guard let ingredientID = $0["id"] as? String else { return }
+                        addRecipeMoreInfo(collectionName: "ingredients", recipeID: recipeId, data: ingredientData) {
                         
-                        db.collection("recipes").document(recipeId).collection("ingredients").document(ingredientID).setData($0, merge: true) { err in
+                            ingredientNum += 1
                             
-                            if let err = err {
+                            if ingredientNum == ingredientsData.count {
+                            
+                                var instructiontNum = 0
                                 
-                                observer.onError(err)
-                            }
-                            else {
-                                
-                                instructionsData.forEach {
+                                instructionsData.forEach { instructionData in
                                     
-                                    guard let instructionID = $0["id"] as? String else { return }
+                                    addRecipeMoreInfo(collectionName: "instructions", recipeID: recipeId, data: instructionData) {
                                     
-                                    db.collection("recipes").document(recipeId).collection("instructions").document(instructionID).setData($0, merge: true) { err in
+                                        instructiontNum += 1
                                         
-                                        if let err = err {
-                                            
-                                            observer.onError(err)
-                                        }
-                                        else {
-                                            
+                                        if ingredientNum == ingredientsData.count {
+                                        
                                             observer.onNext(recipeData)
+                                        
                                         }
+                                    
+                                    } errBlock: { err in
+                                        
+                                        instructiontNum += 1
+                                        
+                                        print(err)
+                                        
+                                        if ingredientNum == ingredientsData.count {
+                                        
+                                            observer.onNext(recipeData)
+                                        
+                                        }
+                                        
                                     }
+
                                 }
+                            
                             }
+                        
+                        } errBlock: { err in
+                            
+                            ingredientNum += 1
+                            
+                            print(err)
+                            
+                            if ingredientNum == ingredientsData.count {
+                            
+                                var instructiontNum = 0
+                                
+                                instructionsData.forEach { instructionData in
+                                    
+                                    addRecipeMoreInfo(collectionName: "instructions", recipeID: recipeId, data: instructionData) {
+                                    
+                                        instructiontNum += 1
+                                        
+                                        if ingredientNum == ingredientsData.count {
+                                        
+                                            observer.onNext(recipeData)
+                                        
+                                        }
+                                    
+                                    } errBlock: { err in
+                                        
+                                        instructiontNum += 1
+                                        
+                                        print(err)
+                                        
+                                        if ingredientNum == ingredientsData.count {
+                                        
+                                            observer.onNext(recipeData)
+                                        
+                                        }
+                                        
+                                    }
+
+                                }
+                                
+                                
+                            
+                            }
+                            
                         }
+
                     }
+                    
+                  
+                    
+                    
+//                    ingredientsData.forEach {
+//
+//                        guard let ingredientID = $0["id"] as? String else { return }
+//
+//                        db.collection("recipes").document(recipeId).collection("ingredients").document(ingredientID).setData($0, merge: true) { err in
+//
+//                            if let err = err {
+//
+//                                observer.onError(err)
+//                            }
+//                            else {
+//
+//                                instructionsData.forEach {
+//
+//                                    guard let instructionID = $0["id"] as? String else { return }
+//
+//                                    db.collection("recipes").document(recipeId).collection("instructions").document(instructionID).setData($0, merge: true) { err in
+//
+//                                        if let err = err {
+//
+//                                            observer.onError(err)
+//                                        }
+//                                        else {
+//
+//                                            observer.onNext(recipeData)
+//                                        }
+//                                    }
+//                                }
+//                            }
+//                        }
+//                    }
                     
                 }
             }
@@ -1169,6 +1520,24 @@ class CreateRecipeDM: CreateRecipeDMProtocol {
             return  Disposables.create()
             
         }
+    }
+    
+   static func addRecipeMoreInfo(collectionName: String, recipeID: String, data: [String: Any], completion: @escaping () -> Void, errBlock: @escaping (Error) -> Void) {
+        
+        guard let id = data["id"] as? String else { return }
+
+        db.collection("recipes").document(recipeID).collection(collectionName).document(id).setData(data, merge: true) { err in
+            
+            if let err = err {
+                
+                errBlock(err)
+            }
+            else {
+                
+                completion()
+            }
+        }
+        
     }
     
     static func generateGenresIDs(genresData: [[String: Any]], user: Firebase.User) -> Observable<[String: Bool]> {
@@ -1378,7 +1747,7 @@ class CreateRecipeDM: CreateRecipeDMProtocol {
                             if let imgURL = imgURL?.absoluteString {
                                 
                                 
-                                self.db.collection("recipes").document(recipeID).updateData([
+                                self.db.collection("recipes").document(recipeID).setData([
                                     
                                     "imgString": imgURL
                                     

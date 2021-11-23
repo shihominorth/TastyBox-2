@@ -47,14 +47,15 @@ class CreateRecipeVM: ViewModelBase {
     var thumbnailImgDataSubject = PublishSubject<Data>()
     
     let titleSubject = BehaviorSubject<String>(value: "")
-    let servingSubject = BehaviorSubject<String>(value: "")
-    let timeSubject = BehaviorSubject<String>(value: "")
+    let servingSubject = BehaviorSubject<Int>(value: 0)
+    let timeSubject = BehaviorSubject<Int>(value: 0)
     let selectedGenres = BehaviorRelay<[Genre]>(value: [])
-    
     var isVIPSubject = BehaviorSubject<Bool>(value: false)
+    
     
     var ingredients = [Ingredient]()
     var instructions = [Instruction]()
+    
     var ingredientsSubject = BehaviorSubject<[Ingredient]>(value: [])
     var instructionsSubject = BehaviorSubject<[Instruction]>(value: [])
     
@@ -68,7 +69,7 @@ class CreateRecipeVM: ViewModelBase {
     let combinedRequirements: Observable<(Bool, Bool, Bool, Bool)>
     let combinedIngredientAndInstructionValidation: Observable<(Bool, Bool)>
     
-    let stringInputs: Observable<(String, String, String)>
+//    let stringInputs: Observable<(String, StrstringInputsing, String)>
     let combinedInputs: [RecipeInput]
     let isIngredienstNotEmpty = PublishSubject<Bool>()
     let isInstructionsNotEmpty = PublishSubject<Bool>()
@@ -84,6 +85,8 @@ class CreateRecipeVM: ViewModelBase {
         self.user = user
         self.apiType = apiType
         
+        self.ingredients = []
+        self.ingredientsSubject = BehaviorSubject<[Ingredient]>(value: self.ingredients)
         
         self.isMainImgValidation = self.mainImgDataSubject
             .map { !$0.isEmpty }
@@ -94,11 +97,11 @@ class CreateRecipeVM: ViewModelBase {
             .share(replay: 1, scope: .forever)
         
         self.isTimeValidation = self.timeSubject
-            .map { !$0.isEmpty }
+            .map { !String($0).isEmpty }
             .share(replay: 1, scope: .forever)
         
         self.isServingValidation = self.servingSubject
-            .map { !$0.isEmpty }
+            .map { !String($0).isEmpty }
             .share(replay: 1, scope: .forever)
         
         self.ingredientValidation = self.ingredientsSubject
@@ -123,9 +126,9 @@ class CreateRecipeVM: ViewModelBase {
         
         self.combinedInputs = [.mainPhoto(self.mainImgDataSubject)]
         
-        stringInputs = .combineLatest(self.titleSubject.asObservable(), self.timeSubject.asObservable(), self.servingSubject.asObservable()) { title, time, serving -> (String, String, String) in
-            return (title, time, serving)
-        }
+//        stringInputs = .combineLatest(self.titleSubject.asObservable(), self.timeSubject.asObservable(), self.servingSubject.asObservable()) { title, time, serving -> (String, String, String) in
+//            return (title, time, serving)
+//        }
         
         super.init()
         
@@ -252,12 +255,13 @@ class CreateRecipeVM: ViewModelBase {
                 
                 let filteredIngredients = self.ingredients.filter { !$0.name.isEmpty }.enumerated()
                     .map { index, value -> Ingredient in
-                        
+
                         let newElement = value
                         newElement.index = index
-                        
+
                         return newElement
                     }
+
                 
                 let filteredInstructions = self.instructions.filter { !$0.text.isEmpty }.enumerated()
                     .map { index, value -> Instruction in
@@ -269,7 +273,8 @@ class CreateRecipeVM: ViewModelBase {
                     }
                 
                 
-                let vm = CheckRecipeVM(sceneCoodinator: self.sceneCoodinator, user: self.user, title: title, mainPhoto: mainImageData, video: url, time: time, serving: serving, isVIP: isVIP, genres: genres, ingredients: filteredIngredients, instructions: filteredInstructions)
+                
+                let vm = CheckRecipeVM(sceneCoodinator: self.sceneCoodinator, user: self.user, title: title, mainPhoto: mainImageData, videoUrl: url, time: time, serving: serving, isVIP: isVIP, genres: genres, ingredients: filteredIngredients, instructions: filteredInstructions)
                 
                 return Observable.just(vm)
                 
@@ -316,12 +321,14 @@ class CreateRecipeVM: ViewModelBase {
         
         let uuid = UUID()
         let uniqueIdString = uuid.uuidString.replacingOccurrences(of: "-", with: "")
-        
+
         let indredient = Ingredient(key: uniqueIdString, name: "", amount: "", order: self.ingredients.count)
-        
+
         self.ingredients.append(indredient)
         self.ingredientsSubject.onNext(self.ingredients)
     }
+    
+
     
     func appendNewInstructions() {
         
@@ -376,6 +383,8 @@ class CreateRecipeVM: ViewModelBase {
                 
                 self.instructions[index].imageURL =  URL(string: str)?.absoluteString
                 
+                self.sceneCoodinator.userDissmissed()
+
             })
         
     }
@@ -398,6 +407,8 @@ class CreateRecipeVM: ViewModelBase {
                 return .empty()
             }
             .do(onNext: { [unowned self] in
+                
+                self.sceneCoodinator.userDissmissed()
                 
                 self.mainImgDataSubject.onNext($0)
                 
@@ -422,7 +433,8 @@ class CreateRecipeVM: ViewModelBase {
             }
             .map { $0 }
             .do(onNext: { [unowned self] in
-                
+               
+                self.sceneCoodinator.userDissmissed()
                 self.videoPlaySubject.onNext($0)
                 
             })

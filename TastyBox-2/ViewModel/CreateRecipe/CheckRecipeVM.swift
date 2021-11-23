@@ -19,32 +19,33 @@ class CheckRecipeVM {
     
     let apiType: CreateRecipeDMProtocol.Type
     
-//    var mainPhoto: Data
-//    var url: URL? = nil
+    //    var mainPhoto: Data
+    //    var url: URL? = nil
     var sections: [RecipeItemSectionModel] = []
     let evaluations: [Evaluation]
-//    let isVIP: Bool
-//    let instructions: [Instruction]
+    //    let isVIP: Bool
+    //    let instructions: [Instruction]
     var isDisplayed = false
     var isEnded = false
-
+    
     let isExpandedSubject = BehaviorRelay<Bool>(value: false)
-
+    
     let isExpandedDiffenreceSubject = ReplaySubject<Bool>.create(bufferSize: 1)
     var diffenrenceIsExpandedSubject: Observable<Bool> {
         return Observable.zip(isExpandedDiffenreceSubject, isExpandedDiffenreceSubject.skip(1)) { previous, current in
             return  previous != current
         }
-       
+        
     }
     
     let title: String
-    let mainPhotoDataString: Data
-    let videoUrlString: String?
+    let mainPhotoData: Data
+    let videoUrl: URL?
     let time: Int
     let serving: Int
     let isVIP: Bool
     let genres: [Genre]
+    
     let ingredients: [Ingredient]
     let instructions: [Instruction]
     
@@ -55,30 +56,27 @@ class CheckRecipeVM {
     
     let disposeBag = DisposeBag()
     
-    init(sceneCoodinator: SceneCoordinator, user: Firebase.User, apiType: CreateRecipeDMProtocol.Type = CreateRecipeDM.self, title: String, mainPhoto: Data, video: URL?, time: String, serving: String, isVIP: Bool, genres: [Genre],  ingredients: [Ingredient], instructions: [Instruction]) {
+    init(sceneCoodinator: SceneCoordinator, user: Firebase.User, apiType: CreateRecipeDMProtocol.Type = CreateRecipeDM.self, title: String, mainPhoto: Data, videoUrl: URL?, time: Int, serving: Int, isVIP: Bool, genres: [Genre],  ingredients: [Ingredient], instructions: [Instruction]) {
+        
         
         self.sceneCoodinator = sceneCoodinator
         self.user = user
         self.apiType = apiType
         
         self.title = title
-        self.mainPhotoDataString = mainPhoto.base64EncodedData()
-        self.videoUrlString = video?.absoluteString
+        self.mainPhotoData = mainPhoto
+        self.videoUrl = videoUrl
+        self.evaluations = [.like, .report]
+        self.time = time
+        self.serving = serving
         self.genres = genres
         self.isVIP = isVIP
         self.ingredients = ingredients
         self.instructions = instructions
-
-        guard let time = Int(time), let serving = Int(serving) else { return }
-        self.time = time
-        self.serving = serving
+      
         
-        
-        evaluations = [.like, .report]
-
-                
         let imgString = mainPhoto.base64EncodedString()
-        let videoString = video?.absoluteString
+        let videoString = videoUrl?.absoluteString
         
         let mainImageSection: RecipeItemSectionModel = .mainImageData(imgURLString: imgString, videoURLString: videoString)
         let titleSection: RecipeItemSectionModel = .title(title: title)
@@ -149,112 +147,81 @@ class CheckRecipeVM {
     }
     
     func uploadRecipe() {
- 
-        var recipeId = ""
         
-        self.apiType.createUploadingRecipeData(isVIP: isVIP, sections: self.sections, user: self.user).do(onNext: { [unowned self] in
-            
-            self.recipeDataSubject.onNext($0)
-            
-        }).do(onNext: {
-            
-            guard let id = $0["id"] as? String else {
-                return
-            }
-            
-            recipeId = id
-            
-        }).flatMap ({ [unowned self] _ in
-            
-            self.apiType.createIngredientsData(section: sections[6], user: self.user, recipeID: recipeId)
-            
-        }).do (onNext: { [unowned self] in
-                
-            self.ingredientsDataSubject.onNext($0)
-                
-        }).flatMap ({ [unowned self] _ in
-            
-            self.apiType.createInstructionsData(section: sections[7], user: self.user, recipeID: recipeId)
-            
-        }).do(onNext: { [unowned self] in
-            
-            self.instructionsDataSubject.onNext($0)
-            
-        }).flatMap ({ [unowned self] _ in
-            
-            self.apiType.createGenresData(sections: [sections[3], sections[6]])
-            
-        }).do(onNext: {
-            
-            self.genresDataSubject.onNext($0)
-            
-        }).flatMap { [unowned self] _ in
-
-            return Observable.combineLatest(self.recipeDataSubject.asObservable(), self.ingredientsDataSubject.asObservable(), self.instructionsDataSubject.asObservable(), self.genresDataSubject.asObservable())
-
-        }
-        .subscribe(onNext: { [unowned self] recipeData, ingredientsData, instructionsData, genresData in
-            
-            let vm = PublishRecipeVM(sceneCoodinator: self.sceneCoodinator, user: self.user, recipeData: recipeData, ingredientsData: ingredientsData, instructionsData: instructionsData, genresData: genresData, isVIP: self.isVIP,  video: self.url, mainImage: self.mainPhoto, instructions: instructions)
-            
-            self.sceneCoodinator.modalTransition(to: .createReceipeScene(scene: .publishRecipe(vm)), type: .modalHalf)
+//        var recipeId = ""
         
-        }, onError: { err in
+//        let removedIngredientsSections = self.sections.enumerated().filter { index, _ in
+//            index != 6
+//        }
+//
 
-            print(err)
-
-        })
-        .disposed(by: disposeBag)
-
+        let vm = PublishRecipeVM(sceneCoodinator: self.sceneCoodinator, user: self.user, title: self.title, serving: self.serving, time: self.time, isVIP: self.isVIP, video: self.videoUrl, mainImageData: self.mainPhotoData, genres: genres, ingredients: ingredients, instructions: instructions)
+        
+        let scene = Scene.createReceipeScene(scene: .publishRecipe(vm))
+        
+        self.sceneCoodinator.modalTransition(to: scene, type: .modalHalf)
+        
+//        self.apiType.createUploadingRecipeData(isVIP: isVIP, sections: self.sections, user: self.user).do(onNext: { [unowned self] in
+//            
+//            self.recipeDataSubject.onNext($0)
+//            
+//        }).do(onNext: {
+//            
+//            guard let id = $0["id"] as? String else {
+//                return
+//            }
+//            
+//            recipeId = id
+//            
+//        }).flatMap ({ [unowned self] _ in
+//            
+//            self.apiType.createIngredientsData(section: sections[6], user: self.user, recipeID: recipeId)
+//            
+//        }).do (onNext: { [unowned self] in
+//            
+//            self.ingredientsDataSubject.onNext($0)
+//            
+//        }).flatMap ({ [unowned self] _ in
+//            
+//            self.apiType.createInstructionsData(section: sections[7], user: self.user, recipeID: recipeId)
+//            
+//        }).do(onNext: { [unowned self] in
+//            
+//            self.instructionsDataSubject.onNext($0)
+//            
+//        }).flatMap ({ [unowned self] _ in
+//            
+//            self.apiType.createGenresData(sections: [sections[3], sections[6]])
+//            
+//        }).do(onNext: {
+//            
+//            self.genresDataSubject.onNext($0)
+//            
+//        }).flatMap { [unowned self] _ in
+//            
+//            return Observable.combineLatest(self.recipeDataSubject.asObservable(), self.ingredientsDataSubject.asObservable(), self.instructionsDataSubject.asObservable(), self.genresDataSubject.asObservable())
+//            
+//        }
+//        .subscribe(onNext: { [unowned self] recipeData, ingredientsData, instructionsData, genresData in
+//            
+//            let vm = PublishRecipeVM(sceneCoodinator: self.sceneCoodinator, user: self.user, recipeData: recipeData, ingredientsData: ingredientsData, instructionsData: instructionsData, genresData: genresData, isVIP: self.isVIP,  video: self.url, mainImage: self.mainPhoto, instructions: instructions)
+//            
+//            self.sceneCoodinator.modalTransition(to: .createReceipeScene(scene: .publishRecipe(vm)), type: .modalHalf)
+//            
+//        }, onError: { err in
+//            
+//            print(err)
+//            
+//        })
+//        .disposed(by: disposeBag)
+        
         
     }
+    
    
-    func setIngredientIDs(recipeId: String) -> Observable<[String: Any]> {
-        
-        if case let .ingredients(items) = sections[6] {
-      
-            let ingredients: [Ingredient] = items.compactMap { item in
-                
-                if case let .ingredients(ingredient) = item {
-                    
-                    return ingredient
-                    
-                }
-                else {
-                    
-                    return nil
-                    
-                }
-            }
-            
-            return self.apiType.getIngredientIDs(ingredients: ingredients)
-                .flatMapLatest { [unowned self] in
-                   
-                    let createDataStream = self.apiType.createIngredientsData(ingredients: $0, user: self.user, recipeID: recipeId)
-                    
-                    // 02はingredientsをgenresとしてのデータにする
-                    // self.apiType.createGenresData(sections: [sections[3], sections[6]]) は
-                    // createGenresDataとconvertToGenresDataに分ける。
-                    // 引数の方がGenre/Ingredientと違うため。
-                    // ingredientsはgenresとしても扱う
-                    
-                    return Observable.zip(createDataStream, <#T##O2#>) { ingredientData, genresData in
-                       
-                        self.ingredientsDataSubject.onNext(ingredientData)
-                        
-                        return genresData
-                    }
-
-                }
-            
-        }
-        
-        return Observable<[String: Any]>.just([:])
-        
-    }
     
 }
 
 extension ObservableType {
-
+    
 }
