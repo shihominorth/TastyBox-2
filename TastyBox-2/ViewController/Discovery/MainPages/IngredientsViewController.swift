@@ -57,14 +57,23 @@ class IngredientsViewController: UIViewController, BindableType {
         let ingredientsCollectionViewFlowLayout = ThereeCellsFlowLayout()
         let recipesCollectionViewFlowLayout = ThereeCellsFlowLayout()
         
+        ingredientsCollectionViewFlowLayout.sectionInset = UIEdgeInsets(top: 3, left: 5, bottom: 3, right: 5)
         ingredientsCollectionViewFlowLayout.estimatedItemSize = UICollectionViewFlowLayout.automaticSize
+       
         ingredientsCollectionView.collectionViewLayout = ingredientsCollectionViewFlowLayout
         
-        let width = recipesCollecitonView.frame.width / 2
+        let width = (recipesCollecitonView.frame.width - 11) / 2
         recipesCollectionViewFlowLayout.itemSize = CGSize(width: width, height: width * 1.5)
+        recipesCollectionViewFlowLayout.minimumLineSpacing = 1
+        recipesCollectionViewFlowLayout.sectionInset = UIEdgeInsets(top: 10, left: 5, bottom: 10, right: 5)
+        
         recipesCollecitonView.collectionViewLayout = recipesCollectionViewFlowLayout
        
         navigationController?.setNavigationBarHidden(false, animated: false)
+        
+        view.backgroundColor = #colorLiteral(red: 0.9998771548, green: 0.9969214797, blue: 0.8987136483, alpha: 1)
+        ingredientsCollectionView.backgroundColor = #colorLiteral(red: 1, green: 0.9960784314, blue: 0.8980392157, alpha: 1)
+        recipesCollecitonView.backgroundColor = #colorLiteral(red: 0.9998771548, green: 0.9969214797, blue: 0.8987136483, alpha: 1)
         
     }
     
@@ -125,7 +134,7 @@ class IngredientsViewController: UIViewController, BindableType {
         viewModel.ingredientSubject
             .debug("get recipe")
             .flatMapLatest { [unowned self] in
-                self.viewModel.getRecipeWithMutipleIngredients(ingredients: $0)
+                self.viewModel.getRecipes(allIngredients: $0)
             }
             .catch { err in
                 
@@ -143,14 +152,62 @@ class IngredientsViewController: UIViewController, BindableType {
             .disposed(by: viewModel.disposeBag)
         
 
+        let selectIngredientsCollectionViewIndexPath =
+        ingredientsCollectionView.rx.itemSelected.share(replay: 1, scope: .forever)
+            .do(onNext: { [unowned self] indexPath in
+                
+                self.viewModel.selectedIngredientSubject.onNext(indexPath.row)
+                
+            })
+            
+        
+        let selectedSingleIngredientIndexPath = selectIngredientsCollectionViewIndexPath.filter { $0.row != 0 }
+        
+        
+        Observable.combineLatest(selectedSingleIngredientIndexPath, viewModel.ingredientSubject) { indexPath, ingredients in
+            
+            return ingredients[indexPath.row - 1]
+            
+        }
+        .flatMapLatest { [unowned self] ingredient in
+            self.viewModel.getRecipes(ingredient: ingredient)
+        }
+        .subscribe(onNext: { recipes in
+
+            self.viewModel.recipesSubject.onNext(recipes)
+
+        })
+        .disposed(by: viewModel.disposeBag)
+        
+        selectIngredientsCollectionViewIndexPath
+            .filter { $0.row == 0 }
+            .withLatestFrom(viewModel.ingredientSubject)
+            .flatMapLatest { [unowned self] in
+                self.viewModel.getRecipes(allIngredients: $0)
+            }
+            .catch { err in
+                
+                return .empty()
+            }
+            .subscribe(onNext: { recipes in
+                
+                self.viewModel.recipesSubject.onNext(recipes)
+                
+            })
+            .disposed(by: viewModel.disposeBag)
         
     }
     
     
     func setUpDataSource() {
         
-        ingredientsDataSource = RxDefaultCollectionViewDataSource<String, IngredientOptionCVCell>(identifier: "ingredientsCVCell") { row, ingredient, cell in
-            
+        ingredientsDataSource = RxDefaultCollectionViewDataSource<String, IngredientOptionCVCell>(identifier: "ingredientsCVCell") { [unowned self] row, ingredient, cell in
+ 
+            self.viewModel.selectedIngredientSubject
+                .map { $0 == row }
+                .bind(to: cell.isSelectedSubject)
+                .disposed(by: cell.disposeBag)
+
             cell.titleLbl.isSkeletonable = true
             cell.titleLbl.showAnimatedSkeleton()
             

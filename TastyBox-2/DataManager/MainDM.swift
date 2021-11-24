@@ -8,6 +8,7 @@
 import Foundation
 import Firebase
 import RxSwift
+import UIKit
 
 protocol MainDMProtocol {
     static func getPastTimelines(user: Firebase.User, date: Date, limit: Int) -> Observable<[Recipe]>
@@ -15,7 +16,7 @@ protocol MainDMProtocol {
     static func getRecipesRanking() -> Observable<[Recipe]>
     static func getRefrigeratorIngredients(user: Firebase.User) -> Observable<[Ingredient]>
     static func getRecipesUsedIngredient(ingredient: Ingredient) -> Observable<[Recipe]>
-    static func getRecipesUsedIngredientsInAll(ingredients: [Ingredient]) -> Observable<[Recipe]>
+    static func getRecipesUsedIngredients(allIngredients: [Ingredient]) -> Observable<[Recipe]>
     static func getVIPRecipes(ingredient: Ingredient) -> Observable<[Recipe]>
     static func getPublishers(ids: [String]) -> Observable<[String: User]>
 }
@@ -185,63 +186,264 @@ class MainDM: MainDMProtocol {
     
     static func getRecipesUsedIngredient(ingredient: Ingredient) -> Observable<[Recipe]> {
         
-        let query = db.collection("recipes").whereField("ingredients.\(ingredient.id)", isEqualTo: true)
+        let query = db.collection("recipes").whereField("genres.\(ingredient.id)", isEqualTo: true)
         
         return getRecipes(query: query)
 
     }
       
-    static func getRecipesUsedIngredientsInAll(ingredients: [Ingredient]) -> Observable<[Recipe]> {
+    static func getRecipesUsedIngredients(allIngredients: [Ingredient]) -> Observable<[Recipe]> {
         
         var query: Query = db.collection("recipes")
         
         var limitLoop = 1
         var max = 0
         // ingredients.countが４以下だとmaxが１またはそれ以下になるためクラッシュしてしまう。
-        if ingredients.isEmpty {
+        if allIngredients.isEmpty {
             
             return .just([])
             
         }
-        else if ingredients.count < 3 {
-            max = 1
+        else if allIngredients.count == 1 {
+            
+            let query = db.collection("recipes").whereField("genres.\(allIngredients[0].id)", isEqualTo: true)
+            
+            return getRecipes(query: query)
+            
         }
-        else if ingredients.count < 5 {
+        else if allIngredients.count < 5 {
+            
+            // if count is 3
+            
+            var queries: [Query] = []
+
+            //　全てのingredientsを含んだrecipeを呼ぶクエリ
+            var allIngeredientContainsQuery = db.collection("recipes").whereField("genres.\(allIngredients[0].id)", isEqualTo: true)
+
+            if allIngredients.count > 1 {
+
+                for index in 1 ..< allIngredients.count {
+
+                    allIngeredientContainsQuery = allIngeredientContainsQuery.whereField("genres.\(allIngredients[index].id)", isEqualTo: true)
+
+                }
+
+            }
+
+
+            queries.append(allIngeredientContainsQuery)
+            
+            // 2個 Ingredientが含まれてるrecipeを探す
+            let multipleIngredientsContainsQuery = self.getRecipesByAllWays(allIngredients: allIngredients)
+            queries.append(contentsOf: multipleIngredientsContainsQuery)
+            
+            
+            // 一つ一つ調べる
+            for ingredient in allIngredients {
+
+                let query = db.collection("recipes").whereField("genres.\(ingredient.id)", isEqualTo: true)
+
+                queries.append(query)
+
+            }
+
+            var getRecipesStream = getRecipes(query: queries[0])
+            
+            queries.enumerated().forEach { index, query in
+                
+                if index != 1 {
+                    
+                    getRecipesStream = getRecipesStream
+                        .flatMap({ recipes in
+                            
+                            return getRecipes(query: query)
+                                .map { newRecipes in
+                                    
+                                    var result = recipes
+                                    result.append(contentsOf: newRecipes)
+                                    
+                                    return result
+                                    
+                                }
+                            
+                        })
+                    
+                }
+                
+            }
+            
+            return getRecipesStream
+            
+//            max = 1
+        }
+//        else if allIngredients.count >= 5 {
            
-            max = Int.random(in: 1 ... ingredients.count)
-        
-        }
-        else  {
+//            max = Int.random(in: 1 ... allIngredients.count)
          
-            let thirtyPercentOfIngredientsCount = Int(round(Double(ingredients.count) * 0.3))
+            let queries = getQueries(searchIngredientsOnceNumLimit: 3, ingredients: allIngredients)
             
-            max = thirtyPercentOfIngredientsCount
+            var getRecipesStream = getRecipes(query: queries[0])
             
-        }
-       
-        if max == 1 {
-        
-            limitLoop = 1
-        
-        }
-        else {
+            queries.enumerated().forEach { index, query in
+                
+                if index != 1 {
+                    
+                    getRecipesStream = getRecipesStream
+                        .flatMap({ recipes in
+                            
+                            return getRecipes(query: query)
+                                .map { newRecipes in
+                                    
+                                    var result = recipes
+                                    result.append(contentsOf: newRecipes)
+                                    
+                                    return result
+                                    
+                                }
+                            
+                        })
+                    
+                }
+                
+            }
             
-            let ramdomLimit = Int.random(in: 1 ... max)
-            limitLoop = ramdomLimit
-        }
-
+            return getRecipesStream
         
-
-        for _ in 0 ..< limitLoop {
-            
-            let randomIndex = Int(arc4random_uniform(UInt32(ingredients.count - 1)))
-            let id = ingredients[randomIndex].id
-
-            query = query.whereField("genres.\(id)", isEqualTo: true)
-        }
-        
-        return getRecipes(query: query)
+//        }
+//        else  {
+//
+//            let thirtyPercentOfIngredientsCount = Int(round(Double(allIngredients.count) * 0.3))
+//
+//            max = thirtyPercentOfIngredientsCount
+//
+//        }
+//
+//        if max == 1 {
+//
+//            limitLoop = 1
+//
+//        }
+//        else {
+//
+//            let ramdomLimit = Int.random(in: 1 ... max)
+//            limitLoop = ramdomLimit
+//        }
+//
+//        var selectedIndice:[Int] = []
+//
+//        var randomIndex = Int.random(in: 0 ..< allIngredients.count)
+//
+//
+//        while !selectedIndice.contains(randomIndex) {
+//
+//            if selectedIndice.contains(randomIndex) {
+//
+//                randomIndex = Int(arc4random_uniform(UInt32(allIngredients.count - 1)))
+//
+//            }
+//            else {
+//
+//                selectedIndice.append(randomIndex)
+//
+//            }
+//
+//        }
+//
+//
+//        for _ in 0 ..< limitLoop {
+//
+//            let id = allIngredients[randomIndex].id
+//
+//            query = query.whereField("genres.\(id)", isEqualTo: true)
+//        }
+//
+//        return getRecipes(query: query)
            
+    }
+    
+    // ways:　通り
+    // 2 ingredients
+    static func getRecipesByAllWays(allIngredients: [Ingredient]) -> [Query] {
+        
+        var source:[[Int]] = []
+        var queries:[Query] = []
+
+        for index in 0 ..< allIngredients.count - 1 {
+
+            for pairingIndex in (index + 1) ..< allIngredients.count - 1 {
+
+                let arr = [index, pairingIndex]
+
+                if !source.contains(arr) {
+
+                    source.append(arr)
+
+                }
+
+            }
+
+        }
+        
+        source.forEach { pair in
+            
+            var query = db.collection("recipes").whereField("genres.\(allIngredients[pair[0]].id)", isEqualTo: true)
+            print("db.collection(recipes).whereField(genres.\(allIngredients[pair[0]].id), isEqualTo: true)")
+            
+            query = query.whereField("genres.\(allIngredients[pair[1]].id)", isEqualTo: true)
+            
+            queries.append(query)
+            
+        }
+        
+       return queries
+        
+    }
+    
+    static func getQueries(numQuery: Int = 5, searchIngredientsOnceNumLimit: Int, ingredients: [Ingredient]) -> [Query] {
+        
+        var tempQueries:[Query] = []
+        
+        for _ in 0 ..< numQuery {
+            
+            let searchIngredientsOnceNum = Int.random(in: 0 ..< searchIngredientsOnceNumLimit)
+
+            var randomIndice:[Int] = []
+            
+
+            let firstSearchIngredientsOnceNum = Int.random(in: 0 ..< searchIngredientsOnceNumLimit)
+            randomIndice.append(firstSearchIngredientsOnceNum)
+            
+            var query = db.collection("recipes").whereField("genres.\(ingredients[firstSearchIngredientsOnceNum].id)", isEqualTo: true)
+            
+            for _ in 1 ..< searchIngredientsOnceNum {
+                
+                var randomIndex: Int {
+                  
+                    var result = Int.random(in: 0 ..< searchIngredientsOnceNumLimit)
+                    
+                    while randomIndice.contains(result) {
+                        
+                        result = Int.random(in: 0 ..< searchIngredientsOnceNumLimit)
+                        
+                        
+                    }
+                    
+                    randomIndice.append(result)
+                    
+                    return result
+                }
+                
+                query = query.whereField("genres.\(ingredients[randomIndex].id)", isEqualTo: true)
+                
+            }
+            
+            tempQueries.append(query)
+        }
+        
+        let queries = Dictionary(grouping: tempQueries, by: { $0 }).keys
+        
+        return Array<Query>(queries)
+        
     }
     
     static func getPublishers(ids: [String]) -> Observable<[String: User]> {

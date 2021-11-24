@@ -457,12 +457,13 @@ extension DiscoveryViewController: UICollectionViewDelegate, UICollectionViewDat
 
 
 class MenuCollectionViewCell: UICollectionViewCell{
+
     @IBOutlet weak var MenuLabel: UILabel!
     
     func focusCell(active: Bool) {
-        let color = active ? #colorLiteral(red: 0.9984802604, green: 0.9880111814, blue: 0.655043602, alpha: 1) : #colorLiteral(red: 0.9890902638, green: 0.8873679042, blue: 0.4545228481, alpha: 1)
+        let color = active ? #colorLiteral(red: 1, green: 0.9882352941, blue: 0.6549019608, alpha: 1) : #colorLiteral(red: 0.9882352941, green: 0.8862745098, blue: 0.4549019608, alpha: 1)
         self.contentView.backgroundColor = color
-        let labelColor = active ? #colorLiteral(red: 0.6745098039, green: 0.5568627451, blue: 0.4078431373, alpha: 1) : #colorLiteral(red: 0.9941859841, green: 0.6491095424, blue: 0.1919379234, alpha: 1)
+        let labelColor = active ? #colorLiteral(red: 0.6745098039, green: 0.5568627451, blue: 0.4078431373, alpha: 1) : #colorLiteral(red: 0.9960784314, green: 0.6509803922, blue: 0.1921568627, alpha: 1)
         MenuLabel.textColor = labelColor
     }
     
