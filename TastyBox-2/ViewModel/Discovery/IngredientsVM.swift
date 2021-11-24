@@ -15,6 +15,8 @@ class IngredientsVM: ViewModelBase {
     let apiType: MainDMProtocol.Type
     
     let recipesSubject: BehaviorSubject<[Recipe]>
+   
+    let ingredientCollectionViewSubject: BehaviorSubject<[Ingredient]>
     let ingredientSubject: BehaviorSubject<[Ingredient]>
     
     let selectedIngredientSubject: BehaviorSubject<Int>
@@ -32,8 +34,9 @@ class IngredientsVM: ViewModelBase {
         self.selectedIngredientSubject = BehaviorSubject<Int>(value: 0)
      
         self.recipesSubject = BehaviorSubject<[Recipe]>(value: [])
+     
         self.ingredientSubject = BehaviorSubject<[Ingredient]>(value: [])
-
+        self.ingredientCollectionViewSubject = BehaviorSubject<[Ingredient]>(value: [])
     }
     
     func getRefrigeratorIngredients() -> Observable<[Ingredient]> {

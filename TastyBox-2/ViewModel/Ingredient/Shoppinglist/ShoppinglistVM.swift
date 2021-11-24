@@ -21,7 +21,7 @@ class ShoppinglistVM: ViewModelBase {
     var user: FirebaseAuth.User!
     var err = NSError()
     
-    let empty = ShoppingItem(name: "___________________empty", amount: "", key: "", isBought: false, order: 0)
+    let empty = ShoppingItem(name: "___________________empty", amount: "", key: "", isBought: false, index: 0)
     
     var emptyHeight: CGFloat = 140.0
     var hasEmptyCell: BehaviorRelay<Bool> = BehaviorRelay<Bool>(value: false)

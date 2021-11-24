@@ -147,74 +147,12 @@ class CheckRecipeVM {
     }
     
     func uploadRecipe() {
-        
-//        var recipeId = ""
-        
-//        let removedIngredientsSections = self.sections.enumerated().filter { index, _ in
-//            index != 6
-//        }
-//
 
         let vm = PublishRecipeVM(sceneCoodinator: self.sceneCoodinator, user: self.user, title: self.title, serving: self.serving, time: self.time, isVIP: self.isVIP, video: self.videoUrl, mainImageData: self.mainPhotoData, genres: genres, ingredients: ingredients, instructions: instructions)
         
         let scene = Scene.createReceipeScene(scene: .publishRecipe(vm))
         
         self.sceneCoodinator.modalTransition(to: scene, type: .modalHalf)
-        
-//        self.apiType.createUploadingRecipeData(isVIP: isVIP, sections: self.sections, user: self.user).do(onNext: { [unowned self] in
-//            
-//            self.recipeDataSubject.onNext($0)
-//            
-//        }).do(onNext: {
-//            
-//            guard let id = $0["id"] as? String else {
-//                return
-//            }
-//            
-//            recipeId = id
-//            
-//        }).flatMap ({ [unowned self] _ in
-//            
-//            self.apiType.createIngredientsData(section: sections[6], user: self.user, recipeID: recipeId)
-//            
-//        }).do (onNext: { [unowned self] in
-//            
-//            self.ingredientsDataSubject.onNext($0)
-//            
-//        }).flatMap ({ [unowned self] _ in
-//            
-//            self.apiType.createInstructionsData(section: sections[7], user: self.user, recipeID: recipeId)
-//            
-//        }).do(onNext: { [unowned self] in
-//            
-//            self.instructionsDataSubject.onNext($0)
-//            
-//        }).flatMap ({ [unowned self] _ in
-//            
-//            self.apiType.createGenresData(sections: [sections[3], sections[6]])
-//            
-//        }).do(onNext: {
-//            
-//            self.genresDataSubject.onNext($0)
-//            
-//        }).flatMap { [unowned self] _ in
-//            
-//            return Observable.combineLatest(self.recipeDataSubject.asObservable(), self.ingredientsDataSubject.asObservable(), self.instructionsDataSubject.asObservable(), self.genresDataSubject.asObservable())
-//            
-//        }
-//        .subscribe(onNext: { [unowned self] recipeData, ingredientsData, instructionsData, genresData in
-//            
-//            let vm = PublishRecipeVM(sceneCoodinator: self.sceneCoodinator, user: self.user, recipeData: recipeData, ingredientsData: ingredientsData, instructionsData: instructionsData, genresData: genresData, isVIP: self.isVIP,  video: self.url, mainImage: self.mainPhoto, instructions: instructions)
-//            
-//            self.sceneCoodinator.modalTransition(to: .createReceipeScene(scene: .publishRecipe(vm)), type: .modalHalf)
-//            
-//        }, onError: { err in
-//            
-//            print(err)
-//            
-//        })
-//        .disposed(by: disposeBag)
-        
         
     }
     

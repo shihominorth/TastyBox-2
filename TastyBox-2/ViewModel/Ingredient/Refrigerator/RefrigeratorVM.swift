@@ -24,7 +24,7 @@ class RefrigeratorVM: ViewModelBase {
     var user: FirebaseAuth.User!
     var err = NSError()
     
-    let empty = RefrigeratorItem(key: "___________________empty", name: "", amount: "", order: 0)
+    let empty = RefrigeratorItem(key: "___________________empty", name: "", amount: "", index: 0)
     
     var emptyHeight: CGFloat = 140.0
     var hasEmptyCell: BehaviorRelay<Bool> = BehaviorRelay<Bool>(value: false)

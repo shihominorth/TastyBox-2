@@ -35,14 +35,25 @@ class RankingViewController: UIViewController, BindableType {
         
     }
     
+    override func viewWillAppear(_ animated: Bool) {
+        
+        viewModel.getRecipsRanking()
+            .subscribe(onNext: { recipes in
+                
+                self.viewModel.recipesSubject.onNext(recipes)
+                
+            })
+            .disposed(by: viewModel.disposeBag)
+    }
+    
 
     func bindViewModel() {
 
         setUpDataSource()
         
-        viewModel.getRecipsRanking()
-            .bind(to: viewModel.recipesSubject)
-            .disposed(by: viewModel.disposeBag)
+//        viewModel.getRecipsRanking()
+//            .bind(to: viewModel.recipesSubject)
+//            .disposed(by: viewModel.disposeBag)
 
             
         viewModel.recipesSubject

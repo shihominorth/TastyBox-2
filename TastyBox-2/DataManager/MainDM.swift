@@ -195,17 +195,49 @@ class MainDM: MainDMProtocol {
         
         var query: Query = db.collection("recipes")
         
-        let thirtyPercentOfIngredientsCount = Int(round(Double(ingredients.count) * 0.3))
+        var limitLoop = 1
+        var max = 0
+        // ingredients.countが４以下だとmaxが１またはそれ以下になるためクラッシュしてしまう。
+        if ingredients.isEmpty {
+            
+            return .just([])
+            
+        }
+        else if ingredients.count < 3 {
+            max = 1
+        }
+        else if ingredients.count < 5 {
+           
+            max = Int.random(in: 1 ... ingredients.count)
+        
+        }
+        else  {
+         
+            let thirtyPercentOfIngredientsCount = Int(round(Double(ingredients.count) * 0.3))
+            
+            max = thirtyPercentOfIngredientsCount
+            
+        }
+       
+        if max == 1 {
+        
+            limitLoop = 1
+        
+        }
+        else {
+            
+            let ramdomLimit = Int.random(in: 1 ... max)
+            limitLoop = ramdomLimit
+        }
 
-        let ramdomLimit = Int.random(in: 1 ... thirtyPercentOfIngredientsCount)
+        
 
-        for _ in 0 ..< ramdomLimit {
+        for _ in 0 ..< limitLoop {
             
             let randomIndex = Int(arc4random_uniform(UInt32(ingredients.count - 1)))
-//            let name = ingredients[randomIndex].name
-            let name = "Hello!"
+            let id = ingredients[randomIndex].id
 
-            query = query.whereField("name", isEqualTo: name)
+            query = query.whereField("genres.\(id)", isEqualTo: true)
         }
         
         return getRecipes(query: query)

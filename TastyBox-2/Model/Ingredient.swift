@@ -17,12 +17,12 @@ class Ingredient  {
     var amount: String
     var index: Int
     
-    init(key: String, name: String, amount: String, order: Int) {
+    init(key: String, name: String, amount: String, index: Int) {
        
         self.id = key
         self.name = name
         self.amount = amount
-        self.index = order
+        self.index = index
     
     }
     
@@ -31,7 +31,7 @@ class Ingredient  {
         let data = queryDoc.data()
         
         guard let id = data["id"] as? String,
-              let index = data["order"] as? Int, // in refrigerator, not index, but order
+              let index = data["index"] as? Int, // in refrigerator, not index, but order
               let name = data["name"] as? String,
               let amount = data["amount"] as? String
         else { return nil }
@@ -94,10 +94,10 @@ class ShoppingItem: Ingredient {
     
     var isBought: Bool
  
-    init(name: String, amount: String, key: String, isBought: Bool, order: Int) {
+    init(name: String, amount: String, key: String, isBought: Bool, index: Int) {
       
         self.isBought = isBought
-        super.init(key: key, name: name, amount: amount, order: order)
+        super.init(key: key, name: name, amount: amount, index: index)
     }
 
     init?(document:  QueryDocumentSnapshot) {
@@ -109,20 +109,20 @@ class ShoppingItem: Ingredient {
             let name = value["name"] as? String,
             let amount = value["amount"] as? String,
             let isBought  = value["isBought"] as? Bool,
-            let order = value["order"] as? Int
+            let index = value["index"] as? Int
             else {
                 return nil
         }
         
         self.isBought = isBought
-        super.init(key: id, name: name, amount: amount, order: order)
+        super.init(key: id, name: name, amount: amount, index: index)
     }
 }
 
 class RefrigeratorItem: Ingredient {
     
-    override init(key: String, name: String, amount: String, order: Int) {
-        super.init(key: key, name: name, amount: amount, order: order)
+    override init(key: String, name: String, amount: String, index: Int) {
+        super.init(key: key, name: name, amount: amount, index: index)
     }
     
     init?(document:  QueryDocumentSnapshot) {
@@ -133,12 +133,12 @@ class RefrigeratorItem: Ingredient {
             let id = value["id"] as? String,
             let name = value["name"] as? String,
             let amount = value["amount"] as? String,
-            let order = value["order"] as? Int
+            let index = value["index"] as? Int
             else {
                 return nil
         }
         
-        super.init(key: id, name: name, amount: amount, order: order)
+        super.init(key: id, name: name, amount: amount, index: index)
     }
     
     init?(document:  QueryDocumentSnapshot, index: Int) {
@@ -153,7 +153,7 @@ class RefrigeratorItem: Ingredient {
                 return nil
         }
         
-        super.init(key: id, name: name, amount: amount, order: index)
+        super.init(key: id, name: name, amount: amount, index: index)
     }
 }
 

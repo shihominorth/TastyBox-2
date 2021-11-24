@@ -29,7 +29,7 @@ protocol RefrigeratorProtocol: AnyObject {
     static func isBoughtShoppinglistItems(processedItems: [ShoppingItem], userID: String) -> Observable<(Bool, ShoppingItem)>
     static func getRefrigeratorDocsCount(userID: String) -> PublishSubject<Int>
     //    static func boughtIngredient(userID: String, item: ShoppingItem) -> Observable<Bool>
-    static func searchIngredients(text: String, userID: String, listName: List)
+//    static func searchIngredients(text: String, userID: String, listName: List)
     
 }
 
@@ -52,7 +52,7 @@ class RefrigeratorDM: RefrigeratorProtocol {
                     "id": id ?? uniqueIdString,
                     "name": name,
                     "amount": amount,
-                    "order": lastIndex,
+                    "index": lastIndex,
                 ]
                 
             case .shoppinglist:
@@ -62,7 +62,7 @@ class RefrigeratorDM: RefrigeratorProtocol {
                     "id": uniqueIdString,
                     "name": name,
                     "amount": amount,
-                    "order": lastIndex,
+                    "index": lastIndex,
                     "isBought": false
                 ]
             }
@@ -84,11 +84,11 @@ class RefrigeratorDM: RefrigeratorProtocol {
                         switch listName {
                         case .shoppinglist:
                             
-                            result = ShoppingItem(name: name, amount: amount, key: uniqueIdString, isBought: false, order: lastIndex)
+                            result = ShoppingItem(name: name, amount: amount, key: uniqueIdString, isBought: false, index: lastIndex)
                         
                         case .refrigerator:
                         
-                            result = RefrigeratorItem(key: id ?? uniqueIdString, name: name, amount: amount, order: lastIndex)
+                            result = RefrigeratorItem(key: id ?? uniqueIdString, name: name, amount: amount, index: lastIndex)
                         }
                         
                         return result
@@ -341,7 +341,7 @@ class RefrigeratorDM: RefrigeratorProtocol {
                             return ingredient
                         }
                         
-                        return RefrigeratorItem(key: "", name: "", amount: "", order: 0)
+                        return RefrigeratorItem(key: "", name: "", amount: "", index: 0)
                     }
                     .filter { $0.name != "" && $0.amount != "" && $0.id != "" }
                     
@@ -366,7 +366,7 @@ class RefrigeratorDM: RefrigeratorProtocol {
                                     return ingredient
                                 }
                                 
-                                return RefrigeratorItem(key: "", name: "", amount: "", order: 0)
+                                return RefrigeratorItem(key: "", name: "", amount: "", index: 0)
                             }
                             .filter { $0.name != "" && $0.amount != "" && $0.id != "" }
                             
@@ -407,7 +407,7 @@ class RefrigeratorDM: RefrigeratorProtocol {
                             return ingredient
                         }
                         
-                        return ShoppingItem(name: "", amount: "", key: "", isBought: false, order: 0)
+                        return ShoppingItem(name: "", amount: "", key: "", isBought: false, index: 0)
                     }
                     .filter { $0.name != "" && $0.amount != "" && $0.id != "" }
                     
@@ -442,7 +442,7 @@ class RefrigeratorDM: RefrigeratorProtocol {
                                         return ingredient
                                     }
                                     
-                                    return ShoppingItem(name: "", amount: "", key: "", isBought: false, order: 0)
+                                    return ShoppingItem(name: "", amount: "", key: "", isBought: false, index: 0)
                                 }
                                 .filter { $0.name != "" && $0.amount != "" && $0.id != "" }
                                 .filter { $0.isBought }
@@ -621,7 +621,7 @@ class RefrigeratorDM: RefrigeratorProtocol {
                     return ingredient
                 }
                 
-                return ShoppingItem(name: "", amount: "", key: "", isBought: false, order: 0)
+                return ShoppingItem(name: "", amount: "", key: "", isBought: false, index: 0)
             }
             .filter { $0.name != "" && $0.amount != "" && $0.id != "" }
             .sorted { $0.index < $1.index }
@@ -728,43 +728,6 @@ class RefrigeratorDM: RefrigeratorProtocol {
         return subject
     }
     
-    
-    
-    static func searchIngredients(text: String, userID: String, listName: List) {
-        
-        db.document(userID).collection(listName.rawValue).whereField("name", isEqualTo: text).getDocuments{ (querySnapshot, err) in
-            //the data has returned from firebase and is valid
-            
-            if let err = err {
-                print("Error updating document: \(err)")
-            } else {
-                print("Document successfully updated")
-                
-                //                self.ingredients.removeAll()
-                
-                if !querySnapshot!.isEmpty {
-                    
-                    for document in querySnapshot!.documents {
-                        
-                        let data = document.data()
-                        
-                        print("data count: \(data.count)")
-                        
-                        if let ingredient = RefrigeratorItem.init(document: document) {
-                            
-                            //                            self.ingredients.append(ingredient)
-                        }
-                        
-                    }
-                    
-                } else {
-                    print("No Ingredients found")
-                }
-                
-            }
-        }
-        
-    }
     
 }
 

@@ -25,7 +25,7 @@ class IngredientsViewController: UIViewController, BindableType {
     @IBOutlet weak var ingredientsCollectionView: UICollectionView!
     @IBOutlet weak var recipesCollecitonView: UICollectionView!
     
-    var ingredientsDataSource: RxDefaultCollectionViewDataSource<Ingredient, IngredientOptionCVCell>!
+    var ingredientsDataSource: RxDefaultCollectionViewDataSource<String, IngredientOptionCVCell>!
     var recipeDataSource: RxDefaultCollectionViewDataSource<Recipe, RecipeWithIngredientCVCell>!
     
     ///  スクロール開始地点
@@ -54,7 +54,16 @@ class IngredientsViewController: UIViewController, BindableType {
         super.viewDidLoad()
         
 //        showConnectingView()
+        let ingredientsCollectionViewFlowLayout = ThereeCellsFlowLayout()
+        let recipesCollectionViewFlowLayout = ThereeCellsFlowLayout()
         
+        ingredientsCollectionViewFlowLayout.estimatedItemSize = UICollectionViewFlowLayout.automaticSize
+        ingredientsCollectionView.collectionViewLayout = ingredientsCollectionViewFlowLayout
+        
+        let width = recipesCollecitonView.frame.width / 2
+        recipesCollectionViewFlowLayout.itemSize = CGSize(width: width, height: width * 1.5)
+        recipesCollecitonView.collectionViewLayout = recipesCollectionViewFlowLayout
+       
         navigationController?.setNavigationBarHidden(false, animated: false)
         
     }
@@ -80,20 +89,13 @@ class IngredientsViewController: UIViewController, BindableType {
             
         }
         
+        
         viewModel.getRefrigeratorIngredients()
-            .subscribe(onNext: { [unowned self] ingredients in
-                
-                self.viewModel.ingredientSubject.onNext(ingredients)
-                
-            })
+            .bind(to: viewModel.ingredientSubject)
             .disposed(by: viewModel.disposeBag)
-    }
-    
-    override func viewDidAppear(_ animated: Bool) {
-        super.viewDidAppear(animated)
-        
         
     }
+ 
     
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
@@ -105,36 +107,56 @@ class IngredientsViewController: UIViewController, BindableType {
     func bindViewModel() {
         
         setUpDataSource()
+
+        viewModel.ingredientSubject
+            .map { ingredients in
+                
+                var ingredientsNames = ingredients.map { $0.name }
+                
+                ingredientsNames.insert("All", at: 0)
+                
+                return ingredientsNames
+                
+            }
+            .bind(to: ingredientsCollectionView.rx.items(dataSource: ingredientsDataSource))
+            .disposed(by: viewModel.disposeBag)
+   
         
         viewModel.ingredientSubject
-            .bind(to: ingredientsCollectionView.rx.items(dataSource: ingredientsDataSource))
+            .debug("get recipe")
+            .flatMapLatest { [unowned self] in
+                self.viewModel.getRecipeWithMutipleIngredients(ingredients: $0)
+            }
+            .catch { err in
+                
+                return .empty()
+            }
+            .subscribe(onNext: { recipes in
+                
+                self.viewModel.recipesSubject.onNext(recipes)
+                
+            })
             .disposed(by: viewModel.disposeBag)
         
         viewModel.recipesSubject
             .bind(to: recipesCollecitonView.rx.items(dataSource: recipeDataSource))
             .disposed(by: viewModel.disposeBag)
-   
         
-        viewModel.ingredientSubject
-            .flatMapLatest { [unowned self] in
-                self.viewModel.getRecipeWithMutipleIngredients(ingredients: $0)
-            }
-            .bind(to: viewModel.recipesSubject)
-            .disposed(by: viewModel.disposeBag)
+
         
     }
     
     
     func setUpDataSource() {
         
-        ingredientsDataSource = RxDefaultCollectionViewDataSource<Ingredient, IngredientOptionCVCell>(identifier: "ingredientsCVCell") { row, ingredient, cell in
+        ingredientsDataSource = RxDefaultCollectionViewDataSource<String, IngredientOptionCVCell>(identifier: "ingredientsCVCell") { row, ingredient, cell in
             
             cell.titleLbl.isSkeletonable = true
             cell.titleLbl.showAnimatedSkeleton()
             
             cell.titleLbl.hideSkeleton()
             
-            cell.titleLbl.text = ingredient.name
+            cell.titleLbl.text = ingredient
         }
         
         recipeDataSource = RxDefaultCollectionViewDataSource<Recipe, RecipeWithIngredientCVCell>(identifier: "recipeWithIngredientCVCell") { row, recipe, cell in
@@ -185,6 +207,7 @@ class IngredientsViewController: UIViewController, BindableType {
         }
     }
 }
+
 
 
 

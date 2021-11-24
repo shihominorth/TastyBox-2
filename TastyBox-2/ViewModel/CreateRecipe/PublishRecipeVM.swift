@@ -17,12 +17,6 @@ class PublishRecipeVM: ViewModelBase {
     let sceneCoodinator: SceneCoordinator
     let user: Firebase.User
     
-    //    let recipeData:[String: Any]
-    //    let instructionsData: [[String: Any]]
-    //    let ingredientsData: [[String: Any]]
-    //    let genresData: [[String: Any]]
-    //    let mainImage: Data
-    
     let mainImageData: Data
     let videoURL: URL?
     

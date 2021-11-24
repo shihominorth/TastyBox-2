@@ -137,7 +137,7 @@ struct Instruction {
         let text = data["text"] as? String
         else { return nil }
         
-        let imageURL = data["imgURL"] as? String
+        let imageURL = data["imgString"] as? String
         
         self.id = id
         self.index = index
@@ -236,7 +236,7 @@ extension RecipeDetailSectionItem: RawRepresentable {
             self = .genres([])
             
         case "ingredients":
-            self = .ingredients(Ingredient(key: "", name: "", amount: "", order: 0))
+            self = .ingredients(Ingredient(key: "", name: "", amount: "", index: 0))
             
         case "instructions":
             self = .instructions(Instruction(id: "", index: 0, imageURL: nil, text: ""))

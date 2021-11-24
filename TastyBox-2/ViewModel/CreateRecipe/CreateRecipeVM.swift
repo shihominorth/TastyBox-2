@@ -111,7 +111,6 @@ class CreateRecipeVM: ViewModelBase {
             .share(replay: 1, scope: .forever)
         
         self.instructionValidation = self.instructionsSubject.map { $0[0] }
-//        .debug()
         .map { !$0.text.isEmpty }
         .share(replay: 1, scope: .forever)
         
@@ -125,11 +124,7 @@ class CreateRecipeVM: ViewModelBase {
         }
         
         self.combinedInputs = [.mainPhoto(self.mainImgDataSubject)]
-        
-//        stringInputs = .combineLatest(self.titleSubject.asObservable(), self.timeSubject.asObservable(), self.servingSubject.asObservable()) { title, time, serving -> (String, String, String) in
-//            return (title, time, serving)
-//        }
-        
+
         super.init()
         
     }
@@ -322,7 +317,7 @@ class CreateRecipeVM: ViewModelBase {
         let uuid = UUID()
         let uniqueIdString = uuid.uuidString.replacingOccurrences(of: "-", with: "")
 
-        let indredient = Ingredient(key: uniqueIdString, name: "", amount: "", order: self.ingredients.count)
+        let indredient = Ingredient(key: uniqueIdString, name: "", amount: "", index: self.ingredients.count)
 
         self.ingredients.append(indredient)
         self.ingredientsSubject.onNext(self.ingredients)
