@@ -595,7 +595,7 @@ PODS:
     - RxSwift (~> 6.0)
     - TimelaneCore (~> 2.0)
   - SCLAlertView (0.8)
-  - SkeletonView (1.25.2)
+  - SkeletonView (1.26.0)
   - SwiftMessages (9.0.5):
     - SwiftMessages/App (= 9.0.5)
   - SwiftMessages/App (9.0.5)
@@ -604,6 +604,7 @@ PODS:
 DEPENDENCIES:
   - Action
   - DifferenceKit
+  - FBSDKCoreKit
   - FBSDKLoginKit
   - Firebase/Analytics
   - Firebase/Auth
@@ -734,10 +735,10 @@ SPEC CHECKSUMS:
   RxSwift: d356ab7bee873611322f134c5f9ef379fa183d8f
   RxTimelane: 8f7721d7f6368d0bebf6d949cec13c537c609747
   SCLAlertView: 6a77bb2edfc65e04dbe57725546cb4107a506b85
-  SkeletonView: 820b2bbd180d7408f3f03b6462cfc3cac39d2ef2
+  SkeletonView: 6b62a8ddbc64abb113ea3243e4a9979e5750f147
   SwiftMessages: 9cca50659fa22bb523b4dd2a958d4442e843a354
   TimelaneCore: 5822c4be9992c7009938babf881561ec03b63acc
 
-PODFILE CHECKSUM: b2e0619f7cb00e12e27d1f1e5ba0d18aaf130b24
+PODFILE CHECKSUM: 604c3b8a141d09cfa230851a429658e2bff56107
 
 COCOAPODS: 1.11.2

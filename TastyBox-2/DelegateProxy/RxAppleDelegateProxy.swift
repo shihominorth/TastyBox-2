@@ -30,14 +30,7 @@ class RxAppleDelegateProxy: DelegateProxy<ASAuthorizationController, ASAuthoriza
     
     func authorizationController(controller: ASAuthorizationController, didCompleteWithAuthorization authorization: ASAuthorization) {
         
-        //        let nonce = self.randomNonceString()
-        //        self.currentNonce = nonce
-        //        let appleIDProvider = ASAuthorizationAppleIDProvider()
-        //        let request = appleIDProvider.createRequest()
-        //        request.requestedScopes = [.fullName, .email]
-        //        request.nonce = sha256(nonce)
-        
-        //
+     
         if let appleIDCredential = authorization.credential as? ASAuthorizationAppleIDCredential {
             
             guard let nonce = self.currentNonce else {

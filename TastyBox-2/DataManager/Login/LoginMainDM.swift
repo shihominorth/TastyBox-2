@@ -18,9 +18,9 @@ import RxCocoa
 import Action
 
 protocol LoginMainProtocol: AnyObject {
-    static var isRegisterMyInfo: Single<Bool> { get }
-    static func login(email: String?, password: String?) -> Single<AuthDataResult>
-    static func loginWithGoogle(viewController presenting: UIViewController) -> Single<Firebase.User>
+    static var isRegisterMyInfo: Observable<Bool> { get }
+    static func login(email: String?, password: String?) -> Observable<AuthDataResult>
+    static func loginWithGoogle(viewController presenting: UIViewController) -> Observable<Firebase.User>
     static func startSignInWithAppleFlow(authorizationController: UIViewController) -> Observable<ASAuthorizationController>
     static func logined(user: Firebase.User) -> Observable<Firebase.User>
 }
@@ -38,32 +38,35 @@ class LoginMainDM: LoginMainProtocol {
     //    一回イベントを送信すると、disposeされるようになってます。
     
     
-   static var isRegisterMyInfo: Single<Bool> {
+   static var isRegisterMyInfo: Observable<Bool> {
         
         
-        return Single.create { single in
+        return Observable.create { observer in
             
             guard let uid = self.uid else {
-                single(.failure(LoginErrors.invailedUser))
+                
+                observer.onError(LoginErrors.invailedUser)
+                
                 return Disposables.create()
             }
             
             
-            Firestore.firestore().collection("users").document(uid).addSnapshotListener { data, err in
+            Firestore.firestore().collection("users").document(uid).getDocument { doc, err in
                 
                 if let err = err {
-                    single(.failure(err))
+                    observer.onError(err)
                     
                 } else {
                     
-                    guard let data = data else { return }
-                    guard let isFirst = data.get("isFirst") as? Bool else {
+                    guard let data = doc?.data() else { return }
+                    guard let isFirst = data["isFirst"] as? Bool else {
                         
-                        single(.success(true))
+                        observer.onNext(true)
                         return
                         
                     }
-                    single(.success(isFirst))
+                    
+                    observer.onNext(isFirst)
                 }
             }
             
@@ -73,20 +76,20 @@ class LoginMainDM: LoginMainProtocol {
     }
     
  
-   static func login(email: String?, password: String?) -> Single<AuthDataResult>{
+   static func login(email: String?, password: String?) -> Observable<AuthDataResult>{
         
-        return Single.create { single in
+        return Observable.create { observer in
             
             guard let email = email else {
                 
-                single(.failure(LoginErrors.invailedEmail))
+                observer.onError(LoginErrors.invailedEmail)
                 
                 return Disposables.create()
             }
             
             guard let password = password else {
                 
-                single(.failure(LoginErrors.invaildPassword))
+                observer.onError(LoginErrors.invaildPassword)
                 
                 return Disposables.create()
             }
@@ -95,15 +98,18 @@ class LoginMainDM: LoginMainProtocol {
             Auth.auth().signIn(withEmail: email, password: password) { result, err in
                 
                 if let err = err {
-                    single(.failure(err))
+                    
+                    observer.onError(err)
+                    
                 } else {
                     
                     if let result = result {
 //                        self.isEmailVerified.onNext(user.isEmailVerified)
-                        single(.success(result))
+                        observer.onNext(result)
                     } else {
 //                        self.isEmailVerified.onNext(false)
-                        single(.failure(LoginErrors.invailedUser))
+                        observer.onError(LoginErrors.invailedUser)
+                        
                     }
                    
 
@@ -124,9 +130,9 @@ class LoginMainDM: LoginMainProtocol {
     // FirebaseAuth.Userはこのクラスの中にObservableプロパティ（おそらくSubject)onNext()する。
     // それをVMではSubscribeする
     
-    static func loginWithGoogle(viewController presenting: UIViewController) -> Single<FirebaseAuth.User> {
+    static func loginWithGoogle(viewController presenting: UIViewController) -> Observable<Firebase.User> {
         
-        return Single.create { single in
+        return Observable.create { observer in
             
             
             guard let clientID = FirebaseApp.app()?.options.clientID else {
@@ -140,7 +146,9 @@ class LoginMainDM: LoginMainProtocol {
             GIDSignIn.sharedInstance.signIn(with: config, presenting: presenting) { user, err in
                 
                 if let err = err {
-                    single(.failure(err))
+                    
+                    observer.onError(err)
+                    
                     return
                 }
                 
@@ -148,7 +156,7 @@ class LoginMainDM: LoginMainProtocol {
                     let authentication = user?.authentication,
                     let idToken = authentication.idToken
                 else {
-                    single(.failure(LoginErrors.invailedAuthentication))
+                    observer.onError(LoginErrors.invailedAuthentication)
                     return
                 }
                 
@@ -158,21 +166,22 @@ class LoginMainDM: LoginMainProtocol {
                 Auth.auth().signIn(with: credential) { authResult, err in
                     
                     if let err = err {
-                        single(.failure(err))
+                       
+                        observer.onError(err)
+                        
                     } else {
                         
                         if let user = authResult?.user {
                             
-                            single(.success(user))
+                            observer.onNext(user)
+                            
                         }
                     }
                 
                 }
             }
             
-            return Disposables.create {
-                print("dispose")
-            }
+            return Disposables.create()
         }
     }
     

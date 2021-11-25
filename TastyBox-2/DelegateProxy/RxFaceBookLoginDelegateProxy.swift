@@ -93,5 +93,6 @@ extension Reactive where Base: FBLoginButton {
         proxy.signInSubject = PublishSubject<FirebaseAuth.User>()
         
         return proxy.signInSubject.asObservable()
+        
     }
 }

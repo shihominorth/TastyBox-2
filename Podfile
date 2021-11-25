@@ -40,6 +40,7 @@ pod 'RxTimelane'
 pod 'GoogleSignIn'
 
 # pods for facebook sign in
+pod 'FBSDKCoreKit'
 pod 'FBSDKLoginKit'
 
 

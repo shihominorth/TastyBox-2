@@ -124,80 +124,205 @@ class LoginMainPageViewController: UIViewController, BindableType, KeyboardSetUp
         registerButton.rx.action = viewModel.registerEmail()
         
         
-        let info = Observable.combineLatest(emailTextField.rx.text.orEmpty.observe(on: MainScheduler.asyncInstance), passwordTextField.rx.text.orEmpty.observe(on: MainScheduler.asyncInstance))
-        
-        login.rx.tap
-            .throttle(.milliseconds(1000), scheduler: MainScheduler.instance)
-            .withLatestFrom(info)
-            .bind(to: viewModel.loginAction.inputs)
+        emailTextField.rx.text
+            .compactMap { $0 }
+            .bind(to: viewModel.emailSubject)
             .disposed(by: viewModel.disposeBag)
         
-//        MARK: after tap password or email text fields, cant use google login button - solved.
-        let _ = googleLoginBtn.rx.controlEvent(.touchUpInside)
+        passwordTextField.rx.text
+            .compactMap { $0 }
+            .bind(to: viewModel.passwordSubject)
+            .disposed(by: viewModel.disposeBag)
+        
+        Observable.combineLatest(viewModel.emailSubject, viewModel.passwordSubject)
+            .flatMapLatest { email, password -> Observable<Bool> in
+            
+            if email.isEmpty || password.isEmpty {
+                
+                return Observable<Bool>.just(false)
+            }
+            
+                return Observable<Bool>.just(true)
+            }
+            .bind(to: viewModel.isEnableLoginBtnSubject)
+            .disposed(by: viewModel.disposeBag)
+        
+        
+        let successStream = PublishSubject<Firebase.User>()
+        let failedStream = PublishSubject<Error>()
+        
+        
+        successStream
+            .flatMapLatest({ [unowned self] user in
+
+                self.viewModel.isRegisteredMyInfo(user: user)
+                     .asObservable()
+
+             }).subscribe(onNext: { [unowned self] isFirst in
+
+                 self.viewModel.goToNext(isFirst: isFirst)
+
+             })
+            .disposed(by: viewModel.disposeBag)
+
+        failedStream
+            .subscribe(onNext: { err in
+                
+                err.handleAuthenticationError()?.showErrNotification()
+                self.hideViewDuringLogin()
+                    
+            })
+            .disposed(by: viewModel.disposeBag)
+        
+        
+        
+        //MARK: bind to success and failed streams
+        
+        //MARK: login with email and password
+        
+        let loginWithEmailStream = login.rx.tap
+            .throttle(.microseconds(1000), scheduler: MainScheduler.instance)
+            .observe(on: MainScheduler.instance)
+            .do(onNext: { _ in
+               
+                self.showsViewDuringLogin()
+                
+            })
+            .withLatestFrom(viewModel.isEnableLoginBtnSubject)
+            .flatMapLatest { [unowned self] isEnable in
+                self.viewModel.checkIsEmptyTxtFields(isEnabled: isEnable)
+            }
+            .flatMapLatest { [unowned self] email, password in
+                self.viewModel.login(email: email, password: password)
+              
+            }
+            .share(replay: 1, scope: .forever)
+            
+        
+        let loginWithEmailSucceededStream = loginWithEmailStream.compactMap { $0.element }
+        let loginWithEmailFailedStream = loginWithEmailStream.compactMap { $0.error }
+
+        loginWithEmailSucceededStream
+            .bind(to: successStream)
+            .disposed(by: viewModel.disposeBag)
+        
+        loginWithEmailFailedStream
+            .bind(to: failedStream)
+            .disposed(by: viewModel.disposeBag)
+        
+        //MARK: login with google
+        
+        let googleLoginStream = googleLoginBtn.rx.controlEvent(.touchUpInside)
             .throttle(.milliseconds(1000), scheduler: MainScheduler.instance)
             .observe(on: MainScheduler.asyncInstance)
-            .flatMap {
-                return self.viewModel.googleLogin(presenting: self)
+            .do(onNext: { _ in
+               
+                self.showsViewDuringLogin()
+                
+            })
+            .flatMapLatest { _ in
+                 self.viewModel.googleLogin(presenting: self)
             }
-            .subscribe(onNext: { user in
-                print(user)
-                self.showsViewDuringLogin() //ここで呼ぶのは遅い。　googleのページが閉じてから間がある。
-            }
-            )
+            .share(replay: 1, scope: .forever)
+        
+        let googleLoginSucceededStream = googleLoginStream.compactMap { $0.element }
+        let googleLoginFailedStream = googleLoginStream.compactMap { $0.error }
+        
+        googleLoginSucceededStream
+            .bind(to: successStream)
+            .disposed(by: viewModel.disposeBag)
+        
+        googleLoginFailedStream
+            .bind(to: failedStream)
             .disposed(by: viewModel.disposeBag)
         
         
         let appleLoginBtn = ASAuthorizationAppleIDButton(authorizationButtonType: .default, authorizationButtonStyle: .black)
         
-        
         self.loginButtonStackView.addArrangedSubview(appleLoginBtn)
-      
-        appleLoginBtn.rx.controlEvent(.touchUpInside)
+       
+        //MARK: login with apple
+        let appleLoginStream = appleLoginBtn.rx.controlEvent(.touchUpInside)
             .throttle(.milliseconds(1000), scheduler: MainScheduler.instance)
             .observe(on: MainScheduler.asyncInstance)
+            .do(onNext: { _ in
+               
+                self.showsViewDuringLogin()
+                
+            })
             .flatMap {
                 return self.viewModel.appleLogin(presenting: self)
             }
-            .subscribe(onNext: { user in
-                print(user)
-                self.showsViewDuringLogin()
-            }, onError: { err in
-                print(err)
-            })
+            .share(replay: 1, scope: .forever)
+        
+        let appleLoginSucceededStream = appleLoginStream.compactMap { $0.element }
+        let appleLoginFailedStream = appleLoginStream.compactMap { $0.error }
+        
+        appleLoginSucceededStream
+            .bind(to: successStream)
             .disposed(by: viewModel.disposeBag)
+        
+        appleLoginFailedStream
+            .bind(to: failedStream)
+            .disposed(by: viewModel.disposeBag)
+ 
 
+        //MARK: login with facebook
+        
         let facebookLoginBtn = FBLoginButton()
         facebookLoginBtn.permissions = ["public_profile", "email"]
 
         self.loginButtonStackView.addArrangedSubview(facebookLoginBtn)
-
-        facebookLoginBtn.rx.controlEvent(.touchUpInside)
+        
+        let appLoginStream = facebookLoginBtn.rx.controlEvent(.touchUpInside)
             .throttle(.milliseconds(1000), scheduler: MainScheduler.instance)
             .observe(on: MainScheduler.asyncInstance)
+            .do(onNext: { _ in
+                self.showsViewDuringLogin()
+                
+            })
             .flatMap {
                 return self.viewModel.faceBookLogin(presenting: self, button: facebookLoginBtn)
             }
-            .subscribe(onNext: { user in
-                print(user)
-                self.showsViewDuringLogin() //ここで呼ぶのは遅い。　googleのページが閉じてから間がある。
-            }, onError: { err in
-                print(err)
-            })
+            .share(replay: 1, scope: .forever)
+        
+        let facebookLoginSucceededStream = appLoginStream.compactMap { $0.element }
+        let facebookLoginFailedStream = appLoginStream.compactMap { $0.error }
+        
+        facebookLoginSucceededStream
+            .bind(to: successStream)
             .disposed(by: viewModel.disposeBag)
-
+        
+        facebookLoginFailedStream
+            .bind(to: failedStream)
+            .disposed(by: viewModel.disposeBag)
+        
+      
     }
     
     func showsViewDuringLogin() {
+       
         let loadingview = UIView(frame: UIScreen.main.bounds)
         let indicator = UIActivityIndicatorView()
         
         loadingview.backgroundColor = #colorLiteral(red: 0.9960784314, green: 0.9960784314, blue: 0.7411764706, alpha: 1)
+        loadingview.tag = 1
         loadingview.addSubview(indicator)
         indicator.center = loadingview.center
         
         self.view.addSubview(loadingview)
         
         indicator.startAnimating()
+    }
+    
+    func hideViewDuringLogin() {
+        
+        if let index = self.view.subviews.firstIndex(where: { $0.tag == 1 }) {
+        
+            self.view.subviews[index].removeFromSuperview()
+        
+        }
+        
     }
 }
 

@@ -4,6 +4,8 @@
 <dict>
 	<key>CFBundleDevelopmentRegion</key>
 	<string>$(DEVELOPMENT_LANGUAGE)</string>
+	<key>CFBundleDisplayName</key>
+	<string></string>
 	<key>CFBundleExecutable</key>
 	<string>$(EXECUTABLE_NAME)</string>
 	<key>CFBundleIdentifier</key>
@@ -29,7 +31,7 @@
 			<string>Editor</string>
 			<key>CFBundleURLSchemes</key>
 			<array>
-				<string>com.googleusercontent.apps.665718174469-k92fcqd5t51sb8f6vfahuvjuiuds34g6</string>
+				<string>com.googleusercontent.apps.556238051319-ltkstgvdt1jtqcmovuqsioe7gla7d8md</string>
 			</array>
 		</dict>
 		<dict>

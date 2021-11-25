@@ -22,218 +22,176 @@ class LoginMainVM: ViewModelBase {
     let sceneCoodinator: SceneCoordinator
     let apiType: LoginMainProtocol.Type
     var user: FirebaseAuth.User?
-    var err = NSError()
-    
+    let isEnableLoginBtnSubject: BehaviorRelay<Bool>
+    let emailSubject: BehaviorSubject<String>
+    let passwordSubject: BehaviorSubject<String>
     
     init(sceneCoodinator: SceneCoordinator, apiType: LoginMainProtocol.Type = LoginMainDM.self) {
+        
         self.sceneCoodinator = sceneCoodinator
         self.apiType = apiType
+        self.isEnableLoginBtnSubject = BehaviorRelay<Bool>(value: false)
+        self.emailSubject = BehaviorSubject<String>(value: "")
+        self.passwordSubject = BehaviorSubject<String>(value: "")
+
     }
     
     
     //    Singleは一回のみElementかErrorを送信することが保証されているObservableです。
     //    一回イベントを送信すると、disposeされるようになってます。
  
-    private func isRegisteredmyInfo() {
+    func isRegisteredMyInfo(user: Firebase.User) -> Observable<Bool> {
        
 
-       let _ = self.apiType.isRegisterMyInfo.subscribe(onSuccess: { isFirst in
+       return self.apiType.isRegisterMyInfo
+            .catch({ err in
             
+                err.handleAuthenticationError()?.generateErrAlert()
+                
+                return .empty()
+            
+            })
+            
+    }
+    
+    func goToNext(isFirst: Bool) {
+        
+        if let user = user {
+
             if isFirst {
-                self.goToRegisterMyInfo()
-            } else {
-                self.goToMain()
+                self.goToRegisterMyInfo(user: user)
             }
-            
-        }, onFailure: { err in
-            
-            guard let reason = self.err.handleAuthenticationError() else { return }
-            SCLAlertView().showTitle(
-                reason.reason, // Title of view
-                subTitle: reason.solution,
-                timeout: .none, // String of view
-                completeText: "Done", // Optional button value, default: ""
-                style: .error, // Styles - see below.
-                colorStyle: 0xA429FF,
-                colorTextButton: 0xFFFFFF
-            )
-            
-        })
+            else {
+                self.goToMain(user: user)
+            }
+        }
+  
     }
      
     
-    fileprivate func goToRegisterMyInfo() {
+    private func goToRegisterMyInfo(user: Firebase.User) {
         
-        if let user = self.user {
-            let vm = RegisterMyInfoProfileVM(sceneCoodinator: sceneCoodinator, user: user)
-            let vc = LoginScene.profileRegister(vm).viewController()
-            self.sceneCoodinator.transition(to: vc, type: .push)
-        }
+//        if let user = self.user {
+        let vm = RegisterMyInfoProfileVM(sceneCoodinator: sceneCoodinator, user: user)
+        let vc = LoginScene.profileRegister(vm).viewController()
+        self.sceneCoodinator.transition(to: vc, type: .push)
+//        }
        
     }
     
-    fileprivate func goToMain() {
+    private func goToMain(user: Firebase.User) {
 
-        if let user = self.user {
+//        if let user = self.user {
             let vm = DiscoveryVM(sceneCoodinator: self.sceneCoodinator, user: user)
             let vc = DiscoveryScene.discovery(vm).viewController()
             self.sceneCoodinator.transition(to: vc, type: .modal(presentationStyle: nil, modalTransisionStyle: nil, hasNavigationController: false))
-        }
+//        }
     }
     
     
-    func googleLogin(presenting vc: UIViewController) -> Observable<FirebaseAuth.User> {
-        
-        return Observable.create { observable in
+    func googleLogin(presenting vc: UIViewController) -> Observable<Event<Firebase.User>> {
+   
+        return self.apiType.loginWithGoogle(viewController: vc)
+            .do(onNext: {  user in
+                
+                self.user = user
             
-            self.apiType.loginWithGoogle(viewController: vc).subscribe { event in
-                
-                switch event {
-                case .failure(let err):
+            })
+                .materialize()
+//            .catch({ err in
+//
+//                err.handleAuthenticationError()?.showErrNotification()
+//
+//                return .empty()
+//            })
+        
                     
-                    self.err = err as NSError
-                    
-                    guard let reason = err.handleAuthenticationError() else { return }
-                    
-                    SCLAlertView().showTitle(
-                        reason.reason, // Title of view
-                        subTitle: reason.solution,
-                        timeout: .none, // String of view
-                        completeText: "Done", // Optional button value, default: ""
-                        style: .error, // Styles - see below.
-                        colorStyle: 0xA429FF,
-                        colorTextButton: 0xFFFFFF
-                    )
-                    
-                case .success(let user):
-                    
-                    self.user = user
-                    observable.onNext(user)
 
-                    self.isRegisteredmyInfo()
-                }
+    }
+    
+    
+    func appleLogin(presenting: UIViewController) -> Observable<Event<Firebase.User>> {
+        
+     
+        return self.apiType.startSignInWithAppleFlow(authorizationController: presenting)
+            .flatMapLatest { controller in
+                return controller.rx.signIn
+            }
+//            .catch { err in
+//
+//                err.handleAuthenticationError()?.showErrNotification()
+//
+//                return .empty()
+//
+//            }
+            .do(onNext: {  user in
                 
+                self.user = user
+            
+            }).materialize()
+        
+        
+    }
+    
+    func faceBookLogin(presenting: UIViewController, button: FBLoginButton) -> Observable<Event<Firebase.User>> {
+
+        return button.rx.signIn
+            .do(onNext: { user in
+            
+            self.user = user
+        
+            }).materialize()
+//            .catch({ err in
+//
+//                print(err)
+//
+//                err.handleAuthenticationError()?.showErrNotification()
+//
+//                return .empty()
+//
+//            })
+           
+    }
+    
+    func checkIsEmptyTxtFields(isEnabled: Bool) -> Observable<(String, String)> {
+        
+        if isEnabled {
+            
+            return .combineLatest(emailSubject, passwordSubject) { email, password in
+                
+                return (email, password)
                 
             }
-    
-        }
-    }
-    
-    func appleLogin(presenting: UIViewController) -> Observable<FirebaseAuth.User> {
-        
-        return Observable.create { observer in
-            _ =
-                self.apiType.startSignInWithAppleFlow(authorizationController: presenting)
-                .subscribe(onNext: { controller in
-                    
-                    let _ =  controller.rx.signIn
-                        .subscribe(onNext: { user in
-
-                            observer.onNext(user)
-
-                            self.user = user
-                            self.isRegisteredmyInfo()
-
-                            
-                        }, onError: { err in
-                            
-                            self.err = err as NSError
-                            observer.onError(err)
-
-                            guard let reason = self.err.handleAuthenticationError() else { return }
-                            SCLAlertView().showTitle(
-                                reason.reason, // Title of view
-                                subTitle: reason.solution,
-                                timeout: .none, // String of view
-                                completeText: "Done", // Optional button value, default: ""
-                                style: .error, // Styles - see below.
-                                colorStyle: 0xA429FF,
-                                colorTextButton: 0xFFFFFF
-                            )
-                            
-                        })
-                    
-                },
-                onError: { err in
-                    self.err = err as NSError
-                    observer.onError(err)
-                }
-                )
             
-            return Disposables.create()
+        }
+        else {
+            
+            let notification = Notification(reason: "Email or password is empty", solution: "You need to fill both.")
+            
+            notification.showErrNotification()
+            
+            return .empty()
         }
         
     }
     
-    func faceBookLogin(presenting: UIViewController, button: FBLoginButton) -> Observable<FirebaseAuth.User> {
-
-        return Observable.create { observer in
-
-            let _ = button.rx.signIn.subscribe(onNext: { user in
-
-                observer.onNext(user)
+    func login(email: String?, password: String?) -> Observable<Event<Firebase.User>> {
+        
+        return self.apiType.login(email: email, password: password)
+            .map { $0.user }
+            .do(onNext: { user in
+            
                 self.user = user
-                self.isRegisteredmyInfo()
-
-            }, onError: { err in
-
-                self.err = err as NSError
-                observer.onError(err)
-                
-                guard let reason = self.err.handleAuthenticationError() else { return }
-                SCLAlertView().showTitle(
-                    reason.reason, // Title of view
-                    subTitle: reason.solution,
-                    timeout: .none, // String of view
-                    completeText: "Done", // Optional button value, default: ""
-                    style: .error, // Styles - see below.
-                    colorStyle: 0xA429FF,
-                    colorTextButton: 0xFFFFFF
-                )
-
-            })
-
-            return Disposables.create()
-        }
+            
+            }).materialize()
+//            .catch { err in
+//
+//                err.handleAuthenticationError()?.showErrNotification()
+//
+//                return .empty()
+//            }
     }
-    
-    
-    lazy var loginAction: Action<(String, String), Void> = { this in
-           return Action { email, password in
-               
-               this.apiType.login(email: email, password: password)
-                   .subscribe(onSuccess: { result in
-                    
-                    
-                       let user = result.user
-                       if user.isEmailVerified {
-                        
-                           self.user = user
-                           self.isRegisteredmyInfo()
 
-                       }
-                       
-                       print(user)
-                   }, onFailure: { err in
-                       self.err = err as NSError
-                       
-                       guard let reason = self.err.handleAuthenticationError() else { return }
-                       SCLAlertView().showTitle(
-                           reason.reason, // Title of view
-                           subTitle: reason.solution,
-                           timeout: .none, // String of view
-                           completeText: "Done", // Optional button value, default: ""
-                           style: .error, // Styles - see below.
-                           colorStyle: 0xA429FF,
-                           colorTextButton: 0xFFFFFF
-                       )
-                   }).disposed(by: this.disposeBag)
-               
-               return Observable.create { _ in
-                   return Disposables.create()
-               }
-           }
-       }(self)
     
     func logined(user: Firebase.User) -> Observable<Firebase.User> {
         
