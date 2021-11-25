@@ -148,6 +148,11 @@ class IngredientsViewController: UIViewController, BindableType {
             .disposed(by: viewModel.disposeBag)
         
         viewModel.recipesSubject
+            .do(onNext: {
+                
+                self.viewModel.recipes = $0
+                
+            })
             .bind(to: recipesCollecitonView.rx.items(dataSource: recipeDataSource))
             .disposed(by: viewModel.disposeBag)
         
@@ -178,6 +183,19 @@ class IngredientsViewController: UIViewController, BindableType {
 
         })
         .disposed(by: viewModel.disposeBag)
+        
+        recipesCollecitonView.rx.itemSelected
+            .map { [unowned self] indexPath in
+            
+                return self.viewModel.recipes[indexPath.row]
+            
+            }
+            .subscribe(onNext: { [unowned self] recipe in
+                
+                self.viewModel.toRecipeDetail(recipe: recipe)
+                
+            })
+            .disposed(by: viewModel.disposeBag)
         
         selectIngredientsCollectionViewIndexPath
             .filter { $0.row == 0 }

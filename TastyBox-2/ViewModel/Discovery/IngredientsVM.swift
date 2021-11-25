@@ -9,11 +9,13 @@ import Foundation
 import Firebase
 import RxSwift
 
+
 class IngredientsVM: ViewModelBase {
     
     let user: Firebase.User
     let apiType: MainDMProtocol.Type
     
+    var recipes: [Recipe]
     let recipesSubject: BehaviorSubject<[Recipe]>
    
     let ingredientCollectionViewSubject: BehaviorSubject<[Ingredient]>
@@ -23,12 +25,13 @@ class IngredientsVM: ViewModelBase {
     
     let selectedRecipeSubject: PublishSubject<Recipe>
 
-    weak var delegate: RankingVMDelegate?
+    weak var delegate: toRecipeDetailDelegate?
     
     init(user: Firebase.User, apiType: MainDMProtocol.Type = MainDM.self) {
         
         self.user = user
         self.apiType = apiType
+        self.recipes = []
      
         self.selectedRecipeSubject = PublishSubject<Recipe>()
         self.selectedIngredientSubject = BehaviorSubject<Int>(value: 0)
@@ -65,4 +68,11 @@ class IngredientsVM: ViewModelBase {
         return self.apiType.getRecipesUsedIngredient(ingredient: ingredient)
         
     }
+    
+    func toRecipeDetail(recipe: Recipe) {
+        
+        self.delegate?.selectedRecipe(recipe: recipe)
+        
+    }
+    
 }

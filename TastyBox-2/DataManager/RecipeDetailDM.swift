@@ -66,11 +66,17 @@ class RecipeDetailDM: RecipeDetailProtocol {
                             
                             docs.append(doc)
                             
-                            if implementedCount == genresIDs.count - 1 {
-                                
-                                let result = docs.compactMap { $0 }
-                                
+                            let result = docs.compactMap { $0 }
+                            
+                            if genresIDs.count == 1 {
+                            
                                 observer.onNext(result)
+                            
+                            }
+                            else if implementedCount == genresIDs.count - 1 {
+ 
+                                observer.onNext(result)
+ 
                             }
 
                         }

@@ -64,20 +64,29 @@ class DiscoveryPresenter: NSObject {
         pageVC?.setViewControllers([viewControllers[row]], direction: .forward, animated: true, completion: { [unowned self] isCompleted in
             
             if isCompleted {
+                
                 self.currentViewController = viewControllers[row]
+                
+                if let currentViewController = currentViewController as? RankingViewController {
+                    
+                    currentViewController.viewModel.delegate = self
+                    
+                }
+                else if let currentViewController = currentViewController as? IngredientsViewController {
+                    
+                    currentViewController.viewModel.delegate = self
+                    
+                }
             }
             
         })
     }
     
  
-//    func setCreatedRecipeVM(<#parameters#>) -> <#return type#> {
-//        <#function body#>
-//    }
 }
 
 
-extension DiscoveryPresenter: RankingVMDelegate {
+extension DiscoveryPresenter: toRecipeDetailDelegate {
     
     func selectedRecipe(recipe: Recipe) {
         

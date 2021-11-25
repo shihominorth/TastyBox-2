@@ -9,7 +9,7 @@ import Foundation
 import Firebase
 import RxSwift
 
-protocol RankingVMDelegate: AnyObject {
+protocol toRecipeDetailDelegate: AnyObject {
     func selectedRecipe(recipe: Recipe)
 }
 
@@ -24,7 +24,7 @@ class RankingVM: ViewModelBase {
     
     let selectedRecipeSubject: PublishSubject<Recipe>
 
-    weak var delegate: RankingVMDelegate?
+    weak var delegate: toRecipeDetailDelegate?
     
     init(user: Firebase.User, apiType: MainDMProtocol.Type = MainDM.self) {
         
