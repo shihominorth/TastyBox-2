@@ -251,7 +251,7 @@ class MainDM: MainDMProtocol {
             
             queries.enumerated().forEach { index, query in
                 
-                if index != 1 {
+                if index != 0 {
                     
                     getRecipesStream = getRecipesStream
                         .flatMap({ recipes in
@@ -286,7 +286,7 @@ class MainDM: MainDMProtocol {
             
             queries.enumerated().forEach { index, query in
                 
-                if index != 1 {
+                if index != 0 {
                     
                     getRecipesStream = getRecipesStream
                         .flatMap({ recipes in
@@ -365,35 +365,51 @@ class MainDM: MainDMProtocol {
     // 2 ingredients
     static func getRecipesByAllWays(allIngredients: [Ingredient]) -> [Query] {
         
-        var source:[[Int]] = []
         var queries:[Query] = []
 
-        for index in 0 ..< allIngredients.count - 1 {
+        if allIngredients.count < 3 {
+            
+            let query = db.collection("recipes").whereField("genres.\(allIngredients[0].id)", isEqualTo: true).whereField("genres.\(allIngredients[1].id)", isEqualTo: true)
+            
+            queries.append(query)
+            
+            return queries
+            
+        }
+        else {
 
-            for pairingIndex in (index + 1) ..< allIngredients.count - 1 {
+            var source:[[Int]] = []
 
-                let arr = [index, pairingIndex]
+            for index in 0 ..< allIngredients.count - 1 {
 
-                if !source.contains(arr) {
+                for pairingIndex in (index + 1) ..< allIngredients.count - 1 {
 
-                    source.append(arr)
+                    let arr = [index, pairingIndex]
+
+                    if !source.contains(arr) {
+
+                        source.append(arr)
+
+                    }
 
                 }
 
             }
-
+            
+            source.forEach { pair in
+                
+                var query = db.collection("recipes").whereField("genres.\(allIngredients[pair[0]].id)", isEqualTo: true)
+                print("db.collection(recipes).whereField(genres.\(allIngredients[pair[0]].id), isEqualTo: true)")
+                
+                query = query.whereField("genres.\(allIngredients[pair[1]].id)", isEqualTo: true)
+                
+                queries.append(query)
+                
+            }
+            
         }
-        
-        source.forEach { pair in
-            
-            var query = db.collection("recipes").whereField("genres.\(allIngredients[pair[0]].id)", isEqualTo: true)
-            print("db.collection(recipes).whereField(genres.\(allIngredients[pair[0]].id), isEqualTo: true)")
-            
-            query = query.whereField("genres.\(allIngredients[pair[1]].id)", isEqualTo: true)
-            
-            queries.append(query)
-            
-        }
+    
+       
         
        return queries
         
