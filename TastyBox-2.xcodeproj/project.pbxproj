@@ -78,6 +78,7 @@
 		6F512A2C26F42DE300826657 /* TutorialViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F512A2B26F42DE200826657 /* TutorialViewController.swift */; };
 		6F512A3026F45BF200826657 /* TutorialCVCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F512A2F26F45BF200826657 /* TutorialCVCell.swift */; };
 		6F512A3226F467A300826657 /* FlowLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F512A3126F467A300826657 /* FlowLayout.swift */; };
+		6F65FB34274F57BA003F12BD /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 6F65FB33274F57B9003F12BD /* GoogleService-Info.plist */; };
 		6F6D0AEE26EED71500CD27AE /* RxFaceBookLoginDelegateProxy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F6D0AED26EED71500CD27AE /* RxFaceBookLoginDelegateProxy.swift */; };
 		6F71EBEC2721FEAD001BF538 /* RxUIViewController+.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F71EBEB2721FEAD001BF538 /* RxUIViewController+.swift */; };
 		6F71EBEE2722B1CC001BF538 /* GenreCollectionViewFlowLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F71EBED2722B1CB001BF538 /* GenreCollectionViewFlowLayout.swift */; };
@@ -112,7 +113,6 @@
 		6F9E04232700CAE0005DCEF4 /* ShoppinglistTVCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F9E04222700CAE0005DCEF4 /* ShoppinglistTVCell.swift */; };
 		6F9E042B27017B91005DCEF4 /* ShoppinglistHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F9E042A27017B91005DCEF4 /* ShoppinglistHeaderView.swift */; };
 		6F9E042D2701DCE8005DCEF4 /* BalloonView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F9E042C2701DCE8005DCEF4 /* BalloonView.swift */; };
-		6FA70A9626E6594D00474FE5 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 6FA70A9526E6594D00474FE5 /* GoogleService-Info.plist */; };
 		6FA70A9926E7A1FF00474FE5 /* SetPasswordViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FA70A9826E7A1FE00474FE5 /* SetPasswordViewController.swift */; };
 		6FA70A9B26E7A69500474FE5 /* SetPasswordVM.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FA70A9A26E7A69400474FE5 /* SetPasswordVM.swift */; };
 		6FA70A9D26E8EA5700474FE5 /* ViewController+.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FA70A9C26E8EA5600474FE5 /* ViewController+.swift */; };
@@ -270,6 +270,7 @@
 		6F512A2B26F42DE200826657 /* TutorialViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TutorialViewController.swift; sourceTree = "<group>"; };
 		6F512A2F26F45BF200826657 /* TutorialCVCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TutorialCVCell.swift; sourceTree = "<group>"; };
 		6F512A3126F467A300826657 /* FlowLayout.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FlowLayout.swift; sourceTree = "<group>"; };
+		6F65FB33274F57B9003F12BD /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		6F6D0AED26EED71500CD27AE /* RxFaceBookLoginDelegateProxy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RxFaceBookLoginDelegateProxy.swift; sourceTree = "<group>"; };
 		6F71EBEB2721FEAD001BF538 /* RxUIViewController+.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "RxUIViewController+.swift"; sourceTree = "<group>"; };
 		6F71EBED2722B1CB001BF538 /* GenreCollectionViewFlowLayout.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GenreCollectionViewFlowLayout.swift; sourceTree = "<group>"; };
@@ -304,7 +305,6 @@
 		6F9E04222700CAE0005DCEF4 /* ShoppinglistTVCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShoppinglistTVCell.swift; sourceTree = "<group>"; };
 		6F9E042A27017B91005DCEF4 /* ShoppinglistHeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShoppinglistHeaderView.swift; sourceTree = "<group>"; };
 		6F9E042C2701DCE8005DCEF4 /* BalloonView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BalloonView.swift; sourceTree = "<group>"; };
-		6FA70A9526E6594D00474FE5 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		6FA70A9726E6660000474FE5 /* TastyBox-2.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = "TastyBox-2.entitlements"; sourceTree = "<group>"; };
 		6FA70A9826E7A1FE00474FE5 /* SetPasswordViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SetPasswordViewController.swift; sourceTree = "<group>"; };
 		6FA70A9A26E7A69400474FE5 /* SetPasswordVM.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SetPasswordVM.swift; sourceTree = "<group>"; };
@@ -700,9 +700,9 @@
 			children = (
 				6FA70A9726E6660000474FE5 /* TastyBox-2.entitlements */,
 				6F40F82726F03375004B69DD /* AlertGenerator.swift */,
-				6FA70A9526E6594D00474FE5 /* GoogleService-Info.plist */,
 				6FB06F3C26D67E0100E110B4 /* AppDelegate.swift */,
 				6FB06F3E26D67E0100E110B4 /* SceneDelegate.swift */,
+				6F65FB33274F57B9003F12BD /* GoogleService-Info.plist */,
 				6FB06F4026D67E0100E110B4 /* ViewController.swift */,
 				6FEF089026F30D8A00C02CDD /* Void.swift */,
 				6F9BE64326D7E4B3005DD80B /* Extensions */,
@@ -1062,10 +1062,10 @@
 				6FB06F4626D67E0600E110B4 /* Assets.xcassets in Resources */,
 				6FB06F4426D67E0100E110B4 /* Main.storyboard in Resources */,
 				6F0E695A271EC3A3002BD547 /* PlayVideoView.xib in Resources */,
-				6FA70A9626E6594D00474FE5 /* GoogleService-Info.plist in Resources */,
 				6F3BF4BE2732F894005C24A5 /* Profile.storyboard in Resources */,
 				6FB970B52725065F00350F84 /* RecipeDetail.storyboard in Resources */,
 				6F194CBA271C77A40084F829 /* VideoPlayer.storyboard in Resources */,
+				6F65FB34274F57BA003F12BD /* GoogleService-Info.plist in Resources */,
 				6FFFB86A27457133006B7985 /* ReportView.xib in Resources */,
 				6F512A2226F3FA5100826657 /* Tutorial.storyboard in Resources */,
 				6FE9EB4926F98A05000AF9D4 /* Ingredient.storyboard in Resources */,
@@ -1486,7 +1486,7 @@
 					"@executable_path/Frameworks",
 				);
 				ONLY_ACTIVE_ARCH = NO;
-				PRODUCT_BUNDLE_IDENTIFIER = "com.shihomikitajima.individual.TastyBox-2";
+				PRODUCT_BUNDLE_IDENTIFIER = com.shihomikitajima.test.TastyBox;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_OBJC_BRIDGING_HEADER = "";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
@@ -1511,7 +1511,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = "com.shihomikitajima.individual.TastyBox-2";
+				PRODUCT_BUNDLE_IDENTIFIER = com.shihomikitajima.test.TastyBox;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
