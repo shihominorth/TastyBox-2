@@ -48,13 +48,13 @@ struct Genre {
         
         return .create { observer in
             
-            let recipes = documents.compactMap { doc in
+            let genres = documents.compactMap { doc in
                 
                 return Genre(documentSnapshot: doc)
             
             }
             
-            observer.onNext(recipes)
+            observer.onNext(genres)
             
             return Disposables.create()
         }
