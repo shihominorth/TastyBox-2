@@ -20,13 +20,14 @@ import Action
 protocol LoginMainProtocol: AnyObject {
     static var isRegisterMyInfo: Observable<Bool> { get }
     static func login(email: String?, password: String?) -> Observable<AuthDataResult>
+    static func createUser(email: String, password: String) -> Observable<Firebase.User>
     static func loginWithGoogle(viewController presenting: UIViewController) -> Observable<Firebase.User>
     static func startSignInWithAppleFlow(authorizationController: UIViewController) -> Observable<ASAuthorizationController>
     static func logined(user: Firebase.User) -> Observable<Firebase.User>
 }
 
 class LoginMainDM: LoginMainProtocol {
-
+ 
     let bag = DisposeBag()
     static let uid = Auth.auth().currentUser?.uid
     // Unhashed nonce.
@@ -86,7 +87,32 @@ class LoginMainDM: LoginMainProtocol {
         
     }
     
-    
+    static func createUser(email: String, password: String) -> Observable<Firebase.User> {
+        
+        return .create { observer in
+            
+            Auth.auth().createUser(withEmail: email, password: password) { result, err in
+              
+                if let err = err {
+                    observer.onError(err)
+                }
+                else {
+                    
+                    if let user = result?.user {
+                        
+                        observer.onNext(user)
+                        
+                    }
+                    
+                }
+            }
+            
+          
+            return Disposables.create()
+        
+        }
+        
+    }
  
    static func login(email: String?, password: String?) -> Observable<AuthDataResult>{
         
