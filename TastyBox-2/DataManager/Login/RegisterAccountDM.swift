@@ -20,7 +20,7 @@ enum RegisterErrors: Error {
 protocol RegisterAccountProtocol {
     
     static func registerEmail(email: String, password: String) -> Observable<Bool>
-    static func sendEmailWithLink(email: String?) -> Completable
+    static func sendEmailWithLink(email: String?) -> Observable<Bool>
     static func signUpWithPassword(email: String, password: String) -> Completable
     static func failedSignUp() -> Completable
 }
@@ -36,13 +36,13 @@ class RegisterAccountDM: RegisterAccountProtocol {
     // https://qiita.com/mtkmr/items/078b715d9965fea1bd04
     // 作り直し
 
-    static func sendEmailWithLink(email: String?) -> Completable {
+    static func sendEmailWithLink(email: String?) -> Observable<Bool> {
         
-        return Completable.create { completable in
+        return Observable.create { observer in
            
             guard let email = email, !email.isEmpty else {
             
-                completable(.error( LoginErrors.invailedEmail))
+                observer.onError(LoginErrors.invailedEmail)
                 return Disposables.create()
                 
             } //ユーザーのメールアドレス
@@ -55,7 +55,7 @@ class RegisterAccountDM: RegisterAccountProtocol {
                 //リンクURL
                 var components = URLComponents()
                 components.scheme = "https"
-                components.host = "tastybox2.page.link" //Firebaseコンソールで作成したダイナミックリンクURLドメイン
+                components.host = "tastyboxver2.page.link" //Firebaseコンソールで作成したダイナミックリンクURLドメイン
            
                 let queryItemEmailName = "email" //URLにemail情報(パラメータ)を追加する
                 let emailTypeQueryItem = URLQueryItem(name: queryItemEmailName, value: email)
@@ -63,7 +63,7 @@ class RegisterAccountDM: RegisterAccountProtocol {
            
             guard let linkParameter = components.url else {
                 
-                completable(.error(LoginErrors.invailedUrl))
+                observer.onError(LoginErrors.invailedUrl)
                 
                 return Disposables.create()
             }
@@ -71,9 +71,9 @@ class RegisterAccountDM: RegisterAccountProtocol {
             
             //ユーザーのメールアドレスに認証リンクを送信
                Auth.auth().sendSignInLink(toEmail: email, actionCodeSettings: actionCodeSettings) { err in
-                if let err = err as NSError? {
+                if let err = err {
                     
-                    completable(.error(err))
+                    observer.onError(err)
                     
                    } else {
                     print("送信完了")
@@ -83,7 +83,7 @@ class RegisterAccountDM: RegisterAccountProtocol {
 
                     //・・・
                     //アラートを表示するなど、ユーザーにメールの確認を促す処理
-                 completable(.completed)
+                       observer.onNext(true)
 //                    DynamicLinks.performDiagnostics(completion: nil)
                    }
                    

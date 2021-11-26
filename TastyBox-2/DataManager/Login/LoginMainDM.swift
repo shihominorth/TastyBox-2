@@ -58,15 +58,26 @@ class LoginMainDM: LoginMainProtocol {
                     
                 } else {
                     
-                    guard let data = doc?.data() else { return }
-                    guard let isFirst = data["isFirst"] as? Bool else {
+                    if let doc = doc {
                         
-                        observer.onNext(true)
-                        return
+                        let data = doc.data()
+                       
+                        guard let isFirst = data?["isFirst"] as? Bool else {
+                            
+                            observer.onNext(true)
+                            return
+                            
+                        }
+                        
+                        observer.onNext(isFirst)
                         
                     }
+                    else {
                     
-                    observer.onNext(isFirst)
+                        observer.onNext(true)
+                    
+                    }
+                    
                 }
             }
             
@@ -74,6 +85,7 @@ class LoginMainDM: LoginMainProtocol {
         }
         
     }
+    
     
  
    static func login(email: String?, password: String?) -> Observable<AuthDataResult>{

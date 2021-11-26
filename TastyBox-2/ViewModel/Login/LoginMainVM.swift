@@ -73,19 +73,18 @@ class LoginMainVM: ViewModelBase {
         
 //        if let user = self.user {
         let vm = RegisterMyInfoProfileVM(sceneCoodinator: sceneCoodinator, user: user)
-        let vc = LoginScene.profileRegister(vm).viewController()
-        self.sceneCoodinator.transition(to: vc, type: .push)
+        let scene: Scene = .loginScene(scene: .profileRegister(vm))
+        self.sceneCoodinator.modalTransition(to: scene, type: .push)
 //        }
        
     }
     
     private func goToMain(user: Firebase.User) {
 
-//        if let user = self.user {
-            let vm = DiscoveryVM(sceneCoodinator: self.sceneCoodinator, user: user)
-            let vc = DiscoveryScene.discovery(vm).viewController()
-            self.sceneCoodinator.transition(to: vc, type: .modal(presentationStyle: nil, modalTransisionStyle: nil, hasNavigationController: false))
-//        }
+        let vm = DiscoveryVM(sceneCoodinator: self.sceneCoodinator, user: user)
+        let scene: Scene = .discovery(scene: .main(vm))
+        self.sceneCoodinator.modalTransition(to: scene, type: .root)
+
     }
     
     
@@ -98,14 +97,6 @@ class LoginMainVM: ViewModelBase {
             
             })
                 .materialize()
-//            .catch({ err in
-//
-//                err.handleAuthenticationError()?.showErrNotification()
-//
-//                return .empty()
-//            })
-        
-                    
 
     }
     
@@ -141,16 +132,7 @@ class LoginMainVM: ViewModelBase {
             self.user = user
         
             }).materialize()
-//            .catch({ err in
-//
-//                print(err)
-//
-//                err.handleAuthenticationError()?.showErrNotification()
-//
-//                return .empty()
-//
-//            })
-           
+
     }
     
     func checkIsEmptyTxtFields(isEnabled: Bool) -> Observable<(String, String)> {
@@ -243,11 +225,11 @@ class LoginMainVM: ViewModelBase {
     func resetPassword() -> CocoaAction {
         return CocoaAction { _ in
             
-            let resetPasswordVM = ResetPasswordVM(coordinator: self.sceneCoodinator)
-            let viewController = LoginScene.resetPassword(resetPasswordVM).viewController()
+            let vm = ResetPasswordVM(coordinator: self.sceneCoodinator)
+            let scene:Scene = .loginScene(scene: .resetPassword(vm))
             
             return self.sceneCoodinator
-                .transition(to: viewController, type: .push)
+                .modalTransition(to: scene, type: .push)
                 .asObservable()
                 //Cannot convert return expression of type 'Observable<Never>' to return type 'Observable<Void>'
                 .map { _ in }  // 上記のエラーがこれで解決する
@@ -256,11 +238,14 @@ class LoginMainVM: ViewModelBase {
     }
     
     func registerEmail() -> CocoaAction {
+        
         return CocoaAction { task in
-            let registerEmailVM = RegisterEmailVM(sceneCoordinator: self.sceneCoodinator)
-            let viewController =  LoginScene.emailVerify(registerEmailVM).viewController()
+            
+            let vm = RegisterEmailVM(sceneCoordinator: self.sceneCoodinator)
+            let scene: Scene = .loginScene(scene: .emailVerify(vm))
+           
             return self.sceneCoodinator
-                .transition(to: viewController, type: .push)
+                .modalTransition(to: scene, type: .push)
                 .asObservable()
                 .map {_ in }
         }

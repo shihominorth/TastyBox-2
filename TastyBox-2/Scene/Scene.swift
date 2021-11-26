@@ -8,6 +8,14 @@
 import Foundation
 
 enum Scene {
+    
+    enum LoginScene {
+        case main(LoginMainVM), resetPassword(ResetPasswordVM), emailVerify(RegisterEmailVM), setPassword(SetPasswordVM), profileRegister(RegisterMyInfoProfileVM), about(AboutViewModel), tutorial(TutorialVM)
+    }
+    
+    enum DiscoveryScene {
+        case main(DiscoveryVM)
+    }
 
     enum CreateRecipeScene {
         case createRecipe(CreateRecipeVM), selectGenre(SelectGenresVM), checkRecipe(CheckRecipeVM), publishRecipe(PublishRecipeVM)
@@ -21,7 +29,7 @@ enum Scene {
         case recipe(RecipeVM)
     }
    
-    case createReceipeScene(scene: CreateRecipeScene), profileScene(scene: ProfileScene), recipeScene(scene: RecipeDetailScene)
+    case loginScene(scene: LoginScene), discovery(scene: DiscoveryScene), createReceipeScene(scene: CreateRecipeScene), profileScene(scene: ProfileScene), recipeScene(scene: RecipeDetailScene)
 }
 
 enum LoadingScene {

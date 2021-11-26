@@ -31,7 +31,7 @@
 			<string>Editor</string>
 			<key>CFBundleURLSchemes</key>
 			<array>
-				<string>com.googleusercontent.apps.556238051319-ltkstgvdt1jtqcmovuqsioe7gla7d8md</string>
+				<string>com.googleusercontent.apps.556238051319-tor3ebui23u04ntgb383qvct8kjur78k</string>
 			</array>
 		</dict>
 		<dict>
@@ -41,7 +41,7 @@
 			<string>TastyBox-2</string>
 			<key>CFBundleURLSchemes</key>
 			<array>
-				<string>com.shihomikitajima.individual.TastyBox-2</string>
+				<string>com.shihomikitajima.version2.TastyBox</string>
 			</array>
 		</dict>
 	</array>
@@ -53,24 +53,24 @@
 	<string>5c732294db2fb9e272ea0460866b7ae7</string>
 	<key>FacebookDisplayName</key>
 	<string>TastyBox</string>
-	<key>LSApplicationQueriesSchemes</key>
-	<array>
-		<string>fbapi</string>
-		<string>fbapi20130214</string>
-		<string>fbapi20130410</string>
-		<string>fbapi20130702</string>
-		<string>fbapi20131010</string>
-		<string>fbapi20131219</string>
-		<string>fbapi20140410</string>
-		<string>fbapi20140116</string>
-		<string>fbapi20150313</string>
-		<string>fbapi20150629</string>
-		<string>fbapi20160328</string>
-		<string>fbauth</string>
-		<string>fb-messenger-share-api</string>
-		<string>fbauth2</string>
-		<string>fbshareextension</string>
-	</array>
+    <key>LSApplicationQueriesSchemes</key>
+    <array>
+      <string>fbapi</string>
+      <string>fbapi20130214</string>
+      <string>fbapi20130410</string>
+      <string>fbapi20130702</string>
+      <string>fbapi20131010</string>
+      <string>fbapi20131219</string>
+      <string>fbapi20140410</string>
+      <string>fbapi20140116</string>
+      <string>fbapi20150313</string>
+      <string>fbapi20150629</string>
+      <string>fbapi20160328</string>
+      <string>fbauth</string>
+      <string>fb-messenger-share-api</string>
+      <string>fbauth2</string>
+      <string>fbshareextension</string>
+    </array>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
 	<key>NSAppTransportSecurity</key>

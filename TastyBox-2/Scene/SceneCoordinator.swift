@@ -44,6 +44,12 @@ class SceneCoordinator: NSObject, SceneCoordinatorType {
         
         switch type {
             
+        case .root:
+            
+            currentViewController = SceneCoordinator.actualViewController(for: viewController)
+            window.rootViewController = viewController
+            subject.onCompleted()
+            
         case .push:
             
             guard let navigationController = currentViewController.navigationController else {
@@ -62,7 +68,7 @@ class SceneCoordinator: NSObject, SceneCoordinatorType {
             
             navigationController.pushViewController(viewController, animated: true)
             
-        case .modal(let presentationStyle, let transitionStyle, let hasNavigationController):
+        case let .modal(presentationStyle, transitionStyle, hasNavigationController):
             
             viewController.modalPresentationStyle = presentationStyle ?? .fullScreen
             viewController.modalTransitionStyle =  transitionStyle ?? .flipHorizontal

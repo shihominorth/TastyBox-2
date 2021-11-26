@@ -48,14 +48,12 @@ class RegisterEmailVM: ViewModelBase {
         
     }
     
-    lazy var sendEmailWithLink: Action<String, Swift.Never> = { this in
+    lazy var sendEmailWithLink: Action<String, Void> = { this in
         
         return Action { email in
-            
-            return Observable.create { observer in
-                
-                self.apiType.sendEmailWithLink(email: email)
-                    .subscribe(onCompleted: {
+   
+          return self.apiType.sendEmailWithLink(email: email)
+                    .do(onNext: { isCompleted in
                        
                         SCLAlertView().showTitle(
                             "Sent Email Validation", // Title of view
@@ -84,19 +82,14 @@ class RegisterEmailVM: ViewModelBase {
                             return
                         }
                         
-                        SCLAlertView().showTitle(
-                            reason.reason, // Title of view
-                            subTitle: reason.solution,
-                            timeout: .none, // String of view
-                            completeText: "Done", // Optional button value, default: ""
-                            style: .error, // Styles - see below.
-                            colorStyle: 0xA429FF,
-                            colorTextButton: 0xFFFFFF
-                        )
+                        reason.showErrNotification()
+                        
                     })
+                        .map { _ in }
                 
-            }
+            
         }
+        
     }(self)
     
     func toLoginMainAction() -> CocoaAction {

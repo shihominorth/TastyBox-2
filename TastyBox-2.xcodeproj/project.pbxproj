@@ -78,7 +78,6 @@
 		6F512A2C26F42DE300826657 /* TutorialViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F512A2B26F42DE200826657 /* TutorialViewController.swift */; };
 		6F512A3026F45BF200826657 /* TutorialCVCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F512A2F26F45BF200826657 /* TutorialCVCell.swift */; };
 		6F512A3226F467A300826657 /* FlowLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F512A3126F467A300826657 /* FlowLayout.swift */; };
-		6F65FB34274F57BA003F12BD /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 6F65FB33274F57B9003F12BD /* GoogleService-Info.plist */; };
 		6F6D0AEE26EED71500CD27AE /* RxFaceBookLoginDelegateProxy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F6D0AED26EED71500CD27AE /* RxFaceBookLoginDelegateProxy.swift */; };
 		6F71EBEC2721FEAD001BF538 /* RxUIViewController+.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F71EBEB2721FEAD001BF538 /* RxUIViewController+.swift */; };
 		6F71EBEE2722B1CC001BF538 /* GenreCollectionViewFlowLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F71EBED2722B1CB001BF538 /* GenreCollectionViewFlowLayout.swift */; };
@@ -147,6 +146,7 @@
 		6FC062C026EAE4020016B990 /* Error+.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FC062BF26EAE4000016B990 /* Error+.swift */; };
 		6FC062C226ECA3D90016B990 /* Notification.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FC062C126ECA3D70016B990 /* Notification.swift */; };
 		6FC062C426ECC9B00016B990 /* LoginErrors.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FC062C326ECC9AF0016B990 /* LoginErrors.swift */; };
+		6FC19B2B2750016C00C37DEB /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 6FC19B2A2750016C00C37DEB /* GoogleService-Info.plist */; };
 		6FC26F642748EC9300AE13F9 /* Collection+.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FC26F632748EC9300AE13F9 /* Collection+.swift */; };
 		6FC26F6A2749033400AE13F9 /* IngredientOptionCVCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FC26F692749033300AE13F9 /* IngredientOptionCVCell.swift */; };
 		6FC26F6D2749065E00AE13F9 /* RecipeWithIngredientCVCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FC26F6C2749065E00AE13F9 /* RecipeWithIngredientCVCell.swift */; };
@@ -270,7 +270,6 @@
 		6F512A2B26F42DE200826657 /* TutorialViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TutorialViewController.swift; sourceTree = "<group>"; };
 		6F512A2F26F45BF200826657 /* TutorialCVCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TutorialCVCell.swift; sourceTree = "<group>"; };
 		6F512A3126F467A300826657 /* FlowLayout.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FlowLayout.swift; sourceTree = "<group>"; };
-		6F65FB33274F57B9003F12BD /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		6F6D0AED26EED71500CD27AE /* RxFaceBookLoginDelegateProxy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RxFaceBookLoginDelegateProxy.swift; sourceTree = "<group>"; };
 		6F71EBEB2721FEAD001BF538 /* RxUIViewController+.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "RxUIViewController+.swift"; sourceTree = "<group>"; };
 		6F71EBED2722B1CB001BF538 /* GenreCollectionViewFlowLayout.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GenreCollectionViewFlowLayout.swift; sourceTree = "<group>"; };
@@ -342,6 +341,7 @@
 		6FC062BF26EAE4000016B990 /* Error+.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Error+.swift"; sourceTree = "<group>"; };
 		6FC062C126ECA3D70016B990 /* Notification.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Notification.swift; sourceTree = "<group>"; };
 		6FC062C326ECC9AF0016B990 /* LoginErrors.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginErrors.swift; sourceTree = "<group>"; };
+		6FC19B2A2750016C00C37DEB /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		6FC26F632748EC9300AE13F9 /* Collection+.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Collection+.swift"; sourceTree = "<group>"; };
 		6FC26F692749033300AE13F9 /* IngredientOptionCVCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IngredientOptionCVCell.swift; sourceTree = "<group>"; };
 		6FC26F6C2749065E00AE13F9 /* RecipeWithIngredientCVCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecipeWithIngredientCVCell.swift; sourceTree = "<group>"; };
@@ -699,10 +699,10 @@
 			isa = PBXGroup;
 			children = (
 				6FA70A9726E6660000474FE5 /* TastyBox-2.entitlements */,
+				6FC19B2A2750016C00C37DEB /* GoogleService-Info.plist */,
 				6F40F82726F03375004B69DD /* AlertGenerator.swift */,
 				6FB06F3C26D67E0100E110B4 /* AppDelegate.swift */,
 				6FB06F3E26D67E0100E110B4 /* SceneDelegate.swift */,
-				6F65FB33274F57B9003F12BD /* GoogleService-Info.plist */,
 				6FB06F4026D67E0100E110B4 /* ViewController.swift */,
 				6FEF089026F30D8A00C02CDD /* Void.swift */,
 				6F9BE64326D7E4B3005DD80B /* Extensions */,
@@ -1065,7 +1065,7 @@
 				6F3BF4BE2732F894005C24A5 /* Profile.storyboard in Resources */,
 				6FB970B52725065F00350F84 /* RecipeDetail.storyboard in Resources */,
 				6F194CBA271C77A40084F829 /* VideoPlayer.storyboard in Resources */,
-				6F65FB34274F57BA003F12BD /* GoogleService-Info.plist in Resources */,
+				6FC19B2B2750016C00C37DEB /* GoogleService-Info.plist in Resources */,
 				6FFFB86A27457133006B7985 /* ReportView.xib in Resources */,
 				6F512A2226F3FA5100826657 /* Tutorial.storyboard in Resources */,
 				6FE9EB4926F98A05000AF9D4 /* Ingredient.storyboard in Resources */,

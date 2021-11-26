@@ -167,6 +167,8 @@ class LoginMainPageViewController: UIViewController, BindableType, KeyboardSetUp
 
         failedStream
             .subscribe(onNext: { err in
+
+                print(err)
                 
                 err.handleAuthenticationError()?.showErrNotification()
                 self.hideViewDuringLogin()
@@ -224,6 +226,7 @@ class LoginMainPageViewController: UIViewController, BindableType, KeyboardSetUp
                  self.viewModel.googleLogin(presenting: self)
             }
             .share(replay: 1, scope: .forever)
+            .debug("google login")
         
         let googleLoginSucceededStream = googleLoginStream.compactMap { $0.element }
         let googleLoginFailedStream = googleLoginStream.compactMap { $0.error }
@@ -244,7 +247,7 @@ class LoginMainPageViewController: UIViewController, BindableType, KeyboardSetUp
         //MARK: login with apple
         let appleLoginStream = appleLoginBtn.rx.controlEvent(.touchUpInside)
             .throttle(.milliseconds(1000), scheduler: MainScheduler.instance)
-            .observe(on: MainScheduler.asyncInstance)
+            .observe(on: MainScheduler.instance)
             .do(onNext: { _ in
                
                 self.showsViewDuringLogin()
@@ -274,7 +277,7 @@ class LoginMainPageViewController: UIViewController, BindableType, KeyboardSetUp
 
         self.loginButtonStackView.addArrangedSubview(facebookLoginBtn)
         
-        let appLoginStream = facebookLoginBtn.rx.controlEvent(.touchUpInside)
+        let facebookLoginStream = facebookLoginBtn.rx.controlEvent(.touchUpInside)
             .throttle(.milliseconds(1000), scheduler: MainScheduler.instance)
             .observe(on: MainScheduler.asyncInstance)
             .do(onNext: { _ in
@@ -286,8 +289,8 @@ class LoginMainPageViewController: UIViewController, BindableType, KeyboardSetUp
             }
             .share(replay: 1, scope: .forever)
         
-        let facebookLoginSucceededStream = appLoginStream.compactMap { $0.element }
-        let facebookLoginFailedStream = appLoginStream.compactMap { $0.error }
+        let facebookLoginSucceededStream = facebookLoginStream.compactMap { $0.element }
+        let facebookLoginFailedStream = facebookLoginStream.compactMap { $0.error }
         
         facebookLoginSucceededStream
             .bind(to: successStream)

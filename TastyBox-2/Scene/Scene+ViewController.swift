@@ -14,19 +14,26 @@ extension Scene {
     func viewController() -> UIViewController {
 
         switch self {
+          
+        case let .loginScene(scene):
             
+            return generateViewController(loginScene: scene)
+            
+        case let .discovery(scene):
+            
+            return generateViewController(discoveryScene: scene)
             
         case let .createReceipeScene(scene):
             
-            return createViewController(scene: scene)
+            return generateViewController(createRecipeScene: scene)
             
         case let .profileScene(scene):
 
-            return profileViewController(scene: scene)
+            return generateViewController(profileScene: scene)
             
         case let .recipeScene(scene: scene):
-            
-            return recipeViewController(scene: scene)
+  
+            return generateViewController(recipeScene: scene)
         }
         
         
@@ -115,6 +122,7 @@ extension LoadingScene {
 extension LoginScene {
    
     func viewController() -> UIViewController {
+       
         let storyboard = UIStoryboard(name: "Login", bundle: nil)
         let aboutStoryBoard =  UIStoryboard(name: "About", bundle: nil)
         let tutorialStoryboard = UIStoryboard(name: "Tutorial", bundle: nil)
@@ -278,11 +286,90 @@ extension IngredientScene {
 
 extension Scene {
     
-    func createViewController(scene: CreateRecipeScene) -> UIViewController {
+    func generateViewController(loginScene scene: LoginScene) -> UIViewController {
+      
+        let storyboard = UIStoryboard(name: "Login", bundle: nil)
+        let aboutStoryBoard =  UIStoryboard(name: "About", bundle: nil)
+        let tutorialStoryboard = UIStoryboard(name: "Tutorial", bundle: nil)
+        
+        switch scene {
+        
+        case .main(let viewModel):
+        
+            var vc = storyboard.instantiateViewController(identifier: "loginPage") as! LoginMainPageViewController
+            
+            vc.bindViewModel(to: viewModel)
+            
+            return vc
+            
+        case .resetPassword(let viewModel):
+            
+            var vc = storyboard.instantiateViewController(withIdentifier: "resetPassword") as! ResetPasswordViewController
+            vc.bindViewModel(to: viewModel)
+            
+            return vc
+            
+        case .emailVerify(let viewModel):
+            
+            var vc = storyboard.instantiateViewController(withIdentifier: "EmailRegister") as! EmailRegisterViewController
+            
+            vc.bindViewModel(to: viewModel)
+            
+            return vc
+            
+        case .setPassword(let viewModel):
+            
+            let nc = storyboard.instantiateViewController(withIdentifier: "setPassword") as! UINavigationController
+            var vc = nc.viewControllers.first as! SetPasswordViewController
+            //        var vc = storyboard.instantiateViewController(identifier: "setPassword") as! SetPasswordViewController
+            
+            vc.bindViewModel(to: viewModel)
+            
+            return nc
+            
+            
+        case .profileRegister(let viewModel):
+            
+            var vc = storyboard.instantiateViewController(withIdentifier: "FirstTimeProfile") as! RegisterMyInfoProfileTableViewController
+            vc.bindViewModel(to: viewModel)
+            return vc
+            
+        case .about(let viewModel):
+            
+            var vc =  aboutStoryBoard.instantiateViewController(withIdentifier: "about") as! AboutViewController
+            vc.bindViewModel(to: viewModel)
+            return vc
+            
+        case .tutorial(let viewModel):
+            var vc = tutorialStoryboard.instantiateViewController(withIdentifier: "tutorial") as! TutorialViewController
+            vc.bindViewModel(to: viewModel)
+            return vc
+        }
+        
+    }
+    
+    func generateViewController(discoveryScene scene: DiscoveryScene) -> UIViewController {
+        
+        let storyboard = UIStoryboard(name: "Main", bundle: nil)
+        //    let aboutStoryBoard =  UIStoryboard(name: "About", bundle: nil)
+        
+        switch scene {
+            
+        case .main(let viewModel):
+            let nc = storyboard.instantiateViewController(withIdentifier: "MainNC") as! UINavigationController
+            var vc = nc.viewControllers.first as! DiscoveryViewController
+            vc.bindViewModel(to: viewModel)
+            return nc
+        }
+        
+    }
+    
+    func generateViewController(createRecipeScene scene: CreateRecipeScene) -> UIViewController {
 
         let storyboard = UIStoryboard(name: "CreateRecipe", bundle: nil)
         
         switch scene {
+        
         case .createRecipe(let viewModel):
 
 //            var vc = storyboard.instantiateViewController(withIdentifier: "createRecipe") as! CreateRecipeViewController
@@ -325,7 +412,23 @@ extension Scene {
         }
     }
     
-    func recipeViewController(scene: RecipeDetailScene) -> UIViewController {
+    func generateViewController(profileScene scene: ProfileScene) -> UIViewController {
+        
+        let storyboard = UIStoryboard(name: "Profile", bundle: nil)
+
+        switch scene {
+        case .myprofile(let viewModel):
+           
+            var vc = storyboard.instantiateViewController(withIdentifier: "myProfile") as! MyProfileViewController
+            vc.bindViewModel(to: viewModel)
+            
+            return vc
+            
+        }
+        
+    }
+    
+    func generateViewController(recipeScene scene: RecipeDetailScene) -> UIViewController {
         
         let storyBoard = UIStoryboard(name: "RecipeDetail", bundle: nil)
         
@@ -341,6 +444,7 @@ extension Scene {
             
         }
     }
+    
 }
 
 
@@ -407,20 +511,6 @@ extension VideoScene {
 
 extension Scene {
     
-    func profileViewController(scene: ProfileScene) -> UIViewController {
-        
-        let storyboard = UIStoryboard(name: "Profile", bundle: nil)
-
-        switch scene {
-        case .myprofile(let viewModel):
-           
-            var vc = storyboard.instantiateViewController(withIdentifier: "myProfile") as! MyProfileViewController
-            vc.bindViewModel(to: viewModel)
-            
-            return vc
-            
-        }
-        
-    }
+    
     
 }
