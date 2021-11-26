@@ -10,16 +10,21 @@ import Firebase
 import RxSwift
 
 protocol RecipeDetailProtocol: AnyObject {
+    static var services: FireStoreServices { get }
     static func getDetailInfo(recipe: Recipe) -> Observable<([Genre], User, [Ingredient], [Instruction])>
     static func likeRecipe(user: Firebase.User, recipe: Recipe, isLiked: Bool) -> Observable<Bool>
     static func addNewMyLikedRecipe(user: Firebase.User, recipe: Recipe) -> Observable<Bool>
     static func getLikedNum(recipe: Recipe) -> Observable<Int> 
-    static func isLikedRecipe(user: Firebase.User, recipe: Recipe) -> Observable<Bool> 
+    static func isLikedRecipe(user: Firebase.User, recipe: Recipe) -> Observable<Bool>
+    static func followPublisher(user: Firebase.User, publisher: User) -> Observable<Void>
 }
 
 class RecipeDetailDM: RecipeDetailProtocol {
     
     static let db = Firestore.firestore()
+    static var services: FireStoreServices {
+        return FireStoreServices()
+    }
     
     private static var listenisILiked: ListenerRegistration!
     
@@ -367,6 +372,45 @@ class RecipeDetailDM: RecipeDetailProtocol {
         
     }
     
+    static func followPublisher(user: Firebase.User, publisher: User) -> Observable<Void> {
+       
+        return .zip(addNewFollower(user: user, publisher: publisher).map { _ in }, addNewFollowing(user: user, publisher: publisher)) { _, _ in
+            
+            return
+            
+        }
+        
+    }
+    
+    static func addNewFollower(user: Firebase.User, publisher: User) -> Observable<Void> {
+        
+        let data:[String: Any] = [
+            
+            "id": user.uid,
+            "followedDate": Date()
+            
+        ]
+        
+        let path = db.collection("users").document(publisher.userID).collection("followers").document(user.uid)
+        
+        return services.setData(path: path, data: data).map { _ in }
+ 
+    }
+    
+    static func addNewFollowing(user: Firebase.User, publisher: User) -> Observable<Void>  {
+        
+        let data:[String: Any] = [
+            
+            "id": publisher.userID,
+            "followingDate": Date()
+            
+        ]
+        
+        let path = db.collection("users").document(user.uid).collection("following").document(publisher.userID)
+        
+        return services.setData(path: path, data: data).map { _ in }
+ 
+    }
     
     // dont listen the liked number of recipe. no need to update at real time. if we listen it, we have to update the number every time other user liked or unliked.
 //    static func listenRecipeIfILiked(user: Firebase.User, recipe: Recipe)  -> Observable<Bool> {

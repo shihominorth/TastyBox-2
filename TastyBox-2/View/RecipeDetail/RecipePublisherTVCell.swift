@@ -7,12 +7,15 @@
 
 import UIKit
 import Kingfisher
+import RxSwift
 
 class RecipePublisherTVCell: UITableViewCell {
 
     @IBOutlet weak var publisherNameLbl: UILabel!
     @IBOutlet weak var publisherBtn: UIButton!
+    @IBOutlet weak var followBtn: UIButton!
     
+    var disposeBag = DisposeBag()
     
     var user: User! {
 
@@ -46,6 +49,8 @@ class RecipePublisherTVCell: UITableViewCell {
         publisherBtn.layer.masksToBounds = true
         publisherBtn.layer.cornerRadius = publisherBtn.frame.width / 2
         publisherBtn.setTitle("", for: .normal)
+        
+        disposeBag = DisposeBag()
     }
 
     override func setSelected(_ selected: Bool, animated: Bool) {

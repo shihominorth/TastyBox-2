@@ -193,6 +193,18 @@ class RecipeVM: ViewModelBase {
     
     }
     
+    func followPublisher(user: Firebase.User, publisher: User) -> Observable<Bool> {
+        
+        if user.uid == publisher.userID {
+        
+            return Observable.just(false)
+        
+        }
+        
+        return self.apiType.followPublisher(user: user, publisher: publisher).map { true }
+        
+    }
+    
 //    func selectedReason() -> <#return type#> {
 //    
 //        return

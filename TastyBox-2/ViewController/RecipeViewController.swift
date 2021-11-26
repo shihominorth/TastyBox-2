@@ -383,6 +383,29 @@ class RecipeViewController: UIViewController, BindableType {
                     cell.user = user
                     cell.selectionStyle = .none
                     
+                    cell.followBtn.rx.tap
+                        .throttle(.microseconds(1000), scheduler: MainScheduler.instance)
+                        .flatMapLatest { _ in
+                            self.viewModel.followPublisher(user: viewModel.user, publisher: user)
+                        }
+                        .catch { err in
+                            
+                            print(err)
+                            
+                            return .empty()
+                        }
+                        .subscribe(onNext: { isCompleted in
+                            
+                            if isCompleted {
+                                print("success")
+                            }
+                            else {
+                                print("same uid")
+                            }
+                            
+                        })
+                        .disposed(by: cell.disposeBag)
+                    
                     return cell
                 }
                 

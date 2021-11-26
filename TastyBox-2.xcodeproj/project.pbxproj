@@ -147,6 +147,7 @@
 		6FC062C226ECA3D90016B990 /* Notification.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FC062C126ECA3D70016B990 /* Notification.swift */; };
 		6FC062C426ECC9B00016B990 /* LoginErrors.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FC062C326ECC9AF0016B990 /* LoginErrors.swift */; };
 		6FC19B2B2750016C00C37DEB /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 6FC19B2A2750016C00C37DEB /* GoogleService-Info.plist */; };
+		6FC19B2D275115CD00C37DEB /* FireStoreServices.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FC19B2C275115CC00C37DEB /* FireStoreServices.swift */; };
 		6FC26F642748EC9300AE13F9 /* Collection+.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FC26F632748EC9300AE13F9 /* Collection+.swift */; };
 		6FC26F6A2749033400AE13F9 /* IngredientOptionCVCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FC26F692749033300AE13F9 /* IngredientOptionCVCell.swift */; };
 		6FC26F6D2749065E00AE13F9 /* RecipeWithIngredientCVCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FC26F6C2749065E00AE13F9 /* RecipeWithIngredientCVCell.swift */; };
@@ -342,6 +343,7 @@
 		6FC062C126ECA3D70016B990 /* Notification.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Notification.swift; sourceTree = "<group>"; };
 		6FC062C326ECC9AF0016B990 /* LoginErrors.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginErrors.swift; sourceTree = "<group>"; };
 		6FC19B2A2750016C00C37DEB /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
+		6FC19B2C275115CC00C37DEB /* FireStoreServices.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FireStoreServices.swift; sourceTree = "<group>"; };
 		6FC26F632748EC9300AE13F9 /* Collection+.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Collection+.swift"; sourceTree = "<group>"; };
 		6FC26F692749033300AE13F9 /* IngredientOptionCVCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IngredientOptionCVCell.swift; sourceTree = "<group>"; };
 		6FC26F6C2749065E00AE13F9 /* RecipeWithIngredientCVCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecipeWithIngredientCVCell.swift; sourceTree = "<group>"; };
@@ -719,6 +721,7 @@
 				6F6D0AEC26EED6EA00CD27AE /* DelegateProxy */,
 				6FC062C326ECC9AF0016B990 /* LoginErrors.swift */,
 				6F512A3126F467A300826657 /* FlowLayout.swift */,
+				6FC19B2C275115CC00C37DEB /* FireStoreServices.swift */,
 			);
 			path = "TastyBox-2";
 			sourceTree = "<group>";
@@ -1293,6 +1296,7 @@
 				6F26D4EA26DFBDF60050BA84 /* DiscoveryVM.swift in Sources */,
 				6FF66B9F26D7AF430024495E /* ResetPasswordVM.swift in Sources */,
 				6F9A0D1027101B1400DABB45 /* SemiModalIndicatorView.swift in Sources */,
+				6FC19B2D275115CD00C37DEB /* FireStoreServices.swift in Sources */,
 				6F9E04232700CAE0005DCEF4 /* ShoppinglistTVCell.swift in Sources */,
 				6F114E0D271D71F800B3BE63 /* UIView.swift in Sources */,
 				6F01F3D227296EAA003CA769 /* PublishRecipeVM.swift in Sources */,
