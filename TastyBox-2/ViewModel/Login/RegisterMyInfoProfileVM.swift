@@ -19,7 +19,7 @@ class RegisterMyInfoProfileVM: ViewModelBase {
     let user: Firebase.User
     
     let defaultUserImageData = #imageLiteral(resourceName: "defaultUserImage").pngData()
-    var userImage: BehaviorRelay<Data>!
+    var userImage: PublishSubject<Data>!
     var isEnableDone = BehaviorRelay(value: false)
     var observeTxtFields = BehaviorRelay<String>(value: "")
     
@@ -28,9 +28,11 @@ class RegisterMyInfoProfileVM: ViewModelBase {
     var familySize = BehaviorRelay<String>(value: "")
     var cuisineType = BehaviorRelay<String>(value: "")
     
+    let photoPickerSubject: PublishSubject<Data>
     
-    let cuisineTypeOptions = ["Chinese Food", "Japanese Food", "Thai food"]
-    let familySizeOptions = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15", "16", "17", "18", "19", "20"]
+    let cuisineTypeOptions: [String]
+    let familySizeOptions: [String]
+    
     
     init(sceneCoodinator: SceneCoordinator, apiType: RegisterMyInfoProtocol.Type = RegisterMyInfoDM.self, user:  Firebase.User) {
         
@@ -38,6 +40,12 @@ class RegisterMyInfoProfileVM: ViewModelBase {
         self.apiType = apiType
         
         self.user = user
+        
+        self.photoPickerSubject = PublishSubject<Data>()
+        self.userImage = PublishSubject<Data>()
+        
+        cuisineTypeOptions = ["Chinese Food", "Japanese Food", "Thai food"]
+        familySizeOptions = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15", "16", "17", "18", "19", "20"]
         
         guard let displayName = user.displayName, let userEmail = user.email else { return }
         
@@ -64,34 +72,38 @@ class RegisterMyInfoProfileVM: ViewModelBase {
                 
             }
             .do(onNext: { [unowned self] data in
+
+                self.userImage.onNext(data)
                 
-                self.userImage = BehaviorRelay<Data>(value: data)
             })
                 
                 
-                }
+    }
+    
+    func toPickPhoto() {
+        
+        let scene: Scene = .digitalContentsPickerScene(scene: .photo)
+        
+        self.sceneCoodinator.modalTransition(to: scene, type: .photoPick(completion: { data in
+            
+            self.userImage.onNext(data)
+            
+        }))
+        
+    }
     
     func registerUser() -> Observable<Void> {
         
         return Observable.combineLatest(userName.asObservable(), email.asObservable(), familySize.asObservable(), cuisineType.asObservable(), userImage.asObservable())
             .flatMap { [unowned self] (name, email, familySize, cuisineType, userImage)  in
+               
                 self.apiType.userRegister(userName: name, email: email, familySize: familySize, cuisineType: cuisineType, accountImage: userImage)
             }
             .catch { err in
                 
                 print(err)
                 
-                guard let reason = err.handleFireStoreError() else { return .empty() }
-                
-                SCLAlertView().showTitle(
-                    reason.reason, // Title of view
-                    subTitle: reason.solution,
-                    timeout: .none, // String of view
-                    completeText: "Done", // Optional button value, default: ""
-                    style: .error, // Styles - see below.
-                    colorStyle: 0xA429FF,
-                    colorTextButton: 0xFFFFFF
-                )
+                err.handleFireStoreError()?.showErrNotification()
                 
                 return .empty()
             }
@@ -101,8 +113,8 @@ class RegisterMyInfoProfileVM: ViewModelBase {
     func goToNext() {
  
         let vm = DiscoveryVM(sceneCoodinator: self.sceneCoodinator, user: self.user)
-        let vc = DiscoveryScene.discovery(vm).viewController()
-        self.sceneCoodinator.transition(to: vc, type: .modal(presentationStyle: nil, modalTransisionStyle: .crossDissolve, hasNavigationController: false))
+        let scene: Scene = .discovery(scene: .main(vm))
+        self.sceneCoodinator.modalTransition(to: scene, type: .modal(presentationStyle: .fullScreen, modalTransisionStyle: .crossDissolve, hasNavigationController: true))
         
     }
     

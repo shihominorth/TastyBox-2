@@ -20,10 +20,13 @@ class SceneCoordinator: NSObject, SceneCoordinatorType {
     private var currentViewController: UIViewController
     private var semiModalPresenter: SemiModalPresenter
     
+    private let disposeBag: DisposeBag
+    
     required init(window: UIWindow) {
         self.window = window
         currentViewController = window.rootViewController!
         semiModalPresenter = SemiModalPresenter()
+        disposeBag = DisposeBag()
     }
     
     static func actualViewController(for viewController: UIViewController) -> UIViewController {
@@ -123,6 +126,52 @@ class SceneCoordinator: NSObject, SceneCoordinatorType {
                 subject.onCompleted()
             }
             
+        case .photoPick(let completion):
+            
+            if let viewController = viewController as? PHPickerViewController {
+                
+                if !(currentViewController is PHPickerViewController)  {
+                   
+                    viewController.modalPresentationStyle = .automatic
+                    viewController.modalTransitionStyle = .coverVertical
+                    
+                    currentViewController.present(viewController, animated: true) {
+                        
+                        subject.onCompleted()
+                    }
+                    
+                    viewController.rx.imageData
+                        .subscribe(onNext: { data in
+                            
+                            completion(data)
+                            
+                        })
+                        .disposed(by: disposeBag)
+                }
+                
+               
+            }
+            
+        case .videoPick(let subject):
+            
+            if let viewController = viewController as? PHPickerViewController {
+                
+                if !(currentViewController is PHPickerViewController)  {
+                   
+                    viewController.modalPresentationStyle = .automatic
+                    viewController.modalTransitionStyle = .coverVertical
+                    
+                    currentViewController.present(viewController, animated: true) { [unowned self] in
+                    
+                        viewController.rx.videoUrl.bind(to: subject).disposed(by: self.disposeBag)
+                        subject.onCompleted()
+                    }
+                    
+                }
+                
+               
+            }
+            
         default:
             break
         }
@@ -136,7 +185,7 @@ class SceneCoordinator: NSObject, SceneCoordinatorType {
     func transition(to viewController: UIViewController, type: SceneTransitionType) -> Completable {
         
         let subject = PublishSubject<Void>()
-        let dissappearsubject = PublishSubject<Void>()
+//        let dissappearsubject = PublishSubje/t<Void>()
         
         switch type {
         case .root:
@@ -278,8 +327,8 @@ class SceneCoordinator: NSObject, SceneCoordinatorType {
                 
             }
             
-            
-            
+        default:
+            break
         }
         
         

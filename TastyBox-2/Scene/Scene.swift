@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import RxSwift
 
 enum Scene {
     
@@ -28,8 +29,12 @@ enum Scene {
     enum RecipeDetailScene {
         case recipe(RecipeVM)
     }
+    
+    enum DigitalContentsPickerScene {
+        case video, photo
+    }
    
-    case loginScene(scene: LoginScene), discovery(scene: DiscoveryScene), createReceipeScene(scene: CreateRecipeScene), profileScene(scene: ProfileScene), recipeScene(scene: RecipeDetailScene)
+    case loginScene(scene: LoginScene), discovery(scene: DiscoveryScene), createReceipeScene(scene: CreateRecipeScene), profileScene(scene: ProfileScene), recipeScene(scene: RecipeDetailScene), digitalContentsPickerScene(scene: DigitalContentsPickerScene)
 }
 
 enum LoadingScene {

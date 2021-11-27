@@ -44,6 +44,8 @@ class RegisterMyInfoDM: RegisterMyInfoProtocol {
     }
     
     
+    
+    
     // account image should convert from uiimage to data?
     // in order to convert it, use .defineUserImage() before call userRegister.
     

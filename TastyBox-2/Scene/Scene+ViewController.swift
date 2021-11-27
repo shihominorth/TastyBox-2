@@ -31,9 +31,13 @@ extension Scene {
 
             return generateViewController(profileScene: scene)
             
-        case let .recipeScene(scene: scene):
+        case let .recipeScene(scene):
   
             return generateViewController(recipeScene: scene)
+            
+        case let .digitalContentsPickerScene(scene):
+            
+            return generateViewController(digitalContentsPickerScene: scene)
         }
         
         
@@ -439,6 +443,44 @@ extension Scene {
             var vc = storyBoard.instantiateViewController(withIdentifier: "recipeDetail") as! RecipeViewController
             
             vc.bindViewModel(to: viewModel)
+            
+            return vc
+            
+        }
+    }
+    
+    func generateViewController(digitalContentsPickerScene scene: DigitalContentsPickerScene) -> PHPickerViewController {
+        
+        switch scene {
+        case .photo:
+            
+            var photoConfigPHPickerConfiguration: PHPickerConfiguration {
+
+                var config = PHPickerConfiguration(photoLibrary: .shared())
+                config.selectionLimit = 1
+                config.filter = PHPickerFilter.any(of: [.images, .livePhotos])
+                
+                
+                return config
+            }
+            
+            let vc = PHPickerViewController(configuration: photoConfigPHPickerConfiguration)
+            
+            return vc
+            
+        case .video:
+            
+            var videoConfigPHPickerConfiguration: PHPickerConfiguration {
+
+                var config = PHPickerConfiguration(photoLibrary: .shared())
+                config.selectionLimit = 1
+                config.filter = .videos
+                config.preferredAssetRepresentationMode = .current
+               
+               return config
+           }
+            
+            let vc = PHPickerViewController(configuration: videoConfigPHPickerConfiguration)
             
             return vc
             

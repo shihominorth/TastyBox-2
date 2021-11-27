@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import RxSwift
 
 enum SceneTransitionType {
   // you can extend this to add animated transition types,
@@ -18,4 +19,6 @@ enum SceneTransitionType {
     case VCAsRoot
     case modalHalf
     case imagePick
+    case photoPick(completion: (Data) -> Void)
+    case videoPick(subject: PublishSubject<URL>)
 }

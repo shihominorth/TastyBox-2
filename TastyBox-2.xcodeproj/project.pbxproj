@@ -78,6 +78,8 @@
 		6F512A2C26F42DE300826657 /* TutorialViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F512A2B26F42DE200826657 /* TutorialViewController.swift */; };
 		6F512A3026F45BF200826657 /* TutorialCVCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F512A2F26F45BF200826657 /* TutorialCVCell.swift */; };
 		6F512A3226F467A300826657 /* FlowLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F512A3126F467A300826657 /* FlowLayout.swift */; };
+		6F54460E275149C900579138 /* StorageService.swift.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F54460D275149C900579138 /* StorageService.swift.swift */; };
+		6F54461027523AD100579138 /* RxRSKImageCropVCDelegateProaxy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F54460F27523AD000579138 /* RxRSKImageCropVCDelegateProaxy.swift */; };
 		6F6D0AEE26EED71500CD27AE /* RxFaceBookLoginDelegateProxy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F6D0AED26EED71500CD27AE /* RxFaceBookLoginDelegateProxy.swift */; };
 		6F71EBEC2721FEAD001BF538 /* RxUIViewController+.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F71EBEB2721FEAD001BF538 /* RxUIViewController+.swift */; };
 		6F71EBEE2722B1CC001BF538 /* GenreCollectionViewFlowLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F71EBED2722B1CB001BF538 /* GenreCollectionViewFlowLayout.swift */; };
@@ -271,6 +273,8 @@
 		6F512A2B26F42DE200826657 /* TutorialViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TutorialViewController.swift; sourceTree = "<group>"; };
 		6F512A2F26F45BF200826657 /* TutorialCVCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TutorialCVCell.swift; sourceTree = "<group>"; };
 		6F512A3126F467A300826657 /* FlowLayout.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FlowLayout.swift; sourceTree = "<group>"; };
+		6F54460D275149C900579138 /* StorageService.swift.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StorageService.swift.swift; sourceTree = "<group>"; };
+		6F54460F27523AD000579138 /* RxRSKImageCropVCDelegateProaxy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RxRSKImageCropVCDelegateProaxy.swift; sourceTree = "<group>"; };
 		6F6D0AED26EED71500CD27AE /* RxFaceBookLoginDelegateProxy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RxFaceBookLoginDelegateProxy.swift; sourceTree = "<group>"; };
 		6F71EBEB2721FEAD001BF538 /* RxUIViewController+.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "RxUIViewController+.swift"; sourceTree = "<group>"; };
 		6F71EBED2722B1CB001BF538 /* GenreCollectionViewFlowLayout.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GenreCollectionViewFlowLayout.swift; sourceTree = "<group>"; };
@@ -568,6 +572,15 @@
 			path = Tutorial;
 			sourceTree = "<group>";
 		};
+		6F54460C275149A300579138 /* Services */ = {
+			isa = PBXGroup;
+			children = (
+				6FC19B2C275115CC00C37DEB /* FireStoreServices.swift */,
+				6F54460D275149C900579138 /* StorageService.swift.swift */,
+			);
+			path = Services;
+			sourceTree = "<group>";
+		};
 		6F6D0AEC26EED6EA00CD27AE /* DelegateProxy */ = {
 			isa = PBXGroup;
 			children = (
@@ -575,6 +588,7 @@
 				6F2BBA8926EDDA6B003B0D5F /* RxAppleDelegateProxy.swift */,
 				6F6D0AED26EED71500CD27AE /* RxFaceBookLoginDelegateProxy.swift */,
 				6F0E695F271F98FE002BD547 /* RxPHPickerViewControllerDelegateProxy.swift */,
+				6F54460F27523AD000579138 /* RxRSKImageCropVCDelegateProaxy.swift */,
 			);
 			path = DelegateProxy;
 			sourceTree = "<group>";
@@ -721,7 +735,7 @@
 				6F6D0AEC26EED6EA00CD27AE /* DelegateProxy */,
 				6FC062C326ECC9AF0016B990 /* LoginErrors.swift */,
 				6F512A3126F467A300826657 /* FlowLayout.swift */,
-				6FC19B2C275115CC00C37DEB /* FireStoreServices.swift */,
+				6F54460C275149A300579138 /* Services */,
 			);
 			path = "TastyBox-2";
 			sourceTree = "<group>";
@@ -1194,6 +1208,7 @@
 				6F512A2426F4169800826657 /* LoadingViewController.swift in Sources */,
 				6F77D487272825C800F1FCD9 /* CheckEvaluateRecipeCVCell.swift in Sources */,
 				6FB970AE2724358300350F84 /* SelectGenreTVCell.swift in Sources */,
+				6F54461027523AD100579138 /* RxRSKImageCropVCDelegateProaxy.swift in Sources */,
 				6FE9EB5026F9A6E1000AF9D4 /* RefrigeratorVM.swift in Sources */,
 				6F9BE63926D7CD9D005DD80B /* UserdataManager.swift in Sources */,
 				6F9E04182700A113005DCEF4 /* ShoppinglistViewController.swift in Sources */,
@@ -1313,6 +1328,7 @@
 				6FFFB86427453853006B7985 /* ReportAlertView.swift in Sources */,
 				6FB970CA2725674200350F84 /* CheckRecipeVM.swift in Sources */,
 				6FB06F3F26D67E0100E110B4 /* SceneDelegate.swift in Sources */,
+				6F54460E275149C900579138 /* StorageService.swift.swift in Sources */,
 				6FFFB86827457122006B7985 /* ReportView.swift in Sources */,
 				6FEA391726DA98D7002F81A3 /* RxGIDSignInDelegateProxy.swift in Sources */,
 				6FC062C026EAE4020016B990 /* Error+.swift in Sources */,
