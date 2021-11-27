@@ -17,6 +17,8 @@ protocol RecipeDetailProtocol: AnyObject {
     static func getLikedNum(recipe: Recipe) -> Observable<Int> 
     static func isLikedRecipe(user: Firebase.User, recipe: Recipe) -> Observable<Bool>
     static func followPublisher(user: Firebase.User, publisher: User) -> Observable<Void>
+    static func unFollowPublisher(user: Firebase.User, publisher: User) -> Observable<Void> 
+    static func isFollowingPublisher(user: Firebase.User, publisherID: String) -> Observable<Bool>
 }
 
 class RecipeDetailDM: RecipeDetailProtocol {
@@ -372,9 +374,23 @@ class RecipeDetailDM: RecipeDetailProtocol {
         
     }
     
+    static func isFollowingPublisher(user: Firebase.User, publisherID: String) -> Observable<Bool> {
+        
+        let path = db.collection("users").document(user.uid)
+       
+        return services.getDocument(path: path)
+            .map { data in
+                if let ids = data["followingsIDs"] as? [String: Bool], let isFollowingPublisher = ids[publisherID] {
+                    return isFollowingPublisher
+                }
+                return false
+            }
+        
+    }
+    
     static func followPublisher(user: Firebase.User, publisher: User) -> Observable<Void> {
        
-        return .zip(addNewFollower(user: user, publisher: publisher).map { _ in }, addNewFollowing(user: user, publisher: publisher)) { _, _ in
+        return .zip(addNewFollower(user: user, publisher: publisher).map { _ in }, addNewFollowing(user: user, publisher: publisher), addNewFollowingUnderUser(user: user, publisher: publisher)) { _, _, _ in
             
             return
             
@@ -387,8 +403,8 @@ class RecipeDetailDM: RecipeDetailProtocol {
         let data:[String: Any] = [
             
             "id": user.uid,
-            "followedDate": Date()
-            
+            "followedDate": Date(),
+            "isFollowed": true
         ]
         
         let path = db.collection("users").document(publisher.userID).collection("followers").document(user.uid)
@@ -402,14 +418,106 @@ class RecipeDetailDM: RecipeDetailProtocol {
         let data:[String: Any] = [
             
             "id": publisher.userID,
-            "followingDate": Date()
-            
+            "followingDate": Date(),
+            "isFollowing": true
         ]
         
-        let path = db.collection("users").document(user.uid).collection("following").document(publisher.userID)
+        let path = db.collection("users").document(user.uid).collection("followings").document(publisher.userID)
+               
         
         return services.setData(path: path, data: data).map { _ in }
  
+    }
+    
+    static func addNewFollowingUnderUser(user: Firebase.User, publisher: User) -> Observable<Void>  {
+
+        let path = db.collection("users").document(user.uid)
+               
+        
+        return services.getDocument(path: path)
+            .map { data in
+                
+                if let idsDic = data["followingsIDs"] as? [String: Bool] {
+                    
+                    var ids = idsDic
+                    
+                    ids[publisher.userID] = true
+                    
+                    let newData = ["followingsIDs": ids]
+                    
+                    return newData
+                    
+                }
+                
+                return ["followingsIDs": [publisher.userID: true]]
+            }
+            .flatMapLatest {
+                self.services.updateData(path: path, data: $0)
+            }
+            .map { _ in }
+ 
+    }
+    
+    
+ 
+
+    
+    static func unFollowPublisher(user: Firebase.User, publisher: User) -> Observable<Void> {
+        
+        let removeFollowingIDs = removeFollowingIDs(user: user, publisher: publisher)
+
+        let updateStatus = updateFollowerFollowingStatus(user: user, publisher: publisher)
+        
+        return .zip(removeFollowingIDs, updateStatus) { _, _ in
+            return
+        }
+        
+    }
+    
+    fileprivate static func removeFollowingIDs(user: Firebase.User, publisher: User) -> Observable<Void> {
+        
+        let path = db.collection("users").document(user.uid)
+        
+        return services.getDocument(path: path)
+            .compactMap { data  in
+                
+                if let idsDic = data["followingsIDs"] as? [String: Bool], let index = idsDic.firstIndex(where: { key, _ in
+                    
+                    return key == publisher.userID
+                    
+                }) {
+                    
+                    var ids = idsDic
+                    
+                    ids.remove(at: index)
+                    
+                    let newData = ["followingsIDs": ids]
+                    
+                    return newData
+                    
+                }
+                
+                return nil
+            }
+            .flatMapLatest {
+                services.updateData(path: path, data: $0).map { _ in }
+            }
+    }
+    
+    
+    fileprivate static func updateFollowerFollowingStatus(user: Firebase.User, publisher: User) -> Observable<Void> {
+       
+        let myFollowingsPath = db.collection("users").document(user.uid).collection("followings").document(publisher.userID)
+        let publisherFollowerPath = db.collection("users").document(publisher.userID).collection("followers").document(user.uid)
+        let updateFollowingStatusData = ["isFollowing": false]
+        let updateFollowertatusData = ["isFollowed": false]
+        
+        return services.updateData(path: myFollowingsPath, data: updateFollowingStatusData)
+            .flatMapLatest { _ in
+                services.updateData(path: publisherFollowerPath, data: updateFollowertatusData)
+            }
+            .map { _ in }
+    
     }
     
     // dont listen the liked number of recipe. no need to update at real time. if we listen it, we have to update the number every time other user liked or unliked.

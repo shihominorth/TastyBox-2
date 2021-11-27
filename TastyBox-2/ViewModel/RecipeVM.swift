@@ -32,7 +32,8 @@ class RecipeVM: ViewModelBase {
     let selectedEvaluationSubject = PublishSubject<Int>()
     let isLikedRecipeSubject = BehaviorSubject<Bool>(value: false)
     let isHiddenFollowSubject = BehaviorSubject<Bool>(value: false)
-    
+    let isFollowingSubject = BehaviorSubject<Bool>(value: false)
+    let tappedFollowBtn = BehaviorSubject<Bool>(value: false)
     
     
     init(sceneCoordinator: SceneCoordinator, user: Firebase.User, apiType: RecipeDetailProtocol.Type = RecipeDetailDM.self, recipe: Recipe) {
@@ -123,6 +124,14 @@ class RecipeVM: ViewModelBase {
        
     }
     
+    func isFollowingPublisher() -> Observable<Bool> {
+        
+        return self.apiType.isFollowingPublisher(user: user, publisherID: recipe.userID)
+        
+    }
+    
+    
+    
 //    func isLikedRecipe(resultSetions: [Section]) -> Observable<[Section]> {
 //
 //        return self.apiType.isLikedRecipe(user: self.user, recipe: self.recipe)
@@ -203,6 +212,18 @@ class RecipeVM: ViewModelBase {
         }
         
         return self.apiType.followPublisher(user: user, publisher: publisher).map { true }
+        
+    }
+    
+    func unFollowPublisher(user: Firebase.User, publisher: User) -> Observable<Bool> {
+        
+        if user.uid == publisher.userID {
+        
+            return Observable.just(false)
+        
+        }
+        
+        return self.apiType.unFollowPublisher(user: user, publisher: publisher).map { true }
         
     }
     

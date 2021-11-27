@@ -70,4 +70,30 @@ class FireStoreServices {
         
     }
     
+    func getDocument(path: DocumentReference) -> Observable<[String: Any]> {
+        
+        return .create { observer in
+            
+            path.getDocument { doc, err in
+                if let err = err {
+                    
+                    observer.onError(err)
+                    
+                }
+                else {
+                    
+                    if let doc = doc, let data = doc.data() {
+                        observer.onNext(data)
+                    }
+                   
+                    
+                }
+            }
+            
+            return Disposables.create()
+        }
+        
+    }
+    
+    
 }

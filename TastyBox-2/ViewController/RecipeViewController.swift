@@ -251,6 +251,10 @@ class RecipeViewController: UIViewController, BindableType {
         
         viewModel.isHiddenFollowSubject.onNext(isHiddenFollowBtn)
         
+        viewModel.isFollowingPublisher()
+            .bind(to: viewModel.isFollowingSubject)
+            .disposed(by: viewModel.disposeBag)
+        
     }
     
     
@@ -389,8 +393,30 @@ class RecipeViewController: UIViewController, BindableType {
                     
                     viewModel.isHiddenFollowSubject.bind(to: cell.followBtn.rx.isHidden).disposed(by: cell.disposeBag)
                     
-                    cell.followBtn.rx.tap
+                    viewModel.isFollowingSubject
+                        .subscribe(onNext: { isFollowing in
+                            
+                            cell.setUpFollowingBtn(isFollowing: isFollowing)
+                            
+                        })
+                        .disposed(by: cell.disposeBag)
+                  
+                    let tappedFollowBtn = cell.followBtn.rx.tap
                         .throttle(.microseconds(1000), scheduler: MainScheduler.instance)
+                        .withLatestFrom(viewModel.isFollowingSubject)
+                        .share(replay: 1, scope: .forever)
+                    
+                    tappedFollowBtn.bind(to: viewModel.tappedFollowBtn).disposed(by: cell.disposeBag)
+                    
+                    let willUnFollowing = tappedFollowBtn
+                        .filter { $0 }
+                    
+                    let willFollowing = tappedFollowBtn
+                        .filter { !$0 }
+                    
+                    
+                    
+                   willFollowing
                         .flatMapLatest { _ in
                             self.viewModel.followPublisher(user: viewModel.user, publisher: user)
                         }
@@ -404,6 +430,8 @@ class RecipeViewController: UIViewController, BindableType {
                             
                             if isCompleted {
                                 print("success")
+                                
+                                self.viewModel.isFollowingSubject.onNext(true)
                             }
                             else {
                                 print("same uid")
@@ -411,6 +439,30 @@ class RecipeViewController: UIViewController, BindableType {
                             
                         })
                         .disposed(by: cell.disposeBag)
+                    
+                    willUnFollowing
+                         .flatMapLatest { _ in
+                             self.viewModel.unFollowPublisher(user: viewModel.user, publisher: user)
+                         }
+                         .catch { err in
+                             
+                             print(err)
+                             
+                             return .empty()
+                         }
+                         .subscribe(onNext: { isCompleted in
+                             
+                             if isCompleted {
+                                 print("success")
+                                 self.viewModel.isFollowingSubject.onNext(false)
+                             }
+                             else {
+                                 print("same uid")
+                             }
+                             
+                         })
+                         .disposed(by: cell.disposeBag)
+                     
                     
                     return cell
                 }
