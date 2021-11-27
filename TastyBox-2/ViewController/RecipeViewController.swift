@@ -247,6 +247,10 @@ class RecipeViewController: UIViewController, BindableType {
             })
             .disposed(by: viewModel.disposeBag)
         
+        let isHiddenFollowBtn = viewModel.user.uid == viewModel.recipe.userID
+        
+        viewModel.isHiddenFollowSubject.onNext(isHiddenFollowBtn)
+        
     }
     
     
@@ -382,6 +386,8 @@ class RecipeViewController: UIViewController, BindableType {
                     
                     cell.user = user
                     cell.selectionStyle = .none
+                    
+                    viewModel.isHiddenFollowSubject.bind(to: cell.followBtn.rx.isHidden).disposed(by: cell.disposeBag)
                     
                     cell.followBtn.rx.tap
                         .throttle(.microseconds(1000), scheduler: MainScheduler.instance)

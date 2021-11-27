@@ -9,6 +9,7 @@ import Foundation
 import DifferenceKit
 import Firebase
 import RxSwift
+import RxCocoa
 import RxRelay
 import SCLAlertView
 import RxDataSources
@@ -30,7 +31,7 @@ class RecipeVM: ViewModelBase {
     let isExpandedSubject = BehaviorRelay<Bool>(value: false)
     let selectedEvaluationSubject = PublishSubject<Int>()
     let isLikedRecipeSubject = BehaviorSubject<Bool>(value: false)
-   
+    let isHiddenFollowSubject = BehaviorSubject<Bool>(value: false)
     
     
     
