@@ -10,7 +10,6 @@ import Photos
 import PhotosUI
 import RxSwift
 import RxCocoa
-import SwiftUI
 
 class RxPHPickerViewControllerDelegateProxy: DelegateProxy<PHPickerViewController, PHPickerViewControllerDelegate>,  PHPickerViewControllerDelegate {
     

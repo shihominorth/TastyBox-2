@@ -80,6 +80,7 @@
 		6F512A3226F467A300826657 /* FlowLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F512A3126F467A300826657 /* FlowLayout.swift */; };
 		6F54460E275149C900579138 /* StorageService.swift.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F54460D275149C900579138 /* StorageService.swift.swift */; };
 		6F54461027523AD100579138 /* RxRSKImageCropVCDelegateProaxy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F54460F27523AD000579138 /* RxRSKImageCropVCDelegateProaxy.swift */; };
+		6F5446122752571C00579138 /* RxUIImagePickerControllerDelegateProxy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F5446112752571B00579138 /* RxUIImagePickerControllerDelegateProxy.swift */; };
 		6F6D0AEE26EED71500CD27AE /* RxFaceBookLoginDelegateProxy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F6D0AED26EED71500CD27AE /* RxFaceBookLoginDelegateProxy.swift */; };
 		6F71EBEC2721FEAD001BF538 /* RxUIViewController+.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F71EBEB2721FEAD001BF538 /* RxUIViewController+.swift */; };
 		6F71EBEE2722B1CC001BF538 /* GenreCollectionViewFlowLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F71EBED2722B1CB001BF538 /* GenreCollectionViewFlowLayout.swift */; };
@@ -275,6 +276,7 @@
 		6F512A3126F467A300826657 /* FlowLayout.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FlowLayout.swift; sourceTree = "<group>"; };
 		6F54460D275149C900579138 /* StorageService.swift.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StorageService.swift.swift; sourceTree = "<group>"; };
 		6F54460F27523AD000579138 /* RxRSKImageCropVCDelegateProaxy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RxRSKImageCropVCDelegateProaxy.swift; sourceTree = "<group>"; };
+		6F5446112752571B00579138 /* RxUIImagePickerControllerDelegateProxy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RxUIImagePickerControllerDelegateProxy.swift; sourceTree = "<group>"; };
 		6F6D0AED26EED71500CD27AE /* RxFaceBookLoginDelegateProxy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RxFaceBookLoginDelegateProxy.swift; sourceTree = "<group>"; };
 		6F71EBEB2721FEAD001BF538 /* RxUIViewController+.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "RxUIViewController+.swift"; sourceTree = "<group>"; };
 		6F71EBED2722B1CB001BF538 /* GenreCollectionViewFlowLayout.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GenreCollectionViewFlowLayout.swift; sourceTree = "<group>"; };
@@ -589,6 +591,7 @@
 				6F6D0AED26EED71500CD27AE /* RxFaceBookLoginDelegateProxy.swift */,
 				6F0E695F271F98FE002BD547 /* RxPHPickerViewControllerDelegateProxy.swift */,
 				6F54460F27523AD000579138 /* RxRSKImageCropVCDelegateProaxy.swift */,
+				6F5446112752571B00579138 /* RxUIImagePickerControllerDelegateProxy.swift */,
 			);
 			path = DelegateProxy;
 			sourceTree = "<group>";
@@ -1283,6 +1286,7 @@
 				6F4EA98B273EC3F200A4B9F4 /* RecipeMainImageTVCell.swift in Sources */,
 				6F71EBF227237082001BF538 /* GenreTVCell.swift in Sources */,
 				6F9A0D1A27101F6D00DABB45 /* SemiModalPresentationController.swift in Sources */,
+				6F5446122752571C00579138 /* RxUIImagePickerControllerDelegateProxy.swift in Sources */,
 				6F194CBC271C7F190084F829 /* UploadingVideoViewController.swift in Sources */,
 				6FEF088026F2A4B000C02CDD /* Recipe.swift in Sources */,
 				6F512A3226F467A300826657 /* FlowLayout.swift in Sources */,

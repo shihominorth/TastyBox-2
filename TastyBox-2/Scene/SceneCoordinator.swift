@@ -171,6 +171,23 @@ class SceneCoordinator: NSObject, SceneCoordinatorType {
                 
                
             }
+        case .camera(let completion):
+            
+            if let viewController = viewController as? UIImagePickerController {
+                
+                currentViewController.present(viewController, animated: true) {
+                    subject.onCompleted()
+                    
+                }
+                
+                viewController.rx.imageData
+                    .subscribe(onNext: { data in
+                        
+                        completion(data)
+                        
+                    })
+                    .disposed(by: disposeBag)
+            }
             
         default:
             break

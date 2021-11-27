@@ -449,7 +449,7 @@ extension Scene {
         }
     }
     
-    func generateViewController(digitalContentsPickerScene scene: DigitalContentsPickerScene) -> PHPickerViewController {
+    func generateViewController(digitalContentsPickerScene scene: DigitalContentsPickerScene) -> UIViewController {
         
         switch scene {
         case .photo:
@@ -483,6 +483,16 @@ extension Scene {
             let vc = PHPickerViewController(configuration: videoConfigPHPickerConfiguration)
             
             return vc
+            
+        case .camera:
+            
+            // 写真を選ぶビュー
+            let pickerVC = UIImagePickerController()
+            // 写真の選択元をカメラロールにする
+            // 「.camera」にすればカメラを起動できる
+            pickerVC.sourceType = .camera
+            
+            return pickerVC
             
         }
     }

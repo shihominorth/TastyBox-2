@@ -31,7 +31,7 @@ enum Scene {
     }
     
     enum DigitalContentsPickerScene {
-        case video, photo
+        case video, photo, camera
     }
    
     case loginScene(scene: LoginScene), discovery(scene: DiscoveryScene), createReceipeScene(scene: CreateRecipeScene), profileScene(scene: ProfileScene), recipeScene(scene: RecipeDetailScene), digitalContentsPickerScene(scene: DigitalContentsPickerScene)

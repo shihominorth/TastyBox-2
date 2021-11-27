@@ -21,4 +21,5 @@ enum SceneTransitionType {
     case imagePick
     case photoPick(completion: (Data) -> Void)
     case videoPick(subject: PublishSubject<URL>)
+    case camera(completion: (Data) -> Void)
 }

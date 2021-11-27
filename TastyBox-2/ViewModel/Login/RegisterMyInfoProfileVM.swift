@@ -92,6 +92,18 @@ class RegisterMyInfoProfileVM: ViewModelBase {
         
     }
     
+    func toCamera() {
+        
+        let scene: Scene = .digitalContentsPickerScene(scene: .camera)
+        
+        self.sceneCoodinator.modalTransition(to: scene, type: .camera(completion: { data in
+            
+            self.userImage.onNext(data)
+            
+        }))
+        
+    }
+    
     func registerUser() -> Observable<Void> {
         
         return Observable.combineLatest(userName.asObservable(), email.asObservable(), familySize.asObservable(), cuisineType.asObservable(), userImage.asObservable())

@@ -320,9 +320,9 @@ class RegisterMyInfoProfileTableViewController: UITableViewController, UIPickerV
             
         })
         
-        let cameraAction = UIAlertAction(title: "Camera", style: .default, handler: { action in
+        let cameraAction = UIAlertAction(title: "Camera", style: .default, handler: { [unowned self] action in
             
-            self.takeYourImage()
+            self.viewModel.toCamera()
             
         })
         
@@ -359,5 +359,8 @@ class RegisterMyInfoProfileTableViewController: UITableViewController, UIPickerV
     
 }
 
-
+extension RegisterMyInfoProfileTableViewController: UIImagePickerControllerDelegate, UINavigationControllerDelegate {
+    
+    
+}
 
