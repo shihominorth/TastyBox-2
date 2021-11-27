@@ -69,4 +69,27 @@ class StorageService {
       
         
     }
+    
+    func downLoadUrl(path: StorageReference) -> Observable<String> {
+        
+        return .create { observer in
+            
+            path.downloadURL { url, err in
+                
+                if let err = err {
+                    observer.onError(err)
+                }
+                else {
+                   
+                    if let stringUrl = url?.absoluteString {
+                        observer.onNext(stringUrl)
+                    }
+                    
+                }
+            }
+            
+            return Disposables.create()
+        }
+        
+    }
 }

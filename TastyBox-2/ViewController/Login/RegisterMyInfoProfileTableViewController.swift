@@ -103,7 +103,7 @@ class RegisterMyInfoProfileTableViewController: UITableViewController, UIPickerV
                 }
                 .do(onNext: { [unowned self] _ in
                     
-                    self.imageCropVC.dismiss(animated: true) {
+                    self.imageCropVC?.dismiss(animated: true) {
                         
                         if let blurView = self.view.subviews.first(where: { $0.tag == 1}) {
                             blurView.removeFromSuperview()
@@ -112,6 +112,7 @@ class RegisterMyInfoProfileTableViewController: UITableViewController, UIPickerV
                     }
                     
                 })
+                    .compactMap { $0 }
                     .subscribe(onNext: { data in
                         
                         guard let image = UIImage(data: data) else { return }
@@ -338,7 +339,7 @@ class RegisterMyInfoProfileTableViewController: UITableViewController, UIPickerV
         
     }
     
-    func processImage(imageData: Data) -> Observable<Data> {
+    func processImage(imageData: Data) -> Observable<Data?> {
         
         if let image = UIImage(data: imageData) {
             
@@ -350,11 +351,13 @@ class RegisterMyInfoProfileTableViewController: UITableViewController, UIPickerV
             
             self.present(imageCropVC, animated: true)
             
+            return imageCropVC.rx.imageData.map { $0 }
+            
         } else {
             print("failed")
         }
         
-        return imageCropVC.rx.imageData.map { $0 }
+        return .just(nil)
     }
     
 }

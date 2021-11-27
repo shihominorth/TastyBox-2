@@ -9,6 +9,7 @@ import Action
 import Firebase
 import Foundation
 import RxSwift
+import RxCocoa
 import RxRelay
 import SCLAlertView
 
@@ -19,7 +20,7 @@ class RegisterMyInfoProfileVM: ViewModelBase {
     let user: Firebase.User
     
     let defaultUserImageData = #imageLiteral(resourceName: "defaultUserImage").pngData()
-    var userImage: PublishSubject<Data>!
+    var userImage: BehaviorSubject<Data>!
     var isEnableDone = BehaviorRelay(value: false)
     var observeTxtFields = BehaviorRelay<String>(value: "")
     
@@ -42,7 +43,7 @@ class RegisterMyInfoProfileVM: ViewModelBase {
         self.user = user
         
         self.photoPickerSubject = PublishSubject<Data>()
-        self.userImage = PublishSubject<Data>()
+        self.userImage = BehaviorSubject<Data>(value: Data())
         
         cuisineTypeOptions = ["Chinese Food", "Japanese Food", "Thai food"]
         familySizeOptions = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15", "16", "17", "18", "19", "20"]
