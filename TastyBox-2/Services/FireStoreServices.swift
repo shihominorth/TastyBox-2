@@ -95,5 +95,90 @@ class FireStoreServices {
         
     }
     
+    func getDocuments(query: Query) -> Observable<[QueryDocumentSnapshot]> {
+        
+        return .create { observer in
+            
+            query.getDocuments { snapShot, err in
+                if let err = err {
+                    
+                    observer.onError(err)
+                    
+                }
+                else {
+                    
+                    if let docs = snapShot?.documents {
+                        observer.onNext(docs)
+                    }
+                   
+                    
+                }
+            }
+            
+            return Disposables.create()
+        }
+        
+    }
+    
+    func updateData(references: [DocumentReference], dic: [String: Any]) -> Observable<Void> {
+
+        return .create { observer in
+            
+            var count = 0
+            
+            references.forEach { reference in
+                
+                
+                updateData(reference: reference, data: dic, completion: { data in
+
+                    count += 1
+                    
+                    if count == references.count {
+                        
+                        observer.onNext(())
+                        
+                    }
+                    
+                }, errBlock: { err in
+                    
+                    print(err)
+                    
+                    count += 1
+                    
+                    if count == references.count {
+                        
+                        observer.onNext(())
+                        
+                    }
+                    
+                    
+                })
+                
+            }
+            
+            
+            return Disposables.create()
+        }
+        
+    }
+    
+    func updateData(reference: DocumentReference, data: [String: Any], completion: @escaping ([String: Any]) -> Void, errBlock: @escaping (Error) -> Void) {
+ 
+            reference.updateData(data) { err in
+                
+                if let err = err {
+                    
+                   errBlock(err)
+                    
+                }
+                else {
+                    
+                    completion(data)
+                    
+                }
+                
+            
+        }
+    }
     
 }

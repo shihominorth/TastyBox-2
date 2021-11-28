@@ -13,6 +13,7 @@ import UIKit
 
 protocol CreateRecipeDMProtocol: AnyObject {
     
+    static var firestoreServices: FireStoreServices { get }
     static func getThumbnailData(url: URL) -> Observable<Data>
     static func getMyGenresIDs(user: Firebase.User) -> Observable<[String]>
     static func getMyGenres(ids: [String], user: Firebase.User) -> Observable<([Genre], Bool)>
@@ -50,7 +51,7 @@ protocol CreateRecipeDMProtocol: AnyObject {
     static func compressData(imgData: [Data]) -> Observable<[Data]>
     static func uploadImages(mainPhoto: Data, videoURL: URL?, user: Firebase.User, recipeID: String) -> Observable<Void>
     static func startUpload(instructions: [Instruction], user: Firebase.User, recipeID: String) -> Observable<Int>
-    
+    static func updateTimeLines(data: [String: Any], user: Firebase.User) -> Observable<Bool> 
     
 }
 
@@ -58,6 +59,10 @@ class CreateRecipeDM: CreateRecipeDMProtocol {
 
     static let db = Firestore.firestore()
     static let storage = Storage.storage().reference()
+    
+    static var firestoreServices: FireStoreServices {
+        return FireStoreServices()
+    }
     
     static func getThumbnailData(url: URL) -> Observable<Data> {
         
@@ -1971,6 +1976,59 @@ class CreateRecipeDM: CreateRecipeDMProtocol {
                 }
             }
         }
+        
+    }
+    
+    
+    static func updateTimeLines(data: [String: Any], user: Firebase.User) -> Observable<Bool> {
+        
+        let query = db.collection("users").document(user.uid).collection("followers").whereField("isFollowed", isEqualTo: true)
+        
+        return firestoreServices.getDocuments(query: query)
+            .map { docs -> [String] in
+                
+                if docs.isEmpty {
+                    return []
+                }
+                
+                let ids:[String] = docs.compactMap {
+                    
+                    let id = $0["id"] as? String
+                    
+                    return id
+                }
+                
+                return ids
+            }
+            .map { ids -> [(DocumentReference)] in
+                
+                if ids.isEmpty {
+                    return []
+                }
+                
+                let pathes:[DocumentReference] = ids.map {
+                    
+                    let path = db.collection("users").document($0).collection("timeline").document($0)
+                    
+                    return path
+                }
+                
+                return pathes
+            }
+            .flatMapLatest { references -> Observable<Bool> in
+                
+                if let id = data["id"] as? String, let date = data["updateDate"] as? Date {
+                    
+                    let data: [String: Any] = [
+                        "id": id,
+                        "updateDate": date
+                    ]
+                    
+                    return firestoreServices.updateData(references: references, dic: data).map { true }
+                }
+                
+                return .just(false)
+            }
         
     }
     //

@@ -145,6 +145,9 @@ class PublishRecipeVM: ViewModelBase {
                 }
                 
             }
+            .flatMapLatest { isUploaded in
+                self.addRecipeTimeLines(data: basicData)
+            }
         
     }
     
@@ -339,6 +342,10 @@ class PublishRecipeVM: ViewModelBase {
 
         }
         
+    }
+    
+    func addRecipeTimeLines(data: [String: Any]) -> Observable<Bool> {
+        return self.apiType.updateTimeLines(data: data, user: self.user)
     }
     
 }
