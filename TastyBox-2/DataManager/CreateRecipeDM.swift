@@ -2017,14 +2017,26 @@ class CreateRecipeDM: CreateRecipeDMProtocol {
             }
             .flatMapLatest { references -> Observable<Bool> in
                 
-                if let id = data["id"] as? String, let date = data["updateDate"] as? Date {
+                if let id = data["id"] as? String {
                     
-                    let data: [String: Any] = [
-                        "id": id,
-                        "updateDate": date
+                    var data: [String: Any] = [
+                        "id": id
                     ]
                     
-                    return firestoreServices.updateData(references: references, dic: data).map { true }
+                    let recipePath = db.collection("recipes").document(id)
+                    
+                    return firestoreServices.getDocument(path: recipePath)
+                        .map({ newData -> [String: Any] in
+                            if let updateDate = newData["updateDate"] as? Timestamp {
+                                data["updateDate"] = updateDate
+                            }
+                            
+                            return data
+                        })
+                        .flatMapLatest { newData in
+                            firestoreServices.setData(references: references, dic: data).map { true }
+                        }
+                   
                 }
                 
                 return .just(false)

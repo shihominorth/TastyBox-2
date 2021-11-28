@@ -372,6 +372,7 @@ class CreateRecipeVM: ViewModelBase {
                 
                 return .empty()
             }
+            .observe(on: MainScheduler.instance)
             .do(onNext: { [unowned self] data in
                 
                 let str = String(decoding: data, as: UTF8.self)
@@ -401,6 +402,7 @@ class CreateRecipeVM: ViewModelBase {
                 
                 return .empty()
             }
+            .observe(on: MainScheduler.instance)
             .do(onNext: { [unowned self] in
                 
                 self.sceneCoodinator.userDissmissed()
@@ -427,6 +429,7 @@ class CreateRecipeVM: ViewModelBase {
                 return .empty()
             }
             .map { $0 }
+            .observe(on: MainScheduler.instance)
             .do(onNext: { [unowned self] in
                
                 self.sceneCoodinator.userDissmissed()

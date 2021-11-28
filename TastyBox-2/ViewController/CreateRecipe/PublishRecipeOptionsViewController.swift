@@ -42,14 +42,18 @@ class PublishRecipeOptionsViewController: UIViewController, BindableType {
             .flatMapLatest { [unowned self]  _ in
                 self.viewModel.uploadRecipe()
             }
+//            .subscribe(on: MainScheduler.instance) // 無駄だった
             .subscribe(onNext: { [unowned self] isCompleted in
              
                 if isCompleted {
-
-                    self.presentingViewController?.presentingViewController?.dismiss(animated: true) {
-                        
-                        self.viewModel.sceneCoodinator.userDissmissed()
+                    
+                    DispatchQueue.main.async {
+                        self.presentingViewController?.presentingViewController?.dismiss(animated: true) {
+                            
+                            self.viewModel.sceneCoodinator.userDissmissed()
+                        }
                     }
+                    
                 }
                 
             })
