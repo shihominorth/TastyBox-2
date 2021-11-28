@@ -81,6 +81,13 @@ extension MainScene {
         let storyboard = UIStoryboard(name: "Main", bundle: nil)
 
         switch self {
+        case .timeline(let viewModel):
+            
+            var vc = storyboard.instantiateViewController(withIdentifier: "timelineVC") as! TimelineViewController
+            vc.bindViewModel(to: viewModel)
+            
+            return vc
+            
         case .ranking(let viewModel):
             var vc = storyboard.instantiateViewController(withIdentifier: "rankingVC") as! RankingViewController
             

@@ -26,15 +26,17 @@ class DiscoveryPresenter: NSObject {
         self.sceneCoordinator = sceneCoordinator
         self.user = user
         
+        let ingredientsVM = IngredientsVM(user: self.user)
+        let ingredientsVC = MainScene.ingredients(ingredientsVM).viewController()
         
         let rankingVM = RankingVM(user: self.user)
         let rankingVC = MainScene.ranking(rankingVM).viewController()
         
-        let ingredientsVM = IngredientsVM(user: self.user)
-        let ingredientsVC = MainScene.ingredients(ingredientsVM).viewController()
+        let timelineVM = TimelineVM(user: self.user)
+        let timelineVC = MainScene.timeline(timelineVM).viewController()
         
         
-        self.viewControllers = [rankingVC, ingredientsVC, rankingVC, rankingVC, rankingVC, rankingVC]
+        self.viewControllers = [timelineVC, ingredientsVC, rankingVC, rankingVC, rankingVC, rankingVC]
                 
       
     }
