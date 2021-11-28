@@ -23,8 +23,8 @@ class TimelineVM {
      
     }
     
-    func getMyTimeline() -> Observable<Timeline> {
-        <#function body#>
-    }
+//    func getMyTimeline() -> Observable<Timeline> {
+//        
+//    }
     
 }

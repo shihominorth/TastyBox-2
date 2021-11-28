@@ -145,6 +145,7 @@ class PublishRecipeVM: ViewModelBase {
                 }
                 
             }
+            .filter { $0 }
             .flatMapLatest { isUploaded in
                 self.addRecipeTimeLines(data: basicData)
             }

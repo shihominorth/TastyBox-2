@@ -2000,47 +2000,109 @@ class CreateRecipeDM: CreateRecipeDMProtocol {
                 
                 return ids
             }
-            .map { ids -> [(DocumentReference)] in
+            .flatMapLatest { ids -> Observable<Bool> in
                 
-                if ids.isEmpty {
-                    return []
-                }
+                 let publisherID = data["publisherID"] as? String
+                 let recipeId = data["id"] as? String
                 
-                let pathes:[DocumentReference] = ids.map {
-                    
-                    let path = db.collection("users").document($0).collection("timeline").document($0)
-                    
-                    return path
-                }
-                
-                return pathes
+                return self.addTimelines(ids: ids, publisherID: publisherID, recipeId: recipeId)
+            
             }
-            .flatMapLatest { references -> Observable<Bool> in
-                
-                if let id = data["id"] as? String {
-                    
-                    var data: [String: Any] = [
-                        "id": id
-                    ]
-                    
-                    let recipePath = db.collection("recipes").document(id)
-                    
-                    return firestoreServices.getDocument(path: recipePath)
-                        .map({ newData -> [String: Any] in
-                            if let updateDate = newData["updateDate"] as? Timestamp {
-                                data["updateDate"] = updateDate
-                            }
-                            
-                            return data
-                        })
-                        .flatMapLatest { newData in
-                            firestoreServices.setData(references: references, dic: data).map { true }
-                        }
-                   
+//            .map { dics -> [(DocumentReference)] in
+//
+//                if dics.isEmpty {
+//                    return []
+//                }
+//
+//                let pathes:[DocumentReference] = dics.compactMap { dic in
+//
+//                    let uuid = UUID()
+//                    let uniqueIdString = uuid.uuidString.replacingOccurrences(of: "-", with: "")
+//
+//                    guard let id = dic["id"] as? String else { return nil }
+//
+//                    let path = db.collection("users").document(id).collection("timeline").document(uniqueIdString)
+//
+//                    return path
+//                }
+//
+//
+//
+//                return pathes
+//            }
+//            .flatMapLatest { references -> Observable<Bool> in
+//
+//                if let id = data["id"] as? String , let publisherID = data["publisherID"] as? String {
+//
+//                    var data: [String: Any] = [
+//
+//                        "id": uniqueIdString,
+//                        "recipeId": id,
+//                        "publisherID": publisherID,
+//                        "kind": "recipes"
+//
+//                    ]
+//
+//                    let recipePath = db.collection("recipes").document(id)
+//
+//                    return firestoreServices.getDocument(path: recipePath)
+//                        .map({ newData -> [String: Any] in
+//                            if let updateDate = newData["updateDate"] as? Timestamp {
+//                                data["updateDate"] = updateDate
+//                            }
+//
+//                            return data
+//                        })
+//                        .flatMapLatest { newData in
+//                            firestoreServices.setData(references: references, dic: data).map { true }
+//                        }
+//
+//                }
+//
+//                return .just(false)
+//            }
+        
+    }
+    
+    static func addTimelines(ids: [String], publisherID: String?, recipeId: String?) -> Observable<Bool> {
+        
+        let uuid = UUID()
+        let uniqueIdString = uuid.uuidString.replacingOccurrences(of: "-", with: "")
+        
+        guard let publisherID = publisherID, let recipeId = recipeId else {
+            return .just(false)
+        }
+
+        let references:[DocumentReference] = ids.compactMap { id in
+            
+            let path = db.collection("users").document(id).collection("timeline").document(uniqueIdString)
+            
+            return path
+        }
+        
+        var data: [String: Any] = [
+           
+            "id": uniqueIdString,
+            "kind": "recipes",
+            "publisherId": publisherID,
+            "recipeId": recipeId
+            
+        ]
+        
+        let recipePath = db.collection("recipes").document(recipeId)
+      
+        return firestoreServices.getDocument(path: recipePath)
+            .map({ newData -> [String: Any] in
+                if let updateDate = newData["updateDate"] as? Timestamp {
+                    data["updateDate"] = updateDate
                 }
                 
-                return .just(false)
+                return data
+            })
+            .flatMapLatest { newData in
+                firestoreServices.setData(references: references, dic: newData).map { true }
             }
+
         
     }
     //
