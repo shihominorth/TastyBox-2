@@ -397,9 +397,7 @@ class CreateRecipeVM: ViewModelBase {
             .catch { err in
                 
                 print(err)
-                
-                
-                
+
                 return .empty()
             }
             .observe(on: MainScheduler.instance)

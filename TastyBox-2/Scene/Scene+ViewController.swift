@@ -42,36 +42,6 @@ extension Scene {
         
         
     }
-    
-//    func getViewController(scene: Scene, viewModel: ViewModelBase) -> UIViewController {
-//        
-//        var result: UIViewController!
-//        
-//        switch scene {
-//        case .createScene:
-//            
-//            var viewcontroller: UIViewController? {
-//                
-//                if let viewModel = viewModel as? SelectGenresVM {
-//                    return CreateRecipeScene.selectGenre(viewModel).viewController()
-//                }
-//                else if let viewModel = viewModel as? CreateRecipeVM {
-//                    return CreateRecipeScene.createRecipe(viewModel).viewController()
-//                }
-//              
-//                return nil
-//            }
-//            
-//            result = viewcontroller
-//            
-//        default:
-//            break
-//        }
-//        
-//        
-//        return result
-//        
-//    }
 }
 
 extension MainScene {
