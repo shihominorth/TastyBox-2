@@ -79,6 +79,11 @@ class DiscoveryPresenter: NSObject {
                     currentViewController.viewModel.delegate = self
                     
                 }
+                else if let currentViewController = currentViewController as? TimelineViewController {
+                    
+                    currentViewController.viewModel.delegate = self
+                    
+                }
             }
             
         })

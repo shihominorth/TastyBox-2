@@ -20,6 +20,10 @@ class NormalTimelineTVCell: UITableViewCell {
         super.awakeFromNib()
         // Initialization code
         
+        self.userImgView.layer.cornerRadius = self.userImgView.frame.width / 2
+        self.recipeImgView.layer.cornerRadius = 25
+        
+        
         self.upperLineView.isSkeletonable = true
         self.userImgView.isSkeletonable = true
         self.userNameLbl.isSkeletonable = true

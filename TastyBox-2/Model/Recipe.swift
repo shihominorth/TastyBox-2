@@ -69,6 +69,45 @@ class Recipe {
         
     }
     
+    init?(doc: DocumentSnapshot) {
+
+        guard let data = doc.data(),
+              let id = data["id"] as? String,
+              let title = data["title"] as? String,
+              let updateDate = data["updateDate"] as? Timestamp,
+              let time = data["time"] as? Int,
+              let serving = data["serving"] as? Int,
+              let isVIP = data["isVIP"] as? Bool,
+              let publisherID = data["publisherID"] as? String,
+              let genresData = data["genres"] as? [String: Bool],
+              let imgURL = data["imgString"] as? String
+        else { return nil }
+        
+        
+        self.recipeID = id
+        self.title = title
+        self.updateDate = updateDate
+        self.cookingTime = time
+        self.likes = data["likes"] as? Int ?? 0
+        self.userID = publisherID
+        self.serving = serving
+        self.isVIP = isVIP
+        self.genresIDs = [String](genresData.keys)
+        self.imgString = imgURL
+        
+        if let videoURL = data["videoURL"] as? String {
+        
+            self.videoURL = videoURL
+        
+        }
+        else {
+        
+            self.videoURL = nil
+        
+        }
+        
+    }
+    
 //    static func generateNewRecipes(queryDocs: [QueryDocumentSnapshot]) -> Observable<[Recipe]> {
 //
 //        return .create { observer in
@@ -90,6 +129,20 @@ class Recipe {
             let recipes = queryDocs.compactMap({ doc in
                 return Recipe(queryDoc: doc)
             })
+            
+            observer.onNext(recipes)
+            
+            return Disposables.create()
+        }
+    }
+    
+    static func generateNewRecipes(docs: [DocumentSnapshot]) -> Observable<[Recipe]> {
+        
+        return .create { observer in
+            
+            let recipes = docs.compactMap { doc in
+                return Recipe(doc: doc)
+            }
             
             observer.onNext(recipes)
             

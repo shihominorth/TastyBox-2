@@ -11,66 +11,76 @@ import RxSwift
 import UIKit
 
 protocol MainDMProtocol {
-    static func getPastTimelines(user: Firebase.User, date: Date, limit: Int) -> Observable<[Recipe]>
-    static func getFutureTimelines(user: Firebase.User, date: Date, limit: Int) -> Observable<[Recipe]> 
+    
+    static var firestoreService: FireStoreServices { get }
+    static func getPastTimelines(user: Firebase.User, date: Date, limit: Int) -> Observable<[Timeline]>
+    static func getFutureTimelines(user: Firebase.User, date: Date, limit: Int) -> Observable<[Timeline]>
     static func getRecipesRanking() -> Observable<[Recipe]>
     static func getRefrigeratorIngredients(user: Firebase.User) -> Observable<[Ingredient]>
     static func getRecipesUsedIngredient(ingredient: Ingredient) -> Observable<[Recipe]>
     static func getRecipesUsedIngredients(allIngredients: [Ingredient]) -> Observable<[Recipe]>
     static func getVIPRecipes(ingredient: Ingredient) -> Observable<[Recipe]>
+    static func getRecipes(ids: [String]) -> Observable<[Recipe]>
     static func getPublishers(ids: [String]) -> Observable<[String: User]>
 }
 
 class MainDM: MainDMProtocol {
-  
+    
     
     static let db = Firestore.firestore()
     static let storage = Storage.storage().reference()
     
+    static var firestoreService: FireStoreServices {
+        return FireStoreServices()
+    }
+    
     //check if result has same recipes as recipes in viewModel
-   // it is likely to get same recipes
+    // it is likely to get same recipes
     
     // why default num is 20 limits?
     // it is likely to get same recipes so need to get the rest for getting 20 recipes
-    static func getPastTimelines(user: Firebase.User, date: Date, limit: Int = 20) -> Observable<[Recipe]> {
+    static func getPastTimelines(user: Firebase.User, date: Date, limit: Int = 20) -> Observable<[Timeline]> {
         
-       let query = db.collection("users").document(user.uid).collection("timeline").order(by: "updateDate", descending: true).whereField("updateDate", isLessThanOrEqualTo: date).limit(to: limit)
-
-        return getTimelineRecipeIds(query: query)
-            .flatMapLatest { ids in
-                getTimeLineRecipeDocuments(ids: ids)
-            }
-            .flatMapLatest { docs in
-                Recipe.generateNewRecipes(queryDocs: docs)
+        let query = db.collection("users").document(user.uid).collection("timeline").order(by: "updateDate", descending: true).whereField("updateDate", isLessThanOrEqualTo: date).limit(to: limit)
+        
+        return firestoreService.getDocuments(query: query)
+            .map { docs -> [Timeline] in
+                
+                return docs.compactMap { doc in
+                    return Timeline.newTimeline(doc: doc)
+                }
+                
             }
         
     }
     
-    static func getFutureTimelines(user: Firebase.User, date: Date, limit: Int = 20) -> Observable<[Recipe]> {
+    static func getFutureTimelines(user: Firebase.User, date: Date, limit: Int = 20) -> Observable<[Timeline]> {
         
-       let query = db.collection("users").document(user.uid).collection("timeline").order(by: "updateDate", descending: true).whereField("updateDate", isGreaterThanOrEqualTo: date).limit(to: limit)
-
-        return getTimelineRecipeIds(query: query)
-            .flatMapLatest { ids in
-                getTimeLineRecipeDocuments(ids: ids)
-            }
-            .flatMapLatest { docs in
-                Recipe.generateNewRecipes(queryDocs: docs)
-            }
+        let query = db.collection("users").document(user.uid).collection("timeline").order(by: "updateDate", descending: true).whereField("updateDate", isGreaterThanOrEqualTo: date).limit(to: limit)
         
+        return firestoreService.getDocuments(query: query)
+            .map { docs -> [Timeline] in
+                
+                return docs.compactMap { doc in
+                    return Timeline.newTimeline(doc: doc)
+                }
+                
+            }
+           
     }
+
     
     static func getTimeLineRecipeDocuments(ids: [String]) -> Observable<[QueryDocumentSnapshot]> {
-    
+        
         return .create { observer in
             
             var implementedNum = 0
             var documents:[QueryDocumentSnapshot] = []
             
             ids.forEach { id in
-                                
+                
                 getRecipeDocument(id: id, completion: { doc in
-                   
+                    
                     implementedNum += 1
                     
                     if let doc = doc {
@@ -86,7 +96,7 @@ class MainDM: MainDMProtocol {
                     print(err)
                     
                     implementedNum += 1
- 
+                    
                     if implementedNum == ids.count {
                         observer.onNext(documents)
                     }
@@ -99,53 +109,7 @@ class MainDM: MainDMProtocol {
         }
         
     }
-    
-    static func getTimelineRecipeIds(query: Query) -> Observable<[String]> {
-        
-        return .create { observer in
-            
-          query.getDocuments { snapShot, err in
-                
-                if let err = err {
-                    
-                    observer.onError(err)
-                
-                }
-                else {
-                    
-                    if let queryDocs = snapShot?.documents {
-                    
-                        let ids: [String] = queryDocs.compactMap {
-                            
-                            let data = $0.data()
-                           
-                            guard let id = data["id"] as? String else {
-                                return nil
-                            }
-                            
-                           return id
-                            
-                        }
-                        
-                        let notDuplecatedIds = Array(Set(ids))
-                        
-                        
-                        observer.onNext(notDuplecatedIds)
-                   
-                    }
-                    else {
-                        
-                        observer.onNext([])
-                        
-                    }
-                    
-                }
-                
-            }
-            
-            return Disposables.create()
-        }
-    }
+ 
     
     static func getRefrigeratorIngredients(user: Firebase.User) -> Observable<[Ingredient]> {
         
@@ -162,7 +126,7 @@ class MainDM: MainDMProtocol {
         let query = db.collection("users").document(user.uid).collection("refrigerator")
         
         return getDocuments(query: query)
-
+        
     }
     
     
@@ -173,15 +137,15 @@ class MainDM: MainDMProtocol {
         let query = db.collection("recipes").whereField("isVIP", isEqualTo: true).limit(to: 20)
         
         return getRecipes(query: query)
-
+        
     }
     
     static func getRecipesRanking() -> Observable<[Recipe]> {
         
         let query = db.collection("recipes").order(by: "likes", descending: true).limit(to: 10)
-
+        
         return getRecipes(query: query)
-           
+        
     }
     
     static func getRecipesUsedIngredient(ingredient: Ingredient) -> Observable<[Recipe]> {
@@ -189,9 +153,9 @@ class MainDM: MainDMProtocol {
         let query = db.collection("recipes").whereField("genres.\(ingredient.id)", isEqualTo: true)
         
         return getRecipes(query: query)
-
+        
     }
-      
+    
     static func getRecipesUsedIngredients(allIngredients: [Ingredient]) -> Observable<[Recipe]> {
         
         var query: Query = db.collection("recipes")
@@ -216,21 +180,21 @@ class MainDM: MainDMProtocol {
             // if count is 3
             
             var queries: [Query] = []
-
+            
             //　全てのingredientsを含んだrecipeを呼ぶクエリ
             var allIngeredientContainsQuery = db.collection("recipes").whereField("genres.\(allIngredients[0].id)", isEqualTo: true)
-
+            
             if allIngredients.count > 1 {
-
+                
                 for index in 1 ..< allIngredients.count {
-
+                    
                     allIngeredientContainsQuery = allIngeredientContainsQuery.whereField("genres.\(allIngredients[index].id)", isEqualTo: true)
-
+                    
                 }
-
+                
             }
-
-
+            
+            
             queries.append(allIngeredientContainsQuery)
             
             // 2個 Ingredientが含まれてるrecipeを探す
@@ -240,13 +204,13 @@ class MainDM: MainDMProtocol {
             
             // 一つ一つ調べる
             for ingredient in allIngredients {
-
+                
                 let query = db.collection("recipes").whereField("genres.\(ingredient.id)", isEqualTo: true)
-
+                
                 queries.append(query)
-
+                
             }
-
+            
             var getRecipesStream = getRecipes(query: queries[0])
             
             queries.enumerated().forEach { index, query in
@@ -274,91 +238,91 @@ class MainDM: MainDMProtocol {
             
             return getRecipesStream
             
-//            max = 1
+            //            max = 1
         }
-//        else if allIngredients.count >= 5 {
-           
-//            max = Int.random(in: 1 ... allIngredients.count)
-         
-            let queries = getQueries(searchIngredientsOnceNumLimit: 3, ingredients: allIngredients)
+        //        else if allIngredients.count >= 5 {
+        
+        //            max = Int.random(in: 1 ... allIngredients.count)
+        
+        let queries = getQueries(searchIngredientsOnceNumLimit: 3, ingredients: allIngredients)
+        
+        var getRecipesStream = getRecipes(query: queries[0])
+        
+        queries.enumerated().forEach { index, query in
             
-            var getRecipesStream = getRecipes(query: queries[0])
-            
-            queries.enumerated().forEach { index, query in
+            if index != 0 {
                 
-                if index != 0 {
-                    
-                    getRecipesStream = getRecipesStream
-                        .flatMap({ recipes in
-                            
-                            return getRecipes(query: query)
-                                .map { newRecipes in
-                                    
-                                    var result = recipes
-                                    result.append(contentsOf: newRecipes)
-                                    
-                                    return result
-                                    
-                                }
-                            
-                        })
-                    
-                }
+                getRecipesStream = getRecipesStream
+                    .flatMap({ recipes in
+                        
+                        return getRecipes(query: query)
+                            .map { newRecipes in
+                                
+                                var result = recipes
+                                result.append(contentsOf: newRecipes)
+                                
+                                return result
+                                
+                            }
+                        
+                    })
                 
             }
             
-            return getRecipesStream
+        }
         
-//        }
-//        else  {
-//
-//            let thirtyPercentOfIngredientsCount = Int(round(Double(allIngredients.count) * 0.3))
-//
-//            max = thirtyPercentOfIngredientsCount
-//
-//        }
-//
-//        if max == 1 {
-//
-//            limitLoop = 1
-//
-//        }
-//        else {
-//
-//            let ramdomLimit = Int.random(in: 1 ... max)
-//            limitLoop = ramdomLimit
-//        }
-//
-//        var selectedIndice:[Int] = []
-//
-//        var randomIndex = Int.random(in: 0 ..< allIngredients.count)
-//
-//
-//        while !selectedIndice.contains(randomIndex) {
-//
-//            if selectedIndice.contains(randomIndex) {
-//
-//                randomIndex = Int(arc4random_uniform(UInt32(allIngredients.count - 1)))
-//
-//            }
-//            else {
-//
-//                selectedIndice.append(randomIndex)
-//
-//            }
-//
-//        }
-//
-//
-//        for _ in 0 ..< limitLoop {
-//
-//            let id = allIngredients[randomIndex].id
-//
-//            query = query.whereField("genres.\(id)", isEqualTo: true)
-//        }
-//
-//        return getRecipes(query: query)
-           
+        return getRecipesStream
+        
+        //        }
+        //        else  {
+        //
+        //            let thirtyPercentOfIngredientsCount = Int(round(Double(allIngredients.count) * 0.3))
+        //
+        //            max = thirtyPercentOfIngredientsCount
+        //
+        //        }
+        //
+        //        if max == 1 {
+        //
+        //            limitLoop = 1
+        //
+        //        }
+        //        else {
+        //
+        //            let ramdomLimit = Int.random(in: 1 ... max)
+        //            limitLoop = ramdomLimit
+        //        }
+        //
+        //        var selectedIndice:[Int] = []
+        //
+        //        var randomIndex = Int.random(in: 0 ..< allIngredients.count)
+        //
+        //
+        //        while !selectedIndice.contains(randomIndex) {
+        //
+        //            if selectedIndice.contains(randomIndex) {
+        //
+        //                randomIndex = Int(arc4random_uniform(UInt32(allIngredients.count - 1)))
+        //
+        //            }
+        //            else {
+        //
+        //                selectedIndice.append(randomIndex)
+        //
+        //            }
+        //
+        //        }
+        //
+        //
+        //        for _ in 0 ..< limitLoop {
+        //
+        //            let id = allIngredients[randomIndex].id
+        //
+        //            query = query.whereField("genres.\(id)", isEqualTo: true)
+        //        }
+        //
+        //        return getRecipes(query: query)
+        
     }
     
     // ways:　通り
@@ -366,7 +330,7 @@ class MainDM: MainDMProtocol {
     static func getRecipesByAllWays(allIngredients: [Ingredient]) -> [Query] {
         
         var queries:[Query] = []
-
+        
         if allIngredients.count < 3 {
             
             let query = db.collection("recipes").whereField("genres.\(allIngredients[0].id)", isEqualTo: true).whereField("genres.\(allIngredients[1].id)", isEqualTo: true)
@@ -377,23 +341,23 @@ class MainDM: MainDMProtocol {
             
         }
         else {
-
+            
             var source:[[Int]] = []
-
+            
             for index in 0 ..< allIngredients.count - 1 {
-
+                
                 for pairingIndex in (index + 1) ..< allIngredients.count - 1 {
-
+                    
                     let arr = [index, pairingIndex]
-
+                    
                     if !source.contains(arr) {
-
+                        
                         source.append(arr)
-
+                        
                     }
-
+                    
                 }
-
+                
             }
             
             source.forEach { pair in
@@ -408,10 +372,10 @@ class MainDM: MainDMProtocol {
             }
             
         }
-    
-       
         
-       return queries
+        
+        
+        return queries
         
     }
     
@@ -422,10 +386,10 @@ class MainDM: MainDMProtocol {
         for _ in 0 ..< numQuery {
             
             let searchIngredientsOnceNum = Int.random(in: 0 ..< searchIngredientsOnceNumLimit)
-
+            
             var randomIndice:[Int] = []
             
-
+            
             let firstSearchIngredientsOnceNum = Int.random(in: 0 ..< searchIngredientsOnceNumLimit)
             randomIndice.append(firstSearchIngredientsOnceNum)
             
@@ -434,7 +398,7 @@ class MainDM: MainDMProtocol {
             for _ in 1 ..< searchIngredientsOnceNum {
                 
                 var randomIndex: Int {
-                  
+                    
                     var result = Int.random(in: 0 ..< searchIngredientsOnceNumLimit)
                     
                     while randomIndice.contains(result) {
@@ -463,13 +427,13 @@ class MainDM: MainDMProtocol {
     }
     
     static func getPublishers(ids: [String]) -> Observable<[String: User]> {
-
+        
         return getPublisherDocuments(ids: ids)
             .flatMapLatest { docs in
                 User.generateNewUsers(documents: docs)
             }
             .map { users in
-               
+                
                 var dic: [String: User] = [:]
                 users.forEach { user in
                     dic[user.userID] = user
@@ -479,6 +443,18 @@ class MainDM: MainDMProtocol {
             }
     }
     
+    static func getRecipes(ids: [String]) -> Observable<[Recipe]> {
+        
+        let references = ids.map { id in
+            return db.collection("recipes").document(id)
+        }
+        
+        return firestoreService.getDocuments(documentReferences: references)
+            .flatMapLatest { docs in
+                Recipe.generateNewRecipes(docs: docs)
+            }
+        
+    }
     
     static func getRecipes(query: Query) -> Observable<[Recipe]> {
         
@@ -493,11 +469,11 @@ class MainDM: MainDMProtocol {
         return .create { observer in
             
             query.getDocuments { snapShot, err in
-              
+                
                 if let err = err {
-                
+                    
                     observer.onError(err)
-                
+                    
                 }
                 else {
                     
@@ -506,41 +482,41 @@ class MainDM: MainDMProtocol {
                         observer.onNext(docs)
                     }
                     else {
-                    
+                        
                         observer.onNext([])
-                    
+                        
                     }
                     
                 }
-            
+                
             }
             
             
             return Disposables.create()
         }
-       
+        
     }
     
     static func getRecipeDocument(id: String, completion: @escaping (QueryDocumentSnapshot?) -> Void, errBlock: @escaping (Error) -> Void){
         
-            
+        
         db.collection("recipes").document(id).getDocument { doc, err in
-              
-                if let err = err {
-                
-                    errBlock(err)
-                
-                }
-                else {
-                    
-                    let doc = doc as? QueryDocumentSnapshot
-                    completion(doc)
-                    
-                }
             
+            if let err = err {
+                
+                errBlock(err)
+                
+            }
+            else {
+                
+                let doc = doc as? QueryDocumentSnapshot
+                completion(doc)
+                
             }
             
-       
+        }
+        
+        
     }
     
     
@@ -556,14 +532,14 @@ class MainDM: MainDMProtocol {
             
             notDuplecateIds.enumerated().forEach { index, id in
                 
-               
-               generateNewPubishers(publisherID: id, completion: { doc in
                 
-                   implementedNum += 1
-                  
-                      
-                   docs.append(doc)
-
+                generateNewPubishers(publisherID: id, completion: { doc in
+                    
+                    implementedNum += 1
+                    
+                    
+                    docs.append(doc)
+                    
                     if implementedNum == notDuplecateIds.count {
                         
                         observer.onNext(docs)

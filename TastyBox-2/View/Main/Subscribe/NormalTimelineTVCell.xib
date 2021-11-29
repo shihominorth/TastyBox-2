@@ -11,7 +11,7 @@
     <objects>
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
         <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
-        <tableViewCell contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" rowHeight="321" id="KGk-i7-Jjw" customClass="NormalTimelineTVCell" customModule="TastyBox_2" customModuleProvider="target">
+        <tableViewCell contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" rowHeight="320" id="KGk-i7-Jjw" customClass="NormalTimelineTVCell" customModule="TastyBox_2" customModuleProvider="target">
             <rect key="frame" x="0.0" y="0.0" width="326" height="321"/>
             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
             <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="KGk-i7-Jjw" id="H2p-sc-9uM">
@@ -36,6 +36,9 @@
                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="PBV-zP-kGo">
                         <rect key="frame" x="43" y="72" width="4" height="249"/>
                         <color key="backgroundColor" systemColor="systemGray2Color"/>
+                        <constraints>
+                            <constraint firstAttribute="width" constant="4" id="YLp-v4-U0V"/>
+                        </constraints>
                     </view>
                     <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="ivY-4o-Bk2">
                         <rect key="frame" x="78" y="82" width="228" height="228"/>
@@ -51,7 +54,7 @@
                         <nil key="highlightedColor"/>
                     </label>
                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Fjm-5a-osU">
-                        <rect key="frame" x="78" y="49" width="228" height="21"/>
+                        <rect key="frame" x="78" y="49" width="228" height="16"/>
                         <fontDescription key="fontDescription" type="system" pointSize="13"/>
                         <color key="textColor" white="0.66666666666666663" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <nil key="highlightedColor"/>
@@ -72,7 +75,7 @@
                     <constraint firstItem="Fjm-5a-osU" firstAttribute="leading" secondItem="ivY-4o-Bk2" secondAttribute="leading" id="WxV-6H-GvK"/>
                     <constraint firstItem="Fjm-5a-osU" firstAttribute="top" secondItem="euz-CA-mql" secondAttribute="bottom" constant="8" symbolic="YES" id="ax1-AB-bnx"/>
                     <constraint firstItem="ikv-JW-Fls" firstAttribute="top" secondItem="H2p-sc-9uM" secondAttribute="top" constant="20" id="cA3-tl-tS3"/>
-                    <constraint firstItem="ivY-4o-Bk2" firstAttribute="top" secondItem="Fjm-5a-osU" secondAttribute="bottom" constant="12" id="ijD-lO-wWA"/>
+                    <constraint firstItem="ivY-4o-Bk2" firstAttribute="top" relation="greaterThanOrEqual" secondItem="Fjm-5a-osU" secondAttribute="bottom" constant="12" id="ijD-lO-wWA"/>
                     <constraint firstItem="NYZ-V5-odZ" firstAttribute="centerX" secondItem="ikv-JW-Fls" secondAttribute="centerX" id="lCB-4G-CeD"/>
                     <constraint firstItem="euz-CA-mql" firstAttribute="centerX" secondItem="ivY-4o-Bk2" secondAttribute="centerX" id="tGQ-RR-UlB"/>
                     <constraint firstItem="ivY-4o-Bk2" firstAttribute="trailing" secondItem="H2p-sc-9uM" secondAttribute="trailingMargin" id="yIy-B2-IPQ"/>

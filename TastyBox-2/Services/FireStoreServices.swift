@@ -131,7 +131,7 @@ class FireStoreServices {
         
     }
     
-    func getDocument(path: DocumentReference) -> Observable<[String: Any]> {
+    func getDocument(path: DocumentReference) -> Observable<DocumentSnapshot> {
         
         return .create { observer in
             
@@ -143,8 +143,8 @@ class FireStoreServices {
                 }
                 else {
                     
-                    if let doc = doc, let data = doc.data() {
-                        observer.onNext(data)
+                    if let doc = doc {
+                        observer.onNext(doc)
                     }
                    
                     
@@ -179,6 +179,68 @@ class FireStoreServices {
             return Disposables.create()
         }
         
+    }
+    
+    func getDocuments(documentReferences: [DocumentReference]) -> Observable<[DocumentSnapshot]> {
+        
+        return .create { observer in
+            
+            var docs:[DocumentSnapshot] = []
+            var implementedNum = 0
+            
+            documentReferences.forEach { reference in
+                
+                self.getDocument(reference: reference) { snapShot in
+                    
+                    implementedNum += 1
+                    docs.append(snapShot)
+                    
+                    if implementedNum == documentReferences.count {
+                        
+                        observer.onNext(docs)
+                        
+                    }
+                    
+                } errBlock: { err in
+                    
+                    print(err)
+                   
+                    implementedNum += 1
+                    
+                    if implementedNum == documentReferences.count {
+                        
+                        observer.onNext(docs)
+                        
+                    }
+                }
+
+            }
+            
+            return Disposables.create()
+        }
+       
+        
+    }
+    
+    func getDocument(reference: DocumentReference, completion: @escaping (DocumentSnapshot) -> Void, errBlock: @escaping (Error) -> Void) {
+        
+        reference.getDocument { doc, err in
+            
+            if let err = err {
+                
+                errBlock(err)
+                
+            }
+            else {
+                
+                if let doc = doc {
+                    
+                    completion(doc)
+                    
+                }
+                
+            }
+        }
     }
     
     func updateData(references: [DocumentReference], dic: [String: Any]) -> Observable<Void> {

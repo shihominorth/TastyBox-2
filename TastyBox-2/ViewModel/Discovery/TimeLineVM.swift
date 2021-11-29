@@ -9,22 +9,46 @@ import Foundation
 import Firebase
 import RxSwift
 
-class TimelineVM {
+class TimelineVM: ViewModelBase {
     
     let user: Firebase.User
     let apiType: MainDMProtocol.Type
-    var posts:[Timeline]
+    let postsSubject:PublishSubject<[Timeline]>
+    var recipes: [Recipe]
+    var publishers: [String: User]
+    weak var delegate: toRecipeDetailDelegate?
     
     init(user: Firebase.User, apiType: MainDMProtocol.Type = MainDM.self) {
         
         self.user = user
         self.apiType = apiType
-        self.posts = []
-     
+        self.postsSubject = PublishSubject<[Timeline]>()
+        self.recipes = []
+        self.publishers = [:]
     }
     
-//    func getMyTimeline() -> Observable<Timeline> {
-//        
-//    }
+    func getMyTimeline() -> Observable<[Timeline]> {
+        
+        return self.apiType.getPastTimelines(user: self.user, date: Date(), limit: 20)
+        
+    }
+    
+    func getPublisher(publisherIds: [String]) -> Observable<[String: User]> {
+        
+        return self.apiType.getPublishers(ids: publisherIds)
+        
+    }
+    
+    func getRecipe(recipeIds: [String]) -> Observable<[Recipe]> {
+        
+        return self.apiType.getRecipes(ids: recipeIds)
+        
+    }
+    
+    func toRecipeDetail(recipe: Recipe) {
+        
+        self.delegate?.selectedRecipe(recipe: recipe)
+        
+    }
     
 }
