@@ -347,7 +347,7 @@ class SelectGenresVM: ViewModelBase {
     
     func dismissSelection() {
         
-        self.sceneCoordinator.userDissmissed()
+        self.sceneCoordinator.userDismissed()
         
     }
     

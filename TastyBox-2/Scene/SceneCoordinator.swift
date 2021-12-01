@@ -152,7 +152,7 @@ class SceneCoordinator: NSObject, SceneCoordinatorType {
                
             }
             
-        case .videoPick(let subject):
+        case .videoPick(let compeltion):
             
             if let viewController = viewController as? PHPickerViewController {
                 
@@ -161,12 +161,19 @@ class SceneCoordinator: NSObject, SceneCoordinatorType {
                     viewController.modalPresentationStyle = .automatic
                     viewController.modalTransitionStyle = .coverVertical
                     
-                    currentViewController.present(viewController, animated: true) { [unowned self] in
-                    
-                        viewController.rx.videoUrl.bind(to: subject).disposed(by: self.disposeBag)
+                    currentViewController.present(viewController, animated: true) {
                         subject.onCompleted()
                     }
                     
+                    viewController.rx.videoUrl
+                        .subscribe(onNext: { url in
+                            
+                           compeltion(url)
+
+                            
+                        })
+                        .disposed(by: disposeBag)
+
                 }
                 
                
@@ -396,32 +403,37 @@ class SceneCoordinator: NSObject, SceneCoordinatorType {
     
     
     @discardableResult
-    func userDissmissed(completion: ((Bool) -> Void)? = nil) -> Completable {
+    func userDismissed(completion: ((Bool) -> Void)? = nil) -> Completable {
         
         let subject = PublishSubject<Void>()
         
-        if let window = UIApplication.shared.windows.filter({ $0.isKeyWindow }).first, let rootViewController = window.rootViewController  {
+        DispatchQueue.main.async {
             
-            
-            var topController = rootViewController
-            
-            while let newTopController = topController.presentedViewController {
-                topController = newTopController
+            if let window = UIApplication.shared.windows.filter({ $0.isKeyWindow }).first, let rootViewController = window.rootViewController  {
+                
+                
+                var topController = rootViewController
+                
+                while let newTopController = topController.presentedViewController {
+                    topController = newTopController
+                }
+                
+                
+                self.currentViewController = SceneCoordinator.actualViewController(for: topController)
+                
+                subject.onCompleted()
+                
+                completion?(true)
+                
             }
+            else {
             
+                completion?(false)
             
-            currentViewController = SceneCoordinator.actualViewController(for: topController)
-            
-            subject.onCompleted()
-            
-            completion?(true)
-            
+            }
         }
-        else {
         
-            completion?(false)
-        
-        }
+      
         
         return subject.asObservable()
             .take(1)

@@ -375,6 +375,14 @@ extension Scene {
             
             return nc
             
+        case .uploadingVideo(let viewModel):
+            
+            var vc = UIStoryboard(name: "VideoPlayer", bundle: nil).instantiateViewController(withIdentifier: "uploadingVideoVC") as! UploadingVideoViewController
+            vc.bindViewModel(to: viewModel)
+            
+            return vc
+            
+            
         case .checkRecipe(let viewModel):
             
             var vc = storyboard.instantiateViewController(withIdentifier: "checkRecipeVC") as! CheckCreatedRecipeViewController
@@ -502,8 +510,10 @@ extension ImagePickScene {
         case .video:
             
             var videoConfigPHPickerConfiguration: PHPickerConfiguration {
-
-                var config = PHPickerConfiguration(photoLibrary: .shared())
+                
+                let photoLibrary = PHPhotoLibrary.shared()
+                var config = PHPickerConfiguration(photoLibrary: photoLibrary)
+//                var config = PHPickerConfiguration(photoLibrary: .shared())
                 config.selectionLimit = 1
                 config.filter = .videos
                 config.preferredAssetRepresentationMode = .current

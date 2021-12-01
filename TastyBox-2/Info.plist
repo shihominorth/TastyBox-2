@@ -2,6 +2,8 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>&quot;This app needs to access your camera roll. We use your photos and movies for uploading posts.</string>
 	<key>NSCameraUsageDescription</key>
 	<string>&quot;This app needs to access your camera. The picture you took will be used for your image, recipe image and so on.</string>
 	<key>CFBundleDevelopmentRegion</key>

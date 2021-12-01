@@ -50,7 +50,7 @@ class PublishRecipeOptionsViewController: UIViewController, BindableType {
                     DispatchQueue.main.async {
                         self.presentingViewController?.presentingViewController?.dismiss(animated: true) {
                             
-                            self.viewModel.sceneCoodinator.userDissmissed()
+                            self.viewModel.sceneCoodinator.userDismissed()
                         }
                     }
                     
@@ -67,7 +67,7 @@ class PublishRecipeOptionsViewController: UIViewController, BindableType {
 
                     self.dismiss(animated: true) {
                       
-                        self.viewModel.sceneCoodinator.userDissmissed()
+                        self.viewModel.sceneCoodinator.userDismissed()
 
                     }
 

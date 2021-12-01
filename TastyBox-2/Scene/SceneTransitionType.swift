@@ -20,6 +20,6 @@ enum SceneTransitionType {
     case modalHalf
     case imagePick
     case photoPick(completion: (Data) -> Void)
-    case videoPick(subject: PublishSubject<URL>)
+    case videoPick(compeletion: (URL) -> Void)
     case camera(completion: (Data) -> Void)
 }

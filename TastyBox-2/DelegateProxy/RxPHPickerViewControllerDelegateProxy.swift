@@ -50,17 +50,17 @@ class RxPHPickerViewControllerDelegateProxy: DelegateProxy<PHPickerViewControlle
         else if provider.hasItemConformingToTypeIdentifier(UTType.video.identifier) ||  provider.hasItemConformingToTypeIdentifier(UTType.quickTimeMovie.identifier) {
             
             guard let typeIdentifier = provider.registeredTypeIdentifiers.first else { return }
-
-            provider.loadItem(forTypeIdentifier: typeIdentifier, options: nil) { [unowned self] url, err in
+           
+            provider.loadFileRepresentation(forTypeIdentifier: "public.movie") { [weak self] url, err in
                 
                 if let err = err {
                     
-                    self.urlSubject.onError(err)
+                    self?.urlSubject.onError(err)
                     
                 }
                 else if let url = url as? URL {
                     
-                    self.urlSubject.onNext(url)
+                    self?.urlSubject.onNext(url)
                     
                 }
             

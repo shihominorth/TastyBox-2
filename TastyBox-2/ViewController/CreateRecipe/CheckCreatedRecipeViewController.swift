@@ -278,7 +278,13 @@ class CheckCreatedRecipeViewController: UIViewController, BindableType {
                 
                 if let cell = tableView.dequeueReusableCell(withIdentifier: "checkTimeNServingTVCell", for: indexPath) as? CheckTimeNServingTVCell {
                     
-                    cell.timeLbl.text = "\(time) mins"
+                    var timeString = "\(time) mins"
+                    
+                    if time > 60 {
+                        timeString = "\(time / 60) hours \(time % 60) mins"
+                    }
+ 
+                    cell.timeLbl.text = timeString
                     cell.serveLbl.text = "\(serving) serving"
                     cell.selectionStyle = .none
                     

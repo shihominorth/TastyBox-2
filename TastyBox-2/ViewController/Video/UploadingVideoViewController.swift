@@ -6,7 +6,7 @@
 //
 
 import UIKit
-import AVFoundation
+import AVKit
 import RxSwift
 import RxCocoa
 import Lottie
@@ -17,14 +17,17 @@ class UploadingVideoViewController: UIViewController, BindableType {
     typealias ViewModelType = UploadingVideoVM
     var viewModel: UploadingVideoVM!
     
-    var playerItem: AVPlayerItem!
-    var playerLooper: AVPlayerLooper!
-    var player: AVQueuePlayer!
-    var layerPlayer: AVPlayerLayer!
+    public var videoPlayer:AVQueuePlayer?
+    public var videoPlayerLayer:AVPlayerLayer?
+    var playerLooper: NSObject?
+    var queuePlayer: AVQueuePlayer?
     
     
     var tap: UITapGestureRecognizer!
     var playView: PlayVideoView!
+    
+    
+    let loop = VideoPlayerLooped()
     
     override func viewDidLoad() {
         
@@ -33,12 +36,18 @@ class UploadingVideoViewController: UIViewController, BindableType {
         self.view.backgroundColor = .black
         
         setUpPlayVideoView()
-        playVideo()
+        //        playVideo()
+        self.loop.playVideo(url: self.viewModel.url, inView: self.playView)
         
     }
     
+    override func viewDidAppear(_ animated: Bool) {
+        
+      
+    }
+    
     override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
-        layerPlayer.frame = CGRect(x: 0, y: 0, width: size.width, height: size.height)
+        videoPlayerLayer?.frame = CGRect(x: 0, y: 0, width: size.width, height: size.height)
     }
     
     func bindViewModel() {
@@ -64,33 +73,34 @@ class UploadingVideoViewController: UIViewController, BindableType {
         setUpBackBtn()
         setUpAddBtn()
         setUpSlider()
-        
-        
-        tap = UITapGestureRecognizer()
-        
-        tap.rx.event
-            .debounce(.microseconds(1000), scheduler: MainScheduler.instance)
-            .asDriver { err in
-                
-                print(err)
-                
-                return Driver.empty()
-            }
-            .asObservable()
-            .withLatestFrom(viewModel.isHiddenPlayingViewRelay)
-            .subscribe(onNext: { isHiddden in
-                self.viewModel.isHiddenPlayingViewRelay.accept(!isHiddden)
-            })
-            .disposed(by: viewModel.disposeBag)
-        
-        
-        self.playView.addGestureRecognizer(tap)
+        setUpGestureRecognizer()
         
         view.addSubview(self.playView)
         
+        let interval = CMTime(value: 1, timescale: 2)
+        
+        self.videoPlayer?.addPeriodicTimeObserver(forInterval: interval, queue: DispatchQueue.main) { [unowned self] progressTime in
+            
+            if let duration = self.videoPlayer?.currentItem?.duration {
+                
+                let seconds = CMTimeGetSeconds(progressTime)
+                let durationSeconds = CMTimeGetSeconds(duration)
+                self.playView.slider.value = Float(seconds / durationSeconds)
+                
+            }
+        }
+        
         NotificationCenter.default.addObserver(self, selector: #selector(itemNewErrorLogEntry), name: .AVPlayerItemNewErrorLogEntry, object: nil)
         
+        NotificationCenter.default.addObserver(self, selector: #selector(itemFailedToPlayToEndTime), name: .AVPlayerItemFailedToPlayToEndTime, object: nil)
+        
         NotificationCenter.default.addObserver(self, selector: #selector(itemPlaybackStalled), name: .AVPlayerItemPlaybackStalled, object: nil)
+        
+        self.videoPlayer?.addObserver(self, forKeyPath: #keyPath(AVPlayer.status), options: [.new, .initial], context: nil)
+        self.videoPlayer?.addObserver(self, forKeyPath: #keyPath(AVPlayer.currentItem.status), options:[.new, .initial], context: nil)
+        
+        // Watch notifications
+        //        NotificationCenter.default.addObserver(self, selector: #selector(didPlaying), name: .AVPlayerItemDidPlayToEndTime, object: nil)
         
     }
     
@@ -104,7 +114,7 @@ class UploadingVideoViewController: UIViewController, BindableType {
         self.playView.backBtn.layer.borderColor = UIColor.systemOrange.cgColor
         
         
-        self.playView.backBtn.rx.tap
+        self.playView?.backBtn.rx.tap
             .debounce(.microseconds(1000), scheduler: MainScheduler.instance)
             .asDriver(onErrorJustReturn: ())
             .asObservable()
@@ -146,14 +156,14 @@ class UploadingVideoViewController: UIViewController, BindableType {
             }
             .subscribe(onNext: { [unowned self] in
                 
-                if let duration = self.player.currentItem?.duration {
+                if let duration = self.videoPlayer?.currentItem?.duration {
                     
                     let totalSeconds = CMTimeGetSeconds(duration)
                     let value = Float64(self.playView.slider.value) * totalSeconds
                     let seekTime = CMTime(value: Int64(value), timescale: 1)
                     
                     
-                    player.seek(to: seekTime, completionHandler: { isCompleted in
+                    videoPlayer?.seek(to: seekTime, completionHandler: { isCompleted in
                         
                     })
                 }
@@ -163,52 +173,39 @@ class UploadingVideoViewController: UIViewController, BindableType {
     }
     
     
+    
+    fileprivate func setUpGestureRecognizer() {
+        
+        tap = UITapGestureRecognizer()
+        
+        tap.rx.event
+            .debounce(.microseconds(1000), scheduler: MainScheduler.instance)
+            .asDriver { err in
+                
+                print(err)
+                
+                return Driver.empty()
+            }
+            .asObservable()
+            .withLatestFrom(viewModel.isHiddenPlayingViewRelay)
+            .subscribe(onNext: { isHiddden in
+                self.viewModel.isHiddenPlayingViewRelay.accept(!isHiddden)
+            })
+            .disposed(by: viewModel.disposeBag)
+        
+        
+        self.playView.addGestureRecognizer(tap)
+    }
+    
+    
     func playVideo() {
         
-        viewModel.urlSubject
+        viewModel.urlSubject?
             .subscribe(onNext: { [unowned self] url in
                 
-                if AVAsset(url: url).isPlayable {
-                    print("success: ", AVAsset(url: url).isPlayable)
-                }
-                
-                let urlString = url.absoluteString
-                
-                print("is valid : ", urlString.isValidURL)
-                
-                self.playerItem = AVPlayerItem(url: url)
-                self.player =  AVQueuePlayer(playerItem: self.playerItem)
-                self.playerLooper = AVPlayerLooper(player: self.player, templateItem: playerItem)
-                
-                self.player.addObserver(self, forKeyPath: "actionAtItemEnd", options: [.new], context: nil)
-                self.player.addObserver(self, forKeyPath: "currentItem.loadedTimeRanges", options: [.new], context: nil)
-                
-                self.layerPlayer = createPlayerLayer()
                 
                 
-                view.layer.addSublayer(self.layerPlayer)
-                self.setUpPlayVideoView()
                 
-//                self.player.play()
-                
-                if #available(iOS 10.0, *) {
-                    self.player.playImmediately(atRate: 1.0)
-                } else {
-                    self.player.play()
-                }
-                
-                let interval = CMTime(value: 1, timescale: 2)
-                
-                self.player.addPeriodicTimeObserver(forInterval: interval, queue: DispatchQueue.main) { [unowned self] progressTime in
-                    
-                    if let duration = self.player.currentItem?.duration {
-                        
-                        let seconds = CMTimeGetSeconds(progressTime)
-                        let durationSeconds = CMTimeGetSeconds(duration)
-                        self.playView.slider.value = Float(seconds / durationSeconds)
-                        
-                    }
-                }
                 
             }, onError: { err in
                 
@@ -221,14 +218,14 @@ class UploadingVideoViewController: UIViewController, BindableType {
         
     }
     
-    func createPlayerLayer() -> AVPlayerLayer {
-        
-        let layer = AVPlayerLayer(player: self.player)
-        layer.frame = self.view.bounds
-        layer.videoGravity = .resizeAspect
-        
-        return layer
-    }
+    //    func createPlayerLayer() -> AVPlayerLayer {
+    //
+    //        let layer = AVPlayerLayer(player: self.player)
+    //        layer.frame = self.view.bounds
+    //        layer.videoGravity = .resizeAspect
+    //
+    //        return layer
+    //    }
     
     @objc func itemPlaybackStalled() {
         print("AVPlayerItemNewErrorLogEntry")
@@ -239,12 +236,56 @@ class UploadingVideoViewController: UIViewController, BindableType {
     }
     
     
+    @objc func itemFailedToPlayToEndTime() {
+        print("failed")
+    }
+    func playVideo(url: URL, inView: UIView){
+        
+        let playerItem = AVPlayerItem(url: url)
+        
+        videoPlayer = AVQueuePlayer(items: [playerItem])
+        playerLooper = AVPlayerLooper(player: videoPlayer!, templateItem: playerItem)
+        
+        videoPlayerLayer = AVPlayerLayer(player: videoPlayer)
+        videoPlayerLayer!.frame = inView.bounds
+        videoPlayerLayer!.videoGravity = .resizeAspectFill
+        
+        inView.layer.addSublayer(videoPlayerLayer!)
+        
+  
+        
+        videoPlayer?.play()
+        
+    }
+    
+    func remove() {
+        videoPlayerLayer?.removeFromSuperlayer()
+        
+    }
     override func observeValue(forKeyPath keyPath: String?, of object: Any?, change: [NSKeyValueChangeKey : Any]?, context: UnsafeMutableRawPointer?) {
         if keyPath == "currentItem.loadedTimeRanges" {
             
             playView.indicator.stopAnimating()
             
         }
+        
+        if let _ = object as? AVPlayer {
+            
+            if  keyPath == #keyPath(AVPlayer.currentItem.status) {
+                
+                let newStatus: AVPlayerItem.Status
+                if let newStatusAsNumber = change?[NSKeyValueChangeKey.newKey] as? NSNumber {
+                    newStatus = AVPlayerItem.Status(rawValue: newStatusAsNumber.intValue)!
+                } else {
+                    newStatus = .unknown
+                }
+                if newStatus == .failed {
+                    NSLog("Error: \(String(describing: self.videoPlayer?.currentItem?.error?.localizedDescription)), error: \(String(describing: self.videoPlayer?.currentItem?.error))")
+                }
+            }
+            
+        }
+        
     }
     
 }

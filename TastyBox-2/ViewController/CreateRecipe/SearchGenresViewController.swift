@@ -35,7 +35,7 @@ class SearchGenresViewController: UIViewController, BindableType {
     }
     
     override func viewDidDisappear(_ animated: Bool) {
-        self.viewModel.sceneCoordinator.userDissmissed()
+        self.viewModel.sceneCoordinator.userDismissed()
     }
     
     func bindViewModel() {

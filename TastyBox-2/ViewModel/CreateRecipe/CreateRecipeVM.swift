@@ -10,9 +10,8 @@ import Action
 import Firebase
 import RxSwift
 import RxCocoa
+import RxRelay
 import SCLAlertView
-import UIKit
-//import UIKit
 
 
 
@@ -77,13 +76,15 @@ class CreateRecipeVM: ViewModelBase {
     var pickingImgIndexSubject = PublishSubject<Int>()
     
     var isExpanded = false
-    
+    let selectedTimeSubject: BehaviorRelay<String>
     
     init(sceneCoodinator: SceneCoordinator, user: Firebase.User, apiType: CreateRecipeDMProtocol.Type = CreateRecipeDM.self) {
         
         self.sceneCoodinator = sceneCoodinator
         self.user = user
         self.apiType = apiType
+        
+        self.selectedTimeSubject = BehaviorRelay<String>(value: "0 hours 0 mins")
         
         self.ingredients = []
         self.ingredientsSubject = BehaviorSubject<[Ingredient]>(value: self.ingredients)
@@ -96,8 +97,15 @@ class CreateRecipeVM: ViewModelBase {
             .map { !$0.isEmpty }
             .share(replay: 1, scope: .forever)
         
-        self.isTimeValidation = self.timeSubject
-            .map { !String($0).isEmpty }
+//        self.isTimeValidation = self.timeSubject
+//            .map { !String($0).isEmpty }
+//            .share(replay: 1, scope: .forever)
+        
+        self.isTimeValidation = self.selectedTimeSubject
+            .map { txt in
+                let txtArr = txt.components(separatedBy: " ").filter { $0 != "" }.filter { $0 != "hours" }.filter { $0 != "mins" }
+                return (txtArr[0] == "0") && (txtArr[1] == "0")
+            }
             .share(replay: 1, scope: .forever)
         
         self.isServingValidation = self.servingSubject
@@ -125,6 +133,8 @@ class CreateRecipeVM: ViewModelBase {
         
         self.combinedInputs = [.mainPhoto(self.mainImgDataSubject)]
 
+       
+        
         super.init()
         
     }
@@ -155,7 +165,9 @@ class CreateRecipeVM: ViewModelBase {
             }
             else {
                 
-                let subtitle = notValidRequirements.joined(separator: "\n・ ")
+                var subtitle = notValidRequirements.joined(separator: "\n・ ")
+                subtitle.insert("・", at: subtitle.startIndex)
+                
                 
                 SCLAlertView().showTitle(
                     "Empty requirement below", // Title of view
@@ -243,8 +255,8 @@ class CreateRecipeVM: ViewModelBase {
     
     func goToNext(){
         
-        Observable.zip(self.mainImgDataSubject.asObservable(), isAddedSubject.asObservable(), videoPlaySubject.asObservable(), titleSubject.asObservable(), timeSubject.asObservable(), servingSubject.asObservable(), isVIPSubject.asObservable(), selectedGenres.asObservable())
-            .flatMap { mainImageData, isAdded, url, title, time, serving, isVIP, genres  -> Observable<CheckRecipeVM> in
+        Observable.zip(self.mainImgDataSubject.asObservable(), isAddedSubject.asObservable(), videoPlaySubject.asObservable(), titleSubject.asObservable(), selectedTimeSubject.asObservable(), servingSubject.asObservable(), isVIPSubject.asObservable(), selectedGenres.asObservable())
+            .flatMap { mainImageData, isAdded, url, title, timeString, serving, isVIP, genres  -> Observable<CheckRecipeVM> in
                 
                 let url = isAdded ? url : nil
                 
@@ -267,7 +279,9 @@ class CreateRecipeVM: ViewModelBase {
                         return newElement
                     }
                 
+                let txtArr = timeString.components(separatedBy: " ").filter { $0 != "" }.filter { $0 != "hours" }.filter { $0 != "mins" }
                 
+                let time = (Int(txtArr[0]) ?? 0) * 60 + (Int(txtArr[1]) ?? 0)
                 
                 let vm = CheckRecipeVM(sceneCoodinator: self.sceneCoodinator, user: self.user, title: title, mainPhoto: mainImageData, videoUrl: url, time: time, serving: serving, isVIP: isVIP, genres: genres, ingredients: filteredIngredients, instructions: filteredInstructions)
                 
@@ -363,33 +377,43 @@ class CreateRecipeVM: ViewModelBase {
     
     func instructionsToImagePicker(index: Int) -> Observable<Data> {
         
-        self.sceneCoodinator.transition(to: photoPicker, type: .imagePick)
+        let subject = PublishSubject<Data>()
+        let scene: Scene = .digitalContentsPickerScene(scene: .photo)
         
-        return photoPicker.rx.imageData
-            .catch { err in
+        self.sceneCoodinator.modalTransition(to: scene, type: .photoPick(completion: { data in
+            
+            let str = String(decoding: data, as: UTF8.self)
+            
+            self.instructions[index].imageURL =  URL(string: str)?.absoluteString
+            
+            self.sceneCoodinator.userDismissed { _ in
                 
-                print(err)
+                subject.onNext(data)
                 
-                return .empty()
             }
-            .observe(on: MainScheduler.instance)
-            .do(onNext: { [unowned self] data in
-                
-                let str = String(decoding: data, as: UTF8.self)
-                
-                self.instructions[index].imageURL =  URL(string: str)?.absoluteString
-                
-                self.sceneCoodinator.userDissmissed()
 
-            })
+            
+        }))
+
+        
+        return subject.asObservable()
         
     }
     
     func toImagePicker() {
         
-        self.sceneCoodinator.transition(to: photoPicker, type: .imagePick)
+        let scene: Scene = .digitalContentsPickerScene(scene: .photo)
+        
+        self.sceneCoodinator.modalTransition(to: scene, type: .photoPick(completion: { data in
+            
+            self.sceneCoodinator.userDismissed()
+            
+            self.mainImgDataSubject.onNext(data)
+            
+        }))
         
     }
+    
     
     func getImage() -> Observable<Data> {
         
@@ -403,7 +427,7 @@ class CreateRecipeVM: ViewModelBase {
             .observe(on: MainScheduler.instance)
             .do(onNext: { [unowned self] in
                 
-                self.sceneCoodinator.userDissmissed()
+                self.sceneCoodinator.userDismissed()
                 
                 self.mainImgDataSubject.onNext($0)
                 
@@ -413,7 +437,13 @@ class CreateRecipeVM: ViewModelBase {
     
     func toVideoPicker() {
         
-        self.sceneCoodinator.transition(to: self.videoPicker, type: .imagePick)
+        let scene: Scene = .digitalContentsPickerScene(scene: .video)
+        
+        self.sceneCoodinator.modalTransition(to: scene, type: .videoPick(compeletion: { [unowned self] url in
+            
+            self.videoPlaySubject.onNext(url)
+            
+        }))
         
     }
     
@@ -430,7 +460,7 @@ class CreateRecipeVM: ViewModelBase {
             .observe(on: MainScheduler.instance)
             .do(onNext: { [unowned self] in
                
-                self.sceneCoodinator.userDissmissed()
+                self.sceneCoodinator.userDismissed()
                 self.videoPlaySubject.onNext($0)
                 
             })
@@ -441,9 +471,9 @@ class CreateRecipeVM: ViewModelBase {
         
         let vm = UploadingVideoVM(sceneCoodinator: self.sceneCoodinator, user: self.user, url: url)
         vm.delegate = self
-        let vc = VideoScene.player(vm).viewController()
+        let scene: Scene = .createReceipeScene(scene: .uploadingVideo(vm))
         
-        self.sceneCoodinator.transition(to: vc, type: .modalHalf)
+        self.sceneCoodinator.modalTransition(to: scene, type: .modalHalf)
         
     }
     

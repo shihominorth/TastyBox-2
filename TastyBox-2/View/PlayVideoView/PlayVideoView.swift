@@ -6,9 +6,10 @@
 //
 
 import UIKit
+import AVFoundation
 
 enum PlayViewStatus {
-     case hide, show, pause
+    case hide, show, pause
     
     static func changeStatus(status: PlayViewStatus) -> PlayViewStatus {
         
@@ -16,20 +17,22 @@ enum PlayViewStatus {
             
         case .hide:
             return .show
-       
+            
         case .show:
             return .pause
             
         case .pause:
             return .hide
-      
+            
         }
     }
- }
- 
+}
+
 
 class PlayVideoView: UIView {
-
+    
+   
+    
     let indicator: UIActivityIndicatorView = {
         
         let result = UIActivityIndicatorView()
@@ -45,7 +48,7 @@ class PlayVideoView: UIView {
     @IBOutlet weak var backBtn: UIButton!
     @IBOutlet weak var addBtn: UIButton!
     @IBOutlet weak var slider: UISlider!
-
+    
     
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -55,29 +58,30 @@ class PlayVideoView: UIView {
         indicator.centerXAnchor.constraint(equalTo: self.centerXAnchor).isActive = true
         indicator.centerYAnchor.constraint(equalTo: self.centerYAnchor).isActive = true
         
-//        setUpPlayBtnView()
+        //        setUpPlayBtnView()
     }
-
+    
     required init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)!
         loadNib()
-//        setUpPlayBtnView()
+        //        setUpPlayBtnView()
     }
-
-//    override func awakeAfter(using aDecoder: NSCoder) -> Any? {
-//         guard subviews.isEmpty else { return self }
-//         return Bundle(for: type(of: self)).loadNibNamed(String(describing: type(of: self)), owner: self, options: nil)?.first
-//     }
     
-
+    
+    //    override func awakeAfter(using aDecoder: NSCoder) -> Any? {
+    //         guard subviews.isEmpty else { return self }
+    //         return Bundle(for: type(of: self)).loadNibNamed(String(describing: type(of: self)), owner: self, options: nil)?.first
+    //     }
+    
+    
     func loadNib() {
         if let view = Bundle(for: type(of: self)).loadNibNamed(String(describing: type(of: self)), owner: self, options: nil)?.first as? UIView {
-           
+            
             view.frame = self.bounds
             self.addSubview(view)
         }
     }
     
-   
-
+    
+    
 }

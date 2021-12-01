@@ -19,7 +19,8 @@ class UploadingVideoVM: ViewModelBase {
     let sceneCoodinator: SceneCoordinator
     let user: Firebase.User
     
-    var urlSubject: Observable<URL>!
+    var url: URL
+    var urlSubject: PublishSubject<URL>!
     var isHiddenPlayingViewRelay = PublishRelay<Bool>()
        
     weak var delegate: UploadingVideoVMDelegate?
@@ -28,10 +29,12 @@ class UploadingVideoVM: ViewModelBase {
         
         self.sceneCoodinator = sceneCoodinator
         self.user = user
+        self.url = url
+        self.urlSubject = PublishSubject<URL>()
         
         super.init()
-        
-        self.urlSubject = observeUrl(url: url)
+       
+      
         
     }
     
