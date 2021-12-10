@@ -96,6 +96,14 @@ class UploadingVideoViewController: UIViewController, BindableType {
         
         NotificationCenter.default.addObserver(self, selector: #selector(itemPlaybackStalled), name: .AVPlayerItemPlaybackStalled, object: nil)
         
+        self.videoPlayer?.addPeriodicTimeObserver(forInterval: interval, queue: nil, using: {time in
+            if self.videoPlayer?.timeControlStatus == .waitingToPlayAtSpecifiedRate {
+                self.playView.indicator.startAnimating()
+            } else if self.videoPlayer?.timeControlStatus == .playing {
+                self.playView.indicator.stopAnimating()
+            }
+        })
+        
         self.videoPlayer?.addObserver(self, forKeyPath: #keyPath(AVPlayer.status), options: [.new, .initial], context: nil)
         self.videoPlayer?.addObserver(self, forKeyPath: #keyPath(AVPlayer.currentItem.status), options:[.new, .initial], context: nil)
         

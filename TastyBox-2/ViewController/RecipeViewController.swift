@@ -17,13 +17,13 @@ import SwiftMessages
 import Lottie
 
 class RecipeViewController: UIViewController, BindableType {
-
+    
     typealias Section = ArraySection<RecipeDetailSectionItem.RawValue, RecipeDetailSectionItem>
     
     typealias ViewModelType = RecipeVM
     var viewModel: RecipeVM!
-
-
+    
+    
     @IBOutlet weak var tableView: UITableView!
     
     var dataSource: RxRecipeTableViewDataSource<Section>!
@@ -48,14 +48,14 @@ class RecipeViewController: UIViewController, BindableType {
             NotificationCenter.default.addObserver(self, selector: #selector(playerDidFinishPlaying), name: .AVPlayerItemDidPlayToEndTime, object: nil)
             
         }
-    
+        
     }
     
     override func viewDidLayoutSubviews() {
-    
+        
         super.viewDidLayoutSubviews()
         self.view.layoutIfNeeded()
-    
+        
     }
     
     func bindViewModel() {
@@ -66,7 +66,7 @@ class RecipeViewController: UIViewController, BindableType {
         
         tableView.register(IngredientsHeaderView.self, forHeaderFooterViewReuseIdentifier: "ingredientsHeader")
         tableView.register(IngredientsHeaderView.self, forHeaderFooterViewReuseIdentifier: "instructionsHeader")
-
+        
         tableView.rx.setDelegate(self).disposed(by: viewModel.disposeBag)
         
         tableView.rx.didScroll
@@ -116,18 +116,18 @@ class RecipeViewController: UIViewController, BindableType {
         
         
         viewModel.getRecipeDetailInfo(recipe: viewModel.recipe)
-//            .flatMapLatest({ [unowned self] sections in
-//                self.viewModel.isLikedRecipe(resultSetions: sections)
-//            })
+        //            .flatMapLatest({ [unowned self] sections in
+        //                self.viewModel.isLikedRecipe(resultSetions: sections)
+        //            })
             .bind(to: tableView.rx.items(dataSource: dataSource))
             .disposed(by: viewModel.disposeBag)
-
+        
         
         viewModel.isExpandedSubject
             .skip(1)
             .distinctUntilChanged()  // check if it's needed later.
             .subscribe(onNext: { [unowned self] isExpanded in
-
+                
                 let indexPath = IndexPath(row: 0, section: 3)
                 
                 if let cell = tableView.cellForRow(at: IndexPath(row: 0, section: 3)) as? CheckGenresTVCell {
@@ -137,19 +137,19 @@ class RecipeViewController: UIViewController, BindableType {
                         UIView.animate(withDuration: 0.0, delay: 0.0, options: [], animations: {
                             // do not change animation
                             tableView.reloadRows(at: [IndexPath(row: 0, section: 3)], with: .none)
-
+                            
                         }) { isCompleted in
                             // do not change animation
                             tableView.scrollToRow(at: indexPath, at: .middle, animated: true)
                         }
-                           
-                    
+                        
+                        
                     }
-                 
-            
+                    
+                    
                 }
-
-               
+                
+                
                 
             })
             .disposed(by: viewModel.disposeBag)
@@ -165,7 +165,7 @@ class RecipeViewController: UIViewController, BindableType {
                     .materialize() // 中じゃないとisDisposedされる
             }
             .share(replay: 1, scope: .forever)
-    
+        
         let gotIsLiked: Observable<Bool> = tappedLike
             .compactMap { $0.element }
             .do(onNext: { [unowned self] isLiked in
@@ -178,56 +178,56 @@ class RecipeViewController: UIViewController, BindableType {
                 }
                 
                 self.tableView.reloadRows(at: [IndexPath(row: 0, section: 2)], with: .none)
-
-               
+                
+                
             })
-
-        let errFound = tappedLike
-            .compactMap { $0.error }
-            .map { $0 as NSError }
-
-
+                
+                let errFound = tappedLike
+                .compactMap { $0.error }
+                .map { $0 as NSError }
+        
+        
         let noDocFound: Observable<Bool> = errFound
             .filter { $0.code == 5 }
             .flatMapLatest { _ in
                 self.viewModel.addNewMyLikedRecipes()
             }
             .do(onNext: { [unowned self] isLiked in
-
+                
                 if isLiked {
                     
                     self.viewModel.recipe.likes += 1
                     
                     tableView.reloadSections(IndexSet(integer: 2), with: .none)
                 }
-
+                
             })
-        
-        let otherErrFound: Observable<Bool> = errFound
-            .filter { $0.code != 5 }
-            .map { err in
-                print(err)
-
-                return false
-            }
+                
+                let otherErrFound: Observable<Bool> = errFound
+                .filter { $0.code != 5 }
+                .map { err in
+                    print(err)
+                    
+                    return false
+                }
         
         let likedMergedObservables = Observable.merge(gotIsLiked, noDocFound, otherErrFound)
-
+        
         likedMergedObservables
             .subscribe(onNext: { isLiked in
-
-            print(isLiked)
-
-
-        })
-        .disposed(by: viewModel.disposeBag)
-
+                
+                print(isLiked)
+                
+                
+            })
+            .disposed(by: viewModel.disposeBag)
+        
         viewModel.isLikedRecipe()
             .bind(to: viewModel.isLikedRecipeSubject)
             .disposed(by: viewModel.disposeBag)
         
         viewModel.selectedEvaluationSubject
-            .filter{ $0 == 1 }
+            .filter { $0 == 1 }
             .flatMapLatest { _ in
                 self.showReportAlertView()
             }
@@ -242,7 +242,7 @@ class RecipeViewController: UIViewController, BindableType {
             .subscribe(onNext: { [unowned self] likes in
                 
                 self.viewModel.recipe.likes = likes
-//                tableView.reloadSections(IndexSet(integer: 2), with: .none)
+                //                tableView.reloadSections(IndexSet(integer: 2), with: .none)
                 
             })
             .disposed(by: viewModel.disposeBag)
@@ -272,41 +272,41 @@ class RecipeViewController: UIViewController, BindableType {
                 if let cell = tableView.dequeueReusableCell(withIdentifier: "recipeMainTVCell", for: indexPath) as? RecipeMainImageTVCell {
                     
                     cell.imgString = data
-//                    cell.videoString = url
+                    //                    cell.videoString = url
                     
-//                    if viewModel.isDisplayed == false && viewModel.recipe.videoURL != nil {
-//
-//                        cell.playVideoView.playerLayer.player = self.player
-//                        cell.playVideoView.imgView.alpha = 1.0
-//
-//                        cell.setSlider()
-//
-//                        UIView.animate(withDuration: 0.2, delay: 2.0, options: [], animations: {
-//
-//                            cell.playVideoView.imgView.alpha = 0.0
-//
-//                        }) { isCompleted in
-//
-//                            if isCompleted {
-//                                cell.playVideoView.imgView.isHidden = true
-//                                cell.playVideoView.playerLayer.player?.play()
-//                                viewModel.isDisplayed = true
-//                            }
-//
-//                        }
-//
-//                    }
-//
-//                    if viewModel.recipe.videoURL == nil {
-//
-                        cell.slider.isHidden = true
-//
-//                    }
-//                    else {
-//
-//                        cell.slider.isHidden = false
-//
-//                    }
+                    //                    if viewModel.isDisplayed == false && viewModel.recipe.videoURL != nil {
+                    //
+                    //                        cell.playVideoView.playerLayer.player = self.player
+                    //                        cell.playVideoView.imgView.alpha = 1.0
+                    //
+                    //                        cell.setSlider()
+                    //
+                    //                        UIView.animate(withDuration: 0.2, delay: 2.0, options: [], animations: {
+                    //
+                    //                            cell.playVideoView.imgView.alpha = 0.0
+                    //
+                    //                        }) { isCompleted in
+                    //
+                    //                            if isCompleted {
+                    //                                cell.playVideoView.imgView.isHidden = true
+                    //                                cell.playVideoView.playerLayer.player?.play()
+                    //                                viewModel.isDisplayed = true
+                    //                            }
+                    //
+                    //                        }
+                    //
+                    //                    }
+                    //
+                    //                    if viewModel.recipe.videoURL == nil {
+                    //
+                    cell.slider.isHidden = true
+                    //
+                    //                    }
+                    //                    else {
+                    //
+                    //                        cell.slider.isHidden = false
+                    //
+                    //                    }
                     
                     cell.selectionStyle = .none
                     
@@ -326,7 +326,7 @@ class RecipeViewController: UIViewController, BindableType {
             case let .evaluates(evaluations):
                 
                 if let cell = tableView.dequeueReusableCell(withIdentifier: "recipeEvaluatesTVCell", for: indexPath) as? RecipeEvaluatesTVCell {
-
+                    
                     cell.evaluations = evaluations
                     cell.selectionStyle = .none
                     
@@ -336,13 +336,13 @@ class RecipeViewController: UIViewController, BindableType {
                         .map { $0.row }
                         .bind(to: viewModel.selectedEvaluationSubject)
                         .disposed(by: cell.disposeBag)
-                   
+                    
                     viewModel.isLikedRecipeSubject
                         .bind(to: cell.isLikedSubject)
                         .disposed(by: cell.disposeBag)
                     
                     cell.likes = viewModel.recipe.likes
-                   
+                    
                     
                     return cell
                 }
@@ -355,25 +355,25 @@ class RecipeViewController: UIViewController, BindableType {
                     cell.selectionStyle = .none
                     
                     cell.expandBtn.setTitle("", for: .normal)
-
+                    
                     
                     cell.expandBtn.rx.tap
                         .throttle(.milliseconds(1000), latest: false, scheduler: MainScheduler.instance)
                     // when debug rx.tap, if it does not emit subscribed, completed and disposed, it emits mutiple events without take(1)
                         .take(1)
-                         .debug("tapped")
+                        .debug("tapped")
                         .withLatestFrom(viewModel.isExpandedSubject)
                         .subscribe(onNext: { isExpanded in
                             
                             viewModel.isExpandedSubject.accept(!isExpanded)
-                           
+                            
                         })
                         .disposed(by: cell.disposeBag)
                     
                     if let img = viewModel.isExpandedSubject.value ? UIImage(systemName: "chevron.up.circle") : UIImage(systemName: "chevron.down.circle"){
                         cell.expandBtn.setImage(img, for: .normal)
                     }
-                  
+                    
                     //?
                     if cell.collectionView.collectionViewLayout.collectionViewContentSize.height <= 70 {
                         
@@ -400,7 +400,7 @@ class RecipeViewController: UIViewController, BindableType {
                             
                         })
                         .disposed(by: cell.disposeBag)
-                  
+                    
                     let tappedFollowBtn = cell.followBtn.rx.tap
                         .throttle(.microseconds(1000), scheduler: MainScheduler.instance)
                         .withLatestFrom(viewModel.isFollowingSubject)
@@ -416,7 +416,7 @@ class RecipeViewController: UIViewController, BindableType {
                     
                     
                     
-                   willFollowing
+                    willFollowing
                         .flatMapLatest { _ in
                             self.viewModel.followPublisher(user: viewModel.user, publisher: user)
                         }
@@ -441,28 +441,28 @@ class RecipeViewController: UIViewController, BindableType {
                         .disposed(by: cell.disposeBag)
                     
                     willUnFollowing
-                         .flatMapLatest { _ in
-                             self.viewModel.unFollowPublisher(user: viewModel.user, publisher: user)
-                         }
-                         .catch { err in
-                             
-                             print(err)
-                             
-                             return .empty()
-                         }
-                         .subscribe(onNext: { isCompleted in
-                             
-                             if isCompleted {
-                                 print("success")
-                                 self.viewModel.isFollowingSubject.onNext(false)
-                             }
-                             else {
-                                 print("same uid")
-                             }
-                             
-                         })
-                         .disposed(by: cell.disposeBag)
-                     
+                        .flatMapLatest { _ in
+                            self.viewModel.unFollowPublisher(user: viewModel.user, publisher: user)
+                        }
+                        .catch { err in
+                            
+                            print(err)
+                            
+                            return .empty()
+                        }
+                        .subscribe(onNext: { isCompleted in
+                            
+                            if isCompleted {
+                                print("success")
+                                self.viewModel.isFollowingSubject.onNext(false)
+                            }
+                            else {
+                                print("same uid")
+                            }
+                            
+                        })
+                        .disposed(by: cell.disposeBag)
+                    
                     
                     return cell
                 }
@@ -485,7 +485,7 @@ class RecipeViewController: UIViewController, BindableType {
                     cell.ingredient = ingredient
                     cell.configure(ingredient: ingredient)
                     cell.selectionStyle = .none
-                
+                    
                     
                     return cell
                 }
@@ -497,13 +497,13 @@ class RecipeViewController: UIViewController, BindableType {
                     cell.instruction = instruction
                     cell.configure(instruction: instruction)
                     cell.selectionStyle = .none
-
+                    
                     return cell
                 }
                 
             }
-               
-               
+            
+            
             return UITableViewCell()
         }
         
@@ -522,7 +522,7 @@ class RecipeViewController: UIViewController, BindableType {
     @objc func playerDidFinishPlaying() {
         
         if let cell = tableView.cellForRow(at: IndexPath(row: 0, section: 0)) as? CheckMainImageTVCell {
-
+            
             UIView.animate(withDuration: 0.2, delay: 2.0, options: [], animations: {
                 
                 cell.playVideoView.imgView.alpha = 1.0
@@ -544,26 +544,19 @@ class RecipeViewController: UIViewController, BindableType {
     func showReportAlertView() -> Observable<String> {
         
         return .create { observer in
-
-//            let view = ReportAlertView(frame: CGRect(x: 0, y: 0, width: self.view.frame.width * 0.8, height: self.view.frame.height * 0.8))
             
+            let view = ReportAlertView()
             
-             let view: ReportView = UINib(nibName: "ReportView", bundle: nil)
-                .instantiate(withOwner: nil, options: nil)
-                .first as! ReportView
-               
-                var config = SwiftMessages.Config()
-                
-                config.presentationStyle = .center
-                config.presentationContext = .window(windowLevel: .normal)
-                config.duration = .forever
-                config.dimMode = .gray(interactive: true)
-                config.interactiveHide = true
-
-                SwiftMessages.show(config: config, view: view)
-                
-//            }
+            var config = SwiftMessages.Config()
             
+            config.becomeKeyWindow = true
+            config.presentationStyle = .center
+            config.presentationContext = .window(windowLevel: .normal)
+            config.duration = .forever
+            config.dimMode = .gray(interactive: false)
+            config.interactiveHide = true
+            
+            SwiftMessages.show(config: config, view: view)
             
             return Disposables.create()
         }
@@ -574,7 +567,7 @@ class RecipeViewController: UIViewController, BindableType {
 extension RecipeViewController: UITableViewDelegate {
     
     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
-       
+        
         switch section {
         case 6:
             
@@ -582,14 +575,14 @@ extension RecipeViewController: UITableViewDelegate {
             
             let label = UILabel()
             label.text = "Ingredients"
-
+            
             label.translatesAutoresizingMaskIntoConstraints = false
             label.numberOfLines = 0
             label.textColor = #colorLiteral(red: 0.6352941176, green: 0.5176470588, blue: 0.368627451, alpha: 1)
             label.font = UIFont.boldSystemFont(ofSize: 17.0)
             label.sizeToFit()
-
-                    
+            
+            
             view.addSubview(label)
             
             
@@ -597,11 +590,11 @@ extension RecipeViewController: UITableViewDelegate {
             label.trailingAnchor.constraint(equalTo: view.layoutMarginsGuide.trailingAnchor).isActive = true
             label.bottomAnchor.constraint(equalTo: view.layoutMarginsGuide.bottomAnchor).isActive = true
             
-           
+            
             if let subview = view.subviews[0] as? UILabel {
-               
+                
                 label.heightAnchor.constraint(equalToConstant: subview.frame.height).isActive = true
-
+                
             }
             
             return view
@@ -609,9 +602,9 @@ extension RecipeViewController: UITableViewDelegate {
         case 7:
             
             let view = tableView.dequeueReusableHeaderFooterView(withIdentifier: "instructionsHeader") as! IngredientsHeaderView
-
+            
             let label = UILabel()
-
+            
             label.text = "Instructions"
             label.translatesAutoresizingMaskIntoConstraints = false
             label.numberOfLines = 0
@@ -627,11 +620,11 @@ extension RecipeViewController: UITableViewDelegate {
             label.bottomAnchor.constraint(equalTo: view.layoutMarginsGuide.bottomAnchor).isActive = true
             
             if let subview = view.subviews[0] as? UILabel {
-               
+                
                 label.heightAnchor.constraint(equalToConstant: subview.frame.height).isActive = true
-
+                
             }
-
+            
             return view
             
         default:
@@ -651,9 +644,9 @@ extension RecipeViewController: UITableViewDelegate {
             return 80
             
         case 3:
-           
+            
             return viewModel.isExpandedSubject.value ?  UITableView.automaticDimension : 100
-
+            
         case 4:
             return 60
             
@@ -689,5 +682,7 @@ extension RecipeViewController: UITableViewDelegate {
     }
     
 }
+
+
 
 
