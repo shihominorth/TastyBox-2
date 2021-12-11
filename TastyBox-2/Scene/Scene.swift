@@ -30,11 +30,15 @@ enum Scene {
         case recipe(RecipeVM)
     }
     
+    enum ReportScene {
+        case report(ReportVM)
+    }
+    
     enum DigitalContentsPickerScene {
         case video, photo, camera
     }
    
-    case loginScene(scene: LoginScene), discovery(scene: DiscoveryScene), createReceipeScene(scene: CreateRecipeScene), profileScene(scene: ProfileScene), recipeScene(scene: RecipeDetailScene), digitalContentsPickerScene(scene: DigitalContentsPickerScene)
+    case loginScene(scene: LoginScene), discovery(scene: DiscoveryScene), createReceipeScene(scene: CreateRecipeScene), profileScene(scene: ProfileScene), recipeScene(scene: RecipeDetailScene), reportScene(scene: ReportScene), digitalContentsPickerScene(scene: DigitalContentsPickerScene)
 }
 
 enum LoadingScene {

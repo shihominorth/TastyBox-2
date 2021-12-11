@@ -35,6 +35,10 @@ extension Scene {
   
             return generateViewController(recipeScene: scene)
             
+        case let .reportScene(scene):
+            
+            return generateViewController(reportScene: scene)
+            
         case let .digitalContentsPickerScene(scene):
             
             return generateViewController(digitalContentsPickerScene: scene)
@@ -426,6 +430,21 @@ extension Scene {
         case .recipe(let viewModel):
             
             var vc = storyBoard.instantiateViewController(withIdentifier: "recipeDetail") as! RecipeViewController
+            
+            vc.bindViewModel(to: viewModel)
+            
+            return vc
+            
+        }
+    }
+    
+    func generateViewController(reportScene scene: ReportScene) -> UIViewController {
+        let storyBoard = UIStoryboard(name: "Report", bundle: nil)
+        
+        switch scene {
+        case .report(let viewModel):
+        
+            var vc = storyBoard.instantiateViewController(withIdentifier: "reportOptionsVC") as! ReportViewController
             
             vc.bindViewModel(to: viewModel)
             

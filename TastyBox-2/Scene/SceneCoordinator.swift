@@ -12,6 +12,7 @@ import Photos
 import PhotosUI
 import RxSwift
 import RxCocoa
+import SwiftMessages
 
 class SceneCoordinator: NSObject, SceneCoordinatorType {
     
@@ -195,6 +196,17 @@ class SceneCoordinator: NSObject, SceneCoordinatorType {
                     })
                     .disposed(by: disposeBag)
             }
+            
+        case .centerCard:
+          
+            let segue = CenterCardSegue(identifier: nil, source: currentViewController, destination: viewController) { [unowned self] in
+               
+                self.currentViewController = SceneCoordinator.actualViewController(for: viewController)
+                subject.onCompleted()
+                
+            }
+            
+            segue.perform()
             
         default:
             break

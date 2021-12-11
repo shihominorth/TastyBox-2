@@ -227,6 +227,17 @@ class RecipeVM: ViewModelBase {
         
     }
     
+    func toReportVC() {
+        
+        let vm = ReportVM(kind: .recipe, id: recipe.recipeID, sceneCoordinator: sceneCoordinator)
+        
+        let scene: Scene = .reportScene(scene: .report(vm))
+        
+        
+        self.sceneCoordinator.modalTransition(to: scene, type: .centerCard)
+        
+    }
+    
 //    func selectedReason() -> <#return type#> {
 //    
 //        return

@@ -27,6 +27,8 @@ class RecipeViewController: UIViewController, BindableType {
     @IBOutlet weak var tableView: UITableView!
     
     var dataSource: RxRecipeTableViewDataSource<Section>!
+   
+    
     
     var playerItem: AVPlayerItem!
     var player: AVPlayer!
@@ -181,7 +183,7 @@ class RecipeViewController: UIViewController, BindableType {
                 
                 
             })
-                
+        
                 let errFound = tappedLike
                 .compactMap { $0.error }
                 .map { $0 as NSError }
@@ -202,7 +204,7 @@ class RecipeViewController: UIViewController, BindableType {
                 }
                 
             })
-                
+        
                 let otherErrFound: Observable<Bool> = errFound
                 .filter { $0.code != 5 }
                 .map { err in
@@ -228,12 +230,9 @@ class RecipeViewController: UIViewController, BindableType {
         
         viewModel.selectedEvaluationSubject
             .filter { $0 == 1 }
-            .flatMapLatest { _ in
+            .subscribe(onNext: { _ in
+                
                 self.showReportAlertView()
-            }
-            .subscribe(onNext: { row in
-                
-                
                 
             })
             .disposed(by: viewModel.disposeBag)
@@ -242,7 +241,6 @@ class RecipeViewController: UIViewController, BindableType {
             .subscribe(onNext: { [unowned self] likes in
                 
                 self.viewModel.recipe.likes = likes
-                //                tableView.reloadSections(IndexSet(integer: 2), with: .none)
                 
             })
             .disposed(by: viewModel.disposeBag)
@@ -541,25 +539,10 @@ class RecipeViewController: UIViewController, BindableType {
         }
     }
     
-    func showReportAlertView() -> Observable<String> {
+    func showReportAlertView() {
+       
+        viewModel.toReportVC()
         
-        return .create { observer in
-            
-            let view = ReportAlertView()
-            
-            var config = SwiftMessages.Config()
-            
-            config.becomeKeyWindow = true
-            config.presentationStyle = .center
-            config.presentationContext = .window(windowLevel: .normal)
-            config.duration = .forever
-            config.dimMode = .gray(interactive: false)
-            config.interactiveHide = true
-            
-            SwiftMessages.show(config: config, view: view)
-            
-            return Disposables.create()
-        }
     }
 }
 

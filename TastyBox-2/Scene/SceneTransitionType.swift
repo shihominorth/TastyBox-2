@@ -22,4 +22,5 @@ enum SceneTransitionType {
     case photoPick(completion: (Data) -> Void)
     case videoPick(compeletion: (URL) -> Void)
     case camera(completion: (Data) -> Void)
+    case centerCard
 }
