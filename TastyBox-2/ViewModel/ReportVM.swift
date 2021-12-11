@@ -19,19 +19,20 @@ enum ReportReason: String {
     case others = "Others"
 }
 
-enum ReportKind {
+enum ReportKind: String {
     case recipe, comment, post
 }
 
 class ReportVM: ViewModelBase {
     
+    let sceneCoordinator: SceneCoordinator
     let kind: ReportKind
     let id: String
     let reasons: [ReportReason]
     let selectedSubject: PublishSubject<Int>
+    let apiType:  ReportProtocol.Type
     
-    
-    init(kind: ReportKind, id: String, sceneCoordinator: SceneCoordinator) {
+    init(kind: ReportKind, id: String, sceneCoordinator: SceneCoordinator, apiType: ReportProtocol.Type = ReportDM.self) {
         
         self.kind = kind
         
@@ -47,11 +48,18 @@ class ReportVM: ViewModelBase {
             reasons = [.harrasmentAndCyberbullying, .privacy, .impersonation, .violent, .childEndangerment, .hateSpeech, .spamAndScams, .others]
         }
         
+        self.sceneCoordinator = sceneCoordinator
         self.selectedSubject = PublishSubject<Int>()
         self.id = id
+        self.apiType = apiType
         
     }
     
     
+    func report(row: Int) -> Observable<Bool> {
+        
+        return self.apiType.report(kind: kind, contentID: id, reason: reasons[row])
+        
+    }
     
 }

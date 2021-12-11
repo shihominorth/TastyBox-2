@@ -206,6 +206,18 @@ class SceneCoordinator: NSObject, SceneCoordinatorType {
                 
             }
             
+            if let viewController = viewController as? ReportViewController {
+                
+                let numCells = CGFloat(viewController.viewModel.reasons.count)
+                let cellHeight = 43.5
+                
+                let headerFooterHeight = 45.0
+                
+                let viewControllerHeight = cellHeight * numCells + headerFooterHeight * 2.0
+                
+                segue.containerView.heightAnchor.constraint(equalToConstant: viewControllerHeight).isActive = true
+            }
+
             segue.perform()
             
         default:

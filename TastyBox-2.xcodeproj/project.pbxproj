@@ -168,6 +168,7 @@
 		6FD427812763B75200472C94 /* ReportVM.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FD427802763B75200472C94 /* ReportVM.swift */; };
 		6FD4278327646F4100472C94 /* ReportAlertViewTVCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FD4278227646F4100472C94 /* ReportAlertViewTVCell.swift */; };
 		6FD427852764794100472C94 /* Segues.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FD427842764794100472C94 /* Segues.swift */; };
+		6FD4278727649B4700472C94 /* ReportDM.swift.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FD4278627649B4600472C94 /* ReportDM.swift.swift */; };
 		6FE15ED0271AA3A80047D3D8 /* CreateRecipeTableViewCells.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FE15ECF271AA3A80047D3D8 /* CreateRecipeTableViewCells.swift */; };
 		6FE15ED3271AA6B50047D3D8 /* EditMainImageTVCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FE15ED2271AA6B50047D3D8 /* EditMainImageTVCell.swift */; };
 		6FE15ED5271AB7B20047D3D8 /* EditMainImageCVCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FE15ED4271AB7B20047D3D8 /* EditMainImageCVCell.swift */; };
@@ -378,6 +379,7 @@
 		6FD427802763B75200472C94 /* ReportVM.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReportVM.swift; sourceTree = "<group>"; };
 		6FD4278227646F4100472C94 /* ReportAlertViewTVCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReportAlertViewTVCell.swift; sourceTree = "<group>"; };
 		6FD427842764794100472C94 /* Segues.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Segues.swift; sourceTree = "<group>"; };
+		6FD4278627649B4600472C94 /* ReportDM.swift.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReportDM.swift.swift; sourceTree = "<group>"; };
 		6FE15ECF271AA3A80047D3D8 /* CreateRecipeTableViewCells.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateRecipeTableViewCells.swift; sourceTree = "<group>"; };
 		6FE15ED2271AA6B50047D3D8 /* EditMainImageTVCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditMainImageTVCell.swift; sourceTree = "<group>"; };
 		6FE15ED4271AB7B20047D3D8 /* EditMainImageCVCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditMainImageCVCell.swift; sourceTree = "<group>"; };
@@ -1056,6 +1058,7 @@
 				6F3BF4D127331789005C24A5 /* MyProfileDM.swift */,
 				6F3BF4D827397142005C24A5 /* RecipeDetailDM.swift */,
 				6FFFB8732746A61C006B7985 /* MainDM.swift */,
+				6FD4278627649B4600472C94 /* ReportDM.swift.swift */,
 			);
 			path = DataManager;
 			sourceTree = "<group>";
@@ -1303,6 +1306,7 @@
 				6F0E695E271EDDD8002BD547 /* PlayVideoView.swift in Sources */,
 				6F06EBE926F6B3D100F2218B /* LoadingVM.swift in Sources */,
 				6F71EBF027234E68001BF538 /* EmptySelectedGenreTVCell.swift in Sources */,
+				6FD4278727649B4700472C94 /* ReportDM.swift.swift in Sources */,
 				6F9E041C2700A196005DCEF4 /* ShoppinglistVM.swift in Sources */,
 				6F4EA988273EABEC00A4B9F4 /* RxRecipeTableViewDataSource.swift in Sources */,
 				6FF66B9E26D7AF430024495E /* RegisterEmailVM.swift in Sources */,
