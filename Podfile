@@ -55,9 +55,18 @@ pod 'SwiftMessages'
 #Lottie
 pod 'lottie-ios'
 
+#Image
 pod 'Kingfisher'
-
 pod 'SkeletonView'
 
+#API
+pod 'Alamofire'
+
+#json
+pod 'SwiftyJSON'
+
+#Google Spread Sheet
+pod 'GoogleAPIClientForREST/Sheets'
+pod 'GoogleAPIClientForREST/Drive'
 
 end
