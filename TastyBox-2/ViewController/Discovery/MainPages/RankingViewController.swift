@@ -65,7 +65,8 @@ class RankingViewController: UIViewController, BindableType {
             .disposed(by: viewModel.disposeBag)
         
         
-        Observable.combineLatest(collectionView.rx.itemSelected, viewModel.recipesSubject) { indexPath, recipes in
+        collectionView.rx.itemSelected
+            .withLatestFrom(viewModel.recipesSubject) { indexPath, recipes in
             
             return recipes[indexPath.row]
         }

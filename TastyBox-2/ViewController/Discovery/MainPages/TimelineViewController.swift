@@ -71,11 +71,9 @@ class TimelineViewController: UIViewController, BindableType {
                         return publisherId
                         
                     }
-//                    else {
-//                        return nil
-//                    }
+
                     return nil
-//
+
                 }
                 
                 return publisherIds
@@ -251,4 +249,5 @@ extension TimelineViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, estimatedHeightForRowAt indexPath: IndexPath) -> CGFloat {
         return 320
     }
+    
 }
