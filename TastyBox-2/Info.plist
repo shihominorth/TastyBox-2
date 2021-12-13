@@ -2,6 +2,10 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
+	<key>PHPhotoLibraryPreventAutomaticLimitedAccessAlert</key>
+	<true/>
+	<key>LSApplicationCategoryType</key>
+	<string></string>
 	<key>NSPhotoLibraryUsageDescription</key>
 	<string>&quot;This app needs to access your camera roll. We use your photos and movies for uploading posts.</string>
 	<key>NSCameraUsageDescription</key>

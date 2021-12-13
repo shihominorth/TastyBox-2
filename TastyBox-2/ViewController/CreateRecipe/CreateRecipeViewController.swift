@@ -14,8 +14,7 @@ import RxCocoa
 import RxSwift
 
 class CreateRecipeViewController: UIViewController, BindableType {
-    
-    
+
     typealias ViewModelType = CreateRecipeVM
     
     var viewModel: CreateRecipeVM!
@@ -158,9 +157,10 @@ extension CreateRecipeViewController: UITableViewDelegate, UITableViewDataSource
                 collectionViewTapped
                     .filter { $0.row == 0 }
                     .subscribe(on: MainScheduler.instance)
-                    .subscribe(onNext: { _ in
+                    .subscribe(onNext: { [unowned self] _ in
                         
-                        self.viewModel.toImagePicker()
+                        self.viewModel.toSelectDigitalContentsVC(kind: .mainImg)
+//                        self.viewModel.toImagePicker()
                         
                     })
                     .disposed(by: cell.disposeBag)

@@ -647,22 +647,78 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="vjp-T4-ynn" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="7039.130434782609" y="-631.47321428571422"/>
+            <point key="canvasLocation" x="7238" y="-698"/>
         </scene>
-        <!--View Controller-->
+        <!--Select Digital Contents View Controller-->
         <scene sceneID="Xba-qN-RSJ">
             <objects>
-                <viewController id="gLB-Dc-bwU" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="select degital contents" id="gLB-Dc-bwU" customClass="SelectDigitalContentsViewController" customModule="TastyBox_2" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="umU-mQ-ARJ">
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="jvL-ba-6RH">
+                                <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
+                                <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                                <collectionViewFlowLayout key="collectionViewLayout" automaticEstimatedItemSize="YES" minimumLineSpacing="10" minimumInteritemSpacing="10" id="RRG-Et-80r">
+                                    <size key="itemSize" width="128" height="128"/>
+                                    <size key="headerReferenceSize" width="0.0" height="0.0"/>
+                                    <size key="footerReferenceSize" width="0.0" height="0.0"/>
+                                    <inset key="sectionInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
+                                </collectionViewFlowLayout>
+                                <cells>
+                                    <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="selectDegitalContentsCVCell" id="ciW-Gf-WEa" customClass="SelectDigitalContentsCVCell" customModule="TastyBox_2" customModuleProvider="target">
+                                        <rect key="frame" x="0.0" y="0.0" width="128" height="128"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                        <collectionViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" id="GSD-64-acG">
+                                            <rect key="frame" x="0.0" y="0.0" width="128" height="128"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                            <subviews>
+                                                <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="Vnp-91-9e9">
+                                                    <rect key="frame" x="0.0" y="0.0" width="128" height="128"/>
+                                                </imageView>
+                                                <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="9fo-Bd-2E2">
+                                                    <rect key="frame" x="100" y="8" width="20" height="20"/>
+                                                    <constraints>
+                                                        <constraint firstAttribute="width" constant="20" id="8c3-fV-kCo"/>
+                                                        <constraint firstAttribute="height" constant="20" id="iqq-Ut-5qs"/>
+                                                    </constraints>
+                                                </imageView>
+                                            </subviews>
+                                            <constraints>
+                                                <constraint firstItem="Vnp-91-9e9" firstAttribute="top" secondItem="GSD-64-acG" secondAttribute="top" id="9oZ-7H-zMW"/>
+                                                <constraint firstItem="Vnp-91-9e9" firstAttribute="leading" secondItem="GSD-64-acG" secondAttribute="leading" id="Ern-LM-vOH"/>
+                                                <constraint firstAttribute="trailing" secondItem="Vnp-91-9e9" secondAttribute="trailing" id="N9W-2O-L3j"/>
+                                                <constraint firstAttribute="trailing" secondItem="9fo-Bd-2E2" secondAttribute="trailing" constant="8" id="OZi-vL-KTr"/>
+                                                <constraint firstAttribute="bottom" secondItem="Vnp-91-9e9" secondAttribute="bottom" id="lIH-uH-3HU"/>
+                                                <constraint firstItem="9fo-Bd-2E2" firstAttribute="top" secondItem="GSD-64-acG" secondAttribute="top" constant="8" id="tiT-dd-7Tz"/>
+                                            </constraints>
+                                        </collectionViewCellContentView>
+                                        <connections>
+                                            <outlet property="contentImgView" destination="Vnp-91-9e9" id="3X7-PS-Mf4"/>
+                                            <outlet property="selectedNumImgView" destination="9fo-Bd-2E2" id="KhU-bg-tbb"/>
+                                        </connections>
+                                    </collectionViewCell>
+                                </cells>
+                            </collectionView>
+                        </subviews>
                         <viewLayoutGuide key="safeArea" id="w2j-7f-ADv"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                        <constraints>
+                            <constraint firstItem="jvL-ba-6RH" firstAttribute="top" secondItem="umU-mQ-ARJ" secondAttribute="top" id="HaB-yJ-dRY"/>
+                            <constraint firstItem="jvL-ba-6RH" firstAttribute="leading" secondItem="w2j-7f-ADv" secondAttribute="leading" id="MjE-hf-Ja1"/>
+                            <constraint firstItem="jvL-ba-6RH" firstAttribute="trailing" secondItem="w2j-7f-ADv" secondAttribute="trailing" id="cz3-Xb-jbB"/>
+                            <constraint firstAttribute="bottom" secondItem="jvL-ba-6RH" secondAttribute="bottom" id="mDz-68-6Sh"/>
+                        </constraints>
                     </view>
+                    <navigationItem key="navigationItem" id="qOM-bT-0vK"/>
+                    <connections>
+                        <outlet property="collectionView" destination="jvL-ba-6RH" id="RFE-z8-P8X"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="xia-wO-toj" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="7934.7826086956529" y="-629.46428571428567"/>
+            <point key="canvasLocation" x="5647.826086956522" y="-1501.3392857142856"/>
         </scene>
         <!--Check Created Recipe View Controller-->
         <scene sceneID="oWD-dg-2Ia">
@@ -1169,7 +1225,7 @@
                 </navigationController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="9hi-QS-Tm7" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="6127.536231884058" y="-631.47321428571422"/>
+            <point key="canvasLocation" x="6249" y="-698"/>
         </scene>
         <!--Navigation Controller-->
         <scene sceneID="lZW-gG-PJi">
@@ -1188,6 +1244,24 @@
                 <placeholder placeholderIdentifier="IBFirstResponder" id="jAu-vW-qXa" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="3828.985507246377" y="-698.4375"/>
+        </scene>
+        <!--Navigation Controller-->
+        <scene sceneID="FQL-H9-rSO">
+            <objects>
+                <navigationController storyboardIdentifier="selectDigitalContentsNC" automaticallyAdjustsScrollViewInsets="NO" id="jGp-vl-E3Y" sceneMemberID="viewController">
+                    <toolbarItems/>
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="3fo-ES-VcX">
+                        <rect key="frame" x="0.0" y="44" width="414" height="44"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                    </navigationBar>
+                    <nil name="viewControllers"/>
+                    <connections>
+                        <segue destination="gLB-Dc-bwU" kind="relationship" relationship="rootViewController" id="tHG-Tn-swo"/>
+                    </connections>
+                </navigationController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="NZe-M1-21s" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="4737.68115942029" y="-1501.3392857142856"/>
         </scene>
     </scenes>
     <resources>

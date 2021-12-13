@@ -97,9 +97,6 @@ class CreateRecipeVM: ViewModelBase {
             .map { !$0.isEmpty }
             .share(replay: 1, scope: .forever)
         
-//        self.isTimeValidation = self.timeSubject
-//            .map { !String($0).isEmpty }
-//            .share(replay: 1, scope: .forever)
         
         self.isTimeValidation = self.selectedTimeSubject
             .map { txt in
@@ -373,6 +370,15 @@ class CreateRecipeVM: ViewModelBase {
             
             return Disposables.create()
         }
+    }
+    
+    func toSelectDigitalContentsVC(kind: DigitalContentsFor) {
+        
+        let vm = SelectDigitalContentsVM(sceneCoodinator: self.sceneCoodinator, user: self.user, kind: kind)
+        let scene: Scene = .digitalContentsPickerScene(scene: .selectDigitalContents(vm))
+        
+        self.sceneCoodinator.modalTransition(to: scene, type: .modal(presentationStyle: .fullScreen, modalTransisionStyle: .coverVertical, hasNavigationController: true))
+        
     }
     
     func instructionsToImagePicker(index: Int) -> Observable<Data> {

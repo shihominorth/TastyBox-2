@@ -498,6 +498,15 @@ extension Scene {
             
             return pickerVC
             
+        case .selectDigitalContents(let viewModel):
+            
+            let nc = UIStoryboard(name: "CreateRecipe", bundle: nil).instantiateViewController(withIdentifier: "selectDigitalContentsNC") as! UINavigationController
+            
+            var vc = nc.viewControllers.first(where: { $0 is SelectDigitalContentsViewController}) as! SelectDigitalContentsViewController
+            
+            vc.bindViewModel(to: viewModel)
+            
+            return nc
         }
     }
     
