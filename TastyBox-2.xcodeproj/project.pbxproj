@@ -168,6 +168,7 @@
 		6FC26F6A2749033400AE13F9 /* IngredientOptionCVCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FC26F692749033300AE13F9 /* IngredientOptionCVCell.swift */; };
 		6FC26F6D2749065E00AE13F9 /* RecipeWithIngredientCVCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FC26F6C2749065E00AE13F9 /* RecipeWithIngredientCVCell.swift */; };
 		6FC26F6F2749081700AE13F9 /* RxDefaultCollectionViewDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FC26F6E2749081700AE13F9 /* RxDefaultCollectionViewDataSource.swift */; };
+		6FD30ABE2768D52E00F7F06D /* SelectDigitalHeaderRCV.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FD30ABD2768D52E00F7F06D /* SelectDigitalHeaderRCV.swift */; };
 		6FD4277D2763B39200472C94 /* ReportViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FD4277C2763B39200472C94 /* ReportViewController.swift */; };
 		6FD4277F2763B3EE00472C94 /* Report.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 6FD4277E2763B3EE00472C94 /* Report.storyboard */; };
 		6FD427812763B75200472C94 /* ReportVM.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FD427802763B75200472C94 /* ReportVM.swift */; };
@@ -387,6 +388,7 @@
 		6FC26F692749033300AE13F9 /* IngredientOptionCVCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IngredientOptionCVCell.swift; sourceTree = "<group>"; };
 		6FC26F6C2749065E00AE13F9 /* RecipeWithIngredientCVCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecipeWithIngredientCVCell.swift; sourceTree = "<group>"; };
 		6FC26F6E2749081700AE13F9 /* RxDefaultCollectionViewDataSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RxDefaultCollectionViewDataSource.swift; sourceTree = "<group>"; };
+		6FD30ABD2768D52E00F7F06D /* SelectDigitalHeaderRCV.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SelectDigitalHeaderRCV.swift; sourceTree = "<group>"; };
 		6FD4277C2763B39200472C94 /* ReportViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReportViewController.swift; sourceTree = "<group>"; };
 		6FD4277E2763B3EE00472C94 /* Report.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = Report.storyboard; sourceTree = "<group>"; };
 		6FD427802763B75200472C94 /* ReportVM.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReportVM.swift; sourceTree = "<group>"; };
@@ -896,6 +898,15 @@
 			path = Ingredients;
 			sourceTree = "<group>";
 		};
+		6FDB4F5C2768D06800E0C630 /* SelectDigitalContents */ = {
+			isa = PBXGroup;
+			children = (
+				6F4090D9276746CB0088C5E1 /* SelectDigitalContentsCVCell.swift */,
+				6FD30ABD2768D52E00F7F06D /* SelectDigitalHeaderRCV.swift */,
+			);
+			path = SelectDigitalContents;
+			sourceTree = "<group>";
+		};
 		6FE15ED1271AA3BD0047D3D8 /* CreateRecipe */ = {
 			isa = PBXGroup;
 			children = (
@@ -973,7 +984,7 @@
 				6F4EA98C273EC8E600A4B9F4 /* RecipeDetail */,
 				6FC26F67274902AD00AE13F9 /* Main */,
 				6FD4278227646F4100472C94 /* ReportAlertViewTVCell.swift */,
-				6F4090D9276746CB0088C5E1 /* SelectDigitalContentsCVCell.swift */,
+				6FDB4F5C2768D06800E0C630 /* SelectDigitalContents */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -1400,6 +1411,7 @@
 				6FC26F6A2749033400AE13F9 /* IngredientOptionCVCell.swift in Sources */,
 				6FEF088926F2A9B000C02CDD /* EditorChoiceViewController.swift in Sources */,
 				6F01F3DD272C366C003CA769 /* SearchedGenresTVCell.swift in Sources */,
+				6FD30ABE2768D52E00F7F06D /* SelectDigitalHeaderRCV.swift in Sources */,
 				6F4090DE2767762B0088C5E1 /* UIImageView+.swift in Sources */,
 				6F9A0D0E27101ACA00DABB45 /* SemiModalDismissInteractiveTransition.swift in Sources */,
 				6F9E042B27017B91005DCEF4 /* ShoppinglistHeaderView.swift in Sources */,

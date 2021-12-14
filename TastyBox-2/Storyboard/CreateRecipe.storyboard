@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="19455" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="i3B-QT-gEa">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="19455" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="qRb-1h-kfM">
     <device id="retina6_1" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
@@ -19,7 +19,7 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="bBI-He-uKZ">
-                                <rect key="frame" x="0.0" y="88" width="414" height="808"/>
+                                <rect key="frame" x="0.0" y="44" width="414" height="852"/>
                                 <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                                 <prototypes>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="editMainImage" rowHeight="414" id="39G-ej-KDm" customClass="EditMainImageTVCell" customModule="TastyBox_2" customModuleProvider="target">
@@ -174,7 +174,7 @@
                                                         <outlet property="delegate" destination="qRb-1h-kfM" id="HoZ-0E-UEI"/>
                                                     </connections>
                                                 </textField>
-                                                <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Minites" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="cCQ-tE-XDQ">
+                                                <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="0 hours 0 mins" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="cCQ-tE-XDQ">
                                                     <rect key="frame" x="80" y="4.5" width="127.5" height="35"/>
                                                     <constraints>
                                                         <constraint firstAttribute="height" constant="35" id="pMm-7G-jab"/>
@@ -1159,6 +1159,7 @@
         <!--Navigation Controller-->
         <scene sceneID="lZW-gG-PJi">
             <objects>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="jAu-vW-qXa" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
                 <navigationController storyboardIdentifier="createRecipeNC" automaticallyAdjustsScrollViewInsets="NO" id="i3B-QT-gEa" sceneMemberID="viewController">
                     <toolbarItems/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" id="Kbw-Bq-Q0m">
@@ -1166,29 +1167,9 @@
                         <autoresizingMask key="autoresizingMask"/>
                     </navigationBar>
                     <nil name="viewControllers"/>
-                    <connections>
-                        <segue destination="qRb-1h-kfM" kind="relationship" relationship="rootViewController" id="uYB-QP-9DQ"/>
-                    </connections>
                 </navigationController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="jAu-vW-qXa" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="3828.985507246377" y="-698.4375"/>
-        </scene>
-        <!--select degital contents-->
-        <scene sceneID="ctG-y0-Onb">
-            <objects>
-                <viewControllerPlaceholder storyboardIdentifier="select degital contents" storyboardName="DigitalContents" referencedIdentifier="select degital contents" id="t8C-dV-n3g" sceneMemberID="viewController"/>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="M0a-5g-FYs" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
-            </objects>
-            <point key="canvasLocation" x="5647.826086956522" y="-1501.3392857142856"/>
-        </scene>
-        <!--selectDigitalContentsNC-->
-        <scene sceneID="aAV-UT-vaJ">
-            <objects>
-                <viewControllerPlaceholder storyboardIdentifier="selectDigitalContentsNC" storyboardName="DigitalContents" referencedIdentifier="selectDigitalContentsNC" id="0sC-TI-cem" sceneMemberID="viewController"/>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="tqE-ck-IYl" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
-            </objects>
-            <point key="canvasLocation" x="4737.68115942029" y="-1501.3392857142856"/>
         </scene>
     </scenes>
     <resources>

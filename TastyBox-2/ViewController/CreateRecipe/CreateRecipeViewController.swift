@@ -152,55 +152,58 @@ extension CreateRecipeViewController: UITableViewDelegate, UITableViewDataSource
             
             if let cell = tableView.dequeueReusableCell(withIdentifier: "editMainImage", for: indexPath) as? EditMainImageTVCell {
                 
-                let collectionViewTapped = cell.collectionView.rx.itemSelected.share(replay: 1, scope: .forever)
-                
-                collectionViewTapped
-                    .filter { $0.row == 0 }
-                    .subscribe(on: MainScheduler.instance)
-                    .subscribe(onNext: { [unowned self] _ in
-                        
-                        self.viewModel.toSelectDigitalContentsVC(kind: .mainImg)
-//                        self.viewModel.toImagePicker()
-                        
-                    })
-                    .disposed(by: cell.disposeBag)
-                
-                
-                self.viewModel.mainImgDataSubject
-                    .skip(1)
+                viewModel.mainImgDataSubject
                     .bind(to: cell.mainImgDataSubject)
                     .disposed(by: cell.disposeBag)
-                
-                collectionViewTapped
-                    .filter { $0.row == 1 }
-                    .observe(on: MainScheduler.instance)
-                    .subscribe(onNext: { [unowned self] _ in
-                        
-                        self.viewModel.toVideoPicker()
-                        
-                    })
-                    .disposed(by: cell.disposeBag)
-                
-                self.viewModel.videoPlaySubject
-                    .skip(1)
-                    .observe(on: MainScheduler.instance)
-                    .subscribe(onNext: { url in
-                        
-                        self.viewModel.playVideo(url: url)
-                        
-                    })
-                    .disposed(by: cell.disposeBag)
-                
-                
-                self.viewModel.isAddedSubject
-                    .filter { $0 }
-                    .withLatestFrom(viewModel.videoPlaySubject)
-                    .flatMapLatest { url in
-                        self.viewModel.getThumbnail(url: url)
-                    }
-                    .bind(to: cell.thumbnailDataSubject)
-                    .disposed(by: cell.disposeBag)
-                
+//                let collectionViewTapped = cell.collectionView.rx.itemSelected.share(replay: 1, scope: .forever)
+//
+//                collectionViewTapped
+//                    .filter { $0.row == 0 }
+//                    .subscribe(on: MainScheduler.instance)
+//                    .subscribe(onNext: { [unowned self] _ in
+//
+//                        self.viewModel.toSelectDigitalContentsVC(kind: .mainImg)
+////                        self.viewModel.toImagePicker()
+//
+//                    })
+//                    .disposed(by: cell.disposeBag)
+//
+//
+//                self.viewModel.mainImgDataSubject
+//                    .skip(1)
+//                    .bind(to: cell.mainImgDataSubject)
+//                    .disposed(by: cell.disposeBag)
+//
+//                collectionViewTapped
+//                    .filter { $0.row == 1 }
+//                    .observe(on: MainScheduler.instance)
+//                    .subscribe(onNext: { [unowned self] _ in
+//
+//                        self.viewModel.toVideoPicker()
+//
+//                    })
+//                    .disposed(by: cell.disposeBag)
+//
+//                self.viewModel.videoPlaySubject
+//                    .skip(1)
+//                    .observe(on: MainScheduler.instance)
+//                    .subscribe(onNext: { url in
+//
+//                        self.viewModel.playVideo(url: url)
+//
+//                    })
+//                    .disposed(by: cell.disposeBag)
+//
+//
+//                self.viewModel.isAddedSubject
+//                    .filter { $0 }
+//                    .withLatestFrom(viewModel.videoPlaySubject)
+//                    .flatMapLatest { url in
+//                        self.viewModel.getThumbnail(url: url)
+//                    }
+//                    .bind(to: cell.thumbnailDataSubject)
+//                    .disposed(by: cell.disposeBag)
+//
                 
                 
                 return cell
@@ -650,7 +653,7 @@ extension CreateRecipeViewController: UITableViewDelegate, UITableViewDataSource
 extension CreateRecipeViewController: UIPickerViewDelegate, UIPickerViewDataSource {
     
     func numberOfComponents(in pickerView: UIPickerView) -> Int {
-        return 2
+        return 4
     }
     
     func pickerView(_ pickerView: UIPickerView, numberOfRowsInComponent component: Int) -> Int {
@@ -660,7 +663,13 @@ extension CreateRecipeViewController: UIPickerViewDelegate, UIPickerViewDataSour
             return 24
             
         case 1:
+            return 1
+            
+        case 2:
             return 59
+            
+        case 3:
+            return 1
             
         default:
             break
@@ -670,11 +679,24 @@ extension CreateRecipeViewController: UIPickerViewDelegate, UIPickerViewDataSour
     }
     
     func pickerView(_ pickerView: UIPickerView, viewForRow row: Int, forComponent component: Int, reusing view: UIView?) -> UIView {
-    
+        
         let label = UILabel()
-        label.text = String(row)
         label.textAlignment = .center
-       
+
+        switch component {
+        case 0, 2:
+            label.text = String(row)
+           
+        case 1:
+            label.text = "hours"
+            
+        case 3:
+            label.text = "mins"
+        default:
+            break
+        }
+      
+     
         return label
     
     }
@@ -683,32 +705,43 @@ extension CreateRecipeViewController: UIPickerViewDelegate, UIPickerViewDataSour
 
         let textFiledTxt = self.viewModel.selectedTimeSubject.value
         var txtArr = textFiledTxt.components(separatedBy: " ").filter { $0 != "" }.filter { $0 != "hours" }.filter { $0 != "mins" }
-        
-        
-        if let label = pickerView.view(forRow: row, forComponent: component) as? UILabel {
 
+        if textFiledTxt.isEmpty {
+            
             if component == 0 {
-
+               
+                let txt = "\(row) hours 0 mins"
+                self.viewModel.selectedTimeSubject.accept(txt)
+            }
+            else if component == 2 {
+                
+                let txt = "0 hours \(row) mins"
+                self.viewModel.selectedTimeSubject.accept(txt)
+            }
+            
+        }
+        else {
+            
+            if component == 0 {
+                
                 if txtArr[0] != "\(row)" {
                     txtArr[0] = "\(row)"
                 }
                 
-                label.text = String(row) + " hours"
             }
-            
-            else if component == 1 {
+            else if component == 2 {
                 
                 if txtArr[1] != "\(row)" {
                     txtArr[1] = "\(row)"
                 }
                 
-                label.text = String(row) + " mins"
             }
             
+            let txt = "\(txtArr[0]) hours \(txtArr[1]) mins"
+            self.viewModel.selectedTimeSubject.accept(txt)
+            
         }
-        
-        let txt = "\(txtArr[0]) hours \(txtArr[1]) mins"
-        self.viewModel.selectedTimeSubject.accept(txt)
+       
         
     }
     

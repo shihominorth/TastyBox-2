@@ -78,13 +78,13 @@ class CreateRecipeVM: ViewModelBase {
     var isExpanded = false
     let selectedTimeSubject: BehaviorRelay<String>
     
-    init(sceneCoodinator: SceneCoordinator, user: Firebase.User, apiType: CreateRecipeDMProtocol.Type = CreateRecipeDM.self) {
+    init(sceneCoodinator: SceneCoordinator, user: Firebase.User, imgData: Data, videoUrl: URL?, apiType: CreateRecipeDMProtocol.Type = CreateRecipeDM.self) {
         
         self.sceneCoodinator = sceneCoodinator
         self.user = user
         self.apiType = apiType
         
-        self.selectedTimeSubject = BehaviorRelay<String>(value: "0 hours 0 mins")
+        self.selectedTimeSubject = BehaviorRelay<String>(value: "")
         
         self.ingredients = []
         self.ingredientsSubject = BehaviorSubject<[Ingredient]>(value: self.ingredients)
@@ -99,6 +99,7 @@ class CreateRecipeVM: ViewModelBase {
         
         
         self.isTimeValidation = self.selectedTimeSubject
+            .filter { !$0.isEmpty }
             .map { txt in
                 let txtArr = txt.components(separatedBy: " ").filter { $0 != "" }.filter { $0 != "hours" }.filter { $0 != "mins" }
                 return (txtArr[0] == "0") && (txtArr[1] == "0")
@@ -128,6 +129,7 @@ class CreateRecipeVM: ViewModelBase {
             return (isIngredientValid, isInstructionValid)
         }
         
+        self.mainImgDataSubject.onNext(imgData)
         self.combinedInputs = [.mainPhoto(self.mainImgDataSubject)]
 
        

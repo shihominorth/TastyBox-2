@@ -90,9 +90,14 @@ class DiscoveryVM: ViewModelBase {
     
     func toCreateRecipeVC() {
         
-        let vm = CreateRecipeVM(sceneCoodinator: self.sceneCoodinator, user: self.user)
+        let vm = SelectDigitalContentsVM(sceneCoodinator: self.sceneCoodinator, user: self.user, kind: .mainImg)
+        let scene: Scene = .digitalContentsPickerScene(scene: .selectDigitalContents(vm))
+        
+        self.sceneCoodinator.modalTransition(to: scene, type: .modal(presentationStyle: .fullScreen, modalTransisionStyle: .coverVertical, hasNavigationController: true))
 
-        self.sceneCoodinator.modalTransition(to: .createReceipeScene(scene: .createRecipe(vm)), type: .modal(presentationStyle: .fullScreen, modalTransisionStyle: .coverVertical, hasNavigationController: true))
+//        let vm = CreateRecipeVM(sceneCoodinator: self.sceneCoodinator, user: self.user)
+//
+//        self.sceneCoodinator.modalTransition(to: .createReceipeScene(scene: .createRecipe(vm)), type: .modal(presentationStyle: .fullScreen, modalTransisionStyle: .coverVertical, hasNavigationController: true))
 
     }
     

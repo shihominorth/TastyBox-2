@@ -357,14 +357,14 @@ extension Scene {
         
         case .createRecipe(let viewModel):
 
-//            var vc = storyboard.instantiateViewController(withIdentifier: "createRecipe") as! CreateRecipeViewController
-            let nc = storyboard.instantiateViewController(withIdentifier: "createRecipeNC") as! UINavigationController
-            var vc = nc.viewControllers.first as! CreateRecipeViewController
+            var vc = storyboard.instantiateViewController(withIdentifier: "createRecipe") as! CreateRecipeViewController
+//            let nc = storyboard.instantiateViewController(withIdentifier: "createRecipeNC") as! UINavigationController
+//            var vc = nc.viewControllers.first as! CreateRecipeViewController
             
             vc.bindViewModel(to: viewModel)
             
-//            return vc
-            return nc
+            return vc
+//            return nc
             
         case .selectGenre(let viewModel):
            

@@ -32,9 +32,41 @@ class SelectedImageVM: ViewModelBase {
  
     }
     
-    func addImage() {
+    func getImageData() -> Observable<Data?> {
         
-        self.delegate?.selectedImage(asset: asset)
+        return .create { [unowned self] observer in
+           
+            let requestOption = PHContentEditingInputRequestOptions()
+            requestOption.isNetworkAccessAllowed = true
+
+            self.asset.requestContentEditingInput(with: requestOption) { (contentEditingInput: PHContentEditingInput?, _) -> Void in
+               
+                let ciImage = CIImage(contentsOf: contentEditingInput!.fullSizeImageURL!)!
+                let image = UIImage(ciImage: ciImage.oriented(forExifOrientation: contentEditingInput!.fullSizeImageOrientation))
+                
+                if let data = image.convertToData() {
+                
+                    observer.onNext(data)
+                
+                }
+                else {
+                    
+                    observer.onNext(nil)
+                
+                }
+            }
+            
+            return Disposables.create()
+        }
+        
+    }
+    
+    func addImage(imgData: Data) {
+        
+        let vm = CreateRecipeVM(sceneCoodinator: self.sceneCoodinator, user: self.user, imgData: imgData, videoUrl: nil)
+        let scene: Scene = .createReceipeScene(scene: .createRecipe(vm))
+        
+        self.sceneCoodinator.modalTransition(to: scene, type: .push)
         
     }
 }

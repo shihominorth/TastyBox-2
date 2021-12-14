@@ -44,9 +44,11 @@ class SelectDigitalContentsViewController: UIViewController, BindableType {
         flowLayout.minimumInteritemSpacing = 2.0
         flowLayout.scrollDirection = .vertical
         flowLayout.minimumLineSpacing = 1.0
+        flowLayout.headerReferenceSize = CGSize(width: self.collectionView.frame.width, height: 50.0)
         
         collectionView.collectionViewLayout = flowLayout
         
+        collectionView.register(SelectDigitalHeaderRCV.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: "select digital contents header view")
         
         cancelBtn.title = "Cancel"
         
@@ -59,6 +61,7 @@ class SelectDigitalContentsViewController: UIViewController, BindableType {
                 
             })
             .disposed(by: viewModel.disposeBag)
+        
         
         self.navigationItem.leftBarButtonItem = cancelBtn
     }
@@ -156,6 +159,29 @@ extension SelectDigitalContentsViewController: UICollectionViewDelegate, UIColle
         return UICollectionViewCell()
     }
     
+    func collectionView(_ collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> UICollectionReusableView {
+        
+        if kind == UICollectionView.elementKindSectionHeader && indexPath.section == 0 {
+            
+            if let headerView = collectionView.dequeueReusableSupplementaryView(ofKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: "select digital contents header view", for: indexPath) as? SelectDigitalHeaderRCV {
+                
+                headerView.segmentControl.selectedSegmentIndex = 0
+
+                headerView.addSubview(headerView.segmentControl)
+                
+                headerView.segmentControl.translatesAutoresizingMaskIntoConstraints = false
+                
+                headerView.segmentControl.centerXAnchor.constraint(equalTo: headerView.centerXAnchor).isActive = true
+                headerView.segmentControl.centerYAnchor.constraint(equalTo: headerView.centerYAnchor).isActive = true
+              
+                return headerView
+            }
+            
+        }
+        
+        return UICollectionReusableView()
+    }
+    
 }
 
 extension SelectDigitalContentsViewController: PHPhotoLibraryChangeObserver {
@@ -173,6 +199,7 @@ extension SelectDigitalContentsViewController: PHPhotoLibraryChangeObserver {
         
     }
 }
+
 
 
 struct CollectionViewFlowLayoutType {
@@ -204,3 +231,5 @@ struct CollectionViewFlowLayoutType {
         viewFrame = frame
     }
 }
+
+
