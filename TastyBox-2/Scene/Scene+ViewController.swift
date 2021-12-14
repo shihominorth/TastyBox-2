@@ -455,6 +455,8 @@ extension Scene {
     
     func generateViewController(digitalContentsPickerScene scene: DigitalContentsPickerScene) -> UIViewController {
         
+        let storyBoard = UIStoryboard(name: "DigitalContents", bundle: nil)
+        
         switch scene {
         case .photo:
             
@@ -500,13 +502,23 @@ extension Scene {
             
         case .selectDigitalContents(let viewModel):
             
-            let nc = UIStoryboard(name: "CreateRecipe", bundle: nil).instantiateViewController(withIdentifier: "selectDigitalContentsNC") as! UINavigationController
+            let nc = storyBoard.instantiateViewController(withIdentifier: "selectDigitalContentsNC") as! UINavigationController
             
             var vc = nc.viewControllers.first(where: { $0 is SelectDigitalContentsViewController}) as! SelectDigitalContentsViewController
             
             vc.bindViewModel(to: viewModel)
             
+        
             return nc
+            
+        case .selectedImage(let viewModel):
+            
+            var vc = storyBoard.instantiateViewController(withIdentifier: "selectedImageVC") as! SelectedImageViewController
+            
+            vc.bindViewModel(to: viewModel)
+            
+            return vc
+            
         }
     }
     

@@ -9,6 +9,7 @@ import UIKit
 import Photos
 import RxSwift
 import RxCocoa
+import SCLAlertView
 
 
 class SelectDigitalContentsViewController: UIViewController, BindableType {
@@ -24,17 +25,13 @@ class SelectDigitalContentsViewController: UIViewController, BindableType {
         
         super.viewDidLoad()
         
-        let status = PHPhotoLibrary.authorizationStatus()
+        PHPhotoLibrary.shared().register(self)
         
-        if status == .notDetermined {
-            
-            // Request permission to access photo library
-            PHPhotoLibrary.requestAuthorization(for: .readWrite) { [unowned self] (status) in
-                DispatchQueue.main.async { [unowned self] in
-                    showUI(for: status)
-                }
+        // Request permission to access photo library
+        PHPhotoLibrary.requestAuthorization(for: .readWrite) { [unowned self] (status) in
+            DispatchQueue.main.async { [unowned self] in
+                showUI(for: status)
             }
-            
         }
         
         
@@ -49,6 +46,7 @@ class SelectDigitalContentsViewController: UIViewController, BindableType {
         flowLayout.minimumLineSpacing = 1.0
         
         collectionView.collectionViewLayout = flowLayout
+        
         
         cancelBtn.title = "Cancel"
         
@@ -65,6 +63,25 @@ class SelectDigitalContentsViewController: UIViewController, BindableType {
         self.navigationItem.leftBarButtonItem = cancelBtn
     }
     
+    override func viewWillAppear(_ animated: Bool) {
+        
+        let status = PHPhotoLibrary.authorizationStatus()
+        
+        if status == .denied {
+            
+            
+            SCLAlertView().showTitle(
+                "Allow Access Your Photo Library", // Title of view
+                subTitle: "Go to Settings -> TastyBox -> Photos",
+                timeout: .none, // String of view
+                completeText: "Done", // Optional button value, default: ""
+                style: .notice, // Styles - see below.
+                colorStyle: 0xA429FF,
+                colorTextButton: 0xFFFFFF
+            )
+            
+        }
+    }
     
     override func viewWillDisappear(_ animated: Bool) {
         
@@ -72,11 +89,24 @@ class SelectDigitalContentsViewController: UIViewController, BindableType {
         
     }
     
+    deinit {
+        PHPhotoLibrary.shared().unregisterChangeObserver(self)
+    }
+    
     func bindViewModel() {
         
         self.viewModel.fetchContents(kind: viewModel.kind)
         
-        
+        collectionView.rx.itemSelected
+            .map { [unowned self] indexPath in
+                self.viewModel.assets[indexPath.row]
+            }
+            .subscribe(onNext: { [unowned self] in
+                
+                self.viewModel.toSelectImageVC(asset: $0)
+                
+            })
+            .disposed(by: viewModel.disposeBag)
     }
     
     
@@ -126,6 +156,22 @@ extension SelectDigitalContentsViewController: UICollectionViewDelegate, UIColle
         return UICollectionViewCell()
     }
     
+}
+
+extension SelectDigitalContentsViewController: PHPhotoLibraryChangeObserver {
+    func photoLibraryDidChange(_ changeInstance: PHChange) {
+        
+        // 1
+        guard let change = changeInstance.changeDetails(for: self.viewModel.assets) else {
+            return
+        }
+        DispatchQueue.main.sync { [unowned self] in
+            // 2
+            self.viewModel.assets = change.fetchResultAfterChanges
+            collectionView.reloadData()
+        }
+        
+    }
 }
 
 

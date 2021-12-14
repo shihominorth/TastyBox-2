@@ -15,8 +15,8 @@ enum DigitalContentsFor {
 }
 
 protocol SelectDegitalContentDelegate: AnyObject {
-    func selectedImage(image: Data)
-    func selectedVideo(videoUrl: URL)
+    func selectedImage(asset: PHAsset)
+    func selectedVideo(asset: URL)
 }
 
 class SelectDigitalContentsVM: ViewModelBase {
@@ -55,6 +55,15 @@ class SelectDigitalContentsVM: ViewModelBase {
         }
  
      
+        
+    }
+    
+    func toSelectImageVC(asset: PHAsset) {
+        
+        let vm = SelectedImageVM(sceneCoodinator: self.sceneCoodinator, user: self.user, kind: kind, asset: asset)
+        let scene: Scene = .digitalContentsPickerScene(scene: .selectedImage(vm))
+        
+        self.sceneCoodinator.modalTransition(to: scene, type: .push)
         
     }
   
