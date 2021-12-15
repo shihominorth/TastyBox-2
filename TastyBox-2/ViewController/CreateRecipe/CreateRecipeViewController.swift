@@ -40,7 +40,7 @@ class CreateRecipeViewController: UIViewController, BindableType {
         cancelBtn.title = "Cancel"
         
         self.navigationItem.rightBarButtonItem = nextBtn
-        self.navigationItem.leftBarButtonItem = cancelBtn
+//        self.navigationItem.leftBarButtonItem = cancelBtn
         
     }
     

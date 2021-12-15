@@ -519,6 +519,14 @@ extension Scene {
             
             return vc
             
+        case .selectedVideo(let viewModel):
+            
+            var vc = storyBoard.instantiateViewController(withIdentifier: "selectedVideoVC") as! SelectedVideoViewController
+            
+            vc.bindViewModel(to: viewModel)
+            
+            return vc
+            
         }
     }
     

@@ -99,13 +99,11 @@ class SelectedImageViewController: UIViewController, BindableType {
         self.viewModel.isHiddenSubject.bind(to: self.stackView.rx.isHidden).disposed(by: viewModel.disposeBag)
         
         addBtn.rx.tap
-            .flatMapLatest { [unowned self] in
-                self.viewModel.getImageData()
-            }
-            .compactMap { $0 }
-            .subscribe(onNext: { [unowned self] data in
+            .throttle(.milliseconds(1000), scheduler: MainScheduler.instance)
+            .subscribe(onNext: { [unowned self] _ in
                 
-                self.viewModel.addImage(imgData: data)
+                guard let newData = self.imgView.image?.convertToData() else { return }
+                self.viewModel.addImage(imgData: newData)
                 
             })
             .disposed(by: viewModel.disposeBag)

@@ -17,6 +17,8 @@ class SelectDigitalContentsViewController: UIViewController, BindableType {
     typealias ViewModelType = SelectDigitalContentsVM
     var viewModel: SelectDigitalContentsVM!
     
+    let segmentControl = UISegmentedControl(items: ["Images", "Videos"])
+    
     let cancelBtn = UIBarButtonItem()
     
     @IBOutlet weak var collectionView: UICollectionView!
@@ -27,11 +29,33 @@ class SelectDigitalContentsViewController: UIViewController, BindableType {
         
         PHPhotoLibrary.shared().register(self)
         
-        // Request permission to access photo library
-        PHPhotoLibrary.requestAuthorization(for: .readWrite) { [unowned self] (status) in
-            DispatchQueue.main.async { [unowned self] in
-                showUI(for: status)
+        let status = PHPhotoLibrary.authorizationStatus()
+
+        if status == .notDetermined {
+            
+            // Request permission to access photo library
+            PHPhotoLibrary.requestAuthorization(for: .readWrite) { [unowned self] (status) in
+                DispatchQueue.main.async { [unowned self] in
+                    showUI(for: status)
+                }
             }
+            
+            
+        }
+        
+        if status == .denied {
+            
+            
+            SCLAlertView().showTitle(
+                "Allow Access Your Photo Library", // Title of view
+                subTitle: "Go to Settings -> TastyBox -> Photos",
+                timeout: .none, // String of view
+                completeText: "Done", // Optional button value, default: ""
+                style: .notice, // Styles - see below.
+                colorStyle: 0xA429FF,
+                colorTextButton: 0xFFFFFF
+            )
+            
         }
         
         
@@ -44,7 +68,7 @@ class SelectDigitalContentsViewController: UIViewController, BindableType {
         flowLayout.minimumInteritemSpacing = 2.0
         flowLayout.scrollDirection = .vertical
         flowLayout.minimumLineSpacing = 1.0
-        flowLayout.headerReferenceSize = CGSize(width: self.collectionView.frame.width, height: 50.0)
+//        flowLayout.headerReferenceSize = CGSize(width: self.collectionView.frame.width, height: 50.0)
         
         collectionView.collectionViewLayout = flowLayout
         
@@ -64,28 +88,13 @@ class SelectDigitalContentsViewController: UIViewController, BindableType {
         
         
         self.navigationItem.leftBarButtonItem = cancelBtn
-    }
-    
-    override func viewWillAppear(_ animated: Bool) {
         
-        let status = PHPhotoLibrary.authorizationStatus()
+        segmentControl.selectedSegmentIndex = 0
         
-        if status == .denied {
-            
-            
-            SCLAlertView().showTitle(
-                "Allow Access Your Photo Library", // Title of view
-                subTitle: "Go to Settings -> TastyBox -> Photos",
-                timeout: .none, // String of view
-                completeText: "Done", // Optional button value, default: ""
-                style: .notice, // Styles - see below.
-                colorStyle: 0xA429FF,
-                colorTextButton: 0xFFFFFF
-            )
-            
-        }
+        
+        self.navigationItem.titleView = segmentControl
     }
-    
+
     override func viewWillDisappear(_ animated: Bool) {
         
         self.viewModel.sceneCoodinator.userDismissed()
@@ -93,12 +102,45 @@ class SelectDigitalContentsViewController: UIViewController, BindableType {
     }
     
     deinit {
+        
         PHPhotoLibrary.shared().unregisterChangeObserver(self)
+    
     }
     
     func bindViewModel() {
         
         self.viewModel.fetchContents(kind: viewModel.kind)
+        
+        self.segmentControl.rx.selectedSegmentIndex
+            .skip(1)
+            .distinctUntilChanged()
+            .throttle(.milliseconds(1000), scheduler: MainScheduler.instance)
+            .subscribe(onNext: { [unowned self] row in
+            
+
+                self.collectionView.performBatchUpdates({
+
+                    if row == 0 {
+
+                        self.viewModel.kind = .recipeMain(.image)
+                        self.viewModel.fetchContents(kind: .recipeMain(.image))
+
+                    }
+                    else {
+
+                        self.viewModel.kind = .recipeMain(.video)
+                        self.viewModel.fetchContents(kind: .recipeMain(.video))
+
+                    }
+
+                }) { success in
+
+                    UIView.transition(with: collectionView, duration: 0.2, options: .transitionCrossDissolve, animations: {self.collectionView.reloadData()}, completion: nil)
+
+                }
+
+            })
+            .disposed(by: viewModel.disposeBag)
         
         collectionView.rx.itemSelected
             .map { [unowned self] indexPath in
@@ -106,10 +148,22 @@ class SelectDigitalContentsViewController: UIViewController, BindableType {
             }
             .subscribe(onNext: { [unowned self] in
                 
-                self.viewModel.toSelectImageVC(asset: $0)
+                switch self.viewModel.kind {
                 
+                case .recipeMain(.video):
+                
+                    self.viewModel.toSelectVideoVC(asset: $0)
+                
+                default:
+                  
+                    self.viewModel.toSelectImageVC(asset: $0)
+                    
+                }
+              
             })
             .disposed(by: viewModel.disposeBag)
+        
+        
     }
     
     
@@ -159,28 +213,67 @@ extension SelectDigitalContentsViewController: UICollectionViewDelegate, UIColle
         return UICollectionViewCell()
     }
     
-    func collectionView(_ collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> UICollectionReusableView {
-        
-        if kind == UICollectionView.elementKindSectionHeader && indexPath.section == 0 {
-            
-            if let headerView = collectionView.dequeueReusableSupplementaryView(ofKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: "select digital contents header view", for: indexPath) as? SelectDigitalHeaderRCV {
-                
-                headerView.segmentControl.selectedSegmentIndex = 0
-
-                headerView.addSubview(headerView.segmentControl)
-                
-                headerView.segmentControl.translatesAutoresizingMaskIntoConstraints = false
-                
-                headerView.segmentControl.centerXAnchor.constraint(equalTo: headerView.centerXAnchor).isActive = true
-                headerView.segmentControl.centerYAnchor.constraint(equalTo: headerView.centerYAnchor).isActive = true
-              
-                return headerView
-            }
-            
-        }
-        
-        return UICollectionReusableView()
-    }
+//    func collectionView(_ collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> UICollectionReusableView {
+//
+//        if kind == UICollectionView.elementKindSectionHeader && indexPath.section == 0  {
+//
+//            switch viewModel.kind {
+//            case .recipeMain:
+//
+//                if let headerView = collectionView.dequeueReusableSupplementaryView(ofKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: "select digital contents header view", for: indexPath) as? SelectDigitalHeaderRCV {
+//
+//                    headerView.segmentControl.selectedSegmentIndex = 0
+//
+//                    headerView.addSubview(headerView.segmentControl)
+//
+//                    headerView.segmentControl.translatesAutoresizingMaskIntoConstraints = false
+//
+//                    headerView.segmentControl.centerXAnchor.constraint(equalTo: headerView.centerXAnchor).isActive = true
+//                    headerView.segmentControl.centerYAnchor.constraint(equalTo: headerView.centerYAnchor).isActive = true
+//
+//
+//                    headerView.segmentControl.rx.selectedSegmentIndex
+//                        .skip(1)
+//                        .distinctUntilChanged()
+//                        .throttle(.milliseconds(1000), scheduler: MainScheduler.instance)
+//                        .subscribe(onNext: { [unowned self] row in
+//
+//                            self.collectionView.performBatchUpdates({
+//
+//                                if row == 0 {
+//
+//                                    self.viewModel.kind = .recipeMain(.image)
+//                                    self.viewModel.fetchContents(kind: .recipeMain(.image))
+//
+//                                }
+//                                else {
+//
+//                                    self.viewModel.kind = .recipeMain(.video)
+//                                    self.viewModel.fetchContents(kind: .recipeMain(.video))
+//
+//                                }
+//
+//                            }) { success in
+//
+//                                collectionView.reloadItems(at: [IndexPath(row: 0, section: 0)])
+//
+//                            }
+//
+//                        })
+//                        .disposed(by: viewModel.disposeBag)
+//
+//                    return headerView
+//                }
+//
+//            default:
+//                break
+//            }
+//
+//
+//        }
+//
+//        return UICollectionReusableView()
+//    }
     
 }
 

@@ -11,7 +11,12 @@ import Photos
 import RxSwift
 
 enum DigitalContentsFor {
-    case profile, mainImg, mainVideo, instructionImg
+    
+    enum RecipeMain {
+        case image, video
+    }
+    
+    case profile, recipeMain(RecipeMain), instructionImg
 }
 
 protocol SelectDegitalContentDelegate: AnyObject {
@@ -25,7 +30,7 @@ class SelectDigitalContentsVM: ViewModelBase {
 
     let sceneCoodinator: SceneCoordinator
     let user: Firebase.User
-    let kind: DigitalContentsFor
+    var kind: DigitalContentsFor
   
     
     weak var delegate: SelectDegitalContentDelegate?
@@ -44,19 +49,18 @@ class SelectDigitalContentsVM: ViewModelBase {
 
         switch kind {
         
-        case .profile, .mainImg, .instructionImg:
+        case .profile, .recipeMain(.image), .instructionImg:
             
             assets = PHAsset.fetchAssets(with: .image, options: nil)
       
-        case .mainVideo:
+        case .recipeMain(.video):
             
             assets = PHAsset.fetchAssets(with: .video, options: nil)
       
         }
  
-     
-        
     }
+
     
     func toSelectImageVC(asset: PHAsset) {
         
@@ -64,6 +68,16 @@ class SelectDigitalContentsVM: ViewModelBase {
         let scene: Scene = .digitalContentsPickerScene(scene: .selectedImage(vm))
         
         self.sceneCoodinator.modalTransition(to: scene, type: .push)
+        
+    }
+    
+    func toSelectVideoVC(asset: PHAsset) {
+        
+        let vm = SelelctedVideoVM(sceneCoodinator: self.sceneCoodinator, user: self.user, asset: asset)
+        let scene: Scene = .digitalContentsPickerScene(scene: .selectedVideo(vm))
+        
+        self.sceneCoodinator.modalTransition(to: scene, type: .push)
+        
         
     }
   

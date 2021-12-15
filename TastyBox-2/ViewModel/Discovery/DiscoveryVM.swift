@@ -90,7 +90,7 @@ class DiscoveryVM: ViewModelBase {
     
     func toCreateRecipeVC() {
         
-        let vm = SelectDigitalContentsVM(sceneCoodinator: self.sceneCoodinator, user: self.user, kind: .mainImg)
+        let vm = SelectDigitalContentsVM(sceneCoodinator: self.sceneCoodinator, user: self.user, kind: .recipeMain(.image))
         let scene: Scene = .digitalContentsPickerScene(scene: .selectDigitalContents(vm))
         
         self.sceneCoodinator.modalTransition(to: scene, type: .modal(presentationStyle: .fullScreen, modalTransisionStyle: .coverVertical, hasNavigationController: true))
