@@ -69,8 +69,12 @@ class SceneCoordinator: NSObject, SceneCoordinatorType {
                 .sentMessage(#selector(UINavigationControllerDelegate.navigationController(_:didShow:animated:)))
                 .map { _ in }
                 .bind(to: subject)
+           
+            DispatchQueue.main.async {
             
-            navigationController.pushViewController(viewController, animated: true)
+                navigationController.pushViewController(viewController, animated: true)
+            
+            }
             
         case let .modal(presentationStyle, transitionStyle, hasNavigationController):
             

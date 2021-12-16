@@ -10,6 +10,7 @@ import AVFoundation
 import Firebase
 import RxSwift
 import UIKit
+import Photos
 
 protocol CreateRecipeDMProtocol: AnyObject {
     
@@ -66,30 +67,37 @@ class CreateRecipeDM: CreateRecipeDMProtocol {
     
     static func getThumbnailData(url: URL) -> Observable<Data> {
         
-        return Observable.create { observer in
+        return .create { observer in
             
-            let asset: AVAsset = AVAsset(url: url)
+            let asset = AVAsset(url: url)
             let imageGenerator = AVAssetImageGenerator(asset: asset)
+            imageGenerator.appliesPreferredTrackTransform = true
             
             do {
-                let thumbnailImage = try imageGenerator.copyCGImage(at: CMTimeMake(value: 1, timescale: 60) , actualTime: nil)
                 
-                if let data = thumbnailImage.data {
+                let thumbnailCGImage = try imageGenerator.copyCGImage(at: CMTimeMake(value: 1, timescale: 60), actualTime: nil)
+               
+                if let data = thumbnailCGImage.data {
+                 
                     observer.onNext(data)
+
                 }
                 
             } catch (let err) {
+               
                 observer.onError(err)
+
             }
             
             return Disposables.create()
-            
         }
+       
     }
+    
     
     static func getMyGenresIDs(user: Firebase.User) -> Observable<[String]> {
         
-        return Observable.create { observer in
+        return .create { observer in
             
             db.collection("users").document(user.uid).collection("genres")
                 .getDocuments { snapShot, err in

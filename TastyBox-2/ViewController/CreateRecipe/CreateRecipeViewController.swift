@@ -152,9 +152,16 @@ extension CreateRecipeViewController: UITableViewDelegate, UITableViewDataSource
             
             if let cell = tableView.dequeueReusableCell(withIdentifier: "editMainImage", for: indexPath) as? EditMainImageTVCell {
                 
+                
                 viewModel.mainImgDataSubject
                     .bind(to: cell.mainImgDataSubject)
                     .disposed(by: cell.disposeBag)
+                
+                viewModel.thumbnailImgDataSubject
+                    .bind(to: cell.thumbnailDataSubject)
+                    .disposed(by: cell.disposeBag)
+                
+//
 //                let collectionViewTapped = cell.collectionView.rx.itemSelected.share(replay: 1, scope: .forever)
 //
 //                collectionViewTapped
@@ -204,6 +211,7 @@ extension CreateRecipeViewController: UITableViewDelegate, UITableViewDataSource
 //                    .bind(to: cell.thumbnailDataSubject)
 //                    .disposed(by: cell.disposeBag)
 //
+
                 
                 
                 return cell

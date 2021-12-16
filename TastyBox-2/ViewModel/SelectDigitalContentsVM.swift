@@ -73,7 +73,7 @@ class SelectDigitalContentsVM: ViewModelBase {
     
     func toSelectVideoVC(asset: PHAsset) {
         
-        let vm = SelelctedVideoVM(sceneCoodinator: self.sceneCoodinator, user: self.user, asset: asset)
+        let vm = SelectedVideoVM(sceneCoodinator: self.sceneCoodinator, user: self.user, asset: asset)
         let scene: Scene = .digitalContentsPickerScene(scene: .selectedVideo(vm))
         
         self.sceneCoodinator.modalTransition(to: scene, type: .push)

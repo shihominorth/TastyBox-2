@@ -116,6 +116,8 @@ extension EditMainImageTVCell: UICollectionViewDataSource {
             let cell =  collectionView.dequeueReusableCell(withReuseIdentifier: "editMainImageCVCell", for: indexPath) as! EditMainImageCVCell
             
             cell.imgView.image = mainImage
+            cell.imgView.contentMode = .scaleAspectFill
+            
             
             return cell
         }
@@ -124,6 +126,9 @@ extension EditMainImageTVCell: UICollectionViewDataSource {
             let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "editMainVideoCVCell", for: indexPath) as! EditMainVideoCVCell
            
             cell.imgView.image = thumbnailImg
+          
+           
+            
               
             return cell
         }

@@ -43,7 +43,7 @@ class CreateRecipeVM: ViewModelBase {
     var isAddedSubject = BehaviorSubject<Bool>(value: false)
     
     var mainImgDataSubject = BehaviorSubject<Data>(value: Data())
-    var thumbnailImgDataSubject = PublishSubject<Data>()
+    var thumbnailImgDataSubject = BehaviorSubject<Data>(value: Data())
     
     let titleSubject = BehaviorSubject<String>(value: "")
     let servingSubject = BehaviorSubject<Int>(value: 0)
@@ -77,8 +77,9 @@ class CreateRecipeVM: ViewModelBase {
     
     var isExpanded = false
     let selectedTimeSubject: BehaviorRelay<String>
+    let mainImgKind: DigitalContentsFor.RecipeMain
     
-    init(sceneCoodinator: SceneCoordinator, user: Firebase.User, imgData: Data, videoUrl: URL?, apiType: CreateRecipeDMProtocol.Type = CreateRecipeDM.self) {
+    init(sceneCoodinator: SceneCoordinator, user: Firebase.User, imgData: Data, videoUrl: URL?, kind: DigitalContentsFor.RecipeMain, apiType: CreateRecipeDMProtocol.Type = CreateRecipeDM.self) {
         
         self.sceneCoodinator = sceneCoodinator
         self.user = user
@@ -132,9 +133,16 @@ class CreateRecipeVM: ViewModelBase {
         self.mainImgDataSubject.onNext(imgData)
         self.combinedInputs = [.mainPhoto(self.mainImgDataSubject)]
 
-       
+        self.mainImgKind = kind
         
-        super.init()
+//        super.init()
+        
+        switch kind {
+        case .video:
+            thumbnailImgDataSubject.onNext(imgData)
+        default:
+            break
+        }
         
     }
     
