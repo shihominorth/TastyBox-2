@@ -118,6 +118,63 @@ extension EditMainImageTVCell: UICollectionViewDataSource {
             cell.imgView.image = mainImage
             cell.imgView.contentMode = .scaleAspectFill
             
+            let selectOthersView: UIView = {
+               
+                let view = UIView()
+                
+                view.translatesAutoresizingMaskIntoConstraints = false
+                
+                return view
+                
+            }()
+            
+            selectOthersView.frame = CGRect(x: 0, y: 0, width: cell.frame.width, height: cell.frame.height * 0.2)
+            
+            cell.addSubview(selectOthersView)
+            
+            NSLayoutConstraint.activate([
+                selectOthersView.leadingAnchor.constraint(equalTo: cell.leadingAnchor),
+                selectOthersView.trailingAnchor.constraint(equalTo: cell.trailingAnchor),
+                selectOthersView.bottomAnchor.constraint(equalTo: cell.bottomAnchor),
+                selectOthersView.heightAnchor.constraint(equalToConstant: cell.frame.height * 0.2)
+            ])
+            
+            
+            let gradient = CAGradientLayer()
+            gradient.startPoint = CGPoint(x: 0.5, y: 0.0)
+            gradient.endPoint = CGPoint(x: 0.5, y: 1.0)
+            gradient.colors = [UIColor.white.withAlphaComponent(0.0).cgColor, UIColor.white.withAlphaComponent(1.0).cgColor]
+            gradient.frame = selectOthersView.bounds
+            selectOthersView.layer.insertSublayer(gradient, at: 0)
+            
+            cell.layoutIfNeeded()
+            
+            let txtLbl: UILabel = {
+               
+                let lbl = UILabel()
+                lbl.translatesAutoresizingMaskIntoConstraints = false
+                lbl.textColor = .brown
+                
+                let stringAttributes: [NSAttributedString.Key : Any] = [
+                    .foregroundColor : UIColor.brown,
+                    .font : UIFont.boldSystemFont(ofSize: 17.0)
+                ]
+                
+                let string = NSAttributedString(string: "Select Other Photo", attributes: stringAttributes)
+                lbl.attributedText = string
+                
+                return lbl
+           
+            }()
+    
+           
+            
+           
+            selectOthersView.addSubview(txtLbl)
+            
+            txtLbl.centerXAnchor.constraint(equalTo: selectOthersView.centerXAnchor).isActive = true
+            txtLbl.centerYAnchor.constraint(equalTo: selectOthersView.centerYAnchor).isActive = true
+            
             
             return cell
         }
@@ -126,8 +183,72 @@ extension EditMainImageTVCell: UICollectionViewDataSource {
             let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "editMainVideoCVCell", for: indexPath) as! EditMainVideoCVCell
            
             cell.imgView.image = thumbnailImg
+            
+            let selectOthersView: UIView = {
+               
+                let view = UIView()
+                
+                view.translatesAutoresizingMaskIntoConstraints = false
+                
+                return view
+                
+            }()
+            
+            selectOthersView.frame = CGRect(x: 0, y: 0, width: cell.frame.width, height: cell.frame.height * 0.2)
+            
+            cell.addSubview(selectOthersView)
+            
+            NSLayoutConstraint.activate([
+                selectOthersView.leadingAnchor.constraint(equalTo: cell.leadingAnchor),
+                selectOthersView.trailingAnchor.constraint(equalTo: cell.trailingAnchor),
+                selectOthersView.bottomAnchor.constraint(equalTo: cell.bottomAnchor),
+                selectOthersView.heightAnchor.constraint(equalToConstant: cell.frame.height * 0.2)
+            ])
+            
+            
+            let gradient = CAGradientLayer()
+            gradient.startPoint = CGPoint(x: 0.5, y: 0.0)
+            gradient.endPoint = CGPoint(x: 0.5, y: 1.0)
+            gradient.colors = [UIColor.white.withAlphaComponent(0.0).cgColor, UIColor.white.withAlphaComponent(1.0).cgColor]
+            gradient.frame = selectOthersView.bounds
+            selectOthersView.layer.insertSublayer(gradient, at: 0)
+            
+            cell.layoutIfNeeded()
           
+            let txtLbl:UILabel = {
+               
+                let lbl = UILabel()
+                lbl.translatesAutoresizingMaskIntoConstraints = false
+                
+                let stringAttributes: [NSAttributedString.Key : Any] = [
+                    .foregroundColor : UIColor.brown,
+                    .font : UIFont.boldSystemFont(ofSize: 17.0)
+                ]
+                
+                let string = NSAttributedString(string: "Select Other Video", attributes: stringAttributes)
+                lbl.attributedText = string
+                
+                return lbl
+                
+            }()
+            
+            
            
+            selectOthersView.addSubview(txtLbl)
+            
+            txtLbl.centerXAnchor.constraint(equalTo: selectOthersView.centerXAnchor).isActive = true
+            txtLbl.centerYAnchor.constraint(equalTo: selectOthersView.centerYAnchor).isActive = true
+            
+            
+            NSLayoutConstraint.activate([
+                
+                selectOthersView.leadingAnchor.constraint(equalTo: cell.leadingAnchor),
+                selectOthersView.trailingAnchor.constraint(equalTo: cell.trailingAnchor),
+                selectOthersView.bottomAnchor.constraint(equalTo: cell.bottomAnchor),
+                selectOthersView.heightAnchor.constraint(equalToConstant: cell.frame.height * 0.2)
+            
+            ])
+            
             
               
             return cell
