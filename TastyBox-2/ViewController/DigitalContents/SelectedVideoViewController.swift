@@ -50,6 +50,37 @@ class SelectedVideoViewController: UIViewController, BindableType {
 //        setUpPlayVideo()
 //        playVideo(videoAsset: self.viewModel.asset)
 //        videoPlayerView = VideoPlayerView(frame: self.view.frame)
+//        videoPlayerView = VideoPlayerView(frame: self.view.frame, asset: self.viewModel.asset)
+//        self.view.addSubview(videoPlayerView!)
+//
+//        addBtn = UIBarButtonItem()
+//        addBtn?.title = "Add"
+//
+//        addBtn?.rx.tap
+//            .flatMapLatest { [unowned self] _ -> Observable<(Data, URL)> in
+//
+//                return self.viewModel.getVideoUrl()
+//                    .flatMapLatest { url in
+//                        self.viewModel.getThumbnail(url: url).map { data in
+//                            return (data, url)
+//                        }
+//                    }
+//
+//            }
+//            .subscribe(onNext: { [unowned self] data, url in
+//
+//                self.viewModel.addVideo(data: data, url: url)
+//
+//            })
+//            .disposed(by: viewModel.disposeBag)
+//
+//        self.navigationItem.rightBarButtonItem = addBtn
+        
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        
         videoPlayerView = VideoPlayerView(frame: self.view.frame, asset: self.viewModel.asset)
         self.view.addSubview(videoPlayerView!)
         
@@ -75,7 +106,6 @@ class SelectedVideoViewController: UIViewController, BindableType {
             .disposed(by: viewModel.disposeBag)
         
         self.navigationItem.rightBarButtonItem = addBtn
-        
     }
     
     override func viewWillDisappear(_ animated: Bool) {

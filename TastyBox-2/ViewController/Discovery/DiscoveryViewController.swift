@@ -109,7 +109,7 @@ class DiscoveryViewController: UIViewController, BindableType {
                 
         viewModel.setDefaultViewControllers()
     }
-    
+     
     override func viewWillDisappear(_ animated: Bool) {
         
         disappearSideMenu()

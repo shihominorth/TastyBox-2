@@ -90,9 +90,10 @@ class SelectDigitalContentsViewController: UIViewController, BindableType {
         self.navigationItem.leftBarButtonItem = cancelBtn
         
         segmentControl.selectedSegmentIndex = 0
-        
-        
+      
         self.navigationItem.titleView = segmentControl
+    
+        
     }
 
     override func viewWillDisappear(_ animated: Bool) {
@@ -110,6 +111,10 @@ class SelectDigitalContentsViewController: UIViewController, BindableType {
     func bindViewModel() {
         
         self.viewModel.fetchContents(kind: viewModel.kind)
+        
+        self.viewModel.isHiddenSegment
+            .bind(to: self.segmentControl.rx.isHidden)
+            .disposed(by: viewModel.disposeBag)
         
         self.segmentControl.rx.selectedSegmentIndex
             .skip(1)
@@ -146,19 +151,30 @@ class SelectDigitalContentsViewController: UIViewController, BindableType {
             .map { [unowned self] indexPath in
                 self.viewModel.assets[indexPath.row]
             }
-            .subscribe(onNext: { [unowned self] in
+            .subscribe(onNext: { [unowned self] asset in
                 
-                switch self.viewModel.kind {
+                self.dismiss(animated: true) {
                 
-                case .recipeMain(.video):
-                
-                    self.viewModel.toSelectVideoVC(asset: $0)
-                
-                default:
-                  
-                    self.viewModel.toSelectImageVC(asset: $0)
                     
+                        switch self.viewModel.kind {
+                        
+                        case .recipeMain(.video):
+                        
+                            self.viewModel.toSelectVideoVC(asset: asset)
+                        
+                        default:
+                          
+                            self.viewModel.toSelectImageVC(asset: asset)
+                            
+                        }
+                    
+                    
+                    
+                   
+                
                 }
+                
+     
               
             })
             .disposed(by: viewModel.disposeBag)

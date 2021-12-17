@@ -162,18 +162,29 @@ extension CreateRecipeViewController: UITableViewDelegate, UITableViewDataSource
                     .disposed(by: cell.disposeBag)
                 
 //
-//                let collectionViewTapped = cell.collectionView.rx.itemSelected.share(replay: 1, scope: .forever)
+                let collectionViewTapped = cell.collectionView.rx.itemSelected.share(replay: 1, scope: .forever)
 //
-//                collectionViewTapped
-//                    .filter { $0.row == 0 }
-//                    .subscribe(on: MainScheduler.instance)
-//                    .subscribe(onNext: { [unowned self] _ in
-//
-//                        self.viewModel.toSelectDigitalContentsVC(kind: .mainImg)
-////                        self.viewModel.toImagePicker()
-//
-//                    })
-//                    .disposed(by: cell.disposeBag)
+                collectionViewTapped
+                    .filter { $0.row == 0 }
+                    .subscribe(on: MainScheduler.instance)
+                    .withLatestFrom(viewModel.thumbnailImgDataSubject)
+                    .subscribe(onNext: { [unowned self] data in
+
+                        switch viewModel.mainImgKind {
+                        
+                        case .image:
+                            self.viewModel.toSelectDigitalContentsVC(kind: .recipeMain(.image))
+                        
+                        case .video:
+                            self.viewModel.toSelectThumbnail(imageData: data)
+               
+                        }
+                        
+                      
+//                        self.viewModel.toImagePicker()
+
+                    })
+                    .disposed(by: cell.disposeBag)
 //
 //
 //                self.viewModel.mainImgDataSubject

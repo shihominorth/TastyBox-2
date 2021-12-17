@@ -527,6 +527,14 @@ extension Scene {
             
             return vc
             
+        case .selectThumbnail(let viewModel):
+            
+            var vc = storyBoard.instantiateViewController(withIdentifier: "selectThumbnailVC") as! SelectThumbnailViewController
+            
+            vc.bindViewModel(to: viewModel)
+            
+            return vc
+            
         }
     }
     

@@ -141,7 +141,23 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="8R6-ke-Hyb" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="6784" y="-717"/>
+            <point key="canvasLocation" x="7692.753623188406" y="-717.1875"/>
+        </scene>
+        <!--Select Thumbnail View Controller-->
+        <scene sceneID="dOZ-zc-wvR">
+            <objects>
+                <viewController storyboardIdentifier="selectThumbnailVC" id="E50-7P-hpD" customClass="SelectThumbnailViewController" customModule="TastyBox_2" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="n4d-xy-gzm">
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <viewLayoutGuide key="safeArea" id="pr7-GQ-FsF"/>
+                        <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                    </view>
+                    <navigationItem key="navigationItem" id="pwd-Lm-Jz7"/>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="JHI-Fh-Dqb" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="6557.971014492754" y="-738.61607142857144"/>
         </scene>
     </scenes>
     <resources>

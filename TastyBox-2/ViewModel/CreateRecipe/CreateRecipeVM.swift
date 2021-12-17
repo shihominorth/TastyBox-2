@@ -8,6 +8,7 @@
 import Foundation
 import Action
 import Firebase
+import Photos
 import RxSwift
 import RxCocoa
 import RxRelay
@@ -384,11 +385,24 @@ class CreateRecipeVM: ViewModelBase {
     
     func toSelectDigitalContentsVC(kind: DigitalContentsFor) {
         
-        let vm = SelectDigitalContentsVM(sceneCoodinator: self.sceneCoodinator, user: self.user, kind: kind)
+        let vm = SelectDigitalContentsVM(sceneCoodinator: self.sceneCoodinator, user: self.user, kind: kind, isEnableSelectOnlyOneDigitalContentType: true)
         let scene: Scene = .digitalContentsPickerScene(scene: .selectDigitalContents(vm))
         
         self.sceneCoodinator.modalTransition(to: scene, type: .modal(presentationStyle: .fullScreen, modalTransisionStyle: .coverVertical, hasNavigationController: true))
+//            .do(onCompleted: {
+//                
+//                vm.delegate = self
+//                
+//            })
         
+    }
+    
+    func toSelectThumbnail(imageData: Data) {
+        
+        let vm = SelectThumbnailVM(sceneCoodinator: self.sceneCoodinator, user: self.user, imageData: imageData)
+        let scene: Scene = .digitalContentsPickerScene(scene: .selectThumbnail(vm))
+        
+        self.sceneCoodinator.modalTransition(to: scene, type: .modal(presentationStyle: .fullScreen, modalTransisionStyle: .coverVertical, hasNavigationController: false))
     }
     
     func instructionsToImagePicker(index: Int) -> Observable<Data> {
@@ -530,6 +544,7 @@ extension CreateRecipeVM: SelectGenreProtocol {
         
     }
 }
+
 
 extension CreateRecipeVM: UploadingVideoVMDelegate {
     

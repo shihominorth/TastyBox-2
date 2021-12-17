@@ -20,8 +20,8 @@ enum DigitalContentsFor {
 }
 
 protocol SelectDegitalContentDelegate: AnyObject {
-    func selectedImage(asset: PHAsset)
-    func selectedVideo(asset: URL)
+    func selectedImage(asset: PHAsset, kind: DigitalContentsFor)
+    func selectedVideo(asset: PHAsset)
 }
 
 class SelectDigitalContentsVM: ViewModelBase {
@@ -31,16 +31,17 @@ class SelectDigitalContentsVM: ViewModelBase {
     let sceneCoodinator: SceneCoordinator
     let user: Firebase.User
     var kind: DigitalContentsFor
-  
+    var isHiddenSegment: BehaviorSubject<Bool>
     
     weak var delegate: SelectDegitalContentDelegate?
     
-    init(sceneCoodinator: SceneCoordinator, user: Firebase.User, kind: DigitalContentsFor) {
+    init(sceneCoodinator: SceneCoordinator, user: Firebase.User, kind: DigitalContentsFor, isEnableSelectOnlyOneDigitalContentType: Bool) {
         
         self.sceneCoodinator = sceneCoodinator
         self.user = user
         self.kind = kind
-
+        self.isHiddenSegment = BehaviorSubject<Bool>(value: isEnableSelectOnlyOneDigitalContentType)
+        
         super.init()
  
     }
