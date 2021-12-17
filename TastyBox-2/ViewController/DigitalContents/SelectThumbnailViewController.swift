@@ -126,7 +126,6 @@ class SelectThumbnailViewController: UIViewController, BindableType {
         
         self.toCameraRollView.addSubview(toCameraRollImgView)
         self.toCameraRollView.addSubview(toCameraRollLbl)
-        
        
     }
     

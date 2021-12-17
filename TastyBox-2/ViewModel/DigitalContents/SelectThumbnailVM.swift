@@ -31,7 +31,9 @@ class SelectThumbnailVM: ViewModelBase {
         let vm = SelectDigitalContentsVM(sceneCoodinator: self.sceneCoodinator, user: self.user, kind: .recipeMain(.image), isEnableSelectOnlyOneDigitalContentType: true)
         let scene: Scene = .digitalContentsPickerScene(scene: .selectDigitalContents(vm))
         
-        self.sceneCoodinator.modalTransition(to: scene, type: .modal(presentationStyle: .currentContext, modalTransisionStyle: .coverVertical, hasNavigationController: true))
+        self.sceneCoodinator.modalTransition(to: scene, type: .modal(presentationStyle: .fullScreen, modalTransisionStyle: .coverVertical, hasNavigationController: true))
+        
+//        self.sceneCoodinator.modalTransition(to: scene, type: .push)
         
     }
     

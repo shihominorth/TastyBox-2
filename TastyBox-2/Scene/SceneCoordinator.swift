@@ -81,9 +81,42 @@ class SceneCoordinator: NSObject, SceneCoordinatorType {
             viewController.modalPresentationStyle = presentationStyle ?? .fullScreen
             viewController.modalTransitionStyle =  transitionStyle ?? .flipHorizontal
             
-            
-            
             if hasNavigationController {
+                
+//                guard let navigationController = currentViewController.navigationController else {
+//                    fatalError("Can't push a view controller without a current navigation controller")
+//                }
+                
+                // Challenge 3: set ourselves as the navigation controller's delegate. This needs to be done
+                // prior to `navigationController.rx.delegate` as it takes care of preserving the configured delegate
+//                navigationController.delegate = self
+                
+                // one-off subscription to be notified when push complete
+                //                _ = navigationController.rx.delegate
+                //                    .sentMessage(#selector(UINavigationControllerDelegate.navigationController(_:didShow:animated:)))
+                //                    .map { _ in }
+                //                    .bind(to: subject)
+                
+//                currentViewController.present(viewController, animated: true) { [unowned self] in
+                    
+                    
+                    if let navigationController = viewController as? UINavigationController {
+//
+//                        self.currentViewController = SceneCoordinator.actualViewController(for: navigationController)
+                        navigationController.delegate = self
+                        
+                        currentViewController.present(viewController, animated: true) {
+                            subject.onCompleted()
+                        }
+//
+                    }
+//
+//                    subject.onCompleted()
+//
+//                }
+//
+            }
+            else {
                 
                 guard let navigationController = currentViewController.navigationController else {
                     fatalError("Can't push a view controller without a current navigation controller")
@@ -93,31 +126,12 @@ class SceneCoordinator: NSObject, SceneCoordinatorType {
                 // prior to `navigationController.rx.delegate` as it takes care of preserving the configured delegate
                 navigationController.delegate = self
                 
-                // one-off subscription to be notified when push complete
-                //                _ = navigationController.rx.delegate
-                //                    .sentMessage(#selector(UINavigationControllerDelegate.navigationController(_:didShow:animated:)))
-                //                    .map { _ in }
-                //                    .bind(to: subject)
-                
-                currentViewController.present(viewController, animated: true) { [unowned self] in
-                    
-                    if let navigationController = viewController as? UINavigationController {
-                        
-                        self.currentViewController = SceneCoordinator.actualViewController(for: navigationController)
-                        
-                    }
-                    
-                    subject.onCompleted()
-                    
-                }
-                
-            }
-            else {
-                
                 currentViewController.present(viewController, animated: true) {
                     subject.onCompleted()
                 }
                 
+                currentViewController = SceneCoordinator.actualViewController(for: viewController)
+
             }
             
             
@@ -301,7 +315,14 @@ class SceneCoordinator: NSObject, SceneCoordinatorType {
             else{
                 
                 currentViewController.present(viewController, animated: true) {
-                    subject.onCompleted()
+//                    subject.onCompleted()
+
+                    if let presenter = viewController.presentedViewController {
+                        
+                        self.currentViewController = SceneCoordinator.actualViewController(for: presenter)
+                        subject.onCompleted()
+                        
+                    }
                 }
                 
             }

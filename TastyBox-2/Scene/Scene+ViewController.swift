@@ -504,7 +504,9 @@ extension Scene {
             
             let nc = storyBoard.instantiateViewController(withIdentifier: "selectDigitalContentsNC") as! UINavigationController
             
-            var vc = nc.viewControllers.first(where: { $0 is SelectDigitalContentsViewController}) as! SelectDigitalContentsViewController
+            var vc = nc.topViewController as! SelectDigitalContentsViewController
+            
+//            var vc = storyBoard.instantiateViewController(withIdentifier: "selectDegitalContentsVC") as! SelectDigitalContentsViewController
             
             vc.bindViewModel(to: viewModel)
             
@@ -529,6 +531,8 @@ extension Scene {
             
         case .selectThumbnail(let viewModel):
             
+//            let nc = storyBoard.instantiateViewController(withIdentifier: "selectThumbnailNC") as! UINavigationController
+//            var vc = nc.viewControllers.first(where: { $0 is SelectThumbnailViewController }) as! SelectThumbnailViewController
             var vc = storyBoard.instantiateViewController(withIdentifier: "selectThumbnailVC") as! SelectThumbnailViewController
             
             vc.bindViewModel(to: viewModel)

@@ -148,12 +148,13 @@ class SelectDigitalContentsViewController: UIViewController, BindableType {
             .disposed(by: viewModel.disposeBag)
         
         collectionView.rx.itemSelected
+            .throttle(.milliseconds(1000), scheduler: MainScheduler.instance)
             .map { [unowned self] indexPath in
                 self.viewModel.assets[indexPath.row]
             }
             .subscribe(onNext: { [unowned self] asset in
                 
-                self.dismiss(animated: true) {
+//                self.dismiss(animated: true) {
                 
                     
                         switch self.viewModel.kind {
@@ -172,7 +173,7 @@ class SelectDigitalContentsViewController: UIViewController, BindableType {
                     
                    
                 
-                }
+//                }
                 
      
               

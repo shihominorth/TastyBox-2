@@ -388,7 +388,7 @@ class CreateRecipeVM: ViewModelBase {
         let vm = SelectDigitalContentsVM(sceneCoodinator: self.sceneCoodinator, user: self.user, kind: kind, isEnableSelectOnlyOneDigitalContentType: true)
         let scene: Scene = .digitalContentsPickerScene(scene: .selectDigitalContents(vm))
         
-        self.sceneCoodinator.modalTransition(to: scene, type: .modal(presentationStyle: .fullScreen, modalTransisionStyle: .coverVertical, hasNavigationController: true))
+        self.sceneCoodinator.modalTransition(to: scene, type: .modal(presentationStyle: .fullScreen, modalTransisionStyle: .coverVertical, hasNavigationController: false))
 //            .do(onCompleted: {
 //                
 //                vm.delegate = self

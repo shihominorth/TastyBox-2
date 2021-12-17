@@ -119,7 +119,8 @@ class DiscoveryViewController: UIViewController, BindableType {
     func bindViewModel() {
         
         self.addRecipeNavBtn.rx.tap
-            .debounce(.microseconds(1000), scheduler: MainScheduler.instance)
+            .throttle(.microseconds(1000), scheduler: MainScheduler.instance)
+            .debug("add recipe btn")
             .subscribe(onNext: { [unowned self] in self.viewModel.toCreateRecipeVC() })
             .disposed(by: viewModel.disposeBag)
         
