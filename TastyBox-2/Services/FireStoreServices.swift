@@ -50,6 +50,7 @@ class FireStoreServices {
             
             var count = 0
             
+            
             references.forEach { reference in
                 
                 

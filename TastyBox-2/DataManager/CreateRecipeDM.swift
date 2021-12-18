@@ -2107,8 +2107,18 @@ class CreateRecipeDM: CreateRecipeDMProtocol {
                 
                 return data
             })
-            .flatMapLatest { newData in
-                firestoreServices.setData(references: references, dic: newData).map { true }
+            .flatMapLatest { newData -> Observable<Bool> in
+                
+                if references.count == 0 {
+                    return Observable<Bool>.just(true)
+                }
+                
+                else if references.count == 1 {
+                    return firestoreServices.setData(path: references[0], data: newData).map { _ in true }
+                }
+                
+                return firestoreServices.setData(references: references, dic: newData).map { true }
+           
             }
 
         
