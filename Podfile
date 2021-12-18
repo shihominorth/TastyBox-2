@@ -44,8 +44,9 @@ pod 'FBSDKCoreKit'
 pod 'FBSDKLoginKit'
 
 
-# edit image 
+# edit
 pod 'RSKImageCropper'
+pod "PryntTrimmerView"
 
 # Alert 
 pod 'SCLAlertView'

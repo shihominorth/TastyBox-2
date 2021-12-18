@@ -10,6 +10,7 @@ import AVFoundation
 import Firebase
 import Photos
 import PhotosUI
+import RSKImageCropper
 import RxSwift
 import RxCocoa
 import SwiftMessages
@@ -524,6 +525,24 @@ class SceneCoordinator: NSObject, SceneCoordinatorType {
         
         currentViewController = viewController
         
+        
+    }
+    
+    func cropImage(cropMode: RSKImageCropMode, imageData: Data) -> Observable<Data> {
+        
+        guard let image = UIImage(data: imageData) else { return Observable.just(imageData) }
+        
+        let imageCropVC = RSKImageCropViewController(image: image, cropMode: cropMode)
+        
+        imageCropVC.moveAndScaleLabel.text = "Triming"
+        imageCropVC.cancelButton.setTitle("Cancel", for: .normal)
+        imageCropVC.chooseButton.setTitle("Done", for: .normal)
+        
+        currentViewController.present(imageCropVC, animated: true)
+
+        
+        
+        return imageCropVC.rx.imageData.map { $0 }
         
     }
     

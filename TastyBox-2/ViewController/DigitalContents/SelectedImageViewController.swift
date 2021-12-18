@@ -133,6 +133,23 @@ class SelectedImageViewController: UIViewController, BindableType {
             })
             .disposed(by: viewModel.disposeBag)
         
+        cutBtn.rx.tap
+            .compactMap {
+                return self.imgView.image?.convertToData()
+            }
+            .flatMapLatest { [unowned self] in
+                self.viewModel.cropImage(imageData: $0)
+            }
+            .compactMap {
+               return UIImage(data: $0)
+            }
+            .subscribe(onNext: { img in
+                
+                self.imgView.image = img
+                
+            })
+            .disposed(by: viewModel.disposeBag)
+        
     }
     
     

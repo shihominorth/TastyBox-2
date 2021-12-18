@@ -100,6 +100,13 @@ class SelectedImageVM: ViewModelBase {
         
         
     }
+    
+    
+    func cropImage(imageData: Data) -> Observable<Data> {
+        
+        return self.sceneCoodinator.cropImage(cropMode: .square, imageData: imageData)
+        
+    }
 }
 
 

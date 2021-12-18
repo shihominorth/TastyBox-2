@@ -84,7 +84,7 @@
 		6F512A3026F45BF200826657 /* TutorialCVCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F512A2F26F45BF200826657 /* TutorialCVCell.swift */; };
 		6F512A3226F467A300826657 /* FlowLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F512A3126F467A300826657 /* FlowLayout.swift */; };
 		6F54460E275149C900579138 /* StorageService.swift.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F54460D275149C900579138 /* StorageService.swift.swift */; };
-		6F54461027523AD100579138 /* RxRSKImageCropVCDelegateProaxy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F54460F27523AD000579138 /* RxRSKImageCropVCDelegateProaxy.swift */; };
+		6F54461027523AD100579138 /* RxRSKImageCropVCDelegateProxy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F54460F27523AD000579138 /* RxRSKImageCropVCDelegateProxy.swift */; };
 		6F5446122752571C00579138 /* RxUIImagePickerControllerDelegateProxy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F5446112752571B00579138 /* RxUIImagePickerControllerDelegateProxy.swift */; };
 		6F6D0AEE26EED71500CD27AE /* RxFaceBookLoginDelegateProxy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F6D0AED26EED71500CD27AE /* RxFaceBookLoginDelegateProxy.swift */; };
 		6F71EBEC2721FEAD001BF538 /* RxUIViewController+.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F71EBEB2721FEAD001BF538 /* RxUIViewController+.swift */; };
@@ -307,7 +307,7 @@
 		6F512A2F26F45BF200826657 /* TutorialCVCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TutorialCVCell.swift; sourceTree = "<group>"; };
 		6F512A3126F467A300826657 /* FlowLayout.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FlowLayout.swift; sourceTree = "<group>"; };
 		6F54460D275149C900579138 /* StorageService.swift.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StorageService.swift.swift; sourceTree = "<group>"; };
-		6F54460F27523AD000579138 /* RxRSKImageCropVCDelegateProaxy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RxRSKImageCropVCDelegateProaxy.swift; sourceTree = "<group>"; };
+		6F54460F27523AD000579138 /* RxRSKImageCropVCDelegateProxy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RxRSKImageCropVCDelegateProxy.swift; sourceTree = "<group>"; };
 		6F5446112752571B00579138 /* RxUIImagePickerControllerDelegateProxy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RxUIImagePickerControllerDelegateProxy.swift; sourceTree = "<group>"; };
 		6F6D0AED26EED71500CD27AE /* RxFaceBookLoginDelegateProxy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RxFaceBookLoginDelegateProxy.swift; sourceTree = "<group>"; };
 		6F71EBEB2721FEAD001BF538 /* RxUIViewController+.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "RxUIViewController+.swift"; sourceTree = "<group>"; };
@@ -646,7 +646,7 @@
 				6F2BBA8926EDDA6B003B0D5F /* RxAppleDelegateProxy.swift */,
 				6F6D0AED26EED71500CD27AE /* RxFaceBookLoginDelegateProxy.swift */,
 				6F0E695F271F98FE002BD547 /* RxPHPickerViewControllerDelegateProxy.swift */,
-				6F54460F27523AD000579138 /* RxRSKImageCropVCDelegateProaxy.swift */,
+				6F54460F27523AD000579138 /* RxRSKImageCropVCDelegateProxy.swift */,
 				6F5446112752571B00579138 /* RxUIImagePickerControllerDelegateProxy.swift */,
 			);
 			path = DelegateProxy;
@@ -1346,7 +1346,7 @@
 				6F4090DA276746CB0088C5E1 /* SelectDigitalContentsCVCell.swift in Sources */,
 				6F77D487272825C800F1FCD9 /* CheckEvaluateRecipeCVCell.swift in Sources */,
 				6FB970AE2724358300350F84 /* SelectGenreTVCell.swift in Sources */,
-				6F54461027523AD100579138 /* RxRSKImageCropVCDelegateProaxy.swift in Sources */,
+				6F54461027523AD100579138 /* RxRSKImageCropVCDelegateProxy.swift in Sources */,
 				6FA8150B276BAD97003D27C0 /* SelectThumbnailViewController.swift in Sources */,
 				6FA8150D276BBB32003D27C0 /* SelectThumbnailVM.swift in Sources */,
 				6FE9EB5026F9A6E1000AF9D4 /* RefrigeratorVM.swift in Sources */,
