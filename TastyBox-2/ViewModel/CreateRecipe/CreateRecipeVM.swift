@@ -389,12 +389,7 @@ class CreateRecipeVM: ViewModelBase {
         let scene: Scene = .digitalContentsPickerScene(scene: .selectDigitalContents(vm))
         
         self.sceneCoodinator.modalTransition(to: scene, type: .modal(presentationStyle: .fullScreen, modalTransisionStyle: .coverVertical, hasNavigationController: true))
-//            .do(onCompleted: {
-//                
-//                vm.delegate = self
-//                
-//            })
-        
+
     }
     
     func toSelectThumbnail(imageData: Data) {
@@ -402,9 +397,10 @@ class CreateRecipeVM: ViewModelBase {
         let vm = SelectThumbnailVM(sceneCoodinator: self.sceneCoodinator, user: self.user, imageData: imageData)
         let scene: Scene = .digitalContentsPickerScene(scene: .selectThumbnail(vm))
     
-        self.sceneCoodinator.modalTransition(to: scene, type: .modal(presentationStyle: .automatic, modalTransisionStyle: .coverVertical, hasNavigationController: true))
-//        self.sceneCoodinator.modalTransition(to: scene, type: .pushFromBottom)
-//        self.sceneCoodinator.transition(to: scene.viewController(), type: .modal(presentationStyle: .fullScreen, modalTransisionStyle: .coverVertical, hasNavigationController: true))
+        vm.delegate = self
+        
+        self.sceneCoodinator.modalTransition(to: scene, type: .modal(presentationStyle: .fullScreen, modalTransisionStyle: .coverVertical, hasNavigationController: true))
+
     }
     
     func instructionsToImagePicker(index: Int) -> Observable<Data> {
@@ -555,5 +551,15 @@ extension CreateRecipeVM: UploadingVideoVMDelegate {
         isAddedSubject.onNext(isAdded)
         
     }
+}
+
+extension CreateRecipeVM: SelectThumbnailDelegate {
+ 
+    func selectedThumbnail(imageData: Data) {
+
+        mainImgDataSubject.onNext(imageData)
+
+    }
+
 }
 

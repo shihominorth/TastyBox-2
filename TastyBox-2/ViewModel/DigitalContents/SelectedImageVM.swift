@@ -11,7 +11,7 @@ import Photos
 import RxSwift
 
 class SelectedImageVM: ViewModelBase {
-   
+    
     let sceneCoodinator: SceneCoordinator
     let user: Firebase.User
     let kind: DigitalContentsFor
@@ -27,32 +27,32 @@ class SelectedImageVM: ViewModelBase {
         self.kind = kind
         self.asset = asset
         self.isHiddenSubject = BehaviorSubject<Bool>(value: false)
-
+        
         super.init()
- 
+        
     }
     
     func getImageData() -> Observable<Data?> {
         
         return .create { [unowned self] observer in
-           
+            
             let requestOption = PHContentEditingInputRequestOptions()
             requestOption.isNetworkAccessAllowed = true
-
+            
             self.asset.requestContentEditingInput(with: requestOption) { (contentEditingInput: PHContentEditingInput?, _) -> Void in
-               
+                
                 let ciImage = CIImage(contentsOf: contentEditingInput!.fullSizeImageURL!)!
                 let image = UIImage(ciImage: ciImage.oriented(forExifOrientation: contentEditingInput!.fullSizeImageOrientation))
                 
                 if let data = image.convertToData() {
-                
+                    
                     observer.onNext(data)
-                
+                    
                 }
                 else {
                     
                     observer.onNext(nil)
-                
+                    
                 }
             }
             
@@ -62,26 +62,33 @@ class SelectedImageVM: ViewModelBase {
     }
     
     func addImage(imgData: Data) {
-            
+        
         switch kind {
+            
         case .profile:
             print("profile")
         case .recipeMain(.image):
             
+            
+            let vm = CreateRecipeVM(sceneCoodinator: self.sceneCoodinator, user: self.user, imgData: imgData, videoUrl: nil, kind: .image)
+            let scene: Scene = .createReceipeScene(scene: .createRecipe(vm))
+            
+            self.sceneCoodinator.modalTransition(to: scene, type: .push)
+            
+            
+        case .recipeMain(.thumbnail):
+            
             if let delegate = delegate {
                 
-                delegate.selectedImage(imageData: imgData)
+                self.sceneCoodinator.pop(animated: true) {
+                    
+                    delegate.selectedImage(imageData: imgData)
+                    
+                }
                 
             }
-            else {
-                
-                let vm = CreateRecipeVM(sceneCoodinator: self.sceneCoodinator, user: self.user, imgData: imgData, videoUrl: nil, kind: .image)
-                let scene: Scene = .createReceipeScene(scene: .createRecipe(vm))
-                
-                self.sceneCoodinator.modalTransition(to: scene, type: .push)
-                
-            }
-          
+            
+            
             
         case .instructionImg:
             print("instruction")

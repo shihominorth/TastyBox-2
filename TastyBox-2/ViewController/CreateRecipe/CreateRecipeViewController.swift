@@ -167,7 +167,7 @@ extension CreateRecipeViewController: UITableViewDelegate, UITableViewDataSource
                 collectionViewTapped
                     .filter { $0.row == 0 }
                     .subscribe(on: MainScheduler.instance)
-                    .withLatestFrom(viewModel.thumbnailImgDataSubject)
+                    .withLatestFrom(viewModel.mainImgDataSubject)
                     .subscribe(onNext: { [unowned self] data in
 
                         switch viewModel.mainImgKind {

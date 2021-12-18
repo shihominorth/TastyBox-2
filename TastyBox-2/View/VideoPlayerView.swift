@@ -75,7 +75,7 @@ class VideoPlayerView: UIView {
     
     init(frame: CGRect, asset: PHAsset) {
         
-        isHiddenSubject = BehaviorSubject<Bool>(value: true)
+//        isHiddenSubject = BehaviorSubject<Bool>(value: true)
         disposeBag = DisposeBag()
         
         tap = UITapGestureRecognizer()
@@ -83,7 +83,7 @@ class VideoPlayerView: UIView {
         super.init(frame: frame)
         
 
-        setUpPlayVideoView(asset: asset)
+//        setUpPlayVideoView(asset: asset)
 
         controlView.frame = frame
         self.addSubview(controlView)
@@ -130,26 +130,28 @@ class VideoPlayerView: UIView {
             
         ])
         
-        
-        tap.rx.event
-            .throttle(.milliseconds(1000), scheduler: MainScheduler.instance)
-            .withLatestFrom(isHiddenSubject)
-            .subscribe(onNext: { [unowned self] isViewsHidden in
+        videoSlider.rx.controlEvent(.valueChanged)
+            .catch { err in
+                return .empty()
+            }
+            .subscribe(onNext: { [unowned self] in
                 
-                self.isHiddenSubject.onNext(!isViewsHidden)
+                if let duration = self.player?.currentItem?.duration {
+                    
+                    let totalSeconds = CMTimeGetSeconds(duration)
+                    let value = Float64(self.videoSlider.value) * totalSeconds
+                    let seekTime = CMTime(value: Int64(value), timescale: 1)
+                    
+                    
+                    self.player?.seek(to: seekTime, completionHandler: { isCompleted in
+                        
+                    })
+                }
                 
             })
             .disposed(by: disposeBag)
         
         controlView.addGestureRecognizer(tap)
-        
-        self.isHiddenSubject
-            .bind(to: pauseBtn.rx.isHidden)
-            .disposed(by: disposeBag)
-        self.isHiddenSubject
-            .bind(to: videoSlider.rx.isHidden)
-            .disposed(by: disposeBag)
-
         backgroundColor = .black
  
     }
@@ -160,57 +162,62 @@ class VideoPlayerView: UIView {
         
     }
     
-    
-    deinit {
-        
-        self.player?.removeObserver(self, forKeyPath: "currentItem.loadedTimeRanges")
-    }
-    
-    func setUpPlayVideoView(asset: PHAsset) {
+    func setUpPlayVideoView(asset: PHAsset, completion: @escaping (AVAsset?, AVAudioMix?, [AnyHashable : Any]?) -> Void) {
         
         guard (asset.mediaType == .video) else {
             print("Not a valid video media type")
             return
         }
         
-        PHCachingImageManager().requestAVAsset(forVideo: asset, options: nil) { [unowned self] (asset, audioMix, args) in
-           
-            let asset = asset as! AVURLAsset
-            
-                
-                let item = AVPlayerItem(asset: asset)
-                
-                player = AVQueuePlayer(playerItem: item)
-                
-                looper = AVPlayerLooper(player: player!, templateItem: item)
-                
-                let playerLayer = AVPlayerLayer(player: player)
-                playerLayer.frame = self.frame
-                playerLayer.videoGravity = .resizeAspectFill
-                self.layer.insertSublayer(playerLayer, at: 0)
-
-                player?.play()
-
-                player?.addObserver(self, forKeyPath: "currentItem.loadedTimeRanges", options: .new, context: nil)
-            
-           
-            let interval = CMTime(value: 1, timescale: 2)
-            
-            self.player?.addPeriodicTimeObserver(forInterval: interval, queue: DispatchQueue.main) { [weak self] progressTime in
-                
-                if let duration = self?.player?.currentItem?.duration {
-                    
-                    let seconds = CMTimeGetSeconds(progressTime)
-                    let durationSeconds = CMTimeGetSeconds(duration)
-                    self?.videoSlider.value = Float(seconds / durationSeconds)
-                    
-                }
-            
-            }
-            
-        }
+        PHCachingImageManager().requestAVAsset(forVideo: asset, options: nil, resultHandler: completion) 
         
     }
+    
+//    func setUpPlayVideoView(asset: PHAsset) {
+//
+//        guard (asset.mediaType == .video) else {
+//            print("Not a valid video media type")
+//            return
+//        }
+//
+//        PHCachingImageManager().requestAVAsset(forVideo: asset, options: nil) { [unowned self] (asset, audioMix, args) in
+//
+//            let asset = asset as! AVURLAsset
+//
+//
+//                let item = AVPlayerItem(asset: asset)
+//
+//                player = AVQueuePlayer(playerItem: item)
+//
+//                looper = AVPlayerLooper(player: player!, templateItem: item)
+//
+//                let playerLayer = AVPlayerLayer(player: player)
+//                playerLayer.frame = self.frame
+//                playerLayer.videoGravity = .resizeAspectFill
+//                self.layer.insertSublayer(playerLayer, at: 0)
+//
+//                player?.play()
+//
+////                player?.addObserver(self, forKeyPath: "currentItem.loadedTimeRanges", options: .new, context: nil)
+//
+//
+//            let interval = CMTime(value: 1, timescale: 2)
+//
+//            self.player?.addPeriodicTimeObserver(forInterval: interval, queue: DispatchQueue.main) { [weak self] progressTime in
+//
+//                if let duration = self?.player?.currentItem?.duration {
+//
+//                    let seconds = CMTimeGetSeconds(progressTime)
+//                    let durationSeconds = CMTimeGetSeconds(duration)
+//                    self?.videoSlider.value = Float(seconds / durationSeconds)
+//
+//                }
+//
+//            }
+//
+//        }
+//
+//    }
     
     func setUpContainerView() {
         
@@ -219,21 +226,21 @@ class VideoPlayerView: UIView {
         
     }
     
-    override func observeValue(forKeyPath keyPath: String?, of object: Any?, change: [NSKeyValueChangeKey : Any]?, context: UnsafeMutableRawPointer?) {
-        
-        if keyPath == "currentItem.loadedTimeRanges" {
-            
-            DispatchQueue.main.async { [unowned self] in
-                
-                self.indicator.stopAnimating()
-                self.controlView.backgroundColor = .clear
-
-            }
-            
-        }
-        else if keyPath == "" {
-            
-        }
-        
-    }
+//    override func observeValue(forKeyPath keyPath: String?, of object: Any?, change: [NSKeyValueChangeKey : Any]?, context: UnsafeMutableRawPointer?) {
+//        
+//        if keyPath == "currentItem.loadedTimeRanges" {
+//            
+//            DispatchQueue.main.async { [unowned self] in
+//                
+//                self.indicator.stopAnimating()
+//                self.controlView.backgroundColor = .clear
+//
+//            }
+//            
+//        }
+//        else if keyPath == "" {
+//            
+//        }
+//        
+//    }
 }

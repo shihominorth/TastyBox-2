@@ -8,22 +8,27 @@
 import Foundation
 import Firebase
 import Photos
+import RxSwift
 
+protocol SelectThumbnailDelegate: AnyObject {
+    func selectedThumbnail(imageData: Data)
+}
 
 class SelectThumbnailVM: ViewModelBase {
     
     var sceneCoodinator: SceneCoordinator
     let user: Firebase.User
     let apiType: CreateRecipeDMProtocol.Type
-    var imageData: Data
+    var imageDataSubject: BehaviorSubject<Data>
     
+    weak var delegate: SelectThumbnailDelegate?
     
     init(sceneCoodinator: SceneCoordinator, user: Firebase.User, apiType: CreateRecipeDMProtocol.Type = CreateRecipeDM.self, imageData: Data) {
         
         self.sceneCoodinator = sceneCoodinator
         self.user = user
         self.apiType = apiType
-        self.imageData = imageData
+        self.imageDataSubject = BehaviorSubject<Data>(value: imageData)
         
     }
     
@@ -36,8 +41,26 @@ class SelectThumbnailVM: ViewModelBase {
         
         self.sceneCoodinator.modalTransition(to: scene, type: .modal(presentationStyle: .fullScreen, modalTransisionStyle: .coverVertical, hasNavigationController: true))
         
-//        self.sceneCoodinator.modalTransition(to: scene, type: .push)
         
+    }
+    
+    func selectThumbnail(imageData: Data) {
+        
+        if let delegate = delegate {
+           
+            self.sceneCoodinator.pop(animated: true) {
+                
+                delegate.selectedThumbnail(imageData: imageData)
+                
+            }
+        }
+        
+    }
+    
+    func dissmiss() {
+
+        self.sceneCoodinator.pop(animated: true)
+
     }
     
 }
@@ -56,14 +79,15 @@ extension SelectThumbnailVM: SelectDegitalContentDelegate {
         let vm = SelectedImageVM(sceneCoodinator: self.sceneCoodinator, user: self.user, kind: kind, asset: asset)
         let scene: Scene = .digitalContentsPickerScene(scene: .selectedImage(vm))
         
-        self.sceneCoodinator.modalTransition(to: scene, type: .pushFromBottom)
-//        self.sceneCoodinator.modalTransition(to: scene, type: .modal(presentationStyle: .fullScreen, modalTransisionStyle: .coverVertical, hasNavigationController: false))
+        vm.delegate = self
+        
+        self.sceneCoodinator.modalTransition(to: scene, type: .modal(presentationStyle: .fullScreen, modalTransisionStyle: .coverVertical, hasNavigationController: false))
     
     }
     
     func selectedImage(imageData: Data) {
 
-        self.imageData = imageData
+        self.imageDataSubject.onNext(imageData)
 
         
     }

@@ -180,8 +180,6 @@ class SelectThumbnailViewController: UIViewController, BindableType {
         
         self.view.backgroundColor = .white
         
-        guard let img = UIImage(data: viewModel.imageData) else { return }
-        thumbnailImgView.image = img
         
         toCameraRollView.addGestureRecognizer(tap)
         
@@ -198,6 +196,34 @@ class SelectThumbnailViewController: UIViewController, BindableType {
             .subscribe(onNext: { [unowned self] _ in
                 
                 self.viewModel.selectThumbnail()
+                
+            })
+            .disposed(by: viewModel.disposeBag)
+        
+        self.viewModel.imageDataSubject
+            .compactMap {
+               return UIImage(data: $0)
+            }
+            .subscribe(onNext: { [unowned self] img in
+                
+                self.thumbnailImgView.image = img
+                
+            })
+            .disposed(by: viewModel.disposeBag)
+        
+        self.selectBtn.rx.tap
+            .withLatestFrom(viewModel.imageDataSubject)
+            .subscribe(onNext: { [unowned self] data in
+                
+                self.viewModel.selectThumbnail(imageData: data)
+                
+            })
+            .disposed(by: viewModel.disposeBag)
+        
+        self.cancelBtn.rx.tap
+            .subscribe(onNext: { [unowned self] in
+                
+                self.viewModel.dissmiss()
                 
             })
             .disposed(by: viewModel.disposeBag)

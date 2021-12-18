@@ -50,7 +50,7 @@ class SelectedImageViewController: UIViewController, BindableType {
         
         stackView = UIStackView()
         stackView.axis = .vertical
-        stackView.spacing = 10
+//        stackView.spacing = 10
         stackView.translatesAutoresizingMaskIntoConstraints = false
         
         cutBtn = UIButton()
@@ -58,8 +58,13 @@ class SelectedImageViewController: UIViewController, BindableType {
         guard let cutImg = UIImage(systemName: "scissors") else { return }
         cutBtn.setBackgroundImage(cutImg, for: .normal)
         cutBtn.tintColor = #colorLiteral(red: 1, green: 0.5763723254, blue: 0, alpha: 1)
+        
+        cutBtn.translatesAutoresizingMaskIntoConstraints = false
   
         stackView.addArrangedSubview(cutBtn)
+        
+        cutBtn.widthAnchor.constraint(equalToConstant: self.view.frame.width * 0.1).isActive = true
+        cutBtn.heightAnchor.constraint(equalToConstant: self.view.frame.width * 0.1).isActive = true
         
         addBtn = UIButton()
         addBtn.translatesAutoresizingMaskIntoConstraints = false
@@ -68,23 +73,33 @@ class SelectedImageViewController: UIViewController, BindableType {
         addBtn.setBackgroundImage(plusImg, for: .normal)
         addBtn.tintColor = #colorLiteral(red: 1, green: 0.5763723254, blue: 0, alpha: 1)
         
+        self.view.addSubview(addBtn)
+        
+        NSLayoutConstraint.activate([
+            
+            addBtn.bottomAnchor.constraint(equalTo: self.view.layoutMarginsGuide.bottomAnchor, constant: -85.0),
+            addBtn.trailingAnchor.constraint(equalTo: self.view.layoutMarginsGuide.trailingAnchor),
+            addBtn.widthAnchor.constraint(equalToConstant: self.view.frame.width * 0.15),
+            addBtn.heightAnchor.constraint(equalToConstant: self.view.frame.width * 0.15)
+            
+        ])
+      
+        
         self.tapView.addGestureRecognizer(tap)
+        
         self.tapView.addSubview(stackView)
         self.tapView.bringSubviewToFront(stackView)
 
-        let widthConstraint = self.stackView.widthAnchor.constraint(equalToConstant: self.view.frame.width * 0.07)
-        let heightConstraint =  self.stackView.heightAnchor.constraint(equalToConstant: (self.view.frame.width * 0.07) * 2 + 10)
-        let bottomConstraint = NSLayoutConstraint(item: stackView!, attribute: .bottom, relatedBy: .equal, toItem: self.tapView, attribute: .bottom, multiplier: 1.0, constant: -85.0)
+        let widthConstraint = self.stackView.widthAnchor.constraint(equalToConstant: self.view.frame.width * 0.1)
+        let heightConstraint =  self.stackView.heightAnchor.constraint(equalToConstant: self.view.frame.width * 0.1)
+//        let bottomConstraint = NSLayoutConstraint(item: stackView!, attribute: .bottom, relatedBy: .equal, toItem: self.tapView, attribute: .bottom, multiplier: 1.0, constant: -85.0)
+        let topConstraint = NSLayoutConstraint(item: stackView!, attribute: .top, relatedBy: .equal, toItem: self.tapView, attribute: .topMargin, multiplier: 1.0, constant: 0.0)
+
         let rightConstraint = NSLayoutConstraint(item: stackView!, attribute: .right, relatedBy: .equal, toItem: self.tapView, attribute: .right, multiplier: 1.0, constant: -20.0)
         
         NSLayoutConstraint.activate([
-            widthConstraint, heightConstraint, rightConstraint, bottomConstraint
+            widthConstraint, heightConstraint, rightConstraint, topConstraint
         ])
-        
-        
-//        self.addBtn = UIBarButtonItem()
-//        self.addBtn.title = "Add"
-//        self.navigationItem.rightBarButtonItem = addBtn
         
         self.imgView.fetchImageAsset(self.viewModel.asset, targetSize: self.imgView.frame.size, completionHandler: nil)
         
@@ -106,6 +121,7 @@ class SelectedImageViewController: UIViewController, BindableType {
             .disposed(by: viewModel.disposeBag)
         
         self.viewModel.isHiddenSubject.bind(to: self.stackView.rx.isHidden).disposed(by: viewModel.disposeBag)
+        self.viewModel.isHiddenSubject.bind(to: self.addBtn.rx.isHidden).disposed(by: viewModel.disposeBag)
         
         addBtn.rx.tap
             .throttle(.milliseconds(1000), scheduler: MainScheduler.instance)

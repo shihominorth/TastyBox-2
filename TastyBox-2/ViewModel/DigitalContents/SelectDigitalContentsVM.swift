@@ -27,7 +27,7 @@ protocol SelectDegitalContentDelegate: AnyObject {
 
 class SelectDigitalContentsVM: ViewModelBase {
     
-    var assets = PHFetchResult<PHAsset>()
+    var assets: PHFetchResult<PHAsset>
 
     let sceneCoodinator: SceneCoordinator
     let user: Firebase.User
@@ -38,6 +38,7 @@ class SelectDigitalContentsVM: ViewModelBase {
     
     init(sceneCoodinator: SceneCoordinator, user: Firebase.User, kind: DigitalContentsFor, isEnableSelectOnlyOneDigitalContentType: Bool) {
         
+        self.assets = PHFetchResult<PHAsset>()
         self.sceneCoodinator = sceneCoodinator
         self.user = user
         self.kind = kind
@@ -65,10 +66,26 @@ class SelectDigitalContentsVM: ViewModelBase {
 
     func toSelectImageVC(asset: PHAsset) {
         
-        let vm = SelectedImageVM(sceneCoodinator: self.sceneCoodinator, user: self.user, kind: kind, asset: asset)
-        let scene: Scene = .digitalContentsPickerScene(scene: .selectedImage(vm))
+        if let delegate = delegate {
+            
+            self.sceneCoodinator.pop(animated: true) { [weak self] in
+                
+                guard let strognSelf = self else { return }
+                delegate.selectedImage(asset: asset, kind: strognSelf.kind, sceneCoordinator: strognSelf.sceneCoodinator)
+
+            }
+            
         
-        self.sceneCoodinator.modalTransition(to: scene, type: .push)
+        }
+        else {
+            
+            let vm = SelectedImageVM(sceneCoodinator: self.sceneCoodinator, user: self.user, kind: kind, asset: asset)
+            let scene: Scene = .digitalContentsPickerScene(scene: .selectedImage(vm))
+            
+            self.sceneCoodinator.modalTransition(to: scene, type: .push)
+            
+        }
+      
         
     }
     
