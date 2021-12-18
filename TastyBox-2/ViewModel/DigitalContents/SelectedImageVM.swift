@@ -62,17 +62,26 @@ class SelectedImageVM: ViewModelBase {
     }
     
     func addImage(imgData: Data) {
-        
+            
         switch kind {
         case .profile:
             print("profile")
         case .recipeMain(.image):
             
-            let vm = CreateRecipeVM(sceneCoodinator: self.sceneCoodinator, user: self.user, imgData: imgData, videoUrl: nil, kind: .image)
-            let scene: Scene = .createReceipeScene(scene: .createRecipe(vm))
-            
-            self.sceneCoodinator.modalTransition(to: scene, type: .push)
-            
+            if let delegate = delegate {
+                
+                delegate.selectedImage(imageData: imgData)
+                
+            }
+            else {
+                
+                let vm = CreateRecipeVM(sceneCoodinator: self.sceneCoodinator, user: self.user, imgData: imgData, videoUrl: nil, kind: .image)
+                let scene: Scene = .createReceipeScene(scene: .createRecipe(vm))
+                
+                self.sceneCoodinator.modalTransition(to: scene, type: .push)
+                
+            }
+          
             
         case .instructionImg:
             print("instruction")

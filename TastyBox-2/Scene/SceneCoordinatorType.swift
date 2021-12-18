@@ -15,12 +15,12 @@ protocol SceneCoordinatorType {
 
   /// pop scene from navigation stack or dismiss current modal
   @discardableResult
-  func pop(animated: Bool) -> Completable
+  func pop(animated: Bool, completion: (() -> Void)?) -> Completable
 }
 
 extension SceneCoordinatorType {
   @discardableResult
   func pop() -> Completable {
-    return pop(animated: true)
+    return pop(animated: true, completion: nil)
   }
 }

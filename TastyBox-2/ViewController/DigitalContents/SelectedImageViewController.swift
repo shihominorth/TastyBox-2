@@ -20,7 +20,8 @@ class SelectedImageViewController: UIViewController, BindableType {
     var stackView: UIStackView!
     var cutBtn: UIButton!
     
-    var addBtn: UIBarButtonItem!
+    var addBtn: UIButton!
+//    var addBtn: UIBarButtonItem!
     var tapView: UIView!
     var tap: UITapGestureRecognizer!
 
@@ -49,6 +50,7 @@ class SelectedImageViewController: UIViewController, BindableType {
         
         stackView = UIStackView()
         stackView.axis = .vertical
+        stackView.spacing = 10
         stackView.translatesAutoresizingMaskIntoConstraints = false
         
         cutBtn = UIButton()
@@ -59,12 +61,19 @@ class SelectedImageViewController: UIViewController, BindableType {
   
         stackView.addArrangedSubview(cutBtn)
         
+        addBtn = UIButton()
+        addBtn.translatesAutoresizingMaskIntoConstraints = false
+
+        guard let plusImg = UIImage(systemName: "plus.circle.fill") else { return }
+        addBtn.setBackgroundImage(plusImg, for: .normal)
+        addBtn.tintColor = #colorLiteral(red: 1, green: 0.5763723254, blue: 0, alpha: 1)
+        
         self.tapView.addGestureRecognizer(tap)
         self.tapView.addSubview(stackView)
         self.tapView.bringSubviewToFront(stackView)
 
-        let widthConstraint = self.stackView.widthAnchor.constraint(equalTo: self.tapView.widthAnchor, multiplier: 0.1)
-        let heightConstraint =  self.stackView.heightAnchor.constraint(equalTo: self.tapView.widthAnchor, multiplier: 0.1)
+        let widthConstraint = self.stackView.widthAnchor.constraint(equalToConstant: self.view.frame.width * 0.07)
+        let heightConstraint =  self.stackView.heightAnchor.constraint(equalToConstant: (self.view.frame.width * 0.07) * 2 + 10)
         let bottomConstraint = NSLayoutConstraint(item: stackView!, attribute: .bottom, relatedBy: .equal, toItem: self.tapView, attribute: .bottom, multiplier: 1.0, constant: -85.0)
         let rightConstraint = NSLayoutConstraint(item: stackView!, attribute: .right, relatedBy: .equal, toItem: self.tapView, attribute: .right, multiplier: 1.0, constant: -20.0)
         
@@ -73,9 +82,9 @@ class SelectedImageViewController: UIViewController, BindableType {
         ])
         
         
-        self.addBtn = UIBarButtonItem()
-        self.addBtn.title = "Add"
-        self.navigationItem.rightBarButtonItem = addBtn
+//        self.addBtn = UIBarButtonItem()
+//        self.addBtn.title = "Add"
+//        self.navigationItem.rightBarButtonItem = addBtn
         
         self.imgView.fetchImageAsset(self.viewModel.asset, targetSize: self.imgView.frame.size, completionHandler: nil)
         
@@ -101,10 +110,10 @@ class SelectedImageViewController: UIViewController, BindableType {
         addBtn.rx.tap
             .throttle(.milliseconds(1000), scheduler: MainScheduler.instance)
             .subscribe(onNext: { [unowned self] _ in
-                
+
                 guard let newData = self.imgView.image?.convertToData() else { return }
                 self.viewModel.addImage(imgData: newData)
-                
+
             })
             .disposed(by: viewModel.disposeBag)
         

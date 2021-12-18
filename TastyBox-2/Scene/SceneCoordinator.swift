@@ -76,6 +76,31 @@ class SceneCoordinator: NSObject, SceneCoordinatorType {
             
             }
             
+        case .pushFromBottom:
+            
+            guard let navigationController = currentViewController.navigationController else {
+                fatalError("Can't push a view controller without a current navigation controller")
+            }
+            
+            // Challenge 3: set ourselves as the navigation controller's delegate. This needs to be done
+            // prior to `navigationController.rx.delegate` as it takes care of preserving the configured delegate
+            navigationController.delegate = self
+            
+            // one-off subscription to be notified when push complete
+            _ = navigationController.rx.delegate
+                .sentMessage(#selector(UINavigationControllerDelegate.navigationController(_:didShow:animated:)))
+                .map { _ in }
+                .bind(to: subject)
+            
+            let transition = CATransition()
+            transition.duration = 0.5
+            transition.timingFunction = CAMediaTimingFunction(name: .easeInEaseOut)
+            transition.type = .push
+            transition.subtype = .fromLeft
+            navigationController.view.layer.add(transition, forKey: kCATransition)
+            navigationController.pushViewController(viewController, animated: false)
+           
+            
         case let .modal(presentationStyle, transitionStyle, hasNavigationController):
             
             viewController.modalPresentationStyle = presentationStyle ?? .fullScreen
@@ -100,7 +125,7 @@ class SceneCoordinator: NSObject, SceneCoordinatorType {
 //                currentViewController.present(viewController, animated: true) { [unowned self] in
                     
                     
-                    if let navigationController = viewController as? UINavigationController {
+                if let navigationController = viewController as? UINavigationController {
 //
 //                        self.currentViewController = SceneCoordinator.actualViewController(for: navigationController)
                         navigationController.delegate = self
@@ -108,7 +133,9 @@ class SceneCoordinator: NSObject, SceneCoordinatorType {
                         currentViewController.present(viewController, animated: true) {
                             subject.onCompleted()
                         }
-//
+
+                        currentViewController = SceneCoordinator.actualViewController(for: viewController)
+
                     }
 //
 //                    subject.onCompleted()
@@ -413,7 +440,7 @@ class SceneCoordinator: NSObject, SceneCoordinatorType {
     
     
     @discardableResult
-    func pop(animated: Bool) -> Completable {
+    func pop(animated: Bool, completion: (() -> Void)? = nil) -> Completable {
         let subject = PublishSubject<Void>()
 
            
@@ -422,7 +449,9 @@ class SceneCoordinator: NSObject, SceneCoordinatorType {
                 currentViewController.dismiss(animated: animated) {
                     self.currentViewController = SceneCoordinator.actualViewController(for: presenter)
                     subject.onCompleted()
+                    completion?()
                 }
+                
             } else if let navigationController = currentViewController.navigationController {
                 // challenge 3: we don't need to set ourselves as delegate of the navigation controller again,
                 // as this has been done during the push transition

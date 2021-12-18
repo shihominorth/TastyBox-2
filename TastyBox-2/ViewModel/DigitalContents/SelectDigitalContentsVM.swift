@@ -13,14 +13,15 @@ import RxSwift
 enum DigitalContentsFor {
     
     enum RecipeMain {
-        case image, video
+        case image, video, thumbnail
     }
     
     case profile, recipeMain(RecipeMain), instructionImg
 }
 
 protocol SelectDegitalContentDelegate: AnyObject {
-    func selectedImage(asset: PHAsset, kind: DigitalContentsFor)
+    func selectedImage(imageData: Data)
+    func selectedImage(asset: PHAsset, kind: DigitalContentsFor, sceneCoordinator: SceneCoordinator)
     func selectedVideo(asset: PHAsset)
 }
 
@@ -50,7 +51,7 @@ class SelectDigitalContentsVM: ViewModelBase {
 
         switch kind {
         
-        case .profile, .recipeMain(.image), .instructionImg:
+        case .profile, .recipeMain(.image), .recipeMain(.thumbnail), .instructionImg:
             
             assets = PHAsset.fetchAssets(with: .image, options: nil)
       
@@ -62,7 +63,6 @@ class SelectDigitalContentsVM: ViewModelBase {
  
     }
 
-    
     func toSelectImageVC(asset: PHAsset) {
         
         let vm = SelectedImageVM(sceneCoodinator: self.sceneCoodinator, user: self.user, kind: kind, asset: asset)
@@ -78,7 +78,6 @@ class SelectDigitalContentsVM: ViewModelBase {
         let scene: Scene = .digitalContentsPickerScene(scene: .selectedVideo(vm))
         
         self.sceneCoodinator.modalTransition(to: scene, type: .push)
-        
         
     }
   

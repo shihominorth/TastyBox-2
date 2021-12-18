@@ -35,9 +35,9 @@ class SelectDigitalContentsViewController: UIViewController, BindableType {
             
             // Request permission to access photo library
             PHPhotoLibrary.requestAuthorization(for: .readWrite) { [unowned self] (status) in
-                DispatchQueue.main.async { [unowned self] in
-                    showUI(for: status)
-                }
+//                DispatchQueue.main.async { [unowned self] in
+//                    showUI(for: status)
+//                }
             }
             
             
@@ -98,7 +98,7 @@ class SelectDigitalContentsViewController: UIViewController, BindableType {
 
     override func viewWillDisappear(_ animated: Bool) {
         
-        self.viewModel.sceneCoodinator.userDismissed()
+//        self.viewModel.sceneCoodinator.userDismissed()
         
     }
     
@@ -162,6 +162,14 @@ class SelectDigitalContentsViewController: UIViewController, BindableType {
                         case .recipeMain(.video):
                         
                             self.viewModel.toSelectVideoVC(asset: asset)
+                            
+                        case .recipeMain(.thumbnail):
+                            
+//                            self.dismiss(animated: true) { [unowned self] in
+                                
+                                self.viewModel.toSelectImageVC(asset: asset)
+                                
+//                            }
                         
                         default:
                           

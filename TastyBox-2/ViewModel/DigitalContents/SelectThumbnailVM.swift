@@ -7,11 +7,12 @@
 
 import Foundation
 import Firebase
+import Photos
 
 
 class SelectThumbnailVM: ViewModelBase {
     
-    let sceneCoodinator: SceneCoordinator
+    var sceneCoodinator: SceneCoordinator
     let user: Firebase.User
     let apiType: CreateRecipeDMProtocol.Type
     var imageData: Data
@@ -28,8 +29,10 @@ class SelectThumbnailVM: ViewModelBase {
     
     func selectThumbnail() {
         
-        let vm = SelectDigitalContentsVM(sceneCoodinator: self.sceneCoodinator, user: self.user, kind: .recipeMain(.image), isEnableSelectOnlyOneDigitalContentType: true)
+        let vm = SelectDigitalContentsVM(sceneCoodinator: self.sceneCoodinator, user: self.user, kind: .recipeMain(.thumbnail), isEnableSelectOnlyOneDigitalContentType: true)
         let scene: Scene = .digitalContentsPickerScene(scene: .selectDigitalContents(vm))
+        
+        vm.delegate = self
         
         self.sceneCoodinator.modalTransition(to: scene, type: .modal(presentationStyle: .fullScreen, modalTransisionStyle: .coverVertical, hasNavigationController: true))
         
@@ -37,4 +40,32 @@ class SelectThumbnailVM: ViewModelBase {
         
     }
     
+}
+
+extension SelectThumbnailVM: SelectDegitalContentDelegate {
+    
+    func selectedVideo(asset: PHAsset) {
+        
+    }
+    
+   
+    func selectedImage(asset: PHAsset, kind: DigitalContentsFor, sceneCoordinator: SceneCoordinator) {
+      
+        self.sceneCoodinator = sceneCoordinator
+        
+        let vm = SelectedImageVM(sceneCoodinator: self.sceneCoodinator, user: self.user, kind: kind, asset: asset)
+        let scene: Scene = .digitalContentsPickerScene(scene: .selectedImage(vm))
+        
+        self.sceneCoodinator.modalTransition(to: scene, type: .pushFromBottom)
+//        self.sceneCoodinator.modalTransition(to: scene, type: .modal(presentationStyle: .fullScreen, modalTransisionStyle: .coverVertical, hasNavigationController: false))
+    
+    }
+    
+    func selectedImage(imageData: Data) {
+
+        self.imageData = imageData
+
+        
+    }
+
 }

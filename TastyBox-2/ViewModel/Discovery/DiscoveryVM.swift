@@ -94,11 +94,13 @@ class DiscoveryVM: ViewModelBase {
         let vm = SelectDigitalContentsVM(sceneCoodinator: self.sceneCoodinator, user: self.user, kind: .recipeMain(.image), isEnableSelectOnlyOneDigitalContentType: false)
         let scene: Scene = .digitalContentsPickerScene(scene: .selectDigitalContents(vm))
         
-//        self.sceneCoodinator.modalTransition(to: scene, type: .push)
+//        vm.delegate = self
+        
+        self.sceneCoodinator.modalTransition(to: scene, type: .pushFromBottom)
             
 //        let vm = CreateRecipeVM(sceneCoodinator: self.sceneCoodinator, user: self.user)
 //
-        self.sceneCoodinator.modalTransition(to: scene, type: .modal(presentationStyle: .fullScreen, modalTransisionStyle: .coverVertical, hasNavigationController: true))
+//        self.sceneCoodinator.modalTransition(to: scene, type: .modal(presentationStyle: .fullScreen, modalTransisionStyle: .coverVertical, hasNavigationController: true))
 
     }
     
@@ -168,3 +170,35 @@ class DiscoveryVM: ViewModelBase {
     }
 }
 
+extension DiscoveryVM: SelectDegitalContentDelegate {
+    
+    func selectedImage(imageData: Data) {
+        
+    }
+    
+    func selectedImage(asset: PHAsset, kind: DigitalContentsFor, sceneCoordinator: SceneCoordinator) {
+        
+        let vm = SelectedImageVM(sceneCoodinator: self.sceneCoodinator, user: self.user, kind: kind, asset: asset)
+        let scene: Scene = .digitalContentsPickerScene(scene: .selectedImage(vm))
+        
+//        self.sceneCoodinator.modalTransition(to: scene, type: .modal(presentationStyle: .fullScreen, modalTransisionStyle: .coverVertical, hasNavigationController: false))
+
+        
+        self.sceneCoodinator.modalTransition(to: scene, type: .push)
+
+    }
+    
+    func selectedVideo(asset: PHAsset) {
+        
+        let vm = SelectedVideoVM(sceneCoodinator: self.sceneCoodinator, user: self.user, asset: asset)
+        let scene: Scene = .digitalContentsPickerScene(scene: .selectedVideo(vm))
+        
+//        self.sceneCoodinator.modalTransition(to: scene, type: .modal(presentationStyle: .fullScreen, modalTransisionStyle: .coverVertical, hasNavigationController: false))
+
+        self.sceneCoodinator.modalTransition(to: scene, type: .push)
+        
+    }
+    
+    
+    
+}

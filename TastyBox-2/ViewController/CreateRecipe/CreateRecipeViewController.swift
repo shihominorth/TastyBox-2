@@ -177,7 +177,8 @@ extension CreateRecipeViewController: UITableViewDelegate, UITableViewDataSource
                         
                         case .video:
                             self.viewModel.toSelectThumbnail(imageData: data)
-               
+                        default:
+                            break
                         }
                         
                       

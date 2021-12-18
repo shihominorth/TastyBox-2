@@ -14,16 +14,20 @@ class SelectThumbnailViewController: UIViewController, BindableType {
     typealias ViewModelType = SelectThumbnailVM
     var viewModel: SelectThumbnailVM!
  
-    let thumbnailImgView: UIImageView
-    let toCameraRollView: UIView
-    let borderView: UIView
-    let toCameraRollLbl: UILabel
-    let toCameraRollImgView: UIImageView
-    let editStackView: UIStackView
-    let selectBtn: UIButton
-    let tap: UITapGestureRecognizer
+    @IBOutlet weak var cancelBtn: UIBarButtonItem!
+    var thumbnailImgView: UIImageView!
+    var toCameraRollView: UIView!
+    var borderView: UIView!
+    var toCameraRollLbl: UILabel!
+    var toCameraRollImgView: UIImageView!
+    var editStackView: UIStackView!
+    var selectBtn: UIButton!
+    var tap: UITapGestureRecognizer!
     
-    required init(coder: NSCoder) {
+    // init cause self.navigationController is nil
+    
+    override func viewDidLoad() {
+        super.viewDidLoad()
         
         thumbnailImgView = {
 
@@ -106,16 +110,9 @@ class SelectThumbnailViewController: UIViewController, BindableType {
         
         tap = UITapGestureRecognizer()
         
-        super.init(nibName: nil, bundle: nil)
         
         toCameraRollImgView.accessibilityIdentifier = "camera roll view"
         thumbnailImgView.accessibilityIdentifier = "thumbnail img view"
-
-    }
-    
-    override func loadView() {
-       
-        super.loadView()
         
         self.view.addSubview(thumbnailImgView)
         self.view.addSubview(editStackView)
@@ -126,11 +123,6 @@ class SelectThumbnailViewController: UIViewController, BindableType {
         
         self.toCameraRollView.addSubview(toCameraRollImgView)
         self.toCameraRollView.addSubview(toCameraRollLbl)
-       
-    }
-    
-    override func viewDidLoad() {
-        super.viewDidLoad()
         
         NSLayoutConstraint.activate([
             
@@ -193,8 +185,8 @@ class SelectThumbnailViewController: UIViewController, BindableType {
         
         toCameraRollView.addGestureRecognizer(tap)
         
-//        self.view.layoutIfNeeded()
     }
+    
  
     
     func bindViewModel() {

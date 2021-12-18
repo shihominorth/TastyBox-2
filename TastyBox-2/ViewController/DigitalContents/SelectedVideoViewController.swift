@@ -16,7 +16,8 @@ class SelectedVideoViewController: UIViewController, BindableType {
     typealias ViewModelType = SelectedVideoVM
     var viewModel: SelectedVideoVM!
     
-    var addBtn: UIBarButtonItem?
+    var addBtn: UIButton?
+//    var addBtn: UIBarButtonItem?
     var videoPlayerView: VideoPlayerView?
 //    var playerVideoView = ContainerControlView()
     
@@ -84,8 +85,28 @@ class SelectedVideoViewController: UIViewController, BindableType {
         videoPlayerView = VideoPlayerView(frame: self.view.frame, asset: self.viewModel.asset)
         self.view.addSubview(videoPlayerView!)
         
-        addBtn = UIBarButtonItem()
-        addBtn?.title = "Add"
+        addBtn = UIButton()
+        guard let plusImg = UIImage(systemName: "plus.circle.fill") else { return }
+        addBtn?.setBackgroundImage(plusImg, for: .normal)
+        addBtn!.tintColor = #colorLiteral(red: 1, green: 0.5763723254, blue: 0, alpha: 1)
+
+        
+        addBtn?.translatesAutoresizingMaskIntoConstraints = false
+        
+        self.view.addSubview(addBtn!)
+        
+        self.view.bringSubviewToFront(addBtn!)
+        
+        NSLayoutConstraint.activate([
+            
+            addBtn!.widthAnchor.constraint(equalToConstant: self.view.frame.width * 0.1),
+            addBtn!.heightAnchor.constraint(equalToConstant: self.view.frame.height * 0.1),
+            addBtn!.trailingAnchor.constraint(equalTo: self.view.layoutMarginsGuide.trailingAnchor),
+            addBtn!.bottomAnchor.constraint(equalTo: self.view.layoutMarginsGuide.bottomAnchor, constant: -80)
+
+        ])
+//        addBtn = UIBarButtonItem()
+//        addBtn?.title = "Add"
         
         addBtn?.rx.tap
             .flatMapLatest { [unowned self] _ -> Observable<(Data, URL)> in
@@ -104,32 +125,6 @@ class SelectedVideoViewController: UIViewController, BindableType {
                 
             })
             .disposed(by: viewModel.disposeBag)
-        
-        self.navigationItem.rightBarButtonItem = addBtn
-    }
-    
-    override func viewWillDisappear(_ animated: Bool) {
-        
-        self.videoPlayerView?.player?.pause()
-       
-
-    }
-    
-    func bindViewModel() {
-        
-        
-//        self.videoPlayerView.isHiddenSubject
-//            .bind(to: viewModel.isHiddenSubject).disposed(by: viewModel.disposeBag)
-        
-//        videoPlayerView?.tap?.rx.event
-//            .throttle(.milliseconds(1000), scheduler: MainScheduler.instance)
-//            .withLatestFrom(viewModel.isHiddenSubject)
-//            .subscribe(onNext: { isPlayerViewHidden in
-//
-//                self.viewModel.isHiddenSubject.onNext(!isPlayerViewHidden)
-//
-//            })
-//            .disposed(by: viewModel.disposeBag)
         
         videoPlayerView?.pauseBtn.rx.tap
             .throttle(.milliseconds(1000), scheduler: MainScheduler.instance)
@@ -167,6 +162,69 @@ class SelectedVideoViewController: UIViewController, BindableType {
                 
             })
             .disposed(by: viewModel.disposeBag)
+        
+//        self.navigationItem.rightBarButtonItem = addBtn
+    }
+    
+    override func viewWillDisappear(_ animated: Bool) {
+        
+        self.videoPlayerView?.player?.pause()
+       
+
+    }
+    
+    func bindViewModel() {
+        
+        
+//        self.videoPlayerView.isHiddenSubject
+//            .bind(to: viewModel.isHiddenSubject).disposed(by: viewModel.disposeBag)
+        
+//        videoPlayerView?.tap?.rx.event
+//            .throttle(.milliseconds(1000), scheduler: MainScheduler.instance)
+//            .withLatestFrom(viewModel.isHiddenSubject)
+//            .subscribe(onNext: { isPlayerViewHidden in
+//
+//                self.viewModel.isHiddenSubject.onNext(!isPlayerViewHidden)
+//
+//            })
+//            .disposed(by: viewModel.disposeBag)
+        
+//        videoPlayerView?.pauseBtn.rx.tap
+//            .throttle(.milliseconds(1000), scheduler: MainScheduler.instance)
+//            .withLatestFrom(self.viewModel.isPlayingSubject)
+//            .subscribe(onNext: { [unowned self] isPlaying in
+//
+//                self.viewModel.isPlayingSubject.onNext(!isPlaying)
+//
+//            })
+//            .disposed(by: viewModel.disposeBag)
+//
+//        viewModel.isPlayingSubject
+//            .skip(1)
+//            .subscribe(onNext: { [unowned self] isPlaying in
+//
+//                if isPlaying {
+//
+//                    guard let image = UIImage(systemName: "pause.circle.fill") else { return }
+//
+//                    self.videoPlayerView?.pauseBtn.setBackgroundImage(image, for: .normal)
+//
+//                    self.videoPlayerView?.player?.play()
+//
+//
+//                }
+//                else {
+//
+//                    guard let image = UIImage(systemName: "play.circle.fill") else { return }
+//
+//                    self.videoPlayerView?.pauseBtn.setBackgroundImage(image, for: .normal)
+//
+//                    self.videoPlayerView?.player?.pause()
+//
+//                }
+//
+//            })
+//            .disposed(by: viewModel.disposeBag)
         
     }
     
