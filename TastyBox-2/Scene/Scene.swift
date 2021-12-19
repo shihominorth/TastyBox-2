@@ -23,7 +23,7 @@ enum Scene {
     }
     
     enum ProfileScene {
-        case myprofile(MyProfileVM)
+        case myprofile(MyProfileVM), profile
     }
     
     enum RecipeDetailScene {

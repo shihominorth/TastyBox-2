@@ -416,6 +416,12 @@ extension Scene {
             vc.bindViewModel(to: viewModel)
             
             return vc
+       
+        case .profile:
+            
+            var vc = storyboard.instantiateViewController(withIdentifier: "profileVC") as! ProfileViewController
+            
+            return vc
             
         }
         
