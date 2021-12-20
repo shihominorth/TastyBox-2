@@ -28,6 +28,9 @@ class MyProfileViewController: UIViewController, BindableType {
     func bindViewModel() {
         
         self.viewModel.getMyPostedRecipes()
+            .bind(to: viewModel.postedRecipesSubject)
+            .disposed(by: viewModel.disposeBag)
+        
     }
     
     func setUpTableView() {

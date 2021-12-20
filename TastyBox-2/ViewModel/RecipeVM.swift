@@ -24,7 +24,7 @@ class RecipeVM: ViewModelBase {
     let recipe: Recipe
     var sections: [Section]
     var evaluations:[Evaluation]
-    
+    var publisher: User!
     var isDisplayed = false
     var isEnded = false
     
@@ -90,7 +90,8 @@ class RecipeVM: ViewModelBase {
             // get publishers from recipe.publisherID
             let publisherElement: RecipeDetailSectionItem = .publisher(publisher)
             let publisherSection = Section(model: publisherElement.rawValue, elements: [publisherElement])
-
+            self.publisher = publisher
+            
             resultSections.append(publisherSection)
             
             
@@ -235,6 +236,16 @@ class RecipeVM: ViewModelBase {
         
         
         self.sceneCoordinator.modalTransition(to: scene, type: .centerCard)
+        
+    }
+    
+    
+    func toProfileVC() {
+        
+        let vm = ProfileVM(sceneCoordinator: self.sceneCoordinator, user: self.user, publisher: self.publisher)
+        let scene: Scene = .profileScene(scene: .profile(vm))
+        
+        self.sceneCoordinator.modalTransition(to: scene, type: .push)
         
     }
     

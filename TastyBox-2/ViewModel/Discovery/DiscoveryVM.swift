@@ -102,7 +102,7 @@ class DiscoveryVM: ViewModelBase {
         
         let vm = MyProfileVM(sceneCoordinator: self.sceneCoodinator, user: self.user)
         
-        self.sceneCoodinator.modalTransition(to: .profileScene(scene: .myprofile(vm)), type: .push)
+        self.sceneCoodinator.modalTransition(to: .profileScene(scene: .myProfile(vm)), type: .push)
         
     }
     

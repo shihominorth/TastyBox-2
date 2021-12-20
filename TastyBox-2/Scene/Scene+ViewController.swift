@@ -410,16 +410,18 @@ extension Scene {
         let storyboard = UIStoryboard(name: "Profile", bundle: nil)
 
         switch scene {
-        case .myprofile(let viewModel):
+        case .myProfile(let viewModel):
            
             var vc = storyboard.instantiateViewController(withIdentifier: "myProfile") as! MyProfileViewController
             vc.bindViewModel(to: viewModel)
             
             return vc
        
-        case .profile:
+        case .profile(let viewModel):
             
             var vc = storyboard.instantiateViewController(withIdentifier: "profileVC") as! ProfileViewController
+            
+            vc.bindViewModel(to: viewModel)
             
             return vc
             

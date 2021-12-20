@@ -28,29 +28,17 @@ class MyProfileVM: ViewModelBase {
         
     }
     
-    func getMyPostedRecipes(){
+    func getMyPostedRecipes() -> Observable<[Recipe]> {
         
-        self.apiType.getMyPostedRecipes(user: self.user)
-            .subscribe(onNext: { recipes in
+        return self.apiType.getMyPostedRecipes(user: self.user)
+            .catch { err in
                 
-                self.postedRecipesSubject.onNext(recipes)
+                err.handleStorageError()?.showErrNotification()
                 
-            }, onError: { err in
+                print(err)
                 
-                guard let reason = err.handleStorageError() else { return }
-                
-                SCLAlertView().showTitle(
-                    reason.reason, // Title of view
-                    subTitle: reason.solution,
-                    timeout: .none, // String of view
-                    completeText: "Done", // Optional button value, default: ""
-                    style: .error, // Styles - see below.
-                    colorStyle: 0xA429FF,
-                    colorTextButton: 0xFFFFFF
-                )
-                
-            })
-            .disposed(by: self.disposeBag)
+                return .empty()
+            }
         
         
     }

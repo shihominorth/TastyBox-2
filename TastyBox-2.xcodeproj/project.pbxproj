@@ -143,6 +143,8 @@
 		6FB06F4626D67E0600E110B4 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 6FB06F4526D67E0600E110B4 /* Assets.xcassets */; };
 		6FB06F4926D67E0600E110B4 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 6FB06F4726D67E0600E110B4 /* LaunchScreen.storyboard */; };
 		6FB70D19276F72260099BC63 /* ProfileViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FB70D18276F72260099BC63 /* ProfileViewController.swift */; };
+		6FB70D1C276F885D0099BC63 /* ProfileVM.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FB70D1B276F885D0099BC63 /* ProfileVM.swift */; };
+		6FB70D1E276F8AB70099BC63 /* ProfileDM.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FB70D1D276F8AB70099BC63 /* ProfileDM.swift */; };
 		6FB970AA2724147000350F84 /* RecipeGenresCVCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FB970A92724147000350F84 /* RecipeGenresCVCell.swift */; };
 		6FB970AC272417FD00350F84 /* GenreCVCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FB970AB272417FC00350F84 /* GenreCVCell.swift */; };
 		6FB970AE2724358300350F84 /* SelectGenreTVCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FB970AD2724358300350F84 /* SelectGenreTVCell.swift */; };
@@ -370,6 +372,8 @@
 		6FB06F4826D67E0600E110B4 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		6FB06F4A26D67E0600E110B4 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		6FB70D18276F72260099BC63 /* ProfileViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileViewController.swift; sourceTree = "<group>"; };
+		6FB70D1B276F885D0099BC63 /* ProfileVM.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileVM.swift; sourceTree = "<group>"; };
+		6FB70D1D276F8AB70099BC63 /* ProfileDM.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileDM.swift; sourceTree = "<group>"; };
 		6FB970A92724147000350F84 /* RecipeGenresCVCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecipeGenresCVCell.swift; sourceTree = "<group>"; };
 		6FB970AB272417FC00350F84 /* GenreCVCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GenreCVCell.swift; sourceTree = "<group>"; };
 		6FB970AD2724358300350F84 /* SelectGenreTVCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SelectGenreTVCell.swift; sourceTree = "<group>"; };
@@ -844,6 +848,15 @@
 			path = "TastyBox-2";
 			sourceTree = "<group>";
 		};
+		6FB70D1A276F88450099BC63 /* Profile */ = {
+			isa = PBXGroup;
+			children = (
+				6F3BF4C22732FBE1005C24A5 /* MyProfileVM.swift */,
+				6FB70D1B276F885D0099BC63 /* ProfileVM.swift */,
+			);
+			path = Profile;
+			sourceTree = "<group>";
+		};
 		6FB970B12724F98100350F84 /* CheckCreatedRecipe */ = {
 			isa = PBXGroup;
 			children = (
@@ -1112,7 +1125,7 @@
 				6F512A2A26F417D300826657 /* Tutorial */,
 				6FE9EB5126F9A6E8000AF9D4 /* Ingredient */,
 				6F3BF4D527395120005C24A5 /* CreateRecipe */,
-				6F3BF4C22732FBE1005C24A5 /* MyProfileVM.swift */,
+				6FB70D1A276F88450099BC63 /* Profile */,
 				6F3BF4D627395195005C24A5 /* RecipeVM.swift */,
 				6FA81509276BAD02003D27C0 /* DigitalContents */,
 				6FD427802763B75200472C94 /* ReportVM.swift */,
@@ -1131,6 +1144,7 @@
 				6F3BF4D827397142005C24A5 /* RecipeDetailDM.swift */,
 				6FFFB8732746A61C006B7985 /* MainDM.swift */,
 				6FD4278627649B4600472C94 /* ReportDM.swift */,
+				6FB70D1D276F8AB70099BC63 /* ProfileDM.swift */,
 			);
 			path = DataManager;
 			sourceTree = "<group>";
@@ -1312,6 +1326,7 @@
 			files = (
 				6F4090E12767ABE20088C5E1 /* SelectDigitalContentsVM.swift in Sources */,
 				6F74C4292719DC61007BB9E6 /* CreateRecipeViewController.swift in Sources */,
+				6FB70D1C276F885D0099BC63 /* ProfileVM.swift in Sources */,
 				6F4EA996273ECD5300A4B9F4 /* RecipeGenresTVCell.swift in Sources */,
 				6F0E6964272024E6002BD547 /* CGImage+.swift in Sources */,
 				6F2BBA8A26EDDA6B003B0D5F /* RxAppleDelegateProxy.swift in Sources */,
@@ -1407,6 +1422,7 @@
 				6FEF088726F2A8CB00C02CDD /* PopularRecipeViewController.swift in Sources */,
 				6F3BF4D927397143005C24A5 /* RecipeDetailDM.swift in Sources */,
 				6FD4278327646F4100472C94 /* ReportAlertViewTVCell.swift in Sources */,
+				6FB70D1E276F8AB70099BC63 /* ProfileDM.swift in Sources */,
 				6F77D4852726DF8D00F1FCD9 /* CheckTimeNServingTVCell.swift in Sources */,
 				6FB970C527250C3F00350F84 /* CheckPublisherTVCell.swift in Sources */,
 				6F3BF4C8273302A2005C24A5 /* MainMyProfileTVCell.swift in Sources */,

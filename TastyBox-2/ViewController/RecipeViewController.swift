@@ -156,6 +156,15 @@ class RecipeViewController: UIViewController, BindableType {
             })
             .disposed(by: viewModel.disposeBag)
         
+        tableView.rx.itemSelected
+            .filter { $0.section == 4 }
+            .subscribe(onNext: { _ in
+                
+                self.viewModel.toProfileVC()
+                
+            })
+            .disposed(by: viewModel.disposeBag)
+        
         
         let tappedLike = viewModel.selectedEvaluationSubject
             .filter { $0 == 0 }
@@ -252,6 +261,7 @@ class RecipeViewController: UIViewController, BindableType {
         viewModel.isFollowingPublisher()
             .bind(to: viewModel.isFollowingSubject)
             .disposed(by: viewModel.disposeBag)
+        
         
     }
     
