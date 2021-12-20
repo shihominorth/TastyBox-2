@@ -17,6 +17,7 @@ class ProfileVM: ViewModelBase {
     let apiType: ProfileDMProtocol.Type
     var recipes: [Recipe]
     var publisher: User
+    var isFollowingSubject: BehaviorSubject<Bool>
     
     var postedRecipesSubject = BehaviorSubject<[Recipe]>(value: [])
     
@@ -27,6 +28,13 @@ class ProfileVM: ViewModelBase {
         self.apiType = apiType
         self.recipes = []
         self.publisher = publisher
+        self.isFollowingSubject = BehaviorSubject<Bool>(value: false)
+        
+    }
+    
+    func isFollowingUser() -> Observable<Bool> {
+        
+        return self.apiType.isFollowing(publisherId: self.publisher.userID, user: self.user)
         
     }
     
@@ -36,6 +44,29 @@ class ProfileVM: ViewModelBase {
         
     }
     
+    func followPublisher(user: Firebase.User, publisher: User) -> Observable<Bool> {
+        
+        if user.uid == publisher.userID {
+        
+            return Observable.just(false)
+        
+        }
+        
+        return self.apiType.followPublisher(user: user, publisher: publisher).map { true }
+        
+    }
+    
+    func unFollowPublisher(user: Firebase.User, publisher: User) -> Observable<Bool> {
+        
+        if user.uid == publisher.userID {
+        
+            return Observable.just(false)
+        
+        }
+        
+        return self.apiType.unFollowPublisher(user: user, publisher: publisher).map { true }
+        
+    }
     
     func toRecipeDetail(recipe: Recipe) {
         
