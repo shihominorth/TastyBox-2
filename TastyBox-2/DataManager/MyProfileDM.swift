@@ -10,10 +10,20 @@ import Firebase
 import RxSwift
 
 protocol MyProfileDMProtocol: AnyObject {
+    static var firestoreService: FireStoreServices { get }
     static func getMyPostedRecipes(user: Firebase.User) -> Observable<[Recipe]>
+    static func getMyInfo(user: Firebase.User) -> Observable<(followings:Int, followeds:Int)>
+    
 }
 
 class MyProfileDM: MyProfileDMProtocol {
+    
+    static var firestoreService: FireStoreServices {
+        
+        return FireStoreServices()
+        
+    }
+    
     
     static let db = Firestore.firestore()
     static let storage = Storage.storage().reference()
@@ -123,6 +133,32 @@ class MyProfileDM: MyProfileDMProtocol {
             
             return Disposables.create()
         }
+    }
+    
+
+    static func getMyInfo(user: Firebase.User) -> Observable<(followings:Int, followeds:Int)> {
+        
+        let path = db.collection("users").document(user.uid)
+        
+        return firestoreService.getDocument(path: path)
+            .map {
+
+                if let data = $0.data() {
+                    
+                    let followingIds = data["followingsIDs"] as? [String:Bool]
+                    let followedIds = data["followedIds"] as? [String:Bool]
+                    
+                    let followingIdsCount: Int = followingIds?.count ?? 0
+                    let followedIdsCount: Int = followedIds?.count ?? 0
+                
+                    return (followingIdsCount, followedIdsCount)
+                
+                }
+                
+                return (0, 0)
+                
+            }
+        
     }
     
 //    static func generateNewRecipe(queryDoc: QueryDocumentSnapshot, user: Firebase.User) -> Observable<Recipe> {

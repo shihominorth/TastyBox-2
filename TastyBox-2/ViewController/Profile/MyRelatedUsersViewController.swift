@@ -7,19 +7,23 @@
 
 import UIKit
 
-class MyFollowingFolloweredUsersViewController: UIViewController {
+class MyRelatedUsersViewController: UIViewController {
     
     @IBOutlet weak var segmentControl: UISegmentedControl!
     @IBOutlet weak var containerView: UIView!
     
-    
+    var pageVC: UIPageViewController!
     
     override func viewDidLoad() {
         super.viewDidLoad()
 
         // Do any additional setup after loading the view.
+        
+        pageVC = self.children.first as? UIPageViewController
+        
+        
     }
-    
+ 
 
     /*
     // MARK: - Navigation

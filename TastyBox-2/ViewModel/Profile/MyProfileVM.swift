@@ -17,14 +17,18 @@ class MyProfileVM: ViewModelBase {
     let user: Firebase.User
     let apiType: MyProfileDMProtocol.Type
     
-    
-    var postedRecipesSubject = BehaviorSubject<[Recipe]>(value: [])
+    let followingsNumSubject: BehaviorSubject<Int>
+    let followedSubject: BehaviorSubject<Int>
+    let postedRecipesSubject: BehaviorSubject<[Recipe]>
     
     init(sceneCoordinator: SceneCoordinator, user: Firebase.User, apiType: MyProfileDMProtocol.Type = MyProfileDM.self) {
         
         self.sceneCoordinator = sceneCoordinator
         self.user = user
         self.apiType = apiType
+        self.postedRecipesSubject = BehaviorSubject<[Recipe]>(value: [])
+        self.followingsNumSubject = BehaviorSubject<Int>(value: 0)
+        self.followedSubject = BehaviorSubject<Int>(value: 0)
         
     }
     
@@ -43,6 +47,10 @@ class MyProfileVM: ViewModelBase {
         
     }
     
+    func getMyFollowings() -> Observable<(followings:Int, followeds:Int)> {
+        return self.apiType.getMyInfo(user: self.user)
+    }
+    
     
     func toRecipeDetail(recipe: Recipe) {
         
@@ -53,5 +61,9 @@ class MyProfileVM: ViewModelBase {
         
     }
     
-    
+    func toMyRelatedUsersVC(isFollowing: Bool) {
+        
+        self.sceneCoordinator.modalTransition(to: .profileScene(scene: .relatedUsers), type: .push)
+        
+    }
 }

@@ -425,6 +425,14 @@ extension Scene {
             
             return vc
             
+        case .relatedUsers:
+            
+            var vc = storyboard.instantiateViewController(withIdentifier: "relatedUsersVC") as! MyRelatedUsersViewController
+            
+            
+            return vc
+            
+            
         }
         
     }
