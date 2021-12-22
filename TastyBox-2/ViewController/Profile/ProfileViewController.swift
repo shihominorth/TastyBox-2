@@ -95,19 +95,7 @@ class ProfileViewController: UIViewController, BindableType {
             .bind(to: viewModel.isFollowingSubject)
             .disposed(by: viewModel.disposeBag)
         
-        
-        viewModel.isFollowingSubject
-            .subscribe(onNext: { isFollowing in
-                
-                guard let rcv = self.collectionView.visibleSupplementaryViews(ofKind: UICollectionView.elementKindSectionHeader).first(where: { $0.reuseIdentifier == "profileMainRCV" }) as? ProfileMainRCV  else {
-                    return
-                }
-                
-                rcv.setUpFollowingBtn(isFollowing: isFollowing)
-                
-            })
-            .disposed(by: viewModel.disposeBag)
-        
+  
         
     }
     
@@ -257,6 +245,16 @@ extension ProfileViewController: UICollectionViewDelegate, SkeletonCollectionVie
                         
                     })
                     .disposed(by: viewModel.disposeBag)
+                
+                
+                viewModel.isFollowingSubject
+                    .subscribe(onNext: { isFollowing in
+                        
+                        rcv.setUpFollowingBtn(isFollowing: isFollowing)
+                        
+                    })
+                    .disposed(by: viewModel.disposeBag)
+                
                 
                 return rcv
             }
