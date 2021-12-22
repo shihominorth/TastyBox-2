@@ -19,7 +19,7 @@ class RxDefaultTableViewDataSource<E: Differentiable, Cell: UITableViewCell>: NS
     var values: Element = []
 
     
-    init(identifier: String, configure: @escaping (Int,  E, Cell) -> Void) {
+    init(identifier: String, configure: @escaping (Int, E, Cell) -> Void) {
         
         self.identifier = identifier
         self.configure = configure

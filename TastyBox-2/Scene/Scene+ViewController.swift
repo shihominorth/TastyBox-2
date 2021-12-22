@@ -425,10 +425,11 @@ extension Scene {
             
             return vc
             
-        case .relatedUsers:
+        case .myRelatedUsers(let viewModel):
             
             var vc = storyboard.instantiateViewController(withIdentifier: "relatedUsersVC") as! MyRelatedUsersViewController
             
+            vc.bindViewModel(to: viewModel)
             
             return vc
             

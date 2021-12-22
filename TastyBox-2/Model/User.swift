@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import DifferenceKit
 import Firebase
 import RxSwift
 
@@ -97,6 +98,67 @@ class User {
         }
     }
     
+}
+
+extension User: Differentiable {
+    
+    func isContentEqual(to source: User) -> Bool {
+        
+        return self.userID == source.userID
+        
+    }
+    
+    var differenceIdentifier: String {
+        return self.userID
+    }
+}
+
+
+class RelatedUser: User {
+    
+    let isRelatedUserSubject: BehaviorSubject<Bool>
+    
+    override init(id: String, name: String, isVIP: Bool, imgURLString: String) {
+
+        isRelatedUserSubject = BehaviorSubject<Bool>(value: true)
+        super.init(id: id, name: name, isVIP: isVIP, imgURLString: imgURLString)
+        
+    }
+    
+    override init?(document:  DocumentSnapshot) {
+       
+        guard
+            let data = document.data(),
+            let id = data["id"] as? String,
+            let name = data["userName"] as? String,
+            let isVIP = data["isVIP"] as? Bool,
+            let imgURL = data["imgString"] as? String
+        else {
+            return nil
+        }
+
+        isRelatedUserSubject = BehaviorSubject<Bool>(value: true)
+        super.init(id: id, name: name, isVIP: isVIP, imgURLString: imgURL)
+
+    }
+    
+    static func generateNewUsers(documents: [DocumentSnapshot]) -> Observable<[RelatedUser]> {
+        
+        return .create { observer in
+            
+            let users = documents.compactMap { doc in
+            
+                return RelatedUser(document: doc)
+            
+            }
+            
+            observer.onNext(users)
+            
+            return Disposables.create()
+        }
+    
+    }
+
 }
 
 struct  AllergicFoodData {

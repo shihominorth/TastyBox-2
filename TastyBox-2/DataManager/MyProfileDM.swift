@@ -10,6 +10,7 @@ import Firebase
 import RxSwift
 
 protocol MyProfileDMProtocol: AnyObject {
+    
     static var firestoreService: FireStoreServices { get }
     static func getMyPostedRecipes(user: Firebase.User) -> Observable<[Recipe]>
     static func getMyInfo(user: Firebase.User) -> Observable<(followings:Int, followeds:Int)>

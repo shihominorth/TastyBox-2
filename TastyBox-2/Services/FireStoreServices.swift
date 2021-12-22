@@ -45,7 +45,7 @@ class FireStoreServices {
     }
     
     func setData(references: [DocumentReference], dic: [String: Any]) -> Observable<Void> {
-
+        
         return .create { observer in
             
             var count = 0
@@ -55,7 +55,7 @@ class FireStoreServices {
                 
                 
                 self.setData(reference: reference, data: dic, isMerge: true, completion: { data in
-
+                    
                     count += 1
                     
                     if count == references.count {
@@ -88,20 +88,20 @@ class FireStoreServices {
     }
     
     func setData(reference: DocumentReference, data: [String: Any], isMerge: Bool = true, completion: @escaping ([String: Any]) -> Void, errBlock: @escaping (Error) -> Void) {
- 
-            reference.setData(data, merge: isMerge) { err in
+        
+        reference.setData(data, merge: isMerge) { err in
+            
+            if let err = err {
                 
-                if let err = err {
-                    
-                   errBlock(err)
-                    
-                }
-                else {
-                    
-                    completion(data)
-                    
-                }
+                errBlock(err)
                 
+            }
+            else {
+                
+                completion(data)
+                
+            }
+            
             
         }
     }
@@ -147,7 +147,7 @@ class FireStoreServices {
                     if let doc = doc {
                         observer.onNext(doc)
                     }
-                   
+                    
                     
                 }
             }
@@ -172,7 +172,7 @@ class FireStoreServices {
                     if let docs = snapShot?.documents {
                         observer.onNext(docs)
                     }
-                   
+                    
                     
                 }
             }
@@ -189,9 +189,15 @@ class FireStoreServices {
             var docs:[DocumentSnapshot] = []
             var implementedNum = 0
             
-            documentReferences.forEach { reference in
+            
+            if documentReferences.isEmpty {
+            
+                observer.onNext([])
+            
+            }
+            else if documentReferences.count == 1 {
                 
-                self.getDocument(reference: reference) { snapShot in
+                self.getDocument(reference: documentReferences[0], completion: { snapShot in
                     
                     implementedNum += 1
                     docs.append(snapShot)
@@ -202,10 +208,10 @@ class FireStoreServices {
                         
                     }
                     
-                } errBlock: { err in
+                }, errBlock: { err in
                     
                     print(err)
-                   
+                    
                     implementedNum += 1
                     
                     if implementedNum == documentReferences.count {
@@ -213,13 +219,42 @@ class FireStoreServices {
                         observer.onNext(docs)
                         
                     }
-                }
-
+                })
+                
             }
-            
+            else {
+                
+                documentReferences.forEach { reference in
+                    
+                    self.getDocument(reference: reference, completion: { snapShot in
+                        
+                        implementedNum += 1
+                        docs.append(snapShot)
+                        
+                        if implementedNum == documentReferences.count {
+                            
+                            observer.onNext(docs)
+                            
+                        }
+                        
+                    }, errBlock: { err in
+                        
+                        print(err)
+                        
+                        implementedNum += 1
+                        
+                        if implementedNum == documentReferences.count {
+                            
+                            observer.onNext(docs)
+                            
+                        }
+                    })
+                    
+                }
+            }
             return Disposables.create()
         }
-       
+        
         
     }
     
@@ -245,7 +280,7 @@ class FireStoreServices {
     }
     
     func updateData(references: [DocumentReference], dic: [String: Any]) -> Observable<Void> {
-
+        
         return .create { observer in
             
             var count = 0
@@ -254,7 +289,7 @@ class FireStoreServices {
                 
                 
                 self.updateData(reference: reference, data: dic, completion: { data in
-
+                    
                     count += 1
                     
                     if count == references.count {
@@ -287,20 +322,20 @@ class FireStoreServices {
     }
     
     func updateData(reference: DocumentReference, data: [String: Any], completion: @escaping ([String: Any]) -> Void, errBlock: @escaping (Error) -> Void) {
- 
-            reference.updateData(data) { err in
+        
+        reference.updateData(data) { err in
+            
+            if let err = err {
                 
-                if let err = err {
-                    
-                   errBlock(err)
-                    
-                }
-                else {
-                    
-                    completion(data)
-                    
-                }
+                errBlock(err)
                 
+            }
+            else {
+                
+                completion(data)
+                
+            }
+            
             
         }
     }
