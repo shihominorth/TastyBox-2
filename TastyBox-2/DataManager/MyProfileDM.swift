@@ -147,7 +147,7 @@ class MyProfileDM: MyProfileDMProtocol {
                 if let data = $0.data() {
                     
                     let followingIds = data["followingsIDs"] as? [String:Bool]
-                    let followedIds = data["followedIds"] as? [String:Bool]
+                    let followedIds = data["followedsIDs"] as? [String:Bool]
                     
                     let followingIdsCount: Int = followingIds?.count ?? 0
                     let followedIdsCount: Int = followedIds?.count ?? 0

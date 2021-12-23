@@ -41,6 +41,8 @@
 		6F119518277210FB002510EC /* RelatedUsersPreseter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F119517277210FB002510EC /* RelatedUsersPreseter.swift */; };
 		6F11951A2772F037002510EC /* FollowingsVM.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F1195192772F036002510EC /* FollowingsVM.swift */; };
 		6F11951C2773109B002510EC /* RelatedUsersDM.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F11951B2773109B002510EC /* RelatedUsersDM.swift */; };
+		6F11951E27738024002510EC /* RelatedUsersViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F11951D27738023002510EC /* RelatedUsersViewController.swift */; };
+		6F11952027745D67002510EC /* RelatedUsersVM.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F11951F27745D67002510EC /* RelatedUsersVM.swift */; };
 		6F194CBA271C77A40084F829 /* VideoPlayer.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 6F194CB9271C77A40084F829 /* VideoPlayer.storyboard */; };
 		6F194CBC271C7F190084F829 /* UploadingVideoViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F194CBB271C7F190084F829 /* UploadingVideoViewController.swift */; };
 		6F26D4E826DF9E360050BA84 /* AboutVM.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F26D4E726DF9E360050BA84 /* AboutVM.swift */; };
@@ -271,6 +273,8 @@
 		6F119517277210FB002510EC /* RelatedUsersPreseter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RelatedUsersPreseter.swift; sourceTree = "<group>"; };
 		6F1195192772F036002510EC /* FollowingsVM.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FollowingsVM.swift; sourceTree = "<group>"; };
 		6F11951B2773109B002510EC /* RelatedUsersDM.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RelatedUsersDM.swift; sourceTree = "<group>"; };
+		6F11951D27738023002510EC /* RelatedUsersViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RelatedUsersViewController.swift; sourceTree = "<group>"; };
+		6F11951F27745D67002510EC /* RelatedUsersVM.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RelatedUsersVM.swift; sourceTree = "<group>"; };
 		6F194CB9271C77A40084F829 /* VideoPlayer.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = VideoPlayer.storyboard; sourceTree = "<group>"; };
 		6F194CBB271C7F190084F829 /* UploadingVideoViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UploadingVideoViewController.swift; sourceTree = "<group>"; };
 		6F26D4E726DF9E360050BA84 /* AboutVM.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AboutVM.swift; sourceTree = "<group>"; };
@@ -557,6 +561,7 @@
 				6F4EA983273CF63B00A4B9F4 /* FollowedUsersViewController.swift */,
 				6F4EA985273CF8C800A4B9F4 /* MyRelatedUsersViewController.swift */,
 				6FB70D18276F72260099BC63 /* ProfileViewController.swift */,
+				6F11951D27738023002510EC /* RelatedUsersViewController.swift */,
 			);
 			path = Profile;
 			sourceTree = "<group>";
@@ -864,6 +869,7 @@
 				6FB70D1B276F885D0099BC63 /* ProfileVM.swift */,
 				6F11951527720072002510EC /* MyRelatedUsersVM.swift */,
 				6F1195192772F036002510EC /* FollowingsVM.swift */,
+				6F11951F27745D67002510EC /* RelatedUsersVM.swift */,
 			);
 			path = Profile;
 			sourceTree = "<group>";
@@ -1378,6 +1384,7 @@
 				6FB70D19276F72260099BC63 /* ProfileViewController.swift in Sources */,
 				6F4090DA276746CB0088C5E1 /* SelectDigitalContentsCVCell.swift in Sources */,
 				6F77D487272825C800F1FCD9 /* CheckEvaluateRecipeCVCell.swift in Sources */,
+				6F11951E27738024002510EC /* RelatedUsersViewController.swift in Sources */,
 				6FB970AE2724358300350F84 /* SelectGenreTVCell.swift in Sources */,
 				6F54461027523AD100579138 /* RxRSKImageCropVCDelegateProxy.swift in Sources */,
 				6FA8150B276BAD97003D27C0 /* SelectThumbnailViewController.swift in Sources */,
@@ -1390,6 +1397,7 @@
 				6F0E6968272082B8002BD547 /* GenresTableHeaderView.swift in Sources */,
 				6FEA390C26D8BEEB002F81A3 /* String+.swift in Sources */,
 				6FE9EB5626F9BA30000AF9D4 /* RefrigeratorTVCell.swift in Sources */,
+				6F11952027745D67002510EC /* RelatedUsersVM.swift in Sources */,
 				6F71EBEC2721FEAD001BF538 /* RxUIViewController+.swift in Sources */,
 				6F9BE64026D7DC7D005DD80B /* RegisterMyInfoDM.swift in Sources */,
 				6FEF089126F30D8A00C02CDD /* Void.swift in Sources */,

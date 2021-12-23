@@ -13,7 +13,7 @@
         <!--My Related Users View Controller-->
         <scene sceneID="s0d-6b-0kx">
             <objects>
-                <viewController storyboardIdentifier="relatedUsersVC" id="Y6W-OH-hqX" customClass="MyRelatedUsersViewController" customModule="TastyBox_2" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="myRelatedUsersVC" id="Y6W-OH-hqX" customClass="MyRelatedUsersViewController" customModule="TastyBox_2" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="5EZ-qb-Rvc">
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -354,6 +354,57 @@
                 <placeholder placeholderIdentifier="IBFirstResponder" id="eNs-dR-qQN" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="2383" y="52"/>
+        </scene>
+        <!--Related Users View Controller-->
+        <scene sceneID="ijA-bk-WTN">
+            <objects>
+                <viewController storyboardIdentifier="relatedUsersVC" id="ZMc-UA-wUy" customClass="RelatedUsersViewController" customModule="TastyBox_2" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="f2B-Hb-wej">
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <segmentedControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="0" translatesAutoresizingMaskIntoConstraints="NO" id="Q3H-iL-ro4">
+                                <rect key="frame" x="0.0" y="44" width="414" height="32"/>
+                                <segments>
+                                    <segment title="Followings"/>
+                                    <segment title="Followed"/>
+                                </segments>
+                            </segmentedControl>
+                            <containerView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="6fH-ky-bX6">
+                                <rect key="frame" x="0.0" y="83" width="414" height="813"/>
+                                <connections>
+                                    <segue destination="ZO7-el-CEN" kind="embed" id="aAF-sO-alk"/>
+                                </connections>
+                            </containerView>
+                        </subviews>
+                        <viewLayoutGuide key="safeArea" id="7yj-Cp-fdI"/>
+                        <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                        <constraints>
+                            <constraint firstItem="6fH-ky-bX6" firstAttribute="leading" secondItem="7yj-Cp-fdI" secondAttribute="leading" id="6Ol-Ya-Mha"/>
+                            <constraint firstItem="Q3H-iL-ro4" firstAttribute="top" secondItem="7yj-Cp-fdI" secondAttribute="top" id="G86-tf-vbS"/>
+                            <constraint firstItem="6fH-ky-bX6" firstAttribute="top" secondItem="Q3H-iL-ro4" secondAttribute="bottom" constant="8" symbolic="YES" id="Pgh-Lf-Doe"/>
+                            <constraint firstAttribute="bottom" secondItem="6fH-ky-bX6" secondAttribute="bottom" id="Vaf-dl-9bx"/>
+                            <constraint firstItem="6fH-ky-bX6" firstAttribute="trailing" secondItem="7yj-Cp-fdI" secondAttribute="trailing" id="a6R-bX-oUe"/>
+                            <constraint firstItem="Q3H-iL-ro4" firstAttribute="trailing" secondItem="7yj-Cp-fdI" secondAttribute="trailing" id="dnZ-az-oYR"/>
+                            <constraint firstItem="Q3H-iL-ro4" firstAttribute="leading" secondItem="7yj-Cp-fdI" secondAttribute="leading" id="j8P-bc-Lga"/>
+                        </constraints>
+                    </view>
+                    <connections>
+                        <outlet property="containerView" destination="6fH-ky-bX6" id="2n9-af-PdQ"/>
+                        <outlet property="segmentControl" destination="Q3H-iL-ro4" id="gJJ-oO-LWw"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="hGZ-fl-AYk" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="-172.46376811594203" y="922.76785714285711"/>
+        </scene>
+        <!--Page View Controller-->
+        <scene sceneID="Yri-m7-k1R">
+            <objects>
+                <pageViewController autoresizesArchivedViewToFullSize="NO" transitionStyle="scroll" navigationOrientation="horizontal" spineLocation="none" id="ZO7-el-CEN" sceneMemberID="viewController"/>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="i2W-dP-pGY" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="684" y="923"/>
         </scene>
     </scenes>
     <resources>

@@ -16,10 +16,11 @@ class ProfileVM: ViewModelBase {
     let user: Firebase.User
     let apiType: ProfileDMProtocol.Type
     var recipes: [Recipe]
-    var publisher: User
+    var profileUser: User
     var isFollowingSubject: BehaviorSubject<Bool>
     
     var postedRecipesSubject = BehaviorSubject<[Recipe]>(value: [])
+
     
     init(sceneCoordinator: SceneCoordinator, user: Firebase.User, publisher: User, apiType: ProfileDMProtocol.Type = ProfileDM.self) {
         
@@ -27,21 +28,27 @@ class ProfileVM: ViewModelBase {
         self.user = user
         self.apiType = apiType
         self.recipes = []
-        self.publisher = publisher
+        self.profileUser = publisher
         self.isFollowingSubject = BehaviorSubject<Bool>(value: false)
         
     }
     
     func isFollowingUser() -> Observable<Bool> {
         
-        return self.apiType.isFollowing(publisherId: self.publisher.userID, user: self.user)
+        return self.apiType.isFollowing(publisherId: self.profileUser.userID, user: self.user)
         
     }
     
     func getUserPostedRecipes() -> Observable<[Recipe]> {
         
-        return self.apiType.getPostRecipes(id: self.publisher.userID)
+        return self.apiType.getPostRecipes(id: self.profileUser.userID)
         
+    }
+    
+    func getFollowingsNum() -> Observable<(followings: Int, followeds: Int)> {
+        
+        return self.apiType.getUserInfo(userId: self.profileUser.userID)
+    
     }
     
     func followPublisher(user: Firebase.User, publisher: User) -> Observable<Bool> {
@@ -74,6 +81,14 @@ class ProfileVM: ViewModelBase {
         
         self.sceneCoordinator.modalTransition(to: .recipeScene(scene: .recipe(vm)), type: .push)
             
+        
+    }
+    
+    func toRelatedUsers() {
+        
+        let vm = RelatedUsersVM(sceneCoordinator: self.sceneCoordinator, user: self.user, isFollowing: false)
+        
+        self.sceneCoordinator.modalTransition(to: .profileScene(scene: .relatedUsers(vm)), type: .push)
         
     }
     
