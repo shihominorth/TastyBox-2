@@ -43,6 +43,7 @@
 		6F11951C2773109B002510EC /* RelatedUsersDM.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F11951B2773109B002510EC /* RelatedUsersDM.swift */; };
 		6F11951E27738024002510EC /* RelatedUsersViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F11951D27738023002510EC /* RelatedUsersViewController.swift */; };
 		6F11952027745D67002510EC /* RelatedUsersVM.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F11951F27745D67002510EC /* RelatedUsersVM.swift */; };
+		6F119522277704CA002510EC /* FollowersVM.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F119521277704C9002510EC /* FollowersVM.swift */; };
 		6F194CBA271C77A40084F829 /* VideoPlayer.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 6F194CB9271C77A40084F829 /* VideoPlayer.storyboard */; };
 		6F194CBC271C7F190084F829 /* UploadingVideoViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F194CBB271C7F190084F829 /* UploadingVideoViewController.swift */; };
 		6F26D4E826DF9E360050BA84 /* AboutVM.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F26D4E726DF9E360050BA84 /* AboutVM.swift */; };
@@ -275,6 +276,7 @@
 		6F11951B2773109B002510EC /* RelatedUsersDM.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RelatedUsersDM.swift; sourceTree = "<group>"; };
 		6F11951D27738023002510EC /* RelatedUsersViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RelatedUsersViewController.swift; sourceTree = "<group>"; };
 		6F11951F27745D67002510EC /* RelatedUsersVM.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RelatedUsersVM.swift; sourceTree = "<group>"; };
+		6F119521277704C9002510EC /* FollowersVM.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FollowersVM.swift; sourceTree = "<group>"; };
 		6F194CB9271C77A40084F829 /* VideoPlayer.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = VideoPlayer.storyboard; sourceTree = "<group>"; };
 		6F194CBB271C7F190084F829 /* UploadingVideoViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UploadingVideoViewController.swift; sourceTree = "<group>"; };
 		6F26D4E726DF9E360050BA84 /* AboutVM.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AboutVM.swift; sourceTree = "<group>"; };
@@ -870,6 +872,7 @@
 				6F11951527720072002510EC /* MyRelatedUsersVM.swift */,
 				6F1195192772F036002510EC /* FollowingsVM.swift */,
 				6F11951F27745D67002510EC /* RelatedUsersVM.swift */,
+				6F119521277704C9002510EC /* FollowersVM.swift */,
 			);
 			path = Profile;
 			sourceTree = "<group>";
@@ -1350,6 +1353,7 @@
 				6F2BBA8A26EDDA6B003B0D5F /* RxAppleDelegateProxy.swift in Sources */,
 				6F74C42B2719DEE7007BB9E6 /* CreateRecipeVM.swift in Sources */,
 				6F927B96275381BB006F95BF /* TimeLineVM.swift in Sources */,
+				6F119522277704CA002510EC /* FollowersVM.swift in Sources */,
 				6F06EBEB26F824ED00F2218B /* ObservableType+.swift in Sources */,
 				6FE9EB5A26F9C01A000AF9D4 /* EditItemRefrigeratorVM.swift in Sources */,
 				6F018BA526DB8327006416D3 /* SceneCoordinatorType.swift in Sources */,

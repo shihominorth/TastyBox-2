@@ -6,20 +6,134 @@
 //
 
 import UIKit
+import Firebase
+import RxSwift
+import RxCocoa
 
-class FollowersViewController: UIViewController {
+class FollowersViewController: UIViewController, BindableType {
 
+    typealias ViewModelType = FollowersVM
+    
     
     // table view cell should be xib file or building progmatically.
     // cuz the views in the cell is different depending on my following user or other's
     
+    @IBOutlet weak var tableView: UITableView!
+    
+    var viewModel: FollowersVM!
+
+
     override func viewDidLoad() {
         super.viewDidLoad()
 
         // Do any additional setup after loading the view.
+        tableView.delegate = self
     }
     
+    
+    func bindViewModel() {
+        
+        let isMyFollowings = self.viewModel.user.uid == self.viewModel.userID
+        
+        bindToTableView(isMyRelatedUsers: isMyFollowings)
+        
+        self.viewModel.getFollowers()
+            .bind(to: viewModel.usersSubject)
+            .disposed(by: viewModel.disposeBag)
+        
+    }
+    
+    func bindToTableView(isMyRelatedUsers: Bool) {
+        
+        if isMyRelatedUsers {
+            
+            let identifier = "myFollowingsTVCell"
+            
+            tableView.register(FollowerTVCell.self, forCellReuseIdentifier: identifier)
+            
+            let dataSource = RxDefaultTableViewDataSource<RelatedUser, FollowerTVCell>(identifier: identifier, configure: { row, user, cell in
+                
+                cell.userNameLbl.text = user.name
+                
+                cell.layoutIfNeeded()
+                cell.userImgView.layer.cornerRadius = cell.userImgView.frame.width / 2
+                
+                guard let url = URL(string: user.imageURLString) else { return }
+                
+                cell.userImgView.kf.setImage(with: url)
+                
+                
+                cell.userManageBtn.rx.tap
+                    .withLatestFrom(user.isRelatedUserSubject)
+                    .withLatestFrom(self.viewModel.usersSubject) { isFollowing, users in
+                        
+                        return (isFollowing, users[row])
+                        
+                    }
+                    .flatMapLatest { isFollowings, user in
+                        self.viewModel.updateRelatedUserStatus(isFollowing: isFollowings, updateUser: user)
+                    }
+                    .subscribe(onNext: { isFollowing in
+                        
+                        user.isRelatedUserSubject.onNext(!isFollowing)
 
+                    })
+                    .disposed(by: cell.disposeBag)
+                
+                user.isRelatedUserSubject
+                    .subscribe(onNext: { isFollowing in
+                        
+                        cell.setUpUserManageBtn(isFollowing: isFollowing)
+                        
+                    })
+                    .disposed(by: cell.disposeBag)
+                
+            })
+            
+            viewModel.usersSubject
+                .bind(to: tableView.rx.items(dataSource: dataSource))
+                .disposed(by: viewModel.disposeBag)
+            
+        }
+        else {
+            
+            let identifier = "userFollowingsTVCell"
+            
+            tableView.register(UserFollowingTVCell.self, forCellReuseIdentifier: identifier)
+            
+            let dataSource = RxDefaultTableViewDataSource<RelatedUser, UserFollowingTVCell>(identifier: identifier, configure: { row, user, cell in
+                
+                cell.userNameLbl.text = user.name
+                
+                cell.layoutIfNeeded()
+                cell.userImgView.layer.cornerRadius = cell.userImgView.frame.width / 2
+                
+                guard let url = URL(string: user.imageURLString) else { return }
+                
+                cell.userImgView.kf.setImage(with: url)
+                
+                cell.setUpUserManageBtn(isFollowing: true)
+                
+                user.isRelatedUserSubject
+                    .subscribe(onNext: { isFollowing in
+                        
+                        cell.setUpUserManageBtn(isFollowing: isFollowing)
+                        
+                    })
+                    .disposed(by: cell.disposeBag)
+                
+            })
+            
+            viewModel.usersSubject
+                .bind(to: tableView.rx.items(dataSource: dataSource))
+                .disposed(by: viewModel.disposeBag)
+            
+        }
+        
+        
+        
+    }
+    
     /*
     // MARK: - Navigation
 
@@ -30,4 +144,101 @@ class FollowersViewController: UIViewController {
     }
     */
 
+}
+
+extension FollowersViewController: UITableViewDelegate {
+    
+    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        return self.view.frame.height * 0.07
+    }
+    
+}
+
+
+class FollowerTVCell: UITableViewCell {
+   
+    let userImgView: UIImageView
+    let userNameLbl: UILabel
+    let userManageBtn: UIButton
+    var disposeBag: DisposeBag
+    
+    required init?(coder: NSCoder) {
+        
+        fatalError("init(coder:) has not been implemented")
+        
+    }
+    
+    override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
+        
+        userImgView = {
+            
+            let imgView = UIImageView()
+            imgView.translatesAutoresizingMaskIntoConstraints = false
+            imgView.clipsToBounds = true
+            
+            return imgView
+        }()
+        
+        userNameLbl = {
+            
+            let lbl = UILabel()
+            lbl.translatesAutoresizingMaskIntoConstraints = false
+            
+            return lbl
+            
+        }()
+        
+        userManageBtn = {
+            
+            let btn = UIButton(type: .system)
+            btn.translatesAutoresizingMaskIntoConstraints = false
+            
+            btn.layer.borderColor = #colorLiteral(red: 1, green: 0.5763723254, blue: 0, alpha: 1)
+            btn.layer.borderWidth = 2
+            btn.layer.cornerRadius = 10
+            
+            btn.setTitle("Following", for: .normal)
+            btn.backgroundColor = #colorLiteral(red: 1, green: 0.5763723254, blue: 0, alpha: 1)
+            
+            
+            return btn
+            
+        }()
+        
+        disposeBag = DisposeBag()
+        
+        super.init(style: style, reuseIdentifier: reuseIdentifier)
+        
+        self.contentView.addSubview(userImgView)
+        self.contentView.addSubview(userNameLbl)
+        self.contentView.addSubview(userManageBtn)
+        
+        NSLayoutConstraint.activate([
+            
+            userImgView.leadingAnchor.constraint(equalTo: self.contentView.layoutMarginsGuide.leadingAnchor),
+            userImgView.centerYAnchor.constraint(equalTo: self.contentView.layoutMarginsGuide.centerYAnchor),
+            userImgView.widthAnchor.constraint(equalToConstant: self.contentView.frame.height * 0.95),
+            userImgView.heightAnchor.constraint(equalToConstant: self.contentView.frame.height * 0.95)
+            
+        ])
+        
+        
+        
+        NSLayoutConstraint.activate([
+            
+            userManageBtn.trailingAnchor.constraint(equalTo: self.contentView.layoutMarginsGuide.trailingAnchor),
+            userManageBtn.centerYAnchor.constraint(equalTo: self.contentView.layoutMarginsGuide.centerYAnchor),
+            userManageBtn.widthAnchor.constraint(equalToConstant: self.contentView.frame.width * 0.3),
+            userManageBtn.heightAnchor.constraint(equalToConstant: self.contentView.frame.height * 0.7)
+            
+        ])
+        
+        NSLayoutConstraint.activate([
+            
+            userNameLbl.leadingAnchor.constraint(equalTo: self.userImgView.trailingAnchor, constant: 20),
+            userNameLbl.topAnchor.constraint(equalTo: self.contentView.layoutMarginsGuide.topAnchor),
+            userNameLbl.trailingAnchor.constraint(equalTo: self.userManageBtn.leadingAnchor, constant: -20),
+            userNameLbl.bottomAnchor.constraint(equalTo: self.contentView.layoutMarginsGuide.bottomAnchor)
+            
+        ])
 }

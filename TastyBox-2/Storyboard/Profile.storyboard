@@ -350,6 +350,9 @@
                             <constraint firstAttribute="bottom" secondItem="WLu-tg-vPX" secondAttribute="bottom" id="pdm-eK-qOH"/>
                         </constraints>
                     </view>
+                    <connections>
+                        <outlet property="tableView" destination="WLu-tg-vPX" id="L3X-4h-x6j"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="eNs-dR-qQN" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
