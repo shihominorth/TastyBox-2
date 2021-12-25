@@ -59,7 +59,7 @@ class ProfileVM: ViewModelBase {
         
         }
         
-        return self.apiType.followPublisher(user: user, publisher: publisher).map { true }
+        return self.apiType.followUser(user: user, willFollowUser: publisher).map { true }
         
     }
     
@@ -71,7 +71,7 @@ class ProfileVM: ViewModelBase {
         
         }
         
-        return self.apiType.unFollowPublisher(user: user, publisher: publisher).map { true }
+        return self.apiType.unFollowUser(user: user, willUnFollowUser: publisher).map { true }
         
     }
     

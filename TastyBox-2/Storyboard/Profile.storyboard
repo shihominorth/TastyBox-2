@@ -298,10 +298,10 @@
             </objects>
             <point key="canvasLocation" x="-1131.8840579710145" y="923.4375"/>
         </scene>
-        <!--Following Users View Controller-->
+        <!--Followings View Controller-->
         <scene sceneID="YeB-Qz-Jvg">
             <objects>
-                <viewController storyboardIdentifier="followingsVC" id="GFd-t3-rkB" customClass="FollowingUsersViewController" customModule="TastyBox_2" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="followingsVC" id="GFd-t3-rkB" customClass="FollowingsViewController" customModule="TastyBox_2" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="N0l-qI-jWf">
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -328,10 +328,10 @@
             </objects>
             <point key="canvasLocation" x="1558" y="52"/>
         </scene>
-        <!--Followed Users View Controller-->
+        <!--Followers View Controller-->
         <scene sceneID="3qZ-gu-sxc">
             <objects>
-                <viewController storyboardIdentifier="followedsVC" id="H9Y-sI-ReQ" customClass="FollowedUsersViewController" customModule="TastyBox_2" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="followedsVC" id="H9Y-sI-ReQ" customClass="FollowersViewController" customModule="TastyBox_2" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="Mbs-hA-bbs">
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>

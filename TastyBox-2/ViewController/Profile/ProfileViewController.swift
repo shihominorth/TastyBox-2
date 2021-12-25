@@ -378,7 +378,6 @@ class ProfileMainRCV: UICollectionReusableView {
             let imgView = UIImageView()
             imgView.isSkeletonable = true
             imgView.translatesAutoresizingMaskIntoConstraints = false
-            //                    imgView.layer.maskedCorners = [.layerMaxXMaxYCorner, .layerMinXMaxYCorner]
             imgView.clipsToBounds = true
             imgView.accessibilityIdentifier = "user image view"
             
@@ -494,6 +493,7 @@ class NumberProfileRCV: UICollectionReusableView {
             let stackView = UIStackView()
             stackView.translatesAutoresizingMaskIntoConstraints = false
             stackView.distribution = .equalSpacing
+            stackView.isSkeletonable = true
             
             return stackView
         }()
@@ -505,6 +505,7 @@ class NumberProfileRCV: UICollectionReusableView {
             btn.tintColor = #colorLiteral(red: 1, green: 0.5763723254, blue: 0, alpha: 1)
             btn.titleLabel?.numberOfLines = 0
             btn.titleLabel?.textAlignment = .center
+            btn.isSkeletonable = true
             
             return btn
         }()
@@ -516,6 +517,7 @@ class NumberProfileRCV: UICollectionReusableView {
             btn.tintColor = #colorLiteral(red: 1, green: 0.5763723254, blue: 0, alpha: 1)
             btn.titleLabel?.numberOfLines = 0
             btn.titleLabel?.textAlignment = .center
+            btn.isSkeletonable = true
             
             return btn
         }()
@@ -528,6 +530,7 @@ class NumberProfileRCV: UICollectionReusableView {
             btn.tintColor = #colorLiteral(red: 1, green: 0.5763723254, blue: 0, alpha: 1)
             btn.titleLabel?.numberOfLines = 0
             btn.titleLabel?.textAlignment = .center
+            btn.isSkeletonable = true
             
             return btn
             
@@ -547,12 +550,12 @@ class NumberProfileRCV: UICollectionReusableView {
             
             self.numStackView.widthAnchor.constraint(equalToConstant: self.frame.width * 0.7),
             self.numStackView.centerXAnchor.constraint(equalTo: self.centerXAnchor),
-            self.numStackView.topAnchor.constraint(equalTo: self.layoutMarginsGuide.topAnchor),
-            self.numStackView.bottomAnchor.constraint(equalTo: self.layoutMarginsGuide.bottomAnchor)
+            self.numStackView.topAnchor.constraint(lessThanOrEqualTo: self.layoutMarginsGuide.topAnchor),
+            self.numStackView.bottomAnchor.constraint(lessThanOrEqualTo: self.layoutMarginsGuide.bottomAnchor)
             
         ])
         
-       
+        self.isSkeletonable = true
         
     }
     

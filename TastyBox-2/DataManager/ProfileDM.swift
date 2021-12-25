@@ -14,10 +14,10 @@ protocol ProfileDMProtocol: AnyObject {
     static var firestoreService: FireStoreServices { get }
     static func getPostRecipes(id: String) -> Observable<[Recipe]>
     static func isFollowing(publisherId: String, user: Firebase.User) -> Observable<Bool>
-    static func followPublisher(user: Firebase.User, publisher: User) -> Observable<Void>
-    static func unFollowPublisher(user: Firebase.User, publisher: User) -> Observable<Void>
+    static func followUser(user: Firebase.User, willFollowUser: User) -> Observable<Void>
+    static func unFollowUser(user: Firebase.User, willUnFollowUser: User) -> Observable<Void>
     static func getUserInfo(userId: String) -> Observable<(followings:Int, followeds:Int)>
-
+    
 }
 
 class ProfileDM: ProfileDMProtocol {
@@ -48,7 +48,7 @@ class ProfileDM: ProfileDMProtocol {
         
         return firestoreService.getDocument(path: path)
             .map {
-
+                
                 if let data = $0.data() {
                     
                     let followingIds = data["followingsIDs"] as? [String:Bool]
@@ -56,9 +56,9 @@ class ProfileDM: ProfileDMProtocol {
                     
                     let followingIdsCount: Int = followingIds?.count ?? 0
                     let followedIdsCount: Int = followedIds?.count ?? 0
-                
+                    
                     return (followingIdsCount, followedIdsCount)
-                
+                    
                 }
                 
                 return (0, 0)
@@ -71,7 +71,7 @@ class ProfileDM: ProfileDMProtocol {
     static func isFollowing(publisherId: String, user: Firebase.User) -> Observable<Bool> {
         
         let path = db.collection("users").document(user.uid)
-       
+        
         return firestoreService.getDocument(path: path)
             .map { data in
                 if let ids = data["followingsIDs"] as? [String: Bool], let isFollowingPublisher = ids[publisherId] {
@@ -82,9 +82,9 @@ class ProfileDM: ProfileDMProtocol {
         
     }
     
-    static func followPublisher(user: Firebase.User, publisher: User) -> Observable<Void> {
-       
-        return .zip(addNewFollower(user: user, publisher: publisher).map { _ in }, addNewFollowing(user: user, publisher: publisher), addNewFollowingUnderUser(user: user, publisher: publisher)) { _, _, _ in
+    static func followUser(user: Firebase.User, willFollowUser: User) -> Observable<Void> {
+        
+        return .zip(addNewFollower(user: user, publisher: willFollowUser).map { _ in }, addNewFollowing(user: user, publisher: willFollowUser), addNewFollowingUnderUser(user: user, publisher: willFollowUser), addNewFollowedUnderUser(user: user, publisher: willFollowUser)) { _, _, _, _  in
             
             return
             
@@ -104,7 +104,7 @@ class ProfileDM: ProfileDMProtocol {
         let path = db.collection("users").document(publisher.userID).collection("followers").document(user.uid)
         
         return firestoreService.setData(path: path, data: data).map { _ in }
- 
+        
     }
     
     static func addNewFollowing(user: Firebase.User, publisher: User) -> Observable<Void>  {
@@ -117,16 +117,16 @@ class ProfileDM: ProfileDMProtocol {
         ]
         
         let path = db.collection("users").document(user.uid).collection("followings").document(publisher.userID)
-               
+        
         
         return firestoreService.setData(path: path, data: data).map { _ in }
- 
+        
     }
     
     static func addNewFollowingUnderUser(user: Firebase.User, publisher: User) -> Observable<Void>  {
-
+        
         let path = db.collection("users").document(user.uid)
-               
+        
         
         return firestoreService.getDocument(path: path)
             .map { data -> [String: Any] in
@@ -149,20 +149,50 @@ class ProfileDM: ProfileDMProtocol {
                 self.firestoreService.updateData(path: path, data: $0)
             }
             .map { _ in }
- 
+        
     }
     
     
- 
-
     
-    static func unFollowPublisher(user: Firebase.User, publisher: User) -> Observable<Void> {
+    static func addNewFollowedUnderUser(user: Firebase.User, publisher: User) -> Observable<Void>  {
         
-        let removeFollowingIDs = removeFollowingIDs(user: user, publisher: publisher)
+        let path = db.collection("users").document(publisher.userID)
+        
+        
+        return firestoreService.getDocument(path: path)
+            .map { data in
+                
+                if let idsDic = data["followedsIDs"] as? [String: Bool] {
+                    
+                    var ids = idsDic
+                    
+                    ids[user.uid] = true
 
-        let updateStatus = updateFollowerFollowingStatus(user: user, publisher: publisher)
+                    let newData = ["followedsIDs": ids]
+                    
+                    return newData
+                    
+                }
+                
+                return ["followedsIDs": [user.uid: true]]
+            }
+            .flatMapLatest {
+                self.firestoreService.updateData(path: path, data: $0)
+            }
+            .map { _ in }
         
-        return .zip(removeFollowingIDs, updateStatus) { _, _ in
+    }
+    
+    
+    
+    static func unFollowUser(user: Firebase.User, willUnFollowUser: User) -> Observable<Void> {
+        
+        let removeFollowingIDs = removeFollowingIDs(user: user, publisher: willUnFollowUser)
+        let removeFollowedIDs = removeFollowedsIDs(user: user, willUnFollowUser: willUnFollowUser)
+        
+        let updateStatus = updateFollowerFollowingStatus(user: user, publisher: willUnFollowUser)
+        
+        return .zip(removeFollowingIDs, removeFollowedIDs, updateStatus) { _, _, _ in
             return
         }
         
@@ -173,9 +203,9 @@ class ProfileDM: ProfileDMProtocol {
         let path = db.collection("users").document(user.uid)
         
         return firestoreService.getDocument(path: path)
-            .compactMap { data  in
+            .compactMap { doc  in
                 
-                if let idsDic = data["followingsIDs"] as? [String: Bool], let index = idsDic.firstIndex(where: { key, _ in
+                if let data = doc.data(), let idsDic = data["followingsIDs"] as? [String: Bool], let index = idsDic.firstIndex(where: { key, _ in
                     
                     return key == publisher.userID
                     
@@ -198,9 +228,39 @@ class ProfileDM: ProfileDMProtocol {
             }
     }
     
+    fileprivate static func removeFollowedsIDs(user: Firebase.User, willUnFollowUser: User) -> Observable<Void> {
+        
+        let path = db.collection("users").document(willUnFollowUser.userID)
+        
+        return firestoreService.getDocument(path: path)
+            .compactMap { doc  in
+                
+                if let data = doc.data(),let idsDic = data["followedsIDs"] as? [String: Bool], let index = idsDic.firstIndex(where: { key, _ in
+                    
+                    return key == user.uid
+                    
+                }) {
+                    
+                    var ids = idsDic
+                    
+                    ids.remove(at: index)
+                    
+                    let newData = ["followedsIDs": ids]
+                    
+                    return newData
+                    
+                }
+                
+                return nil
+            }
+            .flatMapLatest {
+                firestoreService.updateData(path: path, data: $0).map { _ in }
+            }
+    }
+    
     
     fileprivate static func updateFollowerFollowingStatus(user: Firebase.User, publisher: User) -> Observable<Void> {
-       
+        
         let myFollowingsPath = db.collection("users").document(user.uid).collection("followings").document(publisher.userID)
         let publisherFollowerPath = db.collection("users").document(publisher.userID).collection("followers").document(user.uid)
         let updateFollowingStatusData = ["isFollowing": false]
@@ -211,7 +271,7 @@ class ProfileDM: ProfileDMProtocol {
                 firestoreService.updateData(path: publisherFollowerPath, data: updateFollowertatusData)
             }
             .map { _ in }
-    
+        
     }
     
 }

@@ -12,7 +12,7 @@ import SkeletonView
 import RxSwift
 
 
-class FollowingUsersViewController: UIViewController, BindableType {
+class FollowingsViewController: UIViewController, BindableType {
     
     typealias ViewModelType = FolllowingsVM
     
@@ -153,7 +153,7 @@ class FollowingUsersViewController: UIViewController, BindableType {
     
 }
 
-extension FollowingUsersViewController: UITableViewDelegate {
+extension FollowingsViewController: UITableViewDelegate {
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         return self.view.frame.height * 0.07

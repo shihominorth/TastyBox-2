@@ -12,6 +12,7 @@ import RxSwift
 protocol RelatedUsersProtocol {
     
     static var services: FireStoreServices { get }
+    static func getFollowers(user: Firebase.User, userID: String) -> Observable<[RelatedUser]>
     static func getFollowings(user: Firebase.User, userID: String) -> Observable<[RelatedUser]>
     static func followUser(user: Firebase.User, willFollowUser: User) -> Observable<Void>
     static func unFollowUser(user: Firebase.User, willUnFollowUser: User) -> Observable<Void>
@@ -72,9 +73,50 @@ class RelatedUsersDM: RelatedUsersProtocol {
         
     }
     
+    
+    static func getFollowers(user: Firebase.User, userID: String) -> Observable<[RelatedUser]> {
+       
+        var query: Query!
+        
+        if user.uid == userID {
+            
+            query = db.collection("users").document(user.uid).collection("followers").whereField("isFollowed", isEqualTo: true)
+            
+        }
+        else {
+            
+            query = db.collection("users").document(userID).collection("followers").whereField("isFollowed", isEqualTo: true)
+            
+        }
+        
+        return services.getDocuments(query: query)
+            .map {
+                let ids = $0.compactMap { doc -> String? in
+                    
+                    let data = doc.data()
+                    
+                    return data["id"] as? String
+                    
+                }
+                
+                let paths: [DocumentReference] = ids.map {
+                    return db.collection("users").document($0)
+                }
+                
+                return paths
+            }
+            .flatMapLatest {
+                return services.getDocuments(documentReferences: $0)
+            }
+            .flatMapLatest {
+                return RelatedUser.generateNewUsers(documents: $0)
+            }
+        
+    }
+    
     static func followUser(user: Firebase.User, willFollowUser: User) -> Observable<Void> {
        
-        return .zip(addNewFollower(user: user, publisher: willFollowUser).map { _ in }, addNewFollowing(user: user, publisher: willFollowUser), addNewFollowingUnderUser(user: user, publisher: willFollowUser)) { _, _, _ in
+        return .zip(addNewFollower(user: user, publisher: willFollowUser).map { _ in }, addNewFollowing(user: user, publisher: willFollowUser), addNewFollowingUnderUser(user: user, publisher: willFollowUser), addNewFollowedUnderUser(user: user, publisher: willFollowUser)) { _, _, _, _ in
             
             return
             
@@ -141,29 +183,60 @@ class RelatedUsersDM: RelatedUsersProtocol {
             .map { _ in }
  
     }
+ 
     
+    static func addNewFollowedUnderUser(user: Firebase.User, publisher: User) -> Observable<Void>  {
+
+        let path = db.collection("users").document(publisher.userID)
+               
+        
+        return services.getDocument(path: path)
+            .map { data in
+                
+                if let idsDic = data["followedsIDs"] as? [String: Bool] {
+                    
+                    var ids = idsDic
+                    
+                    ids[user.uid] = true
+
+                    let newData = ["followedsIDs": ids]
+                    
+                    return newData
+                    
+                }
+                
+                return ["followedsIDs": [user.uid: true]]
+            }
+            .flatMapLatest {
+                self.services.updateData(path: path, data: $0)
+            }
+            .map { _ in }
+ 
+    }
+ 
     static func unFollowUser(user: Firebase.User, willUnFollowUser: User) -> Observable<Void> {
         
-        let removeFollowingIDs = removeFollowingIDs(user: user, publisher: willUnFollowUser)
+        let removeFollowingIDs = removeFollowingIDs(user: user, willUnFollowUser: willUnFollowUser)
+        let removeFollowedIDs = removeFollowedsIDs(user: user, willUnFollowUser: willUnFollowUser)
 
         let updateStatus = updateFollowerFollowingStatus(user: user, publisher: willUnFollowUser)
         
-        return .zip(removeFollowingIDs, updateStatus) { _, _ in
+        return .zip(removeFollowingIDs, removeFollowedIDs, updateStatus) { _, _, _ in
             return
         }
         
     }
     
-    fileprivate static func removeFollowingIDs(user: Firebase.User, publisher: User) -> Observable<Void> {
+    fileprivate static func removeFollowingIDs(user: Firebase.User, willUnFollowUser: User) -> Observable<Void> {
         
         let path = db.collection("users").document(user.uid)
         
         return services.getDocument(path: path)
-            .compactMap { data  in
+            .compactMap { doc  in
                 
-                if let idsDic = data["followingsIDs"] as? [String: Bool], let index = idsDic.firstIndex(where: { key, _ in
+                if let data = doc.data(), let idsDic = data["followingsIDs"] as? [String: Bool], let index = idsDic.firstIndex(where: { key, _ in
                     
-                    return key == publisher.userID
+                    return key == willUnFollowUser.userID
                     
                 }) {
                     
@@ -172,6 +245,36 @@ class RelatedUsersDM: RelatedUsersProtocol {
                     ids.remove(at: index)
                     
                     let newData = ["followingsIDs": ids]
+                    
+                    return newData
+                    
+                }
+                
+                return nil
+            }
+            .flatMapLatest {
+                services.updateData(path: path, data: $0).map { _ in }
+            }
+    }
+    
+    fileprivate static func removeFollowedsIDs(user: Firebase.User, willUnFollowUser: User) -> Observable<Void> {
+        
+        let path = db.collection("users").document(willUnFollowUser.userID)
+        
+        return services.getDocument(path: path)
+            .compactMap { doc  in
+                
+                if let data = doc.data(), let idsDic = data["followedsIDs"] as? [String: Bool], let index = idsDic.firstIndex(where: { key, _ in
+                    
+                    return key == user.uid
+                    
+                }) {
+                    
+                    var ids = idsDic
+                    
+                    ids.remove(at: index)
+                    
+                    let newData = ["followedsIDs": ids]
                     
                     return newData
                     

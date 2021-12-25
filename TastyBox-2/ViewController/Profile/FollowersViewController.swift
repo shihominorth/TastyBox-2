@@ -7,7 +7,7 @@
 
 import UIKit
 
-class FollowedUsersViewController: UIViewController {
+class FollowersViewController: UIViewController {
 
     
     // table view cell should be xib file or building progmatically.
