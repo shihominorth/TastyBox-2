@@ -9,6 +9,7 @@ import Foundation
 import Firebase
 import RxSwift
 
+
 class FollowersVM: ViewModelBase {
     
     let user: Firebase.User
@@ -16,6 +17,7 @@ class FollowersVM: ViewModelBase {
     
     let usersSubject: BehaviorSubject<[RelatedUser]>
     let userID: String
+    weak var delegate: ManageRelatedUserDelegate?
     
     init(user: Firebase.User, apiType: RelatedUsersProtocol.Type = RelatedUsersDM.self, userID: String) {
         
@@ -43,6 +45,12 @@ class FollowersVM: ViewModelBase {
             return self.apiType.followUser(user: self.user, willFollowUser: updateUser).map { isFollowing }
             
         }
+        
+    }
+    
+    func toManageRelatedUserVC(user: RelatedUser, isFollowing: Bool) {
+        
+        delegate?.manage(user: user, isFollowing: isFollowing)
         
     }
     

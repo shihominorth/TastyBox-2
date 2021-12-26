@@ -60,7 +60,7 @@ class RelatedUsersViewController: UIViewController, BindableType {
         }
         else if index == 1 {
             
-            self.pageVC.setViewControllers([self.viewModel.presenter.followedsVC], direction: .forward, animated: true)
+            self.pageVC.setViewControllers([self.viewModel.presenter.followersVC], direction: .forward, animated: true)
         }
         
         

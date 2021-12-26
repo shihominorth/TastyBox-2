@@ -79,6 +79,15 @@ class FollowersViewController: UIViewController, BindableType {
 
                     })
                     .disposed(by: cell.disposeBag)
+                
+                cell.deleteBtn.rx.tap
+                    .withLatestFrom(user.isRelatedUserSubject)
+                    .subscribe(onNext: { [unowned self] isFollowing in
+                        
+                        self.viewModel.toManageRelatedUserVC(user: user, isFollowing: isFollowing)
+                        
+                    })
+                    .disposed(by: cell.disposeBag)
 
                 user.isRelatedUserSubject
                     .subscribe(onNext: { isFollowing in

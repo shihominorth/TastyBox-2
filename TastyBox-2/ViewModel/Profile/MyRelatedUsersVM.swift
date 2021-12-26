@@ -28,8 +28,26 @@ class MyRelatedUsersVM: ViewModelBase {
         
         self.selectIndexSubject = BehaviorSubject<Int>(value: index)
         self.presenter = RelatedUserPresenter(userId: self.user.uid, user: self.user, isMyRelatedUsers: true)
+        
+        super.init()
+        
+        self.presenter.followersVM.delegate = self
                 
     }
     
  
+}
+
+extension MyRelatedUsersVM: ManageRelatedUserDelegate {
+   
+    func manage(user: RelatedUser, isFollowing: Bool) {
+        
+        let vm = ManageRelatedUserVM(sceneCoordinator: self.sceneCoordinator, user: self.user, manageUser: user, isFollowing: isFollowing)
+    
+        let scene: Scene = .profileScene(scene: .manageRelatedUser(vm))
+        
+        self.sceneCoordinator.modalTransition(to: scene, type: .modalHalf)
+        
+    }
+
 }

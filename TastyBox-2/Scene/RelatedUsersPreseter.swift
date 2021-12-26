@@ -11,14 +11,16 @@ import Firebase
 class RelatedUserPresenter {
     
     let user: Firebase.User
+    let followingsVM: FolllowingsVM
+    let followersVM: FollowersVM
     var followingsVC: FollowingsViewController
-    var followedsVC: FollowersViewController
+    var followersVC: FollowersViewController
     
     init(userId: String, user: Firebase.User, isMyRelatedUsers: Bool) {
       
         let storyBoard = UIStoryboard(name: "Profile", bundle: nil)
         
-        let followingsVM = FolllowingsVM(user: user, userID: userId)
+        self.followingsVM = FolllowingsVM(user: user, userID: userId)
         let followingsVC = storyBoard.instantiateViewController(withIdentifier: "followingsVC") as! FollowingsViewController
         
         self.user = user
@@ -26,11 +28,11 @@ class RelatedUserPresenter {
         self.followingsVC = followingsVC
         self.followingsVC.bindViewModel(to: followingsVM)
         
-        let followedsVM = FollowersVM(user: self.user, userID: userId)
+        self.followersVM = FollowersVM(user: self.user, userID: userId)
         let followedsVC = storyBoard.instantiateViewController(withIdentifier: "followedsVC") as! FollowersViewController
         
-        self.followedsVC = followedsVC
-        self.followedsVC.bindViewModel(to: followedsVM)
+        self.followersVC = followedsVC
+        self.followersVC.bindViewModel(to: followersVM)
         
         
         
