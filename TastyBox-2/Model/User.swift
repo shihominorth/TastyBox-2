@@ -125,7 +125,7 @@ class RelatedUser: User {
         
     }
     
-    override init?(document:  DocumentSnapshot) {
+    init?(document:  DocumentSnapshot, isRelatedUser: Bool) {
        
         guard
             let data = document.data(),
@@ -137,18 +137,35 @@ class RelatedUser: User {
             return nil
         }
 
-        isRelatedUserSubject = BehaviorSubject<Bool>(value: true)
+        isRelatedUserSubject = BehaviorSubject<Bool>(value: isRelatedUser)
         super.init(id: id, name: name, isVIP: isVIP, imgURLString: imgURL)
 
     }
     
-    static func generateNewUsers(documents: [DocumentSnapshot]) -> Observable<[RelatedUser]> {
+    static func generateNewFollowings(documents: [DocumentSnapshot]) -> Observable<[RelatedUser]> {
         
         return .create { observer in
             
             let users = documents.compactMap { doc in
             
-                return RelatedUser(document: doc)
+                return RelatedUser(document: doc, isRelatedUser: true)
+            
+            }
+            
+            observer.onNext(users)
+            
+            return Disposables.create()
+        }
+        
+    }
+    
+    static func generateNewUsers(userInfoTuples: [(DocumentSnapshot, Bool)]) -> Observable<[RelatedUser]> {
+        
+        return .create { observer in
+            
+            let users = userInfoTuples.compactMap { userInfo in
+            
+                return RelatedUser(document: userInfo.0, isRelatedUser: userInfo.1)
             
             }
             
@@ -160,18 +177,5 @@ class RelatedUser: User {
     }
 
 }
-
-struct  AllergicFoodData {
-    var allergicFood: String
-    var checkedFood: Bool?
-}
-
-
-
-struct AllFoodList {
-    var allFood:[AllergicFoodData]
-}
-
-
 
 

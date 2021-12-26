@@ -18,7 +18,7 @@ class RelatedUsersVM: ViewModelBase {
     
     let presenter: RelatedUserPresenter
     
-    init(sceneCoordinator: SceneCoordinator, user: Firebase.User, apiType: ProfileDMProtocol.Type = ProfileDM.self, isFollowing: Bool) {
+    init(sceneCoordinator: SceneCoordinator, user: Firebase.User, apiType: ProfileDMProtocol.Type = ProfileDM.self, isFollowing: Bool, profileID: String) {
         
         self.sceneCoordinator = sceneCoordinator
         self.user = user
@@ -27,7 +27,10 @@ class RelatedUsersVM: ViewModelBase {
         let index = isFollowing ? 0 : 1
         
         self.selectIndexSubject = BehaviorSubject<Int>(value: index)
-        self.presenter = RelatedUserPresenter(userId: self.user.uid, user: self.user, isMyRelatedUsers: true)
+                
+        self.presenter = RelatedUserPresenter(userId: profileID, user: self.user, isMyRelatedUsers: false)
+            
+      
                 
     }
     

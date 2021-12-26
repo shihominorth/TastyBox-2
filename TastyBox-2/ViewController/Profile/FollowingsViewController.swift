@@ -117,16 +117,21 @@ class FollowingsViewController: UIViewController, BindableType {
                 
                 cell.userImgView.kf.setImage(with: url)
                 
-                cell.setUpUserManageBtn(isFollowing: true)
+                cell.userManageBtn.isHidden = self.viewModel.user.uid == user.userID
                 
-                user.isRelatedUserSubject
-                    .subscribe(onNext: { isFollowing in
-                        
-                        cell.setUpUserManageBtn(isFollowing: isFollowing)
-                        
-                    })
-                    .disposed(by: cell.disposeBag)
+                if self.viewModel.user.uid != user.userID {
                 
+                    cell.setUpUserManageBtn(isFollowing: true)
+                
+                    user.isRelatedUserSubject
+                        .subscribe(onNext: { isFollowing in
+                        
+                            cell.setUpUserManageBtn(isFollowing: isFollowing)
+                        
+                        })
+                        .disposed(by: cell.disposeBag)
+                
+                }
             })
             
             viewModel.usersSubject
@@ -299,6 +304,8 @@ class UserFollowingTVCell: UITableViewCell {
         userImgView = {
             
             let imgView = UIImageView()
+            imgView.translatesAutoresizingMaskIntoConstraints = false
+            imgView.clipsToBounds = true
             
             return imgView
         }()
@@ -306,6 +313,7 @@ class UserFollowingTVCell: UITableViewCell {
         userNameLbl = {
             
             let lbl = UILabel()
+            lbl.translatesAutoresizingMaskIntoConstraints = false
             
             return lbl
             
@@ -314,6 +322,8 @@ class UserFollowingTVCell: UITableViewCell {
         userManageBtn = {
             
             let btn = UIButton(type: .system)
+            
+            btn.translatesAutoresizingMaskIntoConstraints = false
             
             btn.layer.borderColor = #colorLiteral(red: 1, green: 0.5763723254, blue: 0, alpha: 1)
             btn.layer.borderWidth = 2

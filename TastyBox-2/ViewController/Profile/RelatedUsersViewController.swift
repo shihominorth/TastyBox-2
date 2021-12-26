@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import RxSwift
 
 class RelatedUsersViewController: UIViewController, BindableType {
     
@@ -27,7 +28,25 @@ class RelatedUsersViewController: UIViewController, BindableType {
     
     func bindViewModel() {
         
+        viewModel.selectIndexSubject
+            .take(1)
+                .subscribe(onNext: { index in
+                    
+                    self.self.segmentControl.rx.selectedSegmentIndex.onNext(index)
+                    self.setUpPageController(index: index)
+                    
+                })
+                .disposed(by: viewModel.disposeBag)
         
+        self.segmentControl.rx.selectedSegmentIndex
+            .subscribe(onNext: { index in
+                
+                self.setUpPageController(index: index)
+                
+                self.viewModel.selectIndexSubject.onNext(index)
+                
+            })
+            .disposed(by: viewModel.disposeBag)
         
     }
     

@@ -11,7 +11,7 @@ import RxSwift
 import RxCocoa
 
 class FollowersViewController: UIViewController, BindableType {
-
+    
     typealias ViewModelType = FollowersVM
     
     
@@ -21,11 +21,11 @@ class FollowersViewController: UIViewController, BindableType {
     @IBOutlet weak var tableView: UITableView!
     
     var viewModel: FollowersVM!
-
-
+    
+    
     override func viewDidLoad() {
         super.viewDidLoad()
-
+        
         // Do any additional setup after loading the view.
         tableView.delegate = self
     }
@@ -66,31 +66,32 @@ class FollowersViewController: UIViewController, BindableType {
                 cell.userManageBtn.rx.tap
                     .withLatestFrom(user.isRelatedUserSubject)
                     .withLatestFrom(self.viewModel.usersSubject) { isFollowing, users in
-                        
+
                         return (isFollowing, users[row])
-                        
+
                     }
                     .flatMapLatest { isFollowings, user in
                         self.viewModel.updateRelatedUserStatus(isFollowing: isFollowings, updateUser: user)
                     }
                     .subscribe(onNext: { isFollowing in
-                        
+
                         user.isRelatedUserSubject.onNext(!isFollowing)
 
                     })
                     .disposed(by: cell.disposeBag)
-                
+
                 user.isRelatedUserSubject
                     .subscribe(onNext: { isFollowing in
-                        
+
                         cell.setUpUserManageBtn(isFollowing: isFollowing)
-                        
+
                     })
                     .disposed(by: cell.disposeBag)
                 
             })
             
             viewModel.usersSubject
+                .skip(1)
                 .bind(to: tableView.rx.items(dataSource: dataSource))
                 .disposed(by: viewModel.disposeBag)
             
@@ -112,19 +113,27 @@ class FollowersViewController: UIViewController, BindableType {
                 
                 cell.userImgView.kf.setImage(with: url)
                 
-                cell.setUpUserManageBtn(isFollowing: true)
-                
-                user.isRelatedUserSubject
-                    .subscribe(onNext: { isFollowing in
-                        
-                        cell.setUpUserManageBtn(isFollowing: isFollowing)
-                        
-                    })
-                    .disposed(by: cell.disposeBag)
+                cell.userManageBtn.isHidden = self.viewModel.user.uid == user.userID
+
+                if self.viewModel.user.uid != user.userID {
+                    
+                    cell.setUpUserManageBtn(isFollowing: true)
+                    
+                    user.isRelatedUserSubject
+                        .subscribe(onNext: { isFollowing in
+                            
+                            cell.setUpUserManageBtn(isFollowing: isFollowing)
+                            
+                        })
+                        .disposed(by: cell.disposeBag)
+                    
+                }
+
                 
             })
             
             viewModel.usersSubject
+                .skip(1)
                 .bind(to: tableView.rx.items(dataSource: dataSource))
                 .disposed(by: viewModel.disposeBag)
             
@@ -135,15 +144,15 @@ class FollowersViewController: UIViewController, BindableType {
     }
     
     /*
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Get the new view controller using segue.destination.
-        // Pass the selected object to the new view controller.
-    }
-    */
-
+     // MARK: - Navigation
+     
+     // In a storyboard-based application, you will often want to do a little preparation before navigation
+     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+     // Get the new view controller using segue.destination.
+     // Pass the selected object to the new view controller.
+     }
+     */
+    
 }
 
 extension FollowersViewController: UITableViewDelegate {
@@ -156,10 +165,11 @@ extension FollowersViewController: UITableViewDelegate {
 
 
 class FollowerTVCell: UITableViewCell {
-   
+    
     let userImgView: UIImageView
     let userNameLbl: UILabel
     let userManageBtn: UIButton
+    let deleteBtn: UIButton
     var disposeBag: DisposeBag
     
     required init?(coder: NSCoder) {
@@ -205,6 +215,24 @@ class FollowerTVCell: UITableViewCell {
             
         }()
         
+        deleteBtn = {
+            
+            let btn = UIButton()
+            btn.translatesAutoresizingMaskIntoConstraints = false
+            
+            if let img = UIImage(systemName: "ellipsis.circle") {
+                
+                btn.setBackgroundImage(img, for: .normal)
+                
+            }
+            
+            btn.tintColor = #colorLiteral(red: 1, green: 0.5763723254, blue: 0, alpha: 1)
+            
+            return btn
+        
+        }()
+        
+        
         disposeBag = DisposeBag()
         
         super.init(style: style, reuseIdentifier: reuseIdentifier)
@@ -212,6 +240,7 @@ class FollowerTVCell: UITableViewCell {
         self.contentView.addSubview(userImgView)
         self.contentView.addSubview(userNameLbl)
         self.contentView.addSubview(userManageBtn)
+        self.contentView.addSubview(deleteBtn)
         
         NSLayoutConstraint.activate([
             
@@ -222,11 +251,18 @@ class FollowerTVCell: UITableViewCell {
             
         ])
         
+        NSLayoutConstraint.activate([
+            
+            deleteBtn.trailingAnchor.constraint(equalTo: self.contentView.layoutMarginsGuide.trailingAnchor),
+            deleteBtn.centerYAnchor.constraint(equalTo: self.contentView.layoutMarginsGuide.centerYAnchor),
+            deleteBtn.widthAnchor.constraint(equalToConstant: self.contentView.frame.height * 0.7),
+            deleteBtn.heightAnchor.constraint(equalToConstant: self.contentView.frame.height * 0.7)
         
+        ])
         
         NSLayoutConstraint.activate([
             
-            userManageBtn.trailingAnchor.constraint(equalTo: self.contentView.layoutMarginsGuide.trailingAnchor),
+            userManageBtn.trailingAnchor.constraint(equalTo: self.deleteBtn.leadingAnchor, constant: -10),
             userManageBtn.centerYAnchor.constraint(equalTo: self.contentView.layoutMarginsGuide.centerYAnchor),
             userManageBtn.widthAnchor.constraint(equalToConstant: self.contentView.frame.width * 0.3),
             userManageBtn.heightAnchor.constraint(equalToConstant: self.contentView.frame.height * 0.7)
@@ -241,4 +277,32 @@ class FollowerTVCell: UITableViewCell {
             userNameLbl.bottomAnchor.constraint(equalTo: self.contentView.layoutMarginsGuide.bottomAnchor)
             
         ])
+        
+    }
+    
+    override func awakeFromNib() {
+        
+        disposeBag = DisposeBag()
+        
+    }
+    
+    
+    func setUpUserManageBtn(isFollowing: Bool) {
+        
+        if isFollowing {
+            
+            self.userManageBtn.setTitle("Following", for: .normal)
+            self.userManageBtn.backgroundColor = #colorLiteral(red: 1, green: 0.5763723254, blue: 0, alpha: 1)
+            self.userManageBtn.tintColor = #colorLiteral(red: 1, green: 1, blue: 1, alpha: 1)
+            
+        }
+        else {
+            
+            self.userManageBtn.setTitle("Follow", for: .normal)
+            self.userManageBtn.backgroundColor = #colorLiteral(red: 1, green: 1, blue: 1, alpha: 1)
+            self.userManageBtn.tintColor = #colorLiteral(red: 1, green: 0.5763723254, blue: 0, alpha: 1)
+            
+        }
+    }
+    
 }

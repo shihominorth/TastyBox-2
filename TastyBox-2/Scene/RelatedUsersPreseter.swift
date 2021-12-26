@@ -26,8 +26,13 @@ class RelatedUserPresenter {
         self.followingsVC = followingsVC
         self.followingsVC.bindViewModel(to: followingsVM)
         
+        let followedsVM = FollowersVM(user: self.user, userID: userId)
+        let followedsVC = storyBoard.instantiateViewController(withIdentifier: "followedsVC") as! FollowersViewController
         
-        self.followedsVC = storyBoard.instantiateViewController(withIdentifier: "followedsVC") as! FollowersViewController
+        self.followedsVC = followedsVC
+        self.followedsVC.bindViewModel(to: followedsVM)
+        
+        
         
         
     }

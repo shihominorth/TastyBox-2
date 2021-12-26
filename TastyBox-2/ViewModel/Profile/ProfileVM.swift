@@ -86,7 +86,7 @@ class ProfileVM: ViewModelBase {
     
     func toRelatedUsers() {
         
-        let vm = RelatedUsersVM(sceneCoordinator: self.sceneCoordinator, user: self.user, isFollowing: false)
+        let vm = RelatedUsersVM(sceneCoordinator: self.sceneCoordinator, user: self.user, isFollowing: false, profileID: self.profileUser.userID)
         
         self.sceneCoordinator.modalTransition(to: .profileScene(scene: .relatedUsers(vm)), type: .push)
         
