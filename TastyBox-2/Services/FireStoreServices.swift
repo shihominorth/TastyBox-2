@@ -137,6 +137,7 @@ class FireStoreServices {
         return .create { observer in
             
             path.getDocument { doc, err in
+                
                 if let err = err {
                     
                     observer.onError(err)

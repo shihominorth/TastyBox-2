@@ -16,6 +16,7 @@ protocol RelatedUsersProtocol {
     static func getFollowings(user: Firebase.User, userID: String) -> Observable<[RelatedUser]>
     static func followUser(user: Firebase.User, willFollowUser: User) -> Observable<Void>
     static func unFollowUser(user: Firebase.User, willUnFollowUser: User) -> Observable<Void>
+    static func delete(user: Firebase.User, follower willUnFollowUser: User) -> Observable<Void>
     
 }
 
@@ -351,6 +352,95 @@ class RelatedUsersDM: RelatedUsersProtocol {
         return services.updateData(path: followingPath, data: updateFollowingStatusData)
             .flatMapLatest { _ in
                 services.updateData(path: followerPath, data: updateFollowertatusData)
+            }
+            .map { _ in }
+        
+    }
+    
+    static func delete(user: Firebase.User, follower willUnFollowUser: User) -> Observable<Void> {
+        
+        let removeFollowingIDs = removeFollowingIDs(user: user, willDeleteUser: willUnFollowUser)
+        let removeFollowedIDs = removeFollowedsIDs(user: user, willDeletedUser: willUnFollowUser)
+        
+        let updateStatus = updateFollowerFollowingStatus(user: user, publisher: willUnFollowUser)
+        
+        return .zip(removeFollowingIDs, removeFollowedIDs, updateStatus) { _, _, _ in
+            return
+        }
+        
+    }
+    
+    fileprivate static func removeFollowingIDs(user: Firebase.User, willDeleteUser: User) -> Observable<Void> {
+        
+        let path = db.collection("users").document(willDeleteUser.userID)
+        
+        return services.getDocument(path: path)
+            .compactMap { doc  in
+                
+                if let data = doc.data(), let idsDic = data["followingsIDs"] as? [String: Bool], let index = idsDic.firstIndex(where: { key, _ in
+                    
+                    return key == user.uid
+                    
+                }) {
+                    
+                    var ids = idsDic
+                    
+                    ids.remove(at: index)
+                    
+                    let newData = ["followingsIDs": ids]
+                    
+                    return newData
+                    
+                }
+                
+                return nil
+            }
+            .flatMapLatest {
+                services.updateData(path: path, data: $0).map { _ in }
+            }
+    }
+    
+    fileprivate static func removeFollowedsIDs(user: Firebase.User, willDeletedUser: User) -> Observable<Void> {
+        
+        let path = db.collection("users").document(user.uid)
+        
+        return services.getDocument(path: path)
+            .compactMap { doc  in
+                
+                if let data = doc.data(), let idsDic = data["followedsIDs"] as? [String: Bool], let index = idsDic.firstIndex(where: { key, _ in
+                    
+                    return key == willDeletedUser.userID
+                    
+                }) {
+                    
+                    var ids = idsDic
+                    
+                    ids.remove(at: index)
+                    
+                    let newData = ["followedsIDs": ids]
+                    
+                    return newData
+                    
+                }
+                
+                return nil
+            }
+            .flatMapLatest {
+                services.updateData(path: path, data: $0).map { _ in }
+            }
+    }
+    
+    
+    fileprivate static func updateFollowerFollowingStatus(user: Firebase.User, publisher: User) -> Observable<Void> {
+        
+        let myFollowingsPath = db.collection("users").document(publisher.userID).collection("followings").document(user.uid)
+        let publisherFollowerPath = db.collection("users").document(user.uid).collection("followers").document(publisher.userID)
+        let updateFollowingStatusData = ["isFollowing": false]
+        let updateFollowertatusData = ["isFollowed": false]
+        
+        return services.updateData(path: myFollowingsPath, data: updateFollowingStatusData)
+            .flatMapLatest { _ in
+                services.updateData(path: publisherFollowerPath, data: updateFollowertatusData)
             }
             .map { _ in }
         

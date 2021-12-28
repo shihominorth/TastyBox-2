@@ -30,6 +30,15 @@ class FollowersViewController: UIViewController, BindableType {
         tableView.delegate = self
     }
     
+    override func viewWillAppear(_ animated: Bool) {
+        
+        super.viewWillAppear(animated)
+        
+        self.viewModel.getFollowers()
+            .bind(to: viewModel.usersSubject)
+            .disposed(by: viewModel.disposeBag)
+        
+    }
     
     func bindViewModel() {
         
@@ -37,10 +46,7 @@ class FollowersViewController: UIViewController, BindableType {
         
         bindToTableView(isMyRelatedUsers: isMyFollowings)
         
-        self.viewModel.getFollowers()
-            .bind(to: viewModel.usersSubject)
-            .disposed(by: viewModel.disposeBag)
-        
+       
     }
     
     func bindToTableView(isMyRelatedUsers: Bool) {

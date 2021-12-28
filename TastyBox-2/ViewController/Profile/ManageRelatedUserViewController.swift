@@ -7,15 +7,18 @@
 
 import UIKit
 import Kingfisher
+import RxSwift
+import RxCocoa
+
 
 class ManageRelatedUserViewController: UIViewController, BindableType {
  
-    typealias ViewModelType = ManageRelatedUserVM
+    typealias ViewModelType = ManageMyRelatedUserVM
     
 
     @IBOutlet weak var collectionView: UICollectionView!
     
-    var viewModel: ManageRelatedUserVM!
+    var viewModel: ManageMyRelatedUserVM!
     
     override func viewDidLoad() {
         
@@ -42,7 +45,24 @@ class ManageRelatedUserViewController: UIViewController, BindableType {
 
     func bindViewModel() {
         
-        
+        collectionView.rx.itemSelected
+            .subscribe(onNext: { indexPath in
+                
+                switch indexPath.row {
+                case 0:
+                    
+                    self.viewModel.delete()
+                    
+                case 1:
+                    
+                    self.viewModel.cancel()
+                    
+                default:
+                    break
+                }
+                
+            })
+            .disposed(by: viewModel.disposeBag)
         
     }
     
