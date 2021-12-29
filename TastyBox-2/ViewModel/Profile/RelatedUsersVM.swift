@@ -32,10 +32,29 @@ class RelatedUsersVM: ViewModelBase {
         self.presenter = RelatedUserPresenter(userId: profileID, user: self.user, isMyRelatedUsers: false)
         
         super.init()
-                        
+         
+        
+        self.presenter.followersVM.showUserProfileDelegate = self
+        self.presenter.followingsVM.showUserProfileDelegate = self
+        
         
     }
     
+
+}
+
+extension RelatedUsersVM: ShowUserProfileDelegate {
+   
+    func toProfile(relatedUser: RelatedUser) {
+    
+        let myProfileVM = MyProfileVM(sceneCoordinator: self.sceneCoordinator, user: self.user)
+        let profileVM = ProfileVM(sceneCoordinator: self.sceneCoordinator, user: self.user, publisher: relatedUser.user)
+
+        let scene: Scene = relatedUser.user.userID == user.uid ? .profileScene(scene: .myProfile(myProfileVM)) : .profileScene(scene: .profile(profileVM))
+
+        self.sceneCoordinator.modalTransition(to: scene, type: .push)
+        
+    }
 
 }
 

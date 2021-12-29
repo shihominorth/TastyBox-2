@@ -44,6 +44,20 @@ class FollowingsViewController: UIViewController, BindableType {
             .bind(to: viewModel.usersSubject)
             .disposed(by: viewModel.disposeBag)
         
+        tableView.rx.itemSelected
+            .do(onNext: { indexPath in
+                self.tableView.deselectRow(at: indexPath, animated: true)
+            })
+            .withLatestFrom(viewModel.usersSubject) { indexPath, users in
+                return users[indexPath.row]
+            }
+            .subscribe(onNext: { [unowned self] user in
+                
+                self.viewModel.toProfile(user: user)
+                
+            })
+            .disposed(by: viewModel.disposeBag)
+        
     }
     
     
@@ -56,36 +70,31 @@ class FollowingsViewController: UIViewController, BindableType {
             
             tableView.register(MyFollowingTVCell.self, forCellReuseIdentifier: identifier)
             
-            let dataSource = RxDefaultTableViewDataSource<RelatedUser, MyFollowingTVCell>(identifier: identifier, configure: { row, user, cell in
+            let dataSource = RxDefaultTableViewDataSource<RelatedUser, MyFollowingTVCell>(identifier: identifier, configure: { row, following, cell in
                 
-                cell.userNameLbl.text = user.name
+                cell.userNameLbl.text = following.user.name
                 
                 cell.layoutIfNeeded()
                 cell.userImgView.layer.cornerRadius = cell.userImgView.frame.width / 2
                 
-                guard let url = URL(string: user.imageURLString) else { return }
+                guard let url = URL(string: following.user.imageURLString) else { return }
                 
                 cell.userImgView.kf.setImage(with: url)
                 
                 
                 cell.userManageBtn.rx.tap
-                    .withLatestFrom(user.isRelatedUserSubject)
-                    .withLatestFrom(self.viewModel.usersSubject) { isFollowing, users in
-                        
-                        return (isFollowing, users[row])
-                        
-                    }
-                    .flatMapLatest { isFollowings, user in
-                        self.viewModel.updateRelatedUserStatus(isFollowing: isFollowings, updateUser: user)
+                    .withLatestFrom(following.isRelatedUserSubject)
+                    .flatMapLatest { isFollowing in
+                        self.viewModel.updateRelatedUserStatus(isFollowing: isFollowing, updateUser: following.user)
                     }
                     .subscribe(onNext: { isFollowing in
                         
-                        user.isRelatedUserSubject.onNext(!isFollowing)
+                        following.isRelatedUserSubject.onNext(!isFollowing)
 
                     })
                     .disposed(by: cell.disposeBag)
                 
-                user.isRelatedUserSubject
+                following.isRelatedUserSubject
                     .subscribe(onNext: { isFollowing in
                         
                         cell.setUpUserManageBtn(isFollowing: isFollowing)
@@ -106,24 +115,24 @@ class FollowingsViewController: UIViewController, BindableType {
             
             tableView.register(UserFollowingTVCell.self, forCellReuseIdentifier: identifier)
             
-            let dataSource = RxDefaultTableViewDataSource<RelatedUser, UserFollowingTVCell>(identifier: identifier, configure: { row, user, cell in
+            let dataSource = RxDefaultTableViewDataSource<RelatedUser, UserFollowingTVCell>(identifier: identifier, configure: { row, following, cell in
                 
-                cell.userNameLbl.text = user.name
+                cell.userNameLbl.text = following.user.name
                 
                 cell.layoutIfNeeded()
                 cell.userImgView.layer.cornerRadius = cell.userImgView.frame.width / 2
                 
-                guard let url = URL(string: user.imageURLString) else { return }
+                guard let url = URL(string: following.user.imageURLString) else { return }
                 
                 cell.userImgView.kf.setImage(with: url)
                 
-                cell.userManageBtn.isHidden = self.viewModel.user.uid == user.userID
+                cell.userManageBtn.isHidden = self.viewModel.user.uid == following.user.userID
                 
-                if self.viewModel.user.uid != user.userID {
+                if self.viewModel.user.uid != following.user.userID {
                 
                     cell.setUpUserManageBtn(isFollowing: true)
                 
-                    user.isRelatedUserSubject
+                    following.isRelatedUserSubject
                         .subscribe(onNext: { isFollowing in
                         
                             cell.setUpUserManageBtn(isFollowing: isFollowing)

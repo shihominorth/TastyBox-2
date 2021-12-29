@@ -18,7 +18,9 @@ class FollowersVM: ViewModelBase {
     var users: [RelatedUser]
     let usersSubject: BehaviorSubject<[RelatedUser]>
     let userID: String
-    weak var showManageUserDelegate: ShowManageUserDelegate?
+   
+    weak var showUserProfileDelegate: ShowUserProfileDelegate?
+    weak var manageMyRelatedUserDelegate: ManageMyRelatedUserDelegate?
     
     init(user: Firebase.User, apiType: RelatedUsersProtocol.Type = RelatedUsersDM.self, userID: String) {
         
@@ -52,22 +54,27 @@ class FollowersVM: ViewModelBase {
     
     func toManageRelatedUserVC(user: RelatedUser, isFollowing: Bool) {
         
-        showManageUserDelegate?.manage(user: user, isFollowing: isFollowing)
+        manageMyRelatedUserDelegate?.manage(user: user, isFollowing: isFollowing)
         
     }
     
+    func toProfile(user: RelatedUser) {
+        
+        showUserProfileDelegate?.toProfile(relatedUser: user)
+        
+    }
     
 }
 
 extension FollowersVM: ManageUserDelegate {
     
-    func delete(user: RelatedUser) {
+    func delete(follower: RelatedUser) {
         
-        self.apiType.delete(user: self.user, follower: user)
+        self.apiType.delete(user: self.user, follower: follower.user)
             .withLatestFrom(usersSubject)
             .subscribe(onNext: { [unowned self] users in
                 
-                let newUsers = users.filter { $0.userID != user.userID }
+                let newUsers = users.filter { $0.user.userID != follower.user.userID }
                 
                 self.usersSubject.onNext(newUsers)
                 

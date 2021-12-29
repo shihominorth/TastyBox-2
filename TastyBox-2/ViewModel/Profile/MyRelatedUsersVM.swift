@@ -9,15 +9,16 @@ import Foundation
 import Firebase
 import RxSwift
 
-protocol ShowManageUserDelegate: AnyObject {
-    
+protocol ShowUserProfileDelegate: AnyObject {
+    func toProfile(relatedUser: RelatedUser)
+}
+
+protocol ManageMyRelatedUserDelegate: AnyObject {
     func manage(user: RelatedUser, isFollowing: Bool)
-//    func toProfile(user: User)
-    
 }
 
 class MyRelatedUsersVM: ViewModelBase {
-    
+ 
     let sceneCoordinator: SceneCoordinator
     let user: Firebase.User
     let apiType: MyProfileDMProtocol.Type
@@ -38,14 +39,31 @@ class MyRelatedUsersVM: ViewModelBase {
         
         super.init()
         
-        self.presenter.followersVM.showManageUserDelegate = self
-                
+        self.presenter.followersVM.showUserProfileDelegate = self
+        self.presenter.followersVM.manageMyRelatedUserDelegate = self
+        self.presenter.followingsVM.showUserProfileDelegate = self
     }
     
  
 }
 
-extension MyRelatedUsersVM: ShowManageUserDelegate {
+extension MyRelatedUsersVM: ShowUserProfileDelegate {
+   
+    func toProfile(relatedUser: RelatedUser) {
+    
+        let myProfileVM = MyProfileVM(sceneCoordinator: self.sceneCoordinator, user: self.user)
+        let profileVM = ProfileVM(sceneCoordinator: self.sceneCoordinator, user: self.user, publisher: relatedUser.user)
+
+        let scene: Scene = relatedUser.user.userID == user.uid ? .profileScene(scene: .myProfile(myProfileVM)) : .profileScene(scene: .profile(profileVM))
+
+        self.sceneCoordinator.modalTransition(to: scene, type: .push)
+        
+    }
+    
+    
+}
+
+extension MyRelatedUsersVM: ManageMyRelatedUserDelegate {
 
     func manage(user: RelatedUser, isFollowing: Bool) {
         

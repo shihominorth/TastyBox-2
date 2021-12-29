@@ -115,7 +115,7 @@ extension ManageRelatedUserViewController: UICollectionViewDelegate, UICollectio
             
             if let crv = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: "manageRelatedUserHeader", for: indexPath) as? ManageUserCRV {
                 
-                if let url = URL(string: viewModel.manageUser.imageURLString) {
+                if let url = URL(string: viewModel.manageUser.user.imageURLString) {
                     crv.userImgView.kf.setImage(with: url)
                 }
                 
@@ -123,7 +123,7 @@ extension ManageRelatedUserViewController: UICollectionViewDelegate, UICollectio
                 crv.userImgView.layer.cornerRadius = crv.userImgView.frame.width / 2
                 
                 
-                crv.userNameLbl.text = viewModel.manageUser.name
+                crv.userNameLbl.text = viewModel.manageUser.user.name
                 
                 return crv
                 

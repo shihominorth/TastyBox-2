@@ -46,7 +46,20 @@ class FollowersViewController: UIViewController, BindableType {
         
         bindToTableView(isMyRelatedUsers: isMyFollowings)
         
-       
+        tableView.rx.itemSelected
+            .do(onNext: { indexPath in
+                self.tableView.deselectRow(at: indexPath, animated: true)
+            })
+            .withLatestFrom(viewModel.usersSubject) { indexPath, users in
+                return users[indexPath.row]
+            }
+            .subscribe(onNext: { [unowned self] user in
+                
+                self.viewModel.toProfile(user: user)
+                
+            })
+            .disposed(by: viewModel.disposeBag)
+        
     }
     
     func bindToTableView(isMyRelatedUsers: Bool) {
@@ -57,45 +70,46 @@ class FollowersViewController: UIViewController, BindableType {
             
             tableView.register(FollowerTVCell.self, forCellReuseIdentifier: identifier)
             
-            let dataSource = RxDefaultTableViewDataSource<RelatedUser, FollowerTVCell>(identifier: identifier, configure: { row, user, cell in
+            let dataSource = RxDefaultTableViewDataSource<RelatedUser, FollowerTVCell>(identifier: identifier, configure: { row, follower, cell in
                 
-                cell.userNameLbl.text = user.name
+                cell.userNameLbl.text = follower.user.name
                 
                 cell.layoutIfNeeded()
                 cell.userImgView.layer.cornerRadius = cell.userImgView.frame.width / 2
                 
-                guard let url = URL(string: user.imageURLString) else { return }
+                guard let url = URL(string: follower.user.imageURLString) else { return }
                 
                 cell.userImgView.kf.setImage(with: url)
                 
                 
                 cell.userManageBtn.rx.tap
-                    .withLatestFrom(user.isRelatedUserSubject)
-                    .withLatestFrom(self.viewModel.usersSubject) { isFollowing, users in
-
-                        return (isFollowing, users[row])
-
-                    }
-                    .flatMapLatest { isFollowings, user in
-                        self.viewModel.updateRelatedUserStatus(isFollowing: isFollowings, updateUser: user)
+                    .withLatestFrom(follower.isRelatedUserSubject)
+//                    .withLatestFrom(self.viewModel.usersSubject) { isFollowing, users in
+//
+//                        return (isFollowing, users[row])
+//
+//                    }
+//                    .flatMapLatest { isFollowings, user in
+                    .flatMapLatest { isFollowings in
+                        self.viewModel.updateRelatedUserStatus(isFollowing: isFollowings, updateUser: follower.user)
                     }
                     .subscribe(onNext: { isFollowing in
 
-                        user.isRelatedUserSubject.onNext(!isFollowing)
+                        follower.isRelatedUserSubject.onNext(!isFollowing)
 
                     })
                     .disposed(by: cell.disposeBag)
                 
                 cell.deleteBtn.rx.tap
-                    .withLatestFrom(user.isRelatedUserSubject)
+                    .withLatestFrom(follower.isRelatedUserSubject)
                     .subscribe(onNext: { [unowned self] isFollowing in
                         
-                        self.viewModel.toManageRelatedUserVC(user: user, isFollowing: isFollowing)
+                        self.viewModel.toManageRelatedUserVC(user: follower, isFollowing: isFollowing)
                         
                     })
                     .disposed(by: cell.disposeBag)
 
-                user.isRelatedUserSubject
+                follower.isRelatedUserSubject
                     .subscribe(onNext: { isFollowing in
 
                         cell.setUpUserManageBtn(isFollowing: isFollowing)
@@ -117,24 +131,24 @@ class FollowersViewController: UIViewController, BindableType {
             
             tableView.register(UserFollowingTVCell.self, forCellReuseIdentifier: identifier)
             
-            let dataSource = RxDefaultTableViewDataSource<RelatedUser, UserFollowingTVCell>(identifier: identifier, configure: { row, user, cell in
+            let dataSource = RxDefaultTableViewDataSource<RelatedUser, UserFollowingTVCell>(identifier: identifier, configure: { row, follower, cell in
                 
-                cell.userNameLbl.text = user.name
+                cell.userNameLbl.text = follower.user.name
                 
                 cell.layoutIfNeeded()
                 cell.userImgView.layer.cornerRadius = cell.userImgView.frame.width / 2
                 
-                guard let url = URL(string: user.imageURLString) else { return }
+                guard let url = URL(string: follower.user.imageURLString) else { return }
                 
                 cell.userImgView.kf.setImage(with: url)
                 
-                cell.userManageBtn.isHidden = self.viewModel.user.uid == user.userID
+                cell.userManageBtn.isHidden = self.viewModel.user.uid == follower.user.userID
 
-                if self.viewModel.user.uid != user.userID {
+                if self.viewModel.user.uid != follower.user.userID {
                     
                     cell.setUpUserManageBtn(isFollowing: true)
                     
-                    user.isRelatedUserSubject
+                        follower.isRelatedUserSubject
                         .subscribe(onNext: { isFollowing in
                             
                             cell.setUpUserManageBtn(isFollowing: isFollowing)

@@ -114,31 +114,29 @@ extension User: Differentiable {
 }
 
 
-class RelatedUser: User {
+class RelatedUser {
     
     let isRelatedUserSubject: BehaviorSubject<Bool>
+    let user: User
     
-    override init(id: String, name: String, isVIP: Bool, imgURLString: String) {
-
-        isRelatedUserSubject = BehaviorSubject<Bool>(value: true)
-        super.init(id: id, name: name, isVIP: isVIP, imgURLString: imgURLString)
+    init(isRelatedUser: Bool, user: User) {
+        
+        self.isRelatedUserSubject = BehaviorSubject<Bool>(value: isRelatedUser)
+        self.user = user
         
     }
+   
     
     init?(document:  DocumentSnapshot, isRelatedUser: Bool) {
        
         guard
-            let data = document.data(),
-            let id = data["id"] as? String,
-            let name = data["userName"] as? String,
-            let isVIP = data["isVIP"] as? Bool,
-            let imgURL = data["imgString"] as? String
+            let user = User(document: document)
         else {
             return nil
         }
 
-        isRelatedUserSubject = BehaviorSubject<Bool>(value: isRelatedUser)
-        super.init(id: id, name: name, isVIP: isVIP, imgURLString: imgURL)
+        self.isRelatedUserSubject = BehaviorSubject<Bool>(value: isRelatedUser)
+        self.user = user
 
     }
     
@@ -178,4 +176,16 @@ class RelatedUser: User {
 
 }
 
-
+extension RelatedUser: Differentiable {
+    
+    func isContentEqual(to source: RelatedUser) -> Bool {
+        
+        return self.user.userID == source.user.userID
+        
+    }
+    
+    var differenceIdentifier: String {
+        return self.user.userID
+    }
+    
+}

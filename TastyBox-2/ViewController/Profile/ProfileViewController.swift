@@ -380,6 +380,7 @@ class ProfileMainRCV: UICollectionReusableView {
             imgView.translatesAutoresizingMaskIntoConstraints = false
             imgView.clipsToBounds = true
             imgView.accessibilityIdentifier = "user image view"
+            imgView.contentMode = .scaleAspectFill
             
             return imgView
             
@@ -402,7 +403,6 @@ class ProfileMainRCV: UICollectionReusableView {
             btn.translatesAutoresizingMaskIntoConstraints = false
             btn.isSkeletonable = true
             btn.accessibilityIdentifier = "user following btn"
-            //            btn.tintColor = .white
             
             return btn
             

@@ -17,6 +17,8 @@ class FolllowingsVM: ViewModelBase {
     let usersSubject: BehaviorSubject<[RelatedUser]>
     let userID: String
     
+    weak var showUserProfileDelegate: ShowUserProfileDelegate?
+    
     init(user: Firebase.User, apiType: RelatedUsersProtocol.Type = RelatedUsersDM.self, userID: String) {
         
         self.user = user
@@ -44,6 +46,12 @@ class FolllowingsVM: ViewModelBase {
             return self.apiType.followUser(user: self.user, willFollowUser: updateUser).map { isFollowing }
             
         }
+        
+    }
+    
+    func toProfile(user: RelatedUser) {
+        
+        showUserProfileDelegate?.toProfile(relatedUser: user)
         
     }
     

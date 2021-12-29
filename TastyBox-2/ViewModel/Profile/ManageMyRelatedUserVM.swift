@@ -9,7 +9,7 @@ import Foundation
 import Firebase
 
 protocol ManageUserDelegate: AnyObject {
-    func delete(user: RelatedUser)
+    func delete(follower: RelatedUser)
 }
 
 class ManageMyRelatedUserVM: ViewModelBase {
@@ -33,7 +33,7 @@ class ManageMyRelatedUserVM: ViewModelBase {
     func delete() {
         
         self.sceneCoordinator.pop(animated: true, completion: { [unowned self] in
-                self.delegate?.delete(user: manageUser)
+                self.delegate?.delete(follower: manageUser)
         })
         
     }
