@@ -31,19 +31,19 @@ class MyProfileViewController: UIViewController, BindableType {
             .bind(to: viewModel.postedRecipesSubject)
             .disposed(by: viewModel.disposeBag)
 
-        viewModel.getMyFollowings()
-            .subscribe(onNext: { followings, followed in
-                
-                if let numberCell = self.tableView.visibleCells.first(where: { $0.reuseIdentifier == "myProfileNum"}) as? MyProfileNumTVCell {
-                    
-                    numberCell.myFollowingNumBtn.setTitle("\(followings)\nfollowings", for: .normal)
-                    numberCell.myFollowedNumBtn.setTitle("\(followed)\nfollowed", for: .normal)
-                    
-                }
-            
-            })
-            .disposed(by: viewModel.disposeBag)
-        
+//        viewModel.getMyFollowings()
+//            .subscribe(onNext: { followings, followed in
+//
+//                if let numberCell = self.tableView.visibleCells.first(where: { $0.reuseIdentifier == "myProfileNum"}) as? MyProfileNumTVCell {
+//
+//                    numberCell.myFollowingNumBtn.setTitle("\(followings)\nfollowings", for: .normal)
+//                    numberCell.myFollowedNumBtn.setTitle("\(followed)\nfollowed", for: .normal)
+//
+//                }
+//
+//            })
+//            .disposed(by: viewModel.disposeBag)
+//
         
         
     }
@@ -52,7 +52,7 @@ class MyProfileViewController: UIViewController, BindableType {
         
         tableView.delegate = self
         tableView.dataSource = self
-        
+    
         
     }
     
@@ -76,6 +76,7 @@ extension MyProfileViewController: UITableViewDelegate, UITableViewDataSource {
                     
                 }
                 
+                cell.selectionStyle = .none
                 
                 return cell
             }
@@ -91,6 +92,18 @@ extension MyProfileViewController: UITableViewDelegate, UITableViewDataSource {
                     }
                     .bind(to: cell.postedRecipesSubject)
                     .disposed(by: cell.disposeBag)
+                
+                viewModel.getMyFollowings()
+                    .subscribe(onNext: { followings, followed in
+                        
+                        cell.myFollowingNumBtn.setTitle("\(followings)\nfollowings", for: .normal)
+                        cell.myFollowedNumBtn.setTitle("\(followed)\nfollowed", for: .normal)
+                            
+                    })
+                    .disposed(by: viewModel.disposeBag)
+                
+                cell.mySavedRecipesBtn.isHidden = true
+                
                 
                 
                 cell.myFollowingNumBtn.rx.tap
@@ -110,6 +123,8 @@ extension MyProfileViewController: UITableViewDelegate, UITableViewDataSource {
                         
                     })
                     .disposed(by: cell.disposeBag)
+                
+                cell.selectionStyle = .none
                 
                 return cell
             }
@@ -134,7 +149,7 @@ extension MyProfileViewController: UITableViewDelegate, UITableViewDataSource {
                 })
                 .disposed(by: cell.disposeBag)
                 
-                
+                cell.selectionStyle = .none
                 
                 return cell
             }
