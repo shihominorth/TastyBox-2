@@ -19,15 +19,18 @@ class DiscoveryVM: ViewModelBase {
     let sceneCoodinator: SceneCoordinator
     let user: Firebase.User
     
-   
-    var isMenuBarOpenedRelay = BehaviorRelay<Bool>(value: false)
+    let selectedIndexRelay: BehaviorRelay<Int>
+    let isMenuBarOpenedRelay: BehaviorRelay<Bool>
     
     init(sceneCoodinator: SceneCoordinator, user: Firebase.User) {
         
         self.sceneCoodinator = sceneCoodinator
         self.user = user
         self.presenter = DiscoveryPresenter(user: user, sceneCoordinator: self.sceneCoodinator)
+        self.selectedIndexRelay = BehaviorRelay<Int>(value: 1)
+        self.isMenuBarOpenedRelay = BehaviorRelay<Bool>(value: false)
     }
+    
     
     func setDefaultViewControllers() {
         

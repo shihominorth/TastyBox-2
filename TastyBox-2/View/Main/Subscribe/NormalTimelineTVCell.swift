@@ -23,8 +23,8 @@ class NormalTimelineTVCell: UITableViewCell {
         self.userImgView.layer.cornerRadius = self.userImgView.frame.width / 2
         self.recipeImgView.layer.cornerRadius = 25
         
-        
-        self.upperLineView.isSkeletonable = true
+        self.upperLineView.isHidden = true
+//        self.upperLineView.isSkeletonable = true
         self.userImgView.isSkeletonable = true
         self.userNameLbl.isSkeletonable = true
         self.dateLbl.isSkeletonable = true
@@ -35,6 +35,13 @@ class NormalTimelineTVCell: UITableViewCell {
         self.userNameLbl.showAnimatedSkeleton()
         self.dateLbl.showAnimatedSkeleton()
         self.recipeImgView.showAnimatedSkeleton()
+        
+        
+       self.upperLineView.accessibilityIdentifier = "upper line view"
+       self.userImgView.accessibilityIdentifier = "user img view"
+       self.userNameLbl.accessibilityIdentifier = "user name lbl"
+       self.dateLbl.accessibilityIdentifier = "date lbl"
+       self.recipeImgView.accessibilityIdentifier = "recipe img view"
         
     }
 

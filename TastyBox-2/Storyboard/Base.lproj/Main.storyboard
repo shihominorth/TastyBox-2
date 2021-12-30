@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="19455" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="A8F-s9-8eV">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="19529" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="A8F-s9-8eV">
     <device id="retina6_1" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="19454"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="19519"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="System colors in document resources" minToolsVersion="11.0"/>
         <capability name="collection view cell content view" minToolsVersion="11.0"/>
@@ -103,17 +103,9 @@
                         <barButtonItem key="leftBarButtonItem" image="line.horizontal.3" catalog="system" id="G39-xU-fFo">
                             <color key="tintColor" systemColor="systemOrangeColor"/>
                         </barButtonItem>
-                        <rightBarButtonItems>
-                            <barButtonItem image="magnifyingglass" catalog="system" id="mZo-mB-1tq">
-                                <color key="tintColor" systemColor="systemOrangeColor"/>
-                                <connections>
-                                    <action selector="SearchBarItem" destination="0Yn-6S-9gE" id="LOw-6P-z0e"/>
-                                </connections>
-                            </barButtonItem>
-                            <barButtonItem image="plus" catalog="system" id="Rz5-PK-6xw">
-                                <color key="tintColor" systemColor="systemOrangeColor"/>
-                            </barButtonItem>
-                        </rightBarButtonItems>
+                        <barButtonItem key="rightBarButtonItem" image="plus" catalog="system" id="Rz5-PK-6xw">
+                            <color key="tintColor" systemColor="systemOrangeColor"/>
+                        </barButtonItem>
                     </navigationItem>
                     <connections>
                         <outlet property="MenuCollectionView" destination="tCU-zL-brP" id="yoR-JD-hVD"/>
@@ -507,14 +499,14 @@
                                 <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                                 <prototypes>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="searcingGenre" id="dUE-zg-JoB" customClass="SearchingGenresTableViewCell" customModule="TastyBox_2" customModuleProvider="target">
-                                        <rect key="frame" x="0.0" y="44.5" width="414" height="43.5"/>
+                                        <rect key="frame" x="0.0" y="44.5" width="414" height="43"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="dUE-zg-JoB" id="qmo-9b-xdM">
-                                            <rect key="frame" x="0.0" y="0.0" width="414" height="43.5"/>
+                                            <rect key="frame" x="0.0" y="0.0" width="414" height="43"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="jtq-wz-5uT">
-                                                    <rect key="frame" x="30" y="11" width="364" height="21.5"/>
+                                                    <rect key="frame" x="30" y="11" width="364" height="21"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                                     <nil key="textColor"/>
                                                     <nil key="highlightedColor"/>
@@ -738,17 +730,14 @@
                                 </collectionViewFlowLayout>
                                 <cells>
                                     <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="ingredientsCVCell" id="E8O-WH-4a4" customClass="IngredientOptionCVCell" customModule="TastyBox_2" customModuleProvider="target">
-                                        <rect key="frame" x="0.0" y="0.0" width="94" height="28"/>
+                                        <rect key="frame" x="0.0" y="0.0" width="63" height="28"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <collectionViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" id="dJI-3Y-Uoo">
-                                            <rect key="frame" x="0.0" y="0.0" width="94" height="28"/>
+                                            <rect key="frame" x="0.0" y="0.0" width="63" height="28"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="2H7-IB-wN8">
-                                                    <rect key="frame" x="12" y="5" width="70" height="18"/>
-                                                    <constraints>
-                                                        <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="70" id="Fpm-gK-cW1"/>
-                                                    </constraints>
+                                                    <rect key="frame" x="12" y="5" width="39" height="18"/>
                                                     <fontDescription key="fontDescription" type="system" weight="semibold" pointSize="15"/>
                                                     <color key="textColor" red="0.63529411759999999" green="0.51764705879999995" blue="0.36862745099999999" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                     <nil key="highlightedColor"/>
@@ -787,17 +776,13 @@
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="X6E-Cj-SKY">
-                                                    <rect key="frame" x="0.0" y="0.0" width="200" height="196"/>
+                                                    <rect key="frame" x="0.0" y="0.0" width="200" height="200"/>
                                                     <constraints>
-                                                        <constraint firstAttribute="height" constant="200" id="K1d-eu-vFk"/>
-                                                        <constraint firstAttribute="width" secondItem="X6E-Cj-SKY" secondAttribute="height" multiplier="1:1" constant="4" id="oSR-P9-guN"/>
+                                                        <constraint firstAttribute="width" secondItem="X6E-Cj-SKY" secondAttribute="height" multiplier="1:1" id="PkK-vc-crb"/>
                                                     </constraints>
                                                 </imageView>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ig5-fT-VML">
-                                                    <rect key="frame" x="0.0" y="204" width="200" height="18"/>
-                                                    <constraints>
-                                                        <constraint firstAttribute="height" relation="lessThanOrEqual" constant="41" id="xVC-yp-l1K"/>
-                                                    </constraints>
+                                                    <rect key="frame" x="0.0" y="208" width="200" height="18"/>
                                                     <fontDescription key="fontDescription" type="system" weight="semibold" pointSize="15"/>
                                                     <color key="textColor" red="0.63529411759999999" green="0.51764705879999995" blue="0.36862745099999999" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                     <nil key="highlightedColor"/>
@@ -805,12 +790,11 @@
                                             </subviews>
                                             <constraints>
                                                 <constraint firstItem="X6E-Cj-SKY" firstAttribute="centerX" secondItem="3eU-lF-GYB" secondAttribute="centerX" id="Fev-IQ-DLa"/>
+                                                <constraint firstItem="X6E-Cj-SKY" firstAttribute="leading" secondItem="3eU-lF-GYB" secondAttribute="leading" id="OuI-Xb-8TD"/>
                                                 <constraint firstItem="ig5-fT-VML" firstAttribute="leading" secondItem="3eU-lF-GYB" secondAttribute="leading" id="UYm-Pb-cxH"/>
                                                 <constraint firstItem="ig5-fT-VML" firstAttribute="top" secondItem="X6E-Cj-SKY" secondAttribute="bottom" constant="8" id="WEq-bk-exO"/>
+                                                <constraint firstItem="X6E-Cj-SKY" firstAttribute="top" secondItem="3eU-lF-GYB" secondAttribute="top" id="cF5-hF-rGc"/>
                                                 <constraint firstAttribute="trailing" secondItem="X6E-Cj-SKY" secondAttribute="trailing" id="cuM-q2-OQo"/>
-                                                <constraint firstItem="X6E-Cj-SKY" firstAttribute="top" secondItem="3eU-lF-GYB" secondAttribute="top" id="dbH-Qd-5Ba"/>
-                                                <constraint firstItem="X6E-Cj-SKY" firstAttribute="leading" secondItem="3eU-lF-GYB" secondAttribute="leading" id="fKQ-7C-ChU"/>
-                                                <constraint firstItem="X6E-Cj-SKY" firstAttribute="top" secondItem="3eU-lF-GYB" secondAttribute="top" id="iWT-QD-jZU"/>
                                                 <constraint firstAttribute="trailing" secondItem="ig5-fT-VML" secondAttribute="trailing" id="xiB-CY-moL"/>
                                             </constraints>
                                         </collectionViewCellContentView>
@@ -1049,7 +1033,6 @@
         <image name="info.circle" catalog="system" width="128" height="121"/>
         <image name="line.horizontal.3" catalog="system" width="128" height="64"/>
         <image name="lock.circle" catalog="system" width="128" height="121"/>
-        <image name="magnifyingglass" catalog="system" width="128" height="115"/>
         <image name="paperplane" catalog="system" width="128" height="118"/>
         <image name="person" catalog="system" width="128" height="117"/>
         <image name="plus" catalog="system" width="128" height="113"/>

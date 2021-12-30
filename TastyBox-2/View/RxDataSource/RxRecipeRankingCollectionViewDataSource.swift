@@ -66,6 +66,8 @@ class RxRecipeRankingCollectionViewDataSource: NSObject, RxCollectionViewDataSou
             cell.titleLbl.isSkeletonable = true
             cell.publisherLbl.isSkeletonable = true
             cell.likedNumLbl.isSkeletonable = true
+
+            
             
             cell.titleLbl.showAnimatedSkeleton()
             cell.publisherLbl.showAnimatedSkeleton()

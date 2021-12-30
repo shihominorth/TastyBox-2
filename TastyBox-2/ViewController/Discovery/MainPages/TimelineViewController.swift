@@ -132,6 +132,10 @@ class TimelineViewController: UIViewController, BindableType {
                         cell.userImgView.hideSkeleton()
                         cell.recipeImgView.hideSkeleton()
                         
+                        if indexPath.row != 0 {
+                            cell.upperLineView.isHidden = false
+                        }
+                        
                         cell.userImgView.kf.setImage(with: userUrl, options: [.transition(.fade(1))], completionHandler: { _ in
                             
                             

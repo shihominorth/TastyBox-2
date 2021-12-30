@@ -42,7 +42,9 @@ class DiscoveryViewController: UIViewController, BindableType {
     var cellUserTappedbefore: UICollectionViewCell?
     
     // 現在選択されている位置を状態として記憶しておくためのプロパティを作る
-    var selectedIndex: Int = 3
+    var selectedIndex: Int = 1
+    
+    var pageVC: UIPageViewController?
     
     //
     //    let FollowingVC = UIStoryboard(name: "followingRecipe", bundle: nil).instantiateViewController(identifier: "followingRecipe") as! FollowingRecipeViewController
@@ -108,6 +110,10 @@ class DiscoveryViewController: UIViewController, BindableType {
         self.navigationItem.backButtonTitle = ""
                 
         viewModel.setDefaultViewControllers()
+        
+        pageVC = self.children.first as! UIPageViewController
+        pageVC?.delegate = self
+        
     }
      
     override func viewWillDisappear(_ animated: Bool) {
@@ -187,20 +193,21 @@ class DiscoveryViewController: UIViewController, BindableType {
         self.containerView.isHidden = false
         
     }
+    
     func CreateMenuLabel() {
         
         let label1 = "Subscribed Creator"
         let label2 = "Your Ingredients Recipe"
         let label3 = "Most Popular"
-        let label4 = "Editor Choice"
-        let label5 = "Cuisine Choice"
-        let label6 = " VIP Only "
+//        let label4 = "Editor Choice"
+//        let label5 = "Cuisine Choice"
+//        let label6 = " VIP Only "
         arrayMenu.append(label1)
         arrayMenu.append(label2)
         arrayMenu.append(label3)
-        arrayMenu.append(label4)
-        arrayMenu.append(label5)
-        arrayMenu.append(label6)
+//        arrayMenu.append(label4)
+//        arrayMenu.append(label5)
+//        arrayMenu.append(label6)
     }
     
     
@@ -363,6 +370,7 @@ extension DiscoveryViewController: UICollectionViewDelegate, UICollectionViewDat
         let active = (indexPath.row == selectedIndex)
         cell.focusCell(active: active)
         cell.MenuLabel.text = arrayMenu[indexPath.row]
+        
         return cell
     }
     
@@ -475,35 +483,38 @@ class MenuCollectionViewCell: UICollectionViewCell{
     
 }
 
-//extension DiscoveryViewController : UIPageViewControllerDelegate {
-//    func pageViewController(_ pageViewController: UIPageViewController, didFinishAnimating finished: Bool, previousViewControllers: [UIViewController], transitionCompleted completed: Bool) {
-//
-//        var index: Int = selectedIndex
+extension DiscoveryViewController : UIPageViewControllerDelegate {
+    func pageViewController(_ pageViewController: UIPageViewController, didFinishAnimating finished: Bool, previousViewControllers: [UIViewController], transitionCompleted completed: Bool) {
+        
+        var index = 0
 
-//        if pageViewController.viewControllers?.first! is FollowingRecipeViewController {
-//            index = 0
-////        }
-//        else if pageViewController.viewControllers?.first! is IngredientsViewController {
-//            index = 1
-//        }
-//        else if pageViewController.viewControllers?.first! is PopularRecipeViewController {
-//            index = 2
-//        }
-//        else if pageViewController.viewControllers?.first! is EditorChoiceViewController {
-//            index = 3
-//        }
-//        else if pageViewController.viewControllers?.first! is CuisineViewController {
-//            index = 4
-//        }
-//        else if pageViewController.viewControllers?.first! is VIPViewController {
-//            index = 5
-//        }
-//
-//        // MenuViewControllerの特定のセルにフォーカスをあてる
-//        let indexPath = NSIndexPath(item: index, section: 0)
-//        self.focusCell(indexPath: indexPath as IndexPath)
-//        self.MenuCollectionView?.scrollToItem(at: indexPath as IndexPath, at: .centeredHorizontally, animated: true)
-//    }
-//}
+        if let currentViewController = pageViewController.viewControllers?.first {
+
+            if currentViewController is TimelineViewController {
+
+                index = 0
+
+            }
+            else if currentViewController is IngredientsViewController {
+                index = 1
+            }
+            else if currentViewController is RankingViewController {
+
+                index = 2
+            }
+            
+            // MenuViewControllerの特定のセルにフォーカスをあてる
+            let indexPath = IndexPath(row: index, section: 0)
+            self.focusCell(indexPath: indexPath)
+//            self.MenuCollectionView?.scrollToItem(at: indexPath as IndexPath, at: .centeredHorizontally, animated: true)
+
+            self.selectedIndex = index
+            
+        }
+
+       
+    }
+    
+}
 
 

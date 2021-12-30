@@ -36,54 +36,68 @@ class DiscoveryPresenter: NSObject {
         let timelineVC = MainScene.timeline(timelineVM).viewController()
         
         
-        self.viewControllers = [timelineVC, ingredientsVC, rankingVC, rankingVC, rankingVC, rankingVC]
+        self.viewControllers = [timelineVC, ingredientsVC, rankingVC]
                 
-      
+        super.init()
+        
+    
+        
     }
     
     func setDefaultViewController() {
        
-        pageVC?.setViewControllers([viewControllers[2]], direction: .forward, animated: true, completion: { [unowned self] isCompleted in
+        pageVC?.setViewControllers([viewControllers[1]], direction: .forward, animated: true, completion: { [unowned self] isCompleted in
             
             if isCompleted {
                 
-                self.currentViewController = viewControllers[2]
+                self.currentViewController = viewControllers[1]
                 
-                if let rankingVC = self.currentViewController as? RankingViewController {
+                if let ingredientVC = self.currentViewController as? IngredientsViewController {
                     
-                    rankingVC.viewModel.delegate = self
+                    ingredientVC.viewModel.delegate = self
 
                 }
             }
             
         })
+        
+        pageVC?.delegate = self
+        pageVC?.dataSource = self
+        
     }
     
     
     func setViewControllers(row: Int) {
        
 
-        pageVC?.setViewControllers([viewControllers[row]], direction: .forward, animated: true, completion: { [unowned self] isCompleted in
+        guard let currentViewController = currentViewController, let currentIndex = viewControllers.firstIndex(where: { String(describing: $0) == String(describing: currentViewController) }) else {
+            return
+        }
+
+        let orientation: UIPageViewController.NavigationDirection = currentIndex < row ? .forward : .reverse
+        
+        pageVC?.setViewControllers([viewControllers[row]], direction: orientation, animated: true, completion: { [unowned self] isCompleted in
             
             if isCompleted {
+
                 
-                self.currentViewController = viewControllers[row]
+                if let currentViewController = viewControllers[row] as? RankingViewController {
+                    
+                    currentViewController.viewModel.delegate = self
+                    
+                }
+                else if let currentViewController = viewControllers[row] as? IngredientsViewController {
+                    
+                    currentViewController.viewModel.delegate = self
+                    
+                }
+                else if let currentViewController = viewControllers[row] as? TimelineViewController {
+                    
+                    currentViewController.viewModel.delegate = self
+                    
+                }
                 
-                if let currentViewController = currentViewController as? RankingViewController {
-                    
-                    currentViewController.viewModel.delegate = self
-                    
-                }
-                else if let currentViewController = currentViewController as? IngredientsViewController {
-                    
-                    currentViewController.viewModel.delegate = self
-                    
-                }
-                else if let currentViewController = currentViewController as? TimelineViewController {
-                    
-                    currentViewController.viewModel.delegate = self
-                    
-                }
+                
             }
             
         })
@@ -104,4 +118,41 @@ extension DiscoveryPresenter: toRecipeDetailDelegate {
         
     }
     
+}
+
+extension DiscoveryPresenter: UIPageViewControllerDelegate, UIPageViewControllerDataSource {
+    
+    func presentationCount(for pageViewController: UIPageViewController) -> Int {
+        return viewControllers.count
+    }
+    
+    func pageViewController(_ pageViewController: UIPageViewController, viewControllerBefore viewController: UIViewController) -> UIViewController? {
+        
+        if let currentViewController = pageViewController.viewControllers?.first, let index = viewControllers.firstIndex(where: { String(describing: currentViewController) == String(describing: $0) }) {
+            
+            
+            if index - 1 >= 0 {
+            
+                return viewControllers[index - 1]
+            
+            }
+    
+        }
+        
+        return nil
+    }
+    
+    func pageViewController(_ pageViewController: UIPageViewController, viewControllerAfter viewController: UIViewController) -> UIViewController? {
+       
+        if let currentViewController = pageViewController.viewControllers?.first, let index = viewControllers.firstIndex(where: { String(describing: currentViewController) == String(describing: $0) }) {
+
+            
+            if index + 1 < viewControllers.count {
+                
+                return viewControllers[index + 1]
+            }
+        }
+        
+        return nil
+    }
 }
