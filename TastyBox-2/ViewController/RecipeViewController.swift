@@ -53,13 +53,6 @@ class RecipeViewController: UIViewController, BindableType {
         
     }
     
-    override func viewDidLayoutSubviews() {
-        
-        super.viewDidLayoutSubviews()
-        self.view.layoutIfNeeded()
-        
-    }
-    
     func bindViewModel() {
         
         setUpDataSource()
@@ -118,9 +111,6 @@ class RecipeViewController: UIViewController, BindableType {
         
         
         viewModel.getRecipeDetailInfo(recipe: viewModel.recipe)
-        //            .flatMapLatest({ [unowned self] sections in
-        //                self.viewModel.isLikedRecipe(resultSetions: sections)
-        //            })
             .bind(to: tableView.rx.items(dataSource: dataSource))
             .disposed(by: viewModel.disposeBag)
         
