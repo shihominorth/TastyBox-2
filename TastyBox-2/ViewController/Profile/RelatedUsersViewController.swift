@@ -24,27 +24,57 @@ class RelatedUsersViewController: UIViewController, BindableType {
 
         pageVC = self.children.first as? UIPageViewController
 
+        pageVC.delegate = self
+        pageVC.dataSource = self
+
     }
     
     func bindViewModel() {
         
+        
         viewModel.selectIndexSubject
             .take(1)
-                .subscribe(onNext: { index in
-                    
-                    self.self.segmentControl.rx.selectedSegmentIndex.onNext(index)
-                    self.setUpPageController(index: index)
-                    
-                })
-                .disposed(by: viewModel.disposeBag)
-        
-        self.segmentControl.rx.selectedSegmentIndex
-            .subscribe(onNext: { index in
+            .subscribe(onNext: { [unowned self] index in
                 
+                self.segmentControl.selectedSegmentIndex = index
                 self.setUpPageController(index: index)
                 
-                self.viewModel.selectIndexSubject.onNext(index)
+            })
+            .disposed(by: viewModel.disposeBag)
+ 
+        
+        segmentControl.rx.selectedSegmentIndex
+            .subscribe(onNext: { [unowned self] index in
                 
+                if let currentViewController = self.pageVC.viewControllers?.first {
+                    
+                    switch index {
+                    case 0:
+                        
+                        guard currentViewController is FollowingsViewController else {
+                            
+                            self.setUpPageController(index: index)
+                            
+                            return
+                            
+                        }
+                        
+                    case 1:
+                        
+                        guard currentViewController is FollowersViewController else {
+                            
+                            self.setUpPageController(index: index)
+                            
+                            return
+                        }
+                        
+                    default:
+                        break
+                    }
+                    
+                }
+
+
             })
             .disposed(by: viewModel.disposeBag)
         
@@ -56,11 +86,11 @@ class RelatedUsersViewController: UIViewController, BindableType {
         
         if index == 0 {
             
-            self.pageVC.setViewControllers([self.viewModel.presenter.followingsVC], direction: .forward, animated: true)
+            self.pageVC.setViewControllers([self.viewModel.presenter.followingsVC], direction: .reverse, animated: true)
         }
         else if index == 1 {
             
-            self.pageVC.setViewControllers([self.viewModel.presenter.followersVC], direction: .reverse, animated: true)
+            self.pageVC.setViewControllers([self.viewModel.presenter.followersVC], direction: .forward, animated: true)
         }
         
         
@@ -76,4 +106,60 @@ class RelatedUsersViewController: UIViewController, BindableType {
     }
     */
 
+}
+
+
+extension RelatedUsersViewController: UIPageViewControllerDataSource, UIPageViewControllerDelegate {
+    
+    func presentationCount(for pageViewController: UIPageViewController) -> Int {
+        
+        return 2
+        
+    }
+    
+    func pageViewController(_ pageViewController: UIPageViewController, viewControllerBefore viewController: UIViewController) -> UIViewController? {
+        
+        if viewController is FollowersViewController {
+                                    
+            return self.viewModel.presenter.followingsVC
+        }
+        
+    
+        return nil
+    }
+    
+    func pageViewController(_ pageViewController: UIPageViewController, viewControllerAfter viewController: UIViewController) -> UIViewController? {
+        
+        
+        if viewController is FollowingsViewController {
+                        
+            return self.viewModel.presenter.followersVC
+        }
+        
+        return nil
+    }
+   
+    
+    func pageViewController(_ pageViewController: UIPageViewController, didFinishAnimating finished: Bool, previousViewControllers: [UIViewController], transitionCompleted completed: Bool) {
+
+
+        if finished {
+
+            if let currentViewController = self.pageVC.viewControllers?.first {
+                
+                if currentViewController is FollowingsViewController {
+
+                    self.segmentControl.selectedSegmentIndex = 0
+
+                }
+                else if currentViewController is FollowersViewController {
+                    
+                    self.segmentControl.selectedSegmentIndex = 1
+                    
+                }
+            }
+
+        }
+    }
+    
 }

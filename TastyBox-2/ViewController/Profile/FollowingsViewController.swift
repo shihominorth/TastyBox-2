@@ -30,7 +30,6 @@ class FollowingsViewController: UIViewController, BindableType {
         // Do any additional setup after loading the view.
         tableView.delegate = self
         
-        
     }
     
     
