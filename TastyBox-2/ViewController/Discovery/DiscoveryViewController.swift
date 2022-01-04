@@ -155,10 +155,10 @@ class DiscoveryViewController: UIViewController, BindableType {
         
         
         self.MenuCollectionView.rx.itemSelected
-            .map {  $0.row }
-            .subscribe(onNext: { [unowned self] row in
+            .subscribe(onNext: { [unowned self] indexPath in
                 
-                self.viewModel.selectPageTitle(row: row)
+                self.focusCell(indexPath: indexPath)
+                self.viewModel.selectPageTitle(row: indexPath.row)
                 
             })
             .disposed(by: viewModel.disposeBag)
@@ -376,7 +376,7 @@ extension DiscoveryViewController: UICollectionViewDelegate, UICollectionViewDat
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         
-        focusCell(indexPath: indexPath)
+       
         
         //        menuViewController(viewController: self.children[0] as! MainPageViewController, at: indexPath.row)
         
