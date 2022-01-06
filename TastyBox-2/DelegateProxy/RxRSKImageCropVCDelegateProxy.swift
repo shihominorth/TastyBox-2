@@ -12,6 +12,10 @@ import RSKImageCropper
 import RxSwift
 import RxCocoa
 
+enum CancelError: Error {
+    case canceled
+}
+
 class RxRSKImageCropVCDelegateProxy: DelegateProxy<RSKImageCropViewController, RSKImageCropViewControllerDelegate>,  RSKImageCropViewControllerDelegate {
     
     public weak private(set) var cropVC: RSKImageCropViewController?
@@ -24,8 +28,8 @@ class RxRSKImageCropVCDelegateProxy: DelegateProxy<RSKImageCropViewController, R
     
     func imageCropViewControllerDidCancelCrop(_ controller: RSKImageCropViewController) {
         
-        self.cropVC?.dismiss(animated: true, completion: nil)
-        
+//        self.cropVC?.dismiss(animated: true, completion: nil)
+        self.imageSubject.onError(CancelError.canceled)
     }
     
     func imageCropViewController(_ controller: RSKImageCropViewController, didCropImage croppedImage: UIImage, usingCropRect cropRect: CGRect, rotationAngle: CGFloat) {

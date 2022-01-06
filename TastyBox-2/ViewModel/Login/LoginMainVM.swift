@@ -102,27 +102,16 @@ class LoginMainVM: ViewModelBase {
     
     
     func appleLogin(presenting: UIViewController) -> Observable<Event<Firebase.User>> {
-        
-     
+
         return self.apiType.startSignInWithAppleFlow(authorizationController: presenting)
-//            .flatMapLatest { controller in
-//                return controller.rx.signIn
-//            }
-//            .catch { err in
-//
-//                err.handleAuthenticationError()?.showErrNotification()
-//
-//                return .empty()
-//
-//            }
             .do(onNext: {  user in
                 
                 self.user = user
             
             }).materialize()
-        
-        
+   
     }
+    
     
     func faceBookLogin(presenting: UIViewController, button: FBLoginButton) -> Observable<Event<Firebase.User>> {
 
@@ -168,12 +157,7 @@ class LoginMainVM: ViewModelBase {
                 self.user = user
             
             }).materialize()
-//            .catch { err in
-//
-//                err.handleAuthenticationError()?.showErrNotification()
-//
-//                return .empty()
-//            }
+                
     }
 
     
@@ -182,47 +166,6 @@ class LoginMainVM: ViewModelBase {
         return self.apiType.logined(user: user)
         
     }
-    
-//        func login(controller: ASAuthorizationController, didCompleteWithAuthorization authorization: ASAuthorization) {
-//            let authentication = self.apiType.authorizationController(controller: controller, didCompleteWithAuthorization: authorization)
-//
-//            let _ = authentication.subscribe(onNext: { user in
-//
-//                let _ = self.dataManager.isFirstLogin.subscribe(onSuccess: { isFirstLogin in
-//
-//                    // go to main page.
-//
-//                }, onFailure:{ err in
-//                    // go to register my info detail page.
-//
-//                }).disposed(by: self.disposeBag)
-//
-//            },
-//            onError: { err in
-//
-//                print(err.localizedDescription)
-//                // error alert is needed to show.
-//
-//                switch err {
-//
-//                // tells users it's not correct password.
-//                case LoginErrors.invailedEmail:
-//                    print("email isn't valified")
-//                //tells users check email and velify our app.
-//                case LoginErrors.invailedUser:
-//                    print("user instance couldn't be unwrapped. it's nil.")
-//                case LoginErrors.inVailedClientID:
-//                    print("client id couldn't be unwrapped. it's nil.")
-//                default:
-//                    print("not meet any errors, but something happens.")
-//
-//                }
-//
-//            })
-//            .disposed(by: self.disposeBag)
-//
-//
-//        }
     
     func resetPassword() -> CocoaAction {
         return CocoaAction { _ in

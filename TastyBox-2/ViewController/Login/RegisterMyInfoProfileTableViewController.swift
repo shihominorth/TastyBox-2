@@ -105,7 +105,7 @@ class RegisterMyInfoProfileTableViewController: UITableViewController, UIPickerV
                     
                     self.imageCropVC?.dismiss(animated: true) {
                         
-                        if let blurView = self.view.subviews.first(where: { $0.tag == 1}) {
+                        if let blurView = self.view.subviews.first(where: { $0.tag == 1 }) {
                             blurView.removeFromSuperview()
                         }
                         
@@ -351,13 +351,25 @@ class RegisterMyInfoProfileTableViewController: UITableViewController, UIPickerV
             
             self.present(imageCropVC, animated: true)
             
-            return imageCropVC.rx.imageData.map { $0 }
+            return imageCropVC.rx.imageData
+                .catch { [unowned self] err in
+
+                    self.imageCropVC?.dismiss(animated: true) {
+                        
+                        if let blurView = self.view.subviews.first(where: { $0.tag == 1 }) {
+                            blurView.removeFromSuperview()
+                        }
+                        
+                    }
+                    
+                    return .empty()
+                }
+                .map { $0 }
             
-        } else {
-            print("failed")
         }
         
         return .just(nil)
+        
     }
     
 }

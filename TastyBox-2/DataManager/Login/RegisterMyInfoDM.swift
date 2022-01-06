@@ -92,7 +92,7 @@ class RegisterMyInfoDM: RegisterMyInfoProtocol {
                 .flatMapLatest { _ in
                     self.changeDisplayName(userName: userName)
                 }
-                .map { _ in }
+//                .map { _ in }
         }
         
         return Observable<Void>.just(())
@@ -129,10 +129,16 @@ class RegisterMyInfoDM: RegisterMyInfoProtocol {
                         }
                         
                     }
+                   
                     
                 }
                 
                
+            }
+            else {
+                
+                observer.onNext(())
+            
             }
            
             return Disposables.create()
