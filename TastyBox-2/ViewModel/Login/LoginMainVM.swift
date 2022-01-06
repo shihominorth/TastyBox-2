@@ -105,9 +105,9 @@ class LoginMainVM: ViewModelBase {
         
      
         return self.apiType.startSignInWithAppleFlow(authorizationController: presenting)
-            .flatMapLatest { controller in
-                return controller.rx.signIn
-            }
+//            .flatMapLatest { controller in
+//                return controller.rx.signIn
+//            }
 //            .catch { err in
 //
 //                err.handleAuthenticationError()?.showErrNotification()
@@ -160,7 +160,9 @@ class LoginMainVM: ViewModelBase {
     func login(email: String?, password: String?) -> Observable<Event<Firebase.User>> {
         
         return self.apiType.login(email: email, password: password)
-            .map { $0.user }
+            .map {
+                $0.user
+            }
             .do(onNext: { user in
             
                 self.user = user

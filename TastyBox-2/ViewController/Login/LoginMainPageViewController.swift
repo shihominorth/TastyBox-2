@@ -212,7 +212,6 @@ class LoginMainPageViewController: UIViewController, BindableType, KeyboardSetUp
             .bind(to: failedStream)
             .disposed(by: viewModel.disposeBag)
         
-        //MARK: login with google
         
         let googleLoginStream = googleLoginBtn.rx.controlEvent(.touchUpInside)
             .throttle(.milliseconds(1000), scheduler: MainScheduler.instance)

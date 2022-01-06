@@ -22,24 +22,24 @@ protocol LoginMainProtocol: AnyObject {
     static func login(email: String?, password: String?) -> Observable<AuthDataResult>
     static func createUser(email: String, password: String) -> Observable<Firebase.User>
     static func loginWithGoogle(viewController presenting: UIViewController) -> Observable<Firebase.User>
-    static func startSignInWithAppleFlow(authorizationController: UIViewController) -> Observable<ASAuthorizationController>
+    static func startSignInWithAppleFlow(authorizationController: UIViewController) ->  Observable<Firebase.User>
     static func logined(user: Firebase.User) -> Observable<Firebase.User>
 }
 
 class LoginMainDM: LoginMainProtocol {
- 
+    
     let bag = DisposeBag()
     static let uid = Auth.auth().currentUser?.uid
     // Unhashed nonce.
     fileprivate static var currentNonce: String?
-        
+    
     
     //    var isNewUser: Bool? //　observable<bool>にするべき
     //    Singleは一回のみElementかErrorを送信することが保証されているObservableです。
     //    一回イベントを送信すると、disposeされるようになってます。
     
     
-   static var isRegisterMyInfo: Observable<Bool> {
+    static var isRegisterMyInfo: Observable<Bool> {
         
         
         return Observable.create { observer in
@@ -62,7 +62,7 @@ class LoginMainDM: LoginMainProtocol {
                     if let doc = doc {
                         
                         let data = doc.data()
-                       
+                        
                         guard let isFirst = data?["isFirst"] as? Bool else {
                             
                             observer.onNext(true)
@@ -74,9 +74,9 @@ class LoginMainDM: LoginMainProtocol {
                         
                     }
                     else {
-                    
+                        
                         observer.onNext(true)
-                    
+                        
                     }
                     
                 }
@@ -92,7 +92,7 @@ class LoginMainDM: LoginMainProtocol {
         return .create { observer in
             
             Auth.auth().createUser(withEmail: email, password: password) { result, err in
-              
+                
                 if let err = err {
                     observer.onError(err)
                 }
@@ -107,14 +107,14 @@ class LoginMainDM: LoginMainProtocol {
                 }
             }
             
-          
+            
             return Disposables.create()
-        
+            
         }
         
     }
- 
-   static func login(email: String?, password: String?) -> Observable<AuthDataResult>{
+    
+    static func login(email: String?, password: String?) -> Observable<AuthDataResult>{
         
         return Observable.create { observer in
             
@@ -142,15 +142,15 @@ class LoginMainDM: LoginMainProtocol {
                 } else {
                     
                     if let result = result {
-//                        self.isEmailVerified.onNext(user.isEmailVerified)
+                        //                        self.isEmailVerified.onNext(user.isEmailVerified)
                         observer.onNext(result)
                     } else {
-//                        self.isEmailVerified.onNext(false)
+                        //                        self.isEmailVerified.onNext(false)
                         observer.onError(LoginErrors.invailedUser)
                         
                     }
-                   
-
+                    
+                    
                 }
                 
             }
@@ -160,7 +160,7 @@ class LoginMainDM: LoginMainProtocol {
         
         
     }
-        
+    
     //MARK:　problem： ローディングビューが出るのが遅い
     
     // - guessed solution
@@ -204,7 +204,7 @@ class LoginMainDM: LoginMainProtocol {
                 Auth.auth().signIn(with: credential) { authResult, err in
                     
                     if let err = err {
-                       
+                        
                         observer.onError(err)
                         
                     } else {
@@ -215,7 +215,7 @@ class LoginMainDM: LoginMainProtocol {
                             
                         }
                     }
-                
+                    
                 }
             }
             
@@ -224,29 +224,24 @@ class LoginMainDM: LoginMainProtocol {
     }
     
     @available(iOS 13, *)
-    static func startSignInWithAppleFlow(authorizationController: UIViewController) -> Observable<ASAuthorizationController> {
-       
-        return Observable.create { observer in
-            
-            let nonce = self.randomNonceString()
-            self.currentNonce = nonce
-            let appleIDProvider = ASAuthorizationAppleIDProvider()
-            let request = appleIDProvider.createRequest()
-            request.requestedScopes = [.fullName, .email]
-            request.nonce = sha256(nonce)
-            
-            let authorizationController = ASAuthorizationController(authorizationRequests: [request])
-                    authorizationController.delegate = authorizationController as? ASAuthorizationControllerDelegate
-            authorizationController.presentationContextProvider = authorizationController as? ASAuthorizationControllerPresentationContextProviding
-            
-            authorizationController.performRequests()
-            UserDefaults.standard.set(nonce, forKey: "nonce")
-
-            observer.onNext(authorizationController)
-            
-            return Disposables.create()
-        }
+    static func startSignInWithAppleFlow(authorizationController: UIViewController) -> Observable<Firebase.User> {
         
+        let nonce = self.randomNonceString()
+        self.currentNonce = nonce
+        let appleIDProvider = ASAuthorizationAppleIDProvider()
+        let request = appleIDProvider.createRequest()
+        request.requestedScopes = [.fullName, .email]
+        request.nonce = sha256(nonce)
+        
+        let authorizationController = ASAuthorizationController(authorizationRequests: [request, ASAuthorizationPasswordProvider().createRequest()])
+        authorizationController.delegate = authorizationController as? ASAuthorizationControllerDelegate
+        authorizationController.presentationContextProvider = authorizationController as? ASAuthorizationControllerPresentationContextProviding
+        
+        authorizationController.performRequests()
+        UserDefaults.standard.set(nonce, forKey: "nonce")
+        
+        
+        return authorizationController.rx.signIn
     }
     
     
@@ -266,7 +261,7 @@ class LoginMainDM: LoginMainProtocol {
     private static func randomNonceString(length: Int = 32) -> String {
         precondition(length > 0)
         let charset: Array<Character> =
-            Array("0123456789ABCDEFGHIJKLMNOPQRSTUVXYZabcdefghijklmnopqrstuvwxyz-._")
+        Array("0123456789ABCDEFGHIJKLMNOPQRSTUVXYZabcdefghijklmnopqrstuvwxyz-._")
         var result = ""
         var remainingLength = length
         
@@ -296,41 +291,41 @@ class LoginMainDM: LoginMainProtocol {
     }
     
     
-   
+    
     
     fileprivate func isUserVailed(_ err: Error?, _ user: AuthDataResult?, _ single: Single<AuthDataResult>) {
         
-//        if let err = err {
+        //        if let err = err {
         
-//            single(.failure(err))
+        //            single(.failure(err))
         
-//        } else {
-//
-//            guard let currentUser = Auth.auth().currentUser, currentUser.isEmailVerified else {
-//                single.onError(LoginErrors.invailedEmail)
-                
-                //本当に何も返さなくてもいいのか？
-//                return
-//            }
-            
-//            guard let user = user else {
-//
-//                single.onError(LoginErrors.invailedUser)
-//
-//                //本当に何も返さなくてもいいのか？
-//                return
-//
-//            }
-            
-            //                    guard let unwrappedIsNewUser = user.additionalUserInfo?.isNewUser else {
-            //                        //本当に何も返さなくてもいいのか？
-            //                        return
-            //                    }
-            //
-            //                    self.isNewUser = unwrappedIsNewUser
-            
-//            single.onNext(user)
-//        }
+        //        } else {
+        //
+        //            guard let currentUser = Auth.auth().currentUser, currentUser.isEmailVerified else {
+        //                single.onError(LoginErrors.invailedEmail)
+        
+        //本当に何も返さなくてもいいのか？
+        //                return
+        //            }
+        
+        //            guard let user = user else {
+        //
+        //                single.onError(LoginErrors.invailedUser)
+        //
+        //                //本当に何も返さなくてもいいのか？
+        //                return
+        //
+        //            }
+        
+        //                    guard let unwrappedIsNewUser = user.additionalUserInfo?.isNewUser else {
+        //                        //本当に何も返さなくてもいいのか？
+        //                        return
+        //                    }
+        //
+        //                    self.isNewUser = unwrappedIsNewUser
+        
+        //            single.onNext(user)
+        //        }
     }
     
     static func logined(user: Firebase.User) -> Observable<Firebase.User> {
@@ -344,20 +339,20 @@ class LoginMainDM: LoginMainProtocol {
                 "isFirst": false
                 
             ] , merge: true) { err in
-                    if let err = err {
-                       
-                        observer.onError(err)
-                        
-                    } else {
-                        
-                        observer.onNext(user)
-                    }
+                if let err = err {
+                    
+                    observer.onError(err)
+                    
+                } else {
+                    
+                    observer.onNext(user)
                 }
+            }
             
             return Disposables.create()
         }
     }
-
+    
     
     func sendEmailVailidation() -> Completable {
         
@@ -382,7 +377,7 @@ class LoginMainDM: LoginMainProtocol {
         }
         
     }
-
+    
     
 }
 
