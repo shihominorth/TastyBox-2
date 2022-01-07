@@ -124,7 +124,7 @@ class RegisterMyInfoProfileTableViewController: UITableViewController, UIPickerV
                     
                     
                     
-                    Observable.combineLatest(viewModel.userName.asObservable(), viewModel.email.asObservable(), viewModel.familySize.asObservable(), viewModel.cuisineType.asObservable()) { (name, email, familySize, cuisineType) -> Bool in
+        Observable.combineLatest(viewModel.userName.asObservable(), viewModel.email.asObservable(), viewModel.familySize.asObservable(), viewModel.cuisineType.asObservable()) { (name, email, familySize, cuisineType) -> Bool in
                         
                         if name.isNotEmpty && email.isNotEmpty && familySize.isNotEmpty && cuisineType.isNotEmpty {
                             return true
