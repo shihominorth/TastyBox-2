@@ -12,26 +12,40 @@ import RxSwift
 protocol MyProfileDMProtocol: AnyObject {
     
     static var firestoreService: FireStoreServices { get }
+    static var storageService: StorageService { get }
     static func getMyPostedRecipes(user: Firebase.User) -> Observable<[Recipe]>
     static func getMyInfo(user: Firebase.User) -> Observable<(followings:Int, followeds:Int)>
+    static func getMyProfileImage(user: Firebase.User) -> Observable<Data>
     
 }
 
 class MyProfileDM: MyProfileDMProtocol {
-    
+ 
     static var firestoreService: FireStoreServices {
         
         return FireStoreServices()
         
     }
-    
+ 
+    static var storageService: StorageService {
+        
+        return StorageService()
+        
+    }
     
     static let db = Firestore.firestore()
     static let storage = Storage.storage().reference()
     
+    static func getMyProfileImage(user: Firebase.User) -> Observable<Data> {
+        
+        let path = storage.child("users/\(user.uid)/userImage.jpg")
+        
+        return storageService.downloadData(path: path)
+        
+    }
+    
     static func getMyPostedRecipes(user: Firebase.User) -> Observable<[Recipe]> {
-        
-        
+   
         return getMyPostedRecipesDocuments(user: user)
             .flatMap { docs in
                 Recipe.generateNewRecipes(queryDocs: docs)

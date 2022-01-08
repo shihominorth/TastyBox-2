@@ -11,14 +11,6 @@ import RxSwift
 
 class StorageService {
     
-  
-    
-    required init() {
-        
-       
-        
-    }
-    
     func addImage(path: StorageReference, image: Data) -> Observable<Data> {
         
        
@@ -87,6 +79,34 @@ class StorageService {
                     
                 }
             }
+            
+            return Disposables.create()
+        }
+        
+    }
+    
+    func downloadData(path: StorageReference) -> Observable<Data> {
+        
+        return .create { observer in
+            
+            path.getData(maxSize: 1 * 1024 * 1024) { data, err in
+               
+                if let err = err {
+                 
+                    observer.onError(err)
+                    
+                } else {
+                 
+                    if let data = data {
+                        
+                        observer.onNext(data)
+                    
+                    }
+                    
+                }
+                
+              }
+                  
             
             return Disposables.create()
         }

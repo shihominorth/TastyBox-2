@@ -11,7 +11,9 @@ import RxSwift
 
 protocol ProfileDMProtocol: AnyObject {
     
+    static var storageService: StorageService { get }
     static var firestoreService: FireStoreServices { get }
+    static func getProfileImage(userID: String) -> Observable<Data>
     static func getPostRecipes(id: String) -> Observable<[Recipe]>
     static func isFollowing(publisherId: String, user: Firebase.User) -> Observable<Bool>
     static func followUser(user: Firebase.User, willFollowUser: User) -> Observable<Void>
@@ -23,10 +25,26 @@ protocol ProfileDMProtocol: AnyObject {
 class ProfileDM: ProfileDMProtocol {
     
     static let db = Firestore.firestore()
+    static let storage = Storage.storage().reference()
     
     static var firestoreService: FireStoreServices {
         
         return FireStoreServices()
+        
+    }
+    
+    static var storageService: StorageService {
+        
+        return StorageService()
+        
+    }
+    
+    
+    static func getProfileImage(userID: String) -> Observable<Data> {
+        
+        let path = storage.child("users/\(userID)/userImage.jpg")
+        
+        return storageService.downloadData(path: path)
         
     }
     

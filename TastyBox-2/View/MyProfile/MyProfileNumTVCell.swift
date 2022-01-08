@@ -13,7 +13,7 @@ class MyProfileNumTVCell: UITableViewCell {
     @IBOutlet weak var myPosetedRecipeNumBtn: UIButton!
     @IBOutlet weak var mySavedRecipesBtn: UIButton!
     @IBOutlet weak var myFollowingNumBtn: UIButton!
-    @IBOutlet weak var myFollowedNumBtn: UIButton!
+    @IBOutlet weak var myFollowersNumBtn: UIButton!
     
     let postedRecipesSubject = BehaviorSubject<Int>(value: 0)
     var disposeBag = DisposeBag()
@@ -36,9 +36,9 @@ class MyProfileNumTVCell: UITableViewCell {
         myFollowingNumBtn.titleLabel?.numberOfLines = 0
         myFollowingNumBtn.titleLabel?.textAlignment = NSTextAlignment.center
         
-        myFollowedNumBtn.tintColor = #colorLiteral(red: 1, green: 0.5763723254, blue: 0, alpha: 1)
-        myFollowedNumBtn.titleLabel?.numberOfLines = 0
-        myFollowedNumBtn.titleLabel?.textAlignment = NSTextAlignment.center
+        myFollowersNumBtn.tintColor = #colorLiteral(red: 1, green: 0.5763723254, blue: 0, alpha: 1)
+        myFollowersNumBtn.titleLabel?.numberOfLines = 0
+        myFollowersNumBtn.titleLabel?.textAlignment = NSTextAlignment.center
         
         postedRecipesSubject
             .subscribe(onNext: { [unowned self] count in

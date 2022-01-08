@@ -17,6 +17,9 @@ class ProfileVM: ViewModelBase {
     let apiType: ProfileDMProtocol.Type
     var recipes: [Recipe]
     var profileUser: User
+    let profileImageDataSubject: PublishSubject<Data>
+    let followingsNumSubject: BehaviorSubject<Int>
+    let followersNumSubject: BehaviorSubject<Int>
     var isFollowingSubject: BehaviorSubject<Bool>
     
     var postedRecipesSubject = BehaviorSubject<[Recipe]>(value: [])
@@ -29,7 +32,17 @@ class ProfileVM: ViewModelBase {
         self.apiType = apiType
         self.recipes = []
         self.profileUser = publisher
+       
         self.isFollowingSubject = BehaviorSubject<Bool>(value: false)
+        self.followingsNumSubject = BehaviorSubject<Int>(value: 0)
+        self.followersNumSubject = BehaviorSubject<Int>(value: 0)
+        self.profileImageDataSubject = PublishSubject<Data>()
+        
+    }
+    
+    func getProfileImage() -> Observable<Data> {
+        
+        return self.apiType.getProfileImage(userID: profileUser.userID)
         
     }
     

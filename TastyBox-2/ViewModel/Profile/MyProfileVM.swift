@@ -17,8 +17,9 @@ class MyProfileVM: ViewModelBase {
     let user: Firebase.User
     let apiType: MyProfileDMProtocol.Type
     
+    let myProfileImageDataSubject: PublishSubject<Data>
     let followingsNumSubject: BehaviorSubject<Int>
-    let followedSubject: BehaviorSubject<Int>
+    let followersNumSubject: BehaviorSubject<Int>
     let postedRecipesSubject: BehaviorSubject<[Recipe]>
     
     init(sceneCoordinator: SceneCoordinator, user: Firebase.User, apiType: MyProfileDMProtocol.Type = MyProfileDM.self) {
@@ -26,9 +27,16 @@ class MyProfileVM: ViewModelBase {
         self.sceneCoordinator = sceneCoordinator
         self.user = user
         self.apiType = apiType
+        self.myProfileImageDataSubject = PublishSubject<Data>()
         self.postedRecipesSubject = BehaviorSubject<[Recipe]>(value: [])
         self.followingsNumSubject = BehaviorSubject<Int>(value: 0)
-        self.followedSubject = BehaviorSubject<Int>(value: 0)
+        self.followersNumSubject = BehaviorSubject<Int>(value: 0)
+        
+    }
+    
+    func getProfileImage() -> Observable<Data> {
+        
+        return self.apiType.getMyProfileImage(user: user)
         
     }
     

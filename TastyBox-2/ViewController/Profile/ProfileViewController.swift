@@ -98,7 +98,18 @@ class ProfileViewController: UIViewController, BindableType {
             .disposed(by: viewModel.disposeBag)
         
         
+        self.viewModel.getProfileImage()
+            .bind(to: viewModel.profileImageDataSubject)
+            .disposed(by: viewModel.disposeBag)
         
+        viewModel.getFollowingsNum()
+            .subscribe(onNext: { [unowned self] followings, followers in
+                
+                self.viewModel.followingsNumSubject.onNext(followings)
+                self.viewModel.followersNumSubject.onNext(followers)
+                
+            })
+            .disposed(by: viewModel.disposeBag)
         
     }
     
@@ -188,18 +199,18 @@ extension ProfileViewController: SkeletonCollectionViewDataSource, SkeletonColle
             
             if kind == UICollectionView.elementKindSectionHeader {
                 
-                if let rcv = collectionView.dequeueReusableSupplementaryView(ofKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: "profileMainRCV", for: indexPath) as? ProfileMainRCV {
+                if let crv = collectionView.dequeueReusableSupplementaryView(ofKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: "profileMainRCV", for: indexPath) as? ProfileMainRCV {
                     
-                    rcv.userNameLbl.text = self.viewModel.profileUser.name
-                    rcv.userImgView.layer.cornerRadius = rcv.userImgView.bounds.size.width / 2
+                    crv.userNameLbl.text = self.viewModel.profileUser.name
+                    crv.userImgView.layer.cornerRadius = crv.userImgView.bounds.size.width / 2
                     
-                    rcv.followBtn.layer.masksToBounds = true
-                    rcv.followBtn.layer.cornerRadius = 15
-                    rcv.followBtn.layer.borderWidth = 2
+                    crv.followBtn.layer.masksToBounds = true
+                    crv.followBtn.layer.cornerRadius = 15
+                    crv.followBtn.layer.borderWidth = 2
                     
                     if let url = URL(string: viewModel.profileUser.imageURLString) {
                         
-                        rcv.userImgView.kf.setImage(with: url) { result in
+                        crv.userImgView.kf.setImage(with: url) { result in
                             
                             
                             switch result {
@@ -213,7 +224,7 @@ extension ProfileViewController: SkeletonCollectionViewDataSource, SkeletonColle
                         }
                     }
                     
-                    let tappedFollowBtn = rcv.followBtn.rx.tap
+                    let tappedFollowBtn = crv.followBtn.rx.tap
                         .throttle(.microseconds(1000), scheduler: MainScheduler.instance)
                         .debug("tapped")
                         .withLatestFrom(self.viewModel.isFollowingSubject)
@@ -280,12 +291,21 @@ extension ProfileViewController: SkeletonCollectionViewDataSource, SkeletonColle
                     viewModel.isFollowingSubject
                         .subscribe(onNext: { isFollowing in
                             
-                            rcv.setUpFollowingBtn(isFollowing: isFollowing)
+                            crv.setUpFollowingBtn(isFollowing: isFollowing)
                             
                         })
                         .disposed(by: viewModel.disposeBag)
                     
-                    return rcv
+                    viewModel.profileImageDataSubject
+                        .subscribe(onNext: { data in
+                            
+                            guard let image = UIImage(data: data) else { return }
+                            crv.userImgView.image = image
+                            
+                        })
+                        .disposed(by: crv.disposeBag)
+                    
+                    return crv
                 }
                 
             }
@@ -294,43 +314,49 @@ extension ProfileViewController: SkeletonCollectionViewDataSource, SkeletonColle
             
             if kind == UICollectionView.elementKindSectionHeader {
                
-                if let rcv = collectionView.dequeueReusableSupplementaryView(ofKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: "numberProfileRCV", for: indexPath) as? NumberProfileRCV {
+                if let crv = collectionView.dequeueReusableSupplementaryView(ofKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: "numberProfileRCV", for: indexPath) as? NumberProfileRCV {
                     
                     viewModel.postedRecipesSubject
                         .subscribe(onNext: { recipes in
                             
-                            rcv.numPostedBtn.setTitle("\(recipes.count)\nRecipes", for: .normal)
+                            crv.numPostedBtn.setTitle("\(recipes.count)\nRecipes", for: .normal)
                             
                         })
-                        .disposed(by: rcv.disposeBag)
+                        .disposed(by: crv.disposeBag)
                     
-                    viewModel.getFollowingsNum()
-                        .subscribe(onNext: { followings, followed in
+                    viewModel.followingsNumSubject
+                        .subscribe(onNext: { followings in
                             
-                            rcv.numFollowingBtn.setTitle("\(followings)\nfollowings", for: .normal)
-                            rcv.numFollowedBtn.setTitle("\(followed)\nfollowed", for: .normal)
+                            crv.numFollowingBtn.setTitle("\(followings)\nfollowings", for: .normal)
+
+                        })
+                        .disposed(by: crv.disposeBag)
+                    
+                    viewModel.followersNumSubject
+                        .subscribe(onNext: { followers in
                             
+                            crv.numFollowedBtn.setTitle("\(followers)\nfollowed", for: .normal)
                             
                         })
-                        .disposed(by: rcv.disposeBag)
+                        .disposed(by: crv.disposeBag)
                     
-                    rcv.numFollowingBtn.rx.tap
+                    crv.numFollowingBtn.rx.tap
                         .subscribe(onNext: { [unowned self] in
                             
                             self.viewModel.toRelatedUsers()
                             
                         })
-                        .disposed(by: rcv.disposeBag)
+                        .disposed(by: crv.disposeBag)
                     
-                    rcv.numFollowedBtn.rx.tap
+                    crv.numFollowedBtn.rx.tap
                         .subscribe(onNext: { [unowned self] in
                             
                             self.viewModel.toRelatedUsers()
                             
                         })
-                        .disposed(by: rcv.disposeBag)
+                        .disposed(by: crv.disposeBag)
                     
-                    return rcv
+                    return crv
                 }
                 
             }
