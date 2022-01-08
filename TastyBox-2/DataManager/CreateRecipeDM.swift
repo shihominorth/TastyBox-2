@@ -14,7 +14,7 @@ import Photos
 
 protocol CreateRecipeDMProtocol: AnyObject {
     
-    static var firestoreServices: FireStoreServices { get }
+    static var firestoreServices: FirestoreServices { get }
     static func getThumbnailData(url: URL) -> Observable<Data>
     static func getMyGenresIDs(user: Firebase.User) -> Observable<[String]>
     static func getMyGenres(ids: [String], user: Firebase.User) -> Observable<([Genre], Bool)>
@@ -61,8 +61,8 @@ class CreateRecipeDM: CreateRecipeDMProtocol {
     static let db = Firestore.firestore()
     static let storage = Storage.storage().reference()
     
-    static var firestoreServices: FireStoreServices {
-        return FireStoreServices()
+    static var firestoreServices: FirestoreServices {
+        return FirestoreServices()
     }
     
     static func getThumbnailData(url: URL) -> Observable<Data> {

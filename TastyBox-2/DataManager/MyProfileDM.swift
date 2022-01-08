@@ -11,7 +11,7 @@ import RxSwift
 
 protocol MyProfileDMProtocol: AnyObject {
     
-    static var firestoreService: FireStoreServices { get }
+    static var firestoreService: FirestoreServices { get }
     static var storageService: StorageService { get }
     static func getMyPostedRecipes(user: Firebase.User) -> Observable<[Recipe]>
     static func getMyInfo(user: Firebase.User) -> Observable<(followings:Int, followeds:Int)>
@@ -21,9 +21,9 @@ protocol MyProfileDMProtocol: AnyObject {
 
 class MyProfileDM: MyProfileDMProtocol {
  
-    static var firestoreService: FireStoreServices {
+    static var firestoreService: FirestoreServices {
         
-        return FireStoreServices()
+        return FirestoreServices()
         
     }
  

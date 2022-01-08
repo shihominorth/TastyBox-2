@@ -11,7 +11,7 @@ import RxSwift
 
 protocol RelatedUsersProtocol {
     
-    static var services: FireStoreServices { get }
+    static var services: FirestoreServices { get }
     static func getFollowers(user: Firebase.User, userID: String) -> Observable<[RelatedUser]>
     static func getFollowings(user: Firebase.User, userID: String) -> Observable<[RelatedUser]>
     static func followUser(user: Firebase.User, willFollowUser: User) -> Observable<Void>
@@ -22,9 +22,9 @@ protocol RelatedUsersProtocol {
 
 class RelatedUsersDM: RelatedUsersProtocol {
     
-    static var services: FireStoreServices {
+    static var services: FirestoreServices {
         
-        return FireStoreServices()
+        return FirestoreServices()
         
     }
     

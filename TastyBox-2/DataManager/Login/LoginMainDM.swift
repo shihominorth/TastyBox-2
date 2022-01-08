@@ -19,7 +19,9 @@ import Action
 
 protocol LoginMainProtocol: AnyObject {
 
+    static var firestoreService: FirestoreServices { get }
     static var isRegisterMyInfo: Observable<Bool> { get }
+    static func isTutorialDone(user: Firebase.User) -> Observable<Bool> 
     static func login(email: String?, password: String?) -> Observable<AuthDataResult>
     static func createUser(email: String, password: String) -> Observable<Firebase.User>
     static func loginWithGoogle(viewController presenting: UIViewController) -> Observable<Firebase.User>
@@ -32,10 +34,13 @@ class LoginMainDM: LoginMainProtocol {
     
     let bag = DisposeBag()
     static let uid = Auth.auth().currentUser?.uid
+    static let db = Firestore.firestore()
     // Unhashed nonce.
     fileprivate static var currentNonce: String?
     
-    
+    static var firestoreService: FirestoreServices {
+        return FirestoreServices()
+    }
     //    var isNewUser: Bool? //　observable<bool>にするべき
     //    Singleは一回のみElementかErrorを送信することが保証されているObservableです。
     //    一回イベントを送信すると、disposeされるようになってます。
@@ -86,6 +91,26 @@ class LoginMainDM: LoginMainProtocol {
             
             return Disposables.create()
         }
+        
+    }
+    
+    static func isTutorialDone(user: Firebase.User) -> Observable<Bool> {
+        
+        let path = db.collection("users").document(user.uid)
+
+        return firestoreService.getDocument(path: path)
+            .map { doc in
+                
+                guard let data = doc.data(),
+                      let isTutorialDone = data["isTutorialDone"] as? Bool else {
+                            
+                    return false
+                
+                }
+                
+                return isTutorialDone
+                
+            }
         
     }
     

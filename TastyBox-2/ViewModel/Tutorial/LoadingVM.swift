@@ -11,7 +11,7 @@ import RxSwift
 import SCLAlertView
 
 class LoadingVM {
-   
+    
     let sceneCoodinator: SceneCoordinator
     let apiType: LoginMainProtocol.Type
     
@@ -21,7 +21,7 @@ class LoadingVM {
     }
     
     func goToNextVC() {
-  
+        
         // login already
         if let user = Auth.auth().currentUser {
             
@@ -31,30 +31,23 @@ class LoadingVM {
                     
                     let viewModel = RegisterMyInfoProfileVM(sceneCoodinator: self.sceneCoodinator, user: user)
                     let firstScene = LoginScene.profileRegister(viewModel).viewController()
+                    
                     self.sceneCoodinator.transition(to: firstScene, type: .push)
                     
                 } else {
                     
                     let viewModel = DiscoveryVM(sceneCoodinator: self.sceneCoodinator, user: user)
                     let vc = DiscoveryScene.discovery(viewModel).viewController()
+                    
                     self.sceneCoodinator.transition(to: vc, type: .root)
                     
                 }
                 
             }, onFailure: { err in
                 
-                print(err as NSError)
+                print(err)
+                err.handleAuthenticationError()?.showErrNotification()
                 
-                guard let reason = err.handleAuthenticationError() else { return }
-                SCLAlertView().showTitle(
-                    reason.reason, // Title of view
-                    subTitle: reason.solution,
-                    timeout: .none, // String of view
-                    completeText: "Done", // Optional button value, default: ""
-                    style: .error, // Styles - see below.
-                    colorStyle: 0xA429FF,
-                    colorTextButton: 0xFFFFFF
-                )
             })
             
             
@@ -62,14 +55,44 @@ class LoadingVM {
         // not login yet.
         else {
             
-           
-            let viewModel = LoginMainVM(sceneCoodinator: sceneCoodinator)
+            let defaults = UserDefaults.standard
             
-            let firstScene = LoginScene.main(viewModel).viewController()
-            sceneCoodinator.transition(to: firstScene, type: .push)
+            if defaults.bool(forKey: "isTutorialDone") {
+               
+                
+                let vm = LoginMainVM(sceneCoodinator: sceneCoodinator)
+                let firstScene: Scene = .loginScene(scene: .main(vm))
+                
+                sceneCoodinator.modalTransition(to: firstScene, type: .push)
+                
+                
+            } else {
+                
+                // First start after installing the app
+                let vm = TutorialVM(sceneCoodinator: self.sceneCoodinator)
+                let scene: Scene = .loginScene(scene: .tutorial(vm))
+                
+//                self.sceneCoodinator.modalTransition(to: scene, type: .modal(presentationStyle: .fullScreen, modalTransisionStyle: .crossDissolve, hasNavigationController: false))
+                self.sceneCoodinator.modalTransition(to: scene, type: .push)
+           
+//                defaults.set(true, forKey: "isAppAlreadyLaunchedOnce")
+//                print("App launched first time")
+                
+            
+            }
+//
+//            UserDefaults.standard.set(currentVersion, forKey: "VersionOfLastRun")
+//            UserDefaults.standard.synchronize()
+            
             
         }
     }
+    
+//    func isTutorialDone(user: Firebase.User) -> Observable<Bool> {
+//
+//        return self.apiType.isTutorialDone(user: user)
+//
+//    }
     
     func isRegisteredMyInfo(user: FirebaseAuth.User) -> Single<Bool> {
         

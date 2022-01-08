@@ -11,7 +11,7 @@ import RxSwift
 import RxCocoa
 
 protocol RegisterMyInfoProtocol: AnyObject {
-    static var firestoreService: FireStoreServices { get }
+    static var firestoreService: FirestoreServices { get }
     static var storageService: StorageService { get }
     static func getUserImage(user: Firebase.User) -> Observable<Data>
     static func userRegister(userName: String?, email: String?, familySize: String?, cuisineType: String?, accountImage: Data?) -> Observable<Void>
@@ -19,8 +19,8 @@ protocol RegisterMyInfoProtocol: AnyObject {
 
 class RegisterMyInfoDM: RegisterMyInfoProtocol {
     
-    static var firestoreService: FireStoreServices {
-        return FireStoreServices()
+    static var firestoreService: FirestoreServices {
+        return FirestoreServices()
     }
     
     static var storageService: StorageService {

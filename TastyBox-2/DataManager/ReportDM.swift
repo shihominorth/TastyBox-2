@@ -16,7 +16,7 @@ import RxSwift
 protocol ReportProtocol: AnyObject {
     
     static var gasService: GASService { get }
-    static var firestoreService: FireStoreServices { get }
+    static var firestoreService: FirestoreServices { get }
     static func report(kind: ReportKind, contentID: String, reason: ReportReason) -> Observable<Bool>
 
 }
@@ -25,8 +25,8 @@ class ReportDM: ReportProtocol {
 
     static let db = Firestore.firestore()
     
-    static var firestoreService: FireStoreServices {
-        return FireStoreServices()
+    static var firestoreService: FirestoreServices {
+        return FirestoreServices()
     }
     
     static var gasService: GASService {

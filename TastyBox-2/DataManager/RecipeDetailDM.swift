@@ -10,7 +10,7 @@ import Firebase
 import RxSwift
 
 protocol RecipeDetailProtocol: AnyObject {
-    static var services: FireStoreServices { get }
+    static var services: FirestoreServices { get }
     static func getDetailInfo(recipe: Recipe) -> Observable<([Genre], User, [Ingredient], [Instruction])>
     static func likeRecipe(user: Firebase.User, recipe: Recipe, isLiked: Bool) -> Observable<Bool>
     static func addNewMyLikedRecipe(user: Firebase.User, recipe: Recipe) -> Observable<Bool>
@@ -24,8 +24,8 @@ protocol RecipeDetailProtocol: AnyObject {
 class RecipeDetailDM: RecipeDetailProtocol {
     
     static let db = Firestore.firestore()
-    static var services: FireStoreServices {
-        return FireStoreServices()
+    static var services: FirestoreServices {
+        return FirestoreServices()
     }
     
     private static var listenisILiked: ListenerRegistration!

@@ -12,7 +12,7 @@ import UIKit
 
 protocol MainDMProtocol {
     
-    static var firestoreService: FireStoreServices { get }
+    static var firestoreService: FirestoreServices { get }
     static func getPastTimelines(user: Firebase.User, date: Date, limit: Int) -> Observable<[Timeline]>
     static func getFutureTimelines(user: Firebase.User, date: Date, limit: Int) -> Observable<[Timeline]>
     static func getRecipesRanking() -> Observable<[Recipe]>
@@ -30,8 +30,8 @@ class MainDM: MainDMProtocol {
     static let db = Firestore.firestore()
     static let storage = Storage.storage().reference()
     
-    static var firestoreService: FireStoreServices {
-        return FireStoreServices()
+    static var firestoreService: FirestoreServices {
+        return FirestoreServices()
     }
     
     //check if result has same recipes as recipes in viewModel

@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="18122" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="kl8-jU-bzW">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="19529" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="kl8-jU-bzW">
     <device id="retina6_1" orientation="portrait" appearance="light"/>
     <dependencies>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="18093"/>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="19519"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="System colors in document resources" minToolsVersion="11.0"/>
         <capability name="collection view cell content view" minToolsVersion="11.0"/>
@@ -49,7 +50,7 @@
                                 <rect key="frame" x="0.0" y="0.0" width="414" height="572"/>
                             </imageView>
                             <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="87b-rF-PXs">
-                                <rect key="frame" x="0.0" y="74" width="414" height="700.5"/>
+                                <rect key="frame" x="0.0" y="74" width="414" height="702"/>
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <collectionViewFlowLayout key="collectionViewLayout" scrollDirection="horizontal" minimumLineSpacing="10" minimumInteritemSpacing="10" id="riU-S9-PUl">
                                     <size key="itemSize" width="128" height="128"/>
@@ -59,7 +60,7 @@
                                 </collectionViewFlowLayout>
                                 <cells>
                                     <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="TutorialCVCell" id="05G-Xb-rhQ" customClass="TutorialCVCell" customModule="TastyBox_2" customModuleProvider="target">
-                                        <rect key="frame" x="375" y="25.5" width="356" height="650"/>
+                                        <rect key="frame" x="375" y="26" width="356" height="650"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <collectionViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" id="XGH-mi-d8u">
                                             <rect key="frame" x="0.0" y="0.0" width="356" height="650"/>
@@ -124,14 +125,14 @@
                                     </collectionViewCell>
                                 </cells>
                                 <collectionReusableView key="sectionHeaderView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="Header" id="2BN-kL-gux">
-                                    <rect key="frame" x="0.0" y="0.0" width="375" height="700.5"/>
+                                    <rect key="frame" x="0.0" y="0.0" width="375" height="702"/>
                                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                     <subviews>
                                         <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" alignment="top" translatesAutoresizingMaskIntoConstraints="NO" id="7x8-UM-4zm">
-                                            <rect key="frame" x="56.5" y="227" width="262" height="246.5"/>
+                                            <rect key="frame" x="56.5" y="228" width="262" height="246.5"/>
                                             <subviews>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Tutorial start" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="i0v-l4-8d8">
-                                                    <rect key="frame" x="0.0" y="0.0" width="171.5" height="36"/>
+                                                    <rect key="frame" x="0.0" y="0.0" width="172" height="36"/>
                                                     <fontDescription key="fontDescription" type="system" weight="semibold" pointSize="30"/>
                                                     <color key="textColor" red="1" green="0.80000000000000004" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                     <nil key="highlightedColor"/>
@@ -179,7 +180,7 @@
                                 </collectionReusableView>
                             </collectionView>
                             <pageControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" numberOfPages="3" translatesAutoresizingMaskIntoConstraints="NO" id="gpU-Kz-iaI">
-                                <rect key="frame" x="146.5" y="794.5" width="121.5" height="27.5"/>
+                                <rect key="frame" x="149.5" y="796" width="115.5" height="26"/>
                                 <color key="pageIndicatorTintColor" white="0.66666666669999997" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <color key="currentPageIndicatorTintColor" red="1" green="0.57647058819999997" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                             </pageControl>
@@ -209,7 +210,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="rEk-Pc-cea" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="2128.985507246377" y="44.866071428571423"/>
+            <point key="canvasLocation" x="2864" y="45"/>
         </scene>
         <!--Navigation Controller-->
         <scene sceneID="meR-Y1-GuM">

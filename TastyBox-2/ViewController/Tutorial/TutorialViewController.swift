@@ -54,15 +54,22 @@ class TutorialViewController: UIViewController, BindableType {
         collectionView.rx.setDataSource(self).disposed(by: viewModel.disposeBag)
         
         pageControl.numberOfPages = 6
-    }
-    
-    override func viewDidDisappear(_ animated: Bool) {
-        navigationController?.isNavigationBarHidden = true
-    }
-    
-    override func viewWillDisappear(_ animated: Bool) {
-        navigationController?.isNavigationBarHidden = false
         
+        
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        
+        super.viewWillAppear(animated)
+        self.navigationController?.isNavigationBarHidden = true
+        
+    }
+
+    override func viewWillDisappear(_ animated: Bool) {
+
+        super.viewWillDisappear(animated)
+        navigationController?.isNavigationBarHidden = false
+
     }
     
     func bindViewModel() {
@@ -94,8 +101,21 @@ extension TutorialViewController: UICollectionViewDataSource, UICollectionViewDe
         case 5:
         
             let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "start", for: indexPath) as! StartCVCell
+            
             cell.configureCell()
 //            cell.signUpwithAccountBtn.rx.action = viewModel.toSignUpAction()
+            
+            cell.signUpwithAccountBtn.rx.tap
+                .throttle(.milliseconds(1000), scheduler: MainScheduler.instance)
+                .do(onNext: {
+                    UserDefaults.standard.set(true, forKey: "isTutorialDone")
+                })
+                .subscribe(onNext: { [unowned self] in
+                    
+                    self.viewModel.toLogin()
+                    
+                })
+                .disposed(by: cell.disposeBag)
 
             return cell
             

@@ -317,17 +317,21 @@ extension Scene {
             
             var vc = storyboard.instantiateViewController(withIdentifier: "FirstTimeProfile") as! RegisterMyInfoProfileTableViewController
             vc.bindViewModel(to: viewModel)
+            
             return vc
             
         case .about(let viewModel):
             
             var vc =  aboutStoryBoard.instantiateViewController(withIdentifier: "about") as! AboutViewController
             vc.bindViewModel(to: viewModel)
+           
             return vc
             
         case .tutorial(let viewModel):
+            
             var vc = tutorialStoryboard.instantiateViewController(withIdentifier: "tutorial") as! TutorialViewController
             vc.bindViewModel(to: viewModel)
+           
             return vc
         }
         

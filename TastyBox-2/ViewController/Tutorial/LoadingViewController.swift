@@ -22,35 +22,7 @@ class LoadingViewController: UIViewController, BindableType {
         navigationController?.isNavigationBarHidden = true
         
         
-        let currentVersion : String = Bundle.main.object(forInfoDictionaryKey: "CFBundleShortVersionString") as! String
-        
-        let versionOfLastRun: String? = UserDefaults.standard.object(forKey: "VersionOfLastRun") as? String
-//
-//        if versionOfLastRun == nil {
-//            // First start after installing the app
-//            let vm = TutorialVM(sceneCoodinator: self.sceneCoodinator)
-//            let vc = LoginScene.tutorial(vm).viewController()
-//
-//            self.sceneCoodinator.transition(to: vc, type: .root)
-//
-//        }
-//        //        else if  !(versionOfLastRun?.isEqual(currentVersion))! {
-//        //            // App is updated
-//        //        }
-//        else {
-//        }
- 
-//        let window = UIWindow(frame: UIScreen.main.bounds)
-//        let sceneCoodinator = SceneCoordinator(window: window)
-//       
-//        let vm = LoadingVM(sceneCoodinator: sceneCoodinator)
-//        let vc = LoadingScene.loading(vm).viewController()
-//        sceneCoodinator.transition(to: vc, type: .root)
-        
-      
        
-        UserDefaults.standard.set(currentVersion, forKey: "VersionOfLastRun")
-        UserDefaults.standard.synchronize()
     }
     
     override func viewDidAppear(_ animated: Bool) {
@@ -65,6 +37,8 @@ class LoadingViewController: UIViewController, BindableType {
     
     
     func bindViewModel() {
+        
+        
         
     }
         
