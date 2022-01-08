@@ -281,11 +281,13 @@ extension Scene {
         
         case .main(let viewModel):
         
-            var vc = storyboard.instantiateViewController(identifier: "loginPage") as! LoginMainPageViewController
+            let nc = storyboard.instantiateViewController(withIdentifier: "loginMainNC")
+//            var vc = storyboard.instantiateViewController(identifier: "loginPage") as! LoginMainPageViewController
+            var vc = nc.children.first as! LoginMainPageViewController
             
             vc.bindViewModel(to: viewModel)
             
-            return vc
+            return nc
             
         case .resetPassword(let viewModel):
             

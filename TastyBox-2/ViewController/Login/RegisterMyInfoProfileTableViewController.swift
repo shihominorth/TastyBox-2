@@ -36,6 +36,7 @@ class RegisterMyInfoProfileTableViewController: UITableViewController, UIPickerV
     
     @IBOutlet weak var doneButton: UIBarButtonItem!
     
+    @IBOutlet weak var switchAccountBtn: UIBarButtonItem!
     
     
     
@@ -59,6 +60,7 @@ class RegisterMyInfoProfileTableViewController: UITableViewController, UIPickerV
         userImageButton.layer.cornerRadius = 0.5 * userImageButton.bounds.size.width
         userImageButton.clipsToBounds = true
         
+        switchAccountBtn.title = "Account"
     }
     
     
@@ -72,14 +74,18 @@ class RegisterMyInfoProfileTableViewController: UITableViewController, UIPickerV
         familySizeTextField.rx.text.orEmpty.bind(to: viewModel.familySize).disposed(by: viewModel.disposeBag)
         cuisineTypeTextField.rx.text.orEmpty.bind(to: viewModel.cuisineType).disposed(by: viewModel.disposeBag)
         
+//        self.viewModel.getUserImage()
+//            .subscribe(onNext: { data in
+//
+//                self.viewModel.photoPickerSubject
+//                    .bind(to: self.viewModel.userImage)
+//                    .disposed(by: self.viewModel.disposeBag)
+//
+//            })
+//            .disposed(by: viewModel.disposeBag)
+        
         self.viewModel.getUserImage()
-            .subscribe(onNext: { data in
-                
-                self.viewModel.photoPickerSubject
-                    .bind(to: self.viewModel.userImage)
-                    .disposed(by: self.viewModel.disposeBag)
-                
-            })
+            .bind(to: viewModel.userImageSubject)
             .disposed(by: viewModel.disposeBag)
         
         self.userImageButton.rx.tap
@@ -96,45 +102,54 @@ class RegisterMyInfoProfileTableViewController: UITableViewController, UIPickerV
                 .disposed(by: viewModel.disposeBag)
                 
                 
-                self.viewModel.userImage
-                .observe(on: MainScheduler.instance)
-                .flatMapLatest { [unowned self] in
-                    self.processImage(imageData: $0)
-                }
-                .do(onNext: { [unowned self] _ in
+        self.viewModel.userImageSubject
+            .observe(on: MainScheduler.instance)
+            .flatMapLatest { [unowned self] in
+                self.processImage(imageData: $0)
+            }
+            .do(onNext: { [unowned self] _ in
                     
-                    self.imageCropVC?.dismiss(animated: true) {
+                self.imageCropVC?.dismiss(animated: true) {
                         
-                        if let blurView = self.view.subviews.first(where: { $0.tag == 1 }) {
-                            blurView.removeFromSuperview()
-                        }
-                        
+                    if let blurView = self.view.subviews.first(where: { $0.tag == 1 }) {
+                        blurView.removeFromSuperview()
                     }
-                    
-                })
-                    .compactMap { $0 }
-                    .subscribe(onNext: { data in
                         
-                        guard let image = UIImage(data: data) else { return }
-                        image.withRenderingMode(.alwaysOriginal)
-                        self.userImageButton.setBackgroundImage(image, for: .normal)
+                }
+                    
+            })
+            .compactMap { $0 }
+            .subscribe(onNext: { data in
                         
-                    })
-                    .disposed(by: viewModel.disposeBag)
+                guard let image = UIImage(data: data) else { return }
+                image.withRenderingMode(.alwaysOriginal)
+                self.userImageButton.setBackgroundImage(image, for: .normal)
+                        
+            })
+            .disposed(by: viewModel.disposeBag)
                     
-                    
+         
+        
+        switchAccountBtn.rx.tap
+            .throttle(.milliseconds(1000), scheduler: MainScheduler.instance)
+            .subscribe(onNext: { [unowned self] in
+                
+                self.viewModel.switchAccount()
+                
+            })
+            .disposed(by: viewModel.disposeBag)
                     
         Observable.combineLatest(viewModel.userName.asObservable(), viewModel.email.asObservable(), viewModel.familySize.asObservable(), viewModel.cuisineType.asObservable()) { (name, email, familySize, cuisineType) -> Bool in
-                        
-                        if name.isNotEmpty && email.isNotEmpty && familySize.isNotEmpty && cuisineType.isNotEmpty {
-                            return true
-                        }
-                        else {
-                            return false
-                        }
-                    }
-                    .bind(to: viewModel.isEnableDone)
-                    .disposed(by: viewModel.disposeBag)
+            
+            if name.isNotEmpty && email.isNotEmpty && familySize.isNotEmpty && cuisineType.isNotEmpty {
+                return true
+            }
+            else {
+                return false
+            }
+        }
+        .bind(to: viewModel.isEnableDone)
+        .disposed(by: viewModel.disposeBag)
         
         doneButton.rx.tap
             .throttle(.milliseconds(1000), scheduler: MainScheduler.asyncInstance)
@@ -147,6 +162,7 @@ class RegisterMyInfoProfileTableViewController: UITableViewController, UIPickerV
                 
             })
             .disposed(by: viewModel.disposeBag)
+        
         
         
         

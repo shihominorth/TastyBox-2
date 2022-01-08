@@ -133,6 +133,7 @@ class DiscoveryVM: ViewModelBase {
         let firebaseAuth = Auth.auth()
         
         if let providerData = firebaseAuth.currentUser?.providerData {
+            
             for userInfo in providerData {
                 switch userInfo.providerID {
                 case "facebook.com":

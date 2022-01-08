@@ -61,30 +61,24 @@ class LoadingVM {
                
                 
                 let vm = LoginMainVM(sceneCoodinator: sceneCoodinator)
-                let firstScene: Scene = .loginScene(scene: .main(vm))
+                let scene: Scene = .loginScene(scene: .main(vm))
                 
-                sceneCoodinator.modalTransition(to: firstScene, type: .push)
-                
+//                sceneCoodinator.modalTransition(to: firstScene, type: .push)
+                self.sceneCoodinator.modalTransition(to: scene, type: .modal(presentationStyle: .fullScreen, modalTransisionStyle: .crossDissolve, hasNavigationController: true))
+
                 
             } else {
                 
-                // First start after installing the app
+                // First start after installing the appr
                 let vm = TutorialVM(sceneCoodinator: self.sceneCoodinator)
                 let scene: Scene = .loginScene(scene: .tutorial(vm))
                 
 //                self.sceneCoodinator.modalTransition(to: scene, type: .modal(presentationStyle: .fullScreen, modalTransisionStyle: .crossDissolve, hasNavigationController: false))
                 self.sceneCoodinator.modalTransition(to: scene, type: .push)
-           
-//                defaults.set(true, forKey: "isAppAlreadyLaunchedOnce")
-//                print("App launched first time")
+
                 
-            
             }
-//
-//            UserDefaults.standard.set(currentVersion, forKey: "VersionOfLastRun")
-//            UserDefaults.standard.synchronize()
-            
-            
+
         }
     }
     

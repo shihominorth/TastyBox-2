@@ -57,30 +57,8 @@ class LoginMainPageViewController: UIViewController, BindableType, KeyboardSetUp
         emailTextField.delegate = self
         passwordTextField.delegate = self
         
-        if let user = Auth.auth().currentUser {
-            
-        } else {
-            
-        }
-        
-        if Auth.auth().currentUser != nil && Auth.auth().currentUser?.uid != nil {
-            // User is signed in.
-            
-            //            let Storyboard: UIStoryboard = UIStoryboard(name: "Main", bundle: nil)
-            //            let vc = Storyboard.instantiateViewController(withIdentifier: "Discovery")
-            //
-            //            //guard self.navigationController?.topViewController == self else { return }
-            //
-            //
-            //            vc.modalTransitionStyle = .flipHorizontal
-            //            vc.modalPresentationStyle = .overFullScreen
-            //            self.navigationController?.pushViewController(vc, animated: false)
-            //
-            
-        }
-        
-        else {
             if let viewWithTag = self.view.viewWithTag(100) {
+               
                 viewWithTag.removeFromSuperview()
                 
                 // make login button rounded
@@ -93,15 +71,27 @@ class LoginMainPageViewController: UIViewController, BindableType, KeyboardSetUp
                 
                 resetPasswordButton.contentHorizontalAlignment = .right
                 registerButton.contentHorizontalAlignment = .right
-            }else{
-                print("No!")
-            }
+          
             
         }
         
         
     }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        
+        super.viewWillAppear(animated)
+        self.navigationController?.isNavigationBarHidden = true
+        
+    }
  
+    override func viewWillDisappear(_ animated: Bool) {
+        
+        super.viewWillDisappear(animated)
+        self.navigationController?.isNavigationBarHidden = false
+        
+    }
+    
     override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
         if let tapRecognizers = self.view.gestureRecognizers?.filter({ $0.name == "dissmiss"}) {
             
@@ -284,7 +274,7 @@ class LoginMainPageViewController: UIViewController, BindableType, KeyboardSetUp
                 
             })
             .flatMap {
-                return self.viewModel.faceBookLogin(presenting: self, button: facebookLoginBtn)
+                self.viewModel.faceBookLogin(presenting: self, button: facebookLoginBtn)
             }
             .share(replay: 1, scope: .forever)
         

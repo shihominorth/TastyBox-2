@@ -6,6 +6,7 @@
 //  Copyright © 2021 Shihomi Kitajima. All rights reserved.
 //
 import Action
+import FBSDKLoginKit
 import Firebase
 import Foundation
 import RxSwift
@@ -20,7 +21,7 @@ class RegisterMyInfoProfileVM: ViewModelBase {
     let user: Firebase.User
     
     let defaultUserImageData = #imageLiteral(resourceName: "defaultUserImage").pngData()
-    var userImage: BehaviorSubject<Data>!
+    var userImageSubject: BehaviorSubject<Data>!
     var isEnableDone = BehaviorRelay(value: false)
     var observeTxtFields = BehaviorRelay<String>(value: "")
     
@@ -43,7 +44,7 @@ class RegisterMyInfoProfileVM: ViewModelBase {
         self.user = user
         
         self.photoPickerSubject = PublishSubject<Data>()
-        self.userImage = BehaviorSubject<Data>(value: Data())
+        self.userImageSubject = BehaviorSubject<Data>(value: Data())
         
         cuisineTypeOptions = ["Chinese Food", "Japanese Food", "Thai food"]
         familySizeOptions = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15", "16", "17", "18", "19", "20"]
@@ -72,11 +73,11 @@ class RegisterMyInfoProfileVM: ViewModelBase {
                 return .empty()
                 
             }
-            .do(onNext: { [unowned self] data in
-
-                self.userImage.onNext(data)
-                
-            })
+//            .do(onNext: { [unowned self] data in
+//
+//                self.userImage.onNext(data)
+//                
+//            })
                 
                 
     }
@@ -87,7 +88,7 @@ class RegisterMyInfoProfileVM: ViewModelBase {
         
         self.sceneCoodinator.modalTransition(to: scene, type: .photoPick(completion: { data in
             
-            self.userImage.onNext(data)
+            self.userImageSubject.onNext(data)
             
         }))
         
@@ -99,7 +100,7 @@ class RegisterMyInfoProfileVM: ViewModelBase {
         
         self.sceneCoodinator.modalTransition(to: scene, type: .camera(completion: { data in
             
-            self.userImage.onNext(data)
+            self.userImageSubject.onNext(data)
             
         }))
         
@@ -107,7 +108,7 @@ class RegisterMyInfoProfileVM: ViewModelBase {
     
     func registerUser() -> Observable<Void> {
         
-        return Observable.combineLatest(userName.asObservable(), email.asObservable(), familySize.asObservable(), cuisineType.asObservable(), userImage.asObservable())
+        return Observable.combineLatest(userName.asObservable(), email.asObservable(), familySize.asObservable(), cuisineType.asObservable(), userImageSubject.asObservable())
             .flatMap { [unowned self] (name, email, familySize, cuisineType, userImage)  in
                
                 self.apiType.userRegister(userName: name, email: email, familySize: familySize, cuisineType: cuisineType, accountImage: userImage)
@@ -128,6 +129,45 @@ class RegisterMyInfoProfileVM: ViewModelBase {
         let vm = DiscoveryVM(sceneCoodinator: self.sceneCoodinator, user: self.user)
         let scene: Scene = .discovery(scene: .main(vm))
         self.sceneCoodinator.modalTransition(to: scene, type: .modal(presentationStyle: .fullScreen, modalTransisionStyle: .crossDissolve, hasNavigationController: true))
+        
+    }
+ 
+    func switchAccount() {
+  
+        let firebaseAuth = Auth.auth()
+        
+        if let providerData = firebaseAuth.currentUser?.providerData {
+            
+            for userInfo in providerData {
+                switch userInfo.providerID {
+                case "facebook.com":
+                    print("Facebook Login")
+                    let loginManager = LoginManager()
+                    loginManager.logOut() // this is an instance function
+                default:
+                    print("provider is \(userInfo.providerID)")
+                }
+            }
+        }
+        
+        do {
+            try firebaseAuth.signOut()
+            
+            let vm = LoadingVM(sceneCoodinator: self.sceneCoodinator)
+            let vc = LoadingScene.loading(vm).viewController()
+            self.sceneCoodinator.transition(to: vc, type: .root)
+            
+        } catch let signOutError as NSError {
+            
+            print("Error signing out: %@", signOutError)
+            
+            if let reason = signOutError.handleAuthenticationError() {
+                reason.generateErrAlert()
+            }
+            
+    
+        }
+        
         
     }
     
