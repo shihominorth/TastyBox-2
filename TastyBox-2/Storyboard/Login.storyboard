@@ -68,7 +68,7 @@
                                                 </constraints>
                                             </stackView>
                                             <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="27" translatesAutoresizingMaskIntoConstraints="NO" id="SFU-7A-36n">
-                                                <rect key="frame" x="57" y="303" width="300" height="166"/>
+                                                <rect key="frame" x="57" y="303" width="300" height="81.5"/>
                                                 <subviews>
                                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="or " textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="GWU-EL-8hk">
                                                         <rect key="frame" x="0.0" y="0.0" width="300" height="20.5"/>
@@ -79,7 +79,7 @@
                                                         <size key="shadowOffset" width="0.0" height="0.0"/>
                                                     </label>
                                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="EcU-YZ-vqX" customClass="GIDSignInButton">
-                                                        <rect key="frame" x="0.0" y="47.5" width="300" height="118.5"/>
+                                                        <rect key="frame" x="0.0" y="47.5" width="300" height="34"/>
                                                         <state key="normal">
                                                             <color key="titleColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                         </state>
@@ -90,7 +90,7 @@
                                                 </constraints>
                                             </stackView>
                                             <stackView opaque="NO" contentMode="scaleToFill" spacing="36" translatesAutoresizingMaskIntoConstraints="NO" id="UcA-YS-pNd">
-                                                <rect key="frame" x="57" y="539" width="300" height="60"/>
+                                                <rect key="frame" x="57" y="454.5" width="300" height="60"/>
                                                 <subviews>
                                                     <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="20" translatesAutoresizingMaskIntoConstraints="NO" id="2CG-SA-I0T">
                                                         <rect key="frame" x="0.0" y="0.0" width="165" height="60"/>
@@ -163,23 +163,59 @@
                                                 <nil key="highlightedColor"/>
                                                 <size key="shadowOffset" width="0.0" height="0.0"/>
                                             </label>
+                                            <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="8" translatesAutoresizingMaskIntoConstraints="NO" id="igI-Ie-KxP">
+                                                <rect key="frame" x="57" y="544.5" width="300" height="88"/>
+                                                <subviews>
+                                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="If you login, you agreed with privacy policy and terms and conditions. please read them below." textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ZOD-xq-N6h">
+                                                        <rect key="frame" x="0.0" y="0.0" width="300" height="24"/>
+                                                        <fontDescription key="fontDescription" type="system" pointSize="10"/>
+                                                        <color key="textColor" red="0.63529411759999999" green="0.51764705879999995" blue="0.36862745099999999" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                                        <nil key="highlightedColor"/>
+                                                    </label>
+                                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ZR3-EY-1qy">
+                                                        <rect key="frame" x="0.0" y="32" width="300" height="24"/>
+                                                        <constraints>
+                                                            <constraint firstAttribute="height" constant="24" id="Qs2-Ht-ncf"/>
+                                                        </constraints>
+                                                        <color key="tintColor" red="1" green="0.57637232540000005" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                                        <state key="normal" title="Button"/>
+                                                        <buttonConfiguration key="configuration" style="plain" title="Privacy Policy">
+                                                            <fontDescription key="titleFontDescription" name="HelveticaNeue" family="Helvetica Neue" pointSize="10"/>
+                                                        </buttonConfiguration>
+                                                    </button>
+                                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ptG-6O-wEc">
+                                                        <rect key="frame" x="0.0" y="64" width="300" height="24"/>
+                                                        <constraints>
+                                                            <constraint firstAttribute="height" constant="24" id="fAV-67-Ra3"/>
+                                                        </constraints>
+                                                        <color key="tintColor" red="1" green="0.57637232540000005" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                                        <state key="normal" title="Button"/>
+                                                        <buttonConfiguration key="configuration" style="plain" title="Terms of Use">
+                                                            <fontDescription key="titleFontDescription" name="HelveticaNeue" family="Helvetica Neue" pointSize="10"/>
+                                                        </buttonConfiguration>
+                                                    </button>
+                                                </subviews>
+                                            </stackView>
                                         </subviews>
                                         <color key="backgroundColor" red="0.99607843139999996" green="0.99607843139999996" blue="0.74117647060000003" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
                                         <constraints>
                                             <constraint firstItem="cyv-I1-yHM" firstAttribute="top" secondItem="6O3-PD-IjP" secondAttribute="bottom" constant="27" id="5Gd-sn-kuR"/>
                                             <constraint firstAttribute="trailing" secondItem="kgz-hz-lob" secondAttribute="trailing" constant="107" id="5VY-F1-GgU"/>
+                                            <constraint firstItem="igI-Ie-KxP" firstAttribute="leading" secondItem="UcA-YS-pNd" secondAttribute="leading" id="8GZ-CS-MGF"/>
                                             <constraint firstAttribute="height" constant="808" id="A5v-v4-6ng"/>
                                             <constraint firstItem="SFU-7A-36n" firstAttribute="centerX" secondItem="z49-Bf-34Q" secondAttribute="centerX" id="Fkt-Xn-kBB"/>
                                             <constraint firstItem="UcA-YS-pNd" firstAttribute="top" secondItem="SFU-7A-36n" secondAttribute="bottom" constant="70" id="HhU-CA-GZc"/>
                                             <constraint firstItem="6O3-PD-IjP" firstAttribute="centerX" secondItem="z49-Bf-34Q" secondAttribute="centerX" id="HyT-Hr-u8z"/>
+                                            <constraint firstItem="igI-Ie-KxP" firstAttribute="trailing" secondItem="UcA-YS-pNd" secondAttribute="trailing" id="I5o-kJ-ADA"/>
                                             <constraint firstItem="UcA-YS-pNd" firstAttribute="centerX" secondItem="z49-Bf-34Q" secondAttribute="centerX" id="LeE-OC-AeD"/>
                                             <constraint firstItem="kgz-hz-lob" firstAttribute="centerY" secondItem="z49-Bf-34Q" secondAttribute="centerY" id="N4P-8Q-W9b"/>
                                             <constraint firstItem="kgz-hz-lob" firstAttribute="leading" secondItem="z49-Bf-34Q" secondAttribute="leading" id="OaT-eV-sdr"/>
                                             <constraint firstItem="cyv-I1-yHM" firstAttribute="leading" secondItem="SFU-7A-36n" secondAttribute="leading" id="W7s-sQ-hPu"/>
+                                            <constraint firstItem="igI-Ie-KxP" firstAttribute="centerX" secondItem="z49-Bf-34Q" secondAttribute="centerX" id="euP-OB-Tbf"/>
                                             <constraint firstItem="SFU-7A-36n" firstAttribute="top" secondItem="cyv-I1-yHM" secondAttribute="bottom" constant="23" id="gF0-0M-cQg"/>
                                             <constraint firstItem="kgz-hz-lob" firstAttribute="top" secondItem="z49-Bf-34Q" secondAttribute="top" id="imd-8S-zLO"/>
+                                            <constraint firstItem="igI-Ie-KxP" firstAttribute="top" secondItem="UcA-YS-pNd" secondAttribute="bottom" constant="30" id="kji-lP-o5Y"/>
                                             <constraint firstItem="6O3-PD-IjP" firstAttribute="top" secondItem="z49-Bf-34Q" secondAttribute="top" constant="40" id="otc-n6-Bla"/>
-                                            <constraint firstAttribute="bottom" relation="lessThanOrEqual" secondItem="UcA-YS-pNd" secondAttribute="bottom" constant="209" id="rIY-v2-3bk"/>
                                             <constraint firstAttribute="bottom" secondItem="kgz-hz-lob" secondAttribute="bottom" id="tE8-h4-Mq2"/>
                                         </constraints>
                                     </view>
@@ -212,8 +248,10 @@
                         <outlet property="login" destination="1AW-Wj-Qt7" id="cBd-Zc-hEI"/>
                         <outlet property="loginButtonStackView" destination="SFU-7A-36n" id="P5w-lM-DyR"/>
                         <outlet property="passwordTextField" destination="X3a-Uh-AYS" id="i8h-xh-LUS"/>
+                        <outlet property="privacyPolicyBtn" destination="ZR3-EY-1qy" id="cIH-jf-pia"/>
                         <outlet property="registerButton" destination="SLt-lc-Q4Q" id="c5Y-JU-7Tf"/>
                         <outlet property="resetPasswordButton" destination="NyG-hk-adB" id="OM2-XT-uyi"/>
+                        <outlet property="termsAndConditionsBtn" destination="ptG-6O-wEc" id="wa0-ma-w0T"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="FpN-iY-agp" sceneMemberID="firstResponder"/>

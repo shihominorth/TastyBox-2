@@ -18,13 +18,16 @@
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <activityIndicatorView opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" fixedFrame="YES" style="medium" translatesAutoresizingMaskIntoConstraints="NO" id="J0F-yM-64M">
+                            <activityIndicatorView opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" style="medium" translatesAutoresizingMaskIntoConstraints="NO" id="J0F-yM-64M">
                                 <rect key="frame" x="197" y="438" width="20" height="20"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                             </activityIndicatorView>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="vDu-zF-Fre"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                        <constraints>
+                            <constraint firstItem="J0F-yM-64M" firstAttribute="centerY" secondItem="5EZ-qb-Rvc" secondAttribute="centerY" id="WmT-4w-xxC"/>
+                            <constraint firstItem="J0F-yM-64M" firstAttribute="centerX" secondItem="5EZ-qb-Rvc" secondAttribute="centerX" id="mCK-3A-3nH"/>
+                        </constraints>
                     </view>
                     <navigationItem key="navigationItem" id="X3m-wX-He7"/>
                     <connections>

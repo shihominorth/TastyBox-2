@@ -7,19 +7,17 @@
 //
 
 import Foundation
+import AuthenticationServices
+import CryptoKit
 import Firebase
 import FirebaseAuth
 import FirebaseFirestore
 import FBSDKLoginKit
-
 import GoogleSignIn
-import AuthenticationServices
-import CryptoKit
-//import Crashlytics
 import RxSwift
 import RxCocoa
 import RxTimelane
-
+import SafariServices
 
 class LoginMainPageViewController: UIViewController, BindableType, KeyboardSetUpProtocol {
     
@@ -46,6 +44,8 @@ class LoginMainPageViewController: UIViewController, BindableType, KeyboardSetUp
     @IBOutlet weak var resetPasswordButton: UIButton!
     @IBOutlet weak var registerButton: UIButton!
     
+    @IBOutlet weak var privacyPolicyBtn: UIButton!
+    @IBOutlet weak var termsAndConditionsBtn: UIButton!
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -75,8 +75,9 @@ class LoginMainPageViewController: UIViewController, BindableType, KeyboardSetUp
             
         }
         
-        
+      
     }
+    
     
     override func viewWillAppear(_ animated: Bool) {
         
@@ -289,6 +290,31 @@ class LoginMainPageViewController: UIViewController, BindableType, KeyboardSetUp
             .bind(to: failedStream)
             .disposed(by: viewModel.disposeBag)
         
+        
+        privacyPolicyBtn.rx.tap
+            .throttle(.milliseconds(1000), scheduler: MainScheduler.instance)
+            .subscribe(onNext: { [unowned self] _ in
+                
+                if let url = URL(string: "https://tastybox2.weebly.com/privacy-policy.html") {
+                    let safariViewController = SFSafariViewController(url: url)
+                    self.present(safariViewController, animated: true)
+                }
+                
+            })
+            .disposed(by: viewModel.disposeBag)
+        
+        termsAndConditionsBtn.rx.tap
+            .throttle(.milliseconds(1000), scheduler: MainScheduler.instance)
+            .subscribe(onNext: { [unowned self] _ in
+                
+                if let url = URL(string: "https://tastybox2.weebly.com/terms-of-use.html") {
+                    let safariViewController = SFSafariViewController(url: url)
+                    self.present(safariViewController, animated: true)
+                }
+                
+                
+            })
+            .disposed(by: viewModel.disposeBag)
       
     }
     
