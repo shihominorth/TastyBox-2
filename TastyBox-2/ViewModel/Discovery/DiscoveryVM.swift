@@ -52,21 +52,21 @@ class DiscoveryVM: ViewModelBase {
                     
                     self.toMyProfile()
                 
-                case 2:
+                case 1:
                     self.toRefrigerator()
                     
-                case 3:
+                case 2:
                     self.toShoppinglist()
                     
-                case 4:
+                case 3:
                     
                     self.toContactForm()
                     
-                case 5:
+                case 4:
                     
                     self.toAboutPage()
                     
-                case 6:
+                case 5:
                     self.logout()
                     
                 default:
