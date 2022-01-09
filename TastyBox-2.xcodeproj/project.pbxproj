@@ -65,6 +65,7 @@
 		6F3BF4D927397143005C24A5 /* RecipeDetailDM.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F3BF4D827397142005C24A5 /* RecipeDetailDM.swift */; };
 		6F3BF4DB273BCE11005C24A5 /* SkeltonView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F3BF4DA273BCE0F005C24A5 /* SkeltonView.swift */; };
 		6F3BF4DD273C2080005C24A5 /* ThereeCellsFlowLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F3BF4DC273C207E005C24A5 /* ThereeCellsFlowLayout.swift */; };
+		6F3FBC692789EE2C00085413 /* Tutorial.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F3FBC682789EE2C00085413 /* Tutorial.swift */; };
 		6F4090D227667DED0088C5E1 /* SelectDigitalContentsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F4090D127667DED0088C5E1 /* SelectDigitalContentsViewController.swift */; };
 		6F4090DA276746CB0088C5E1 /* SelectDigitalContentsCVCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F4090D9276746CB0088C5E1 /* SelectDigitalContentsCVCell.swift */; };
 		6F4090DE2767762B0088C5E1 /* UIImageView+.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F4090DD2767762B0088C5E1 /* UIImageView+.swift */; };
@@ -300,6 +301,7 @@
 		6F3BF4D827397142005C24A5 /* RecipeDetailDM.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecipeDetailDM.swift; sourceTree = "<group>"; };
 		6F3BF4DA273BCE0F005C24A5 /* SkeltonView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SkeltonView.swift; sourceTree = "<group>"; };
 		6F3BF4DC273C207E005C24A5 /* ThereeCellsFlowLayout.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThereeCellsFlowLayout.swift; sourceTree = "<group>"; };
+		6F3FBC682789EE2C00085413 /* Tutorial.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Tutorial.swift; sourceTree = "<group>"; };
 		6F4090D127667DED0088C5E1 /* SelectDigitalContentsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SelectDigitalContentsViewController.swift; sourceTree = "<group>"; };
 		6F4090D9276746CB0088C5E1 /* SelectDigitalContentsCVCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SelectDigitalContentsCVCell.swift; sourceTree = "<group>"; };
 		6F4090DD2767762B0088C5E1 /* UIImageView+.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIImageView+.swift"; sourceTree = "<group>"; };
@@ -769,6 +771,7 @@
 				6FE9EB4D26F99EF4000AF9D4 /* Ingredient.swift */,
 				6F0E696D27208D8A002BD547 /* Genre.swift */,
 				6F927B99275385CB006F95BF /* Timeline.swift */,
+				6F3FBC682789EE2C00085413 /* Tutorial.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -1424,6 +1427,7 @@
 				6F512A3026F45BF200826657 /* TutorialCVCell.swift in Sources */,
 				6FC26F642748EC9300AE13F9 /* Collection+.swift in Sources */,
 				6F77D489272853FE00F1FCD9 /* PlayVideoInsideTVCellView.swift in Sources */,
+				6F3FBC692789EE2C00085413 /* Tutorial.swift in Sources */,
 				6F01F3CE27296D2A003CA769 /* PublishRecipeOptionCVCell.swift in Sources */,
 				6F9A0D0B27101A6E00DABB45 /* SemiModalDismissAnimatedTransition.swift in Sources */,
 				6FBCB91226D7B5F200C050B2 /* User.swift in Sources */,

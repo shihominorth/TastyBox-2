@@ -34,6 +34,7 @@ class TutorialViewController: UIViewController, BindableType {
     }
     
     override func viewDidLoad() {
+        
         super.viewDidLoad()
         
         collectionView.decelerationRate = .fast
@@ -53,8 +54,8 @@ class TutorialViewController: UIViewController, BindableType {
         collectionView.rx.setDelegate(self).disposed(by: viewModel.disposeBag)
         collectionView.rx.setDataSource(self).disposed(by: viewModel.disposeBag)
         
-        pageControl.numberOfPages = 6
-        
+        self.generateExplanations()
+
         
     }
     
@@ -74,8 +75,37 @@ class TutorialViewController: UIViewController, BindableType {
     
     func bindViewModel() {
         
+       
+        
     }
     
+    func generateExplanations() {
+        
+        guard let firstImage = UIImage(named: "food_spaghetti_vongole_bianco") else { return }
+        let first = Tutorial(title: "Find creative and tasty recipes!", image: firstImage, explanation: "You can find recipes from TastyBox!")
+        
+        self.viewModel.explainations.append(first)
+        
+        guard let secondImage = UIImage(named: "food_spaghetti_vongole_bianco") else { return }
+        let second = Tutorial(title: "Follow your favorite publishers!", image: secondImage, explanation: "Check the latest recipes")
+        
+        self.viewModel.explainations.append(second)
+        
+        guard let thirdImage = UIImage(named: "food_spaghetti_vongole_bianco") else { return }
+        let third = Tutorial(title: "Find the recipes that your ingredients is used!", image: thirdImage, explanation: "You can know the recipes each ingredients you have are used.")
+        
+        
+        self.viewModel.explainations.append(third)
+        
+        
+        guard let fourthImage = UIImage(named: "food_spaghetti_vongole_bianco") else { return }
+        let fourth = Tutorial(title: "Aim to get the top likes!", image: fourthImage, explanation: "Everyone can like the recipe, ")
+        
+        self.viewModel.explainations.append(fourth)
+        
+        pageControl.numberOfPages = self.viewModel.explainations.count
+        
+    }
     
 }
 
@@ -87,7 +117,7 @@ extension TutorialViewController: UICollectionViewDataSource, UICollectionViewDe
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         
-        return 6
+        return self.viewModel.explainations.count + 1
     }
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
@@ -98,7 +128,7 @@ extension TutorialViewController: UICollectionViewDataSource, UICollectionViewDe
  
         switch indexPath.row {
 
-        case 5:
+        case viewModel.explainations.count:
         
             let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "start", for: indexPath) as! StartCVCell
             
@@ -120,11 +150,17 @@ extension TutorialViewController: UICollectionViewDataSource, UICollectionViewDe
             return cell
             
         default:
+            
             let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "TutorialCVCell", for: indexPath) as! TutorialCVCell
             
             cell.layer.borderWidth = 1
             cell.layer.cornerRadius = 30.0
             cell.layer.borderColor = #colorLiteral(red: 0.7019607843, green: 0.6980392157, blue: 0.5019607843, alpha: 1)
+            
+            
+            cell.contextLbl.text = self.viewModel.explainations[indexPath.row].explanation
+            cell.titleLbl.text = self.viewModel.explainations[indexPath.row].title
+            
             
             return cell
             

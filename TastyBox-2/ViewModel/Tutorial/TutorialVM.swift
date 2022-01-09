@@ -12,10 +12,13 @@ class TutorialVM: ViewModelBase {
     let sceneCoodinator: SceneCoordinator
     let apiType: LoginMainProtocol.Type
     
+    var explainations: [Tutorial]
+    
     init(sceneCoodinator: SceneCoordinator, apiType: LoginMainProtocol.Type = LoginMainDM.self) {
+        
         self.sceneCoodinator = sceneCoodinator
         self.apiType = apiType
-        
+        self.explainations = []
         
     }
     
