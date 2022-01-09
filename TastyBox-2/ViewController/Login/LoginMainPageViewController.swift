@@ -295,10 +295,7 @@ class LoginMainPageViewController: UIViewController, BindableType, KeyboardSetUp
             .throttle(.milliseconds(1000), scheduler: MainScheduler.instance)
             .subscribe(onNext: { [unowned self] _ in
                 
-                if let url = URL(string: "https://tastybox2.weebly.com/privacy-policy.html") {
-                    let safariViewController = SFSafariViewController(url: url)
-                    self.present(safariViewController, animated: true)
-                }
+                self.viewModel.toWebSite()
                 
             })
             .disposed(by: viewModel.disposeBag)
@@ -306,12 +303,8 @@ class LoginMainPageViewController: UIViewController, BindableType, KeyboardSetUp
         termsAndConditionsBtn.rx.tap
             .throttle(.milliseconds(1000), scheduler: MainScheduler.instance)
             .subscribe(onNext: { [unowned self] _ in
-                
-                if let url = URL(string: "https://tastybox2.weebly.com/terms-of-use.html") {
-                    let safariViewController = SFSafariViewController(url: url)
-                    self.present(safariViewController, animated: true)
-                }
-                
+               
+                self.viewModel.toWebSite()
                 
             })
             .disposed(by: viewModel.disposeBag)

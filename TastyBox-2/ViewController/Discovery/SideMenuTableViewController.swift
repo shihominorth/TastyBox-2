@@ -17,7 +17,6 @@ class SideMenuTableViewController: UITableViewController {
       
         self.tableView.separatorColor = UIColor.clear
         self.tableView.allowsSelection = true
-    
     }
     
 }

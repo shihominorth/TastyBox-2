@@ -8,6 +8,7 @@
 import UIKit
 import Photos
 import PhotosUI
+import SafariServices
 
 extension Scene {
     
@@ -22,6 +23,10 @@ extension Scene {
         case let .discovery(scene):
             
             return generateViewController(discoveryScene: scene)
+            
+        case let .webSite(scene):
+            
+            return generateViewController(webSiteScene: scene)
             
         case let .createReceipeScene(scene):
             
@@ -353,6 +358,29 @@ extension Scene {
             return nc
         }
         
+    }
+    
+    func generateViewController(webSiteScene scene: WebSiteScene) -> UIViewController {
+        
+        switch scene {
+            
+        case .termsOfUseAndPrivacyPolicy:
+            
+            let url = URL(string: "https://tastybox2.weebly.com/privacy-policy-and-term-of-use.html")!
+            
+            let vc = SFSafariViewController(url: url)
+            
+            return vc
+            
+        case .contact:
+            
+            let url = URL(string: "https://tastybox2.weebly.com/contact.html")!
+            
+            let vc = SFSafariViewController(url: url)
+            
+            return vc
+            
+        }
     }
     
     func generateViewController(createRecipeScene scene: CreateRecipeScene) -> UIViewController {

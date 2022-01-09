@@ -17,6 +17,10 @@ enum Scene {
     enum DiscoveryScene {
         case main(DiscoveryVM)
     }
+    
+    enum WebSiteScene {
+        case termsOfUseAndPrivacyPolicy, contact
+    }
 
     enum CreateRecipeScene {
         case createRecipe(CreateRecipeVM), selectGenre(SelectGenresVM), uploadingVideo(UploadingVideoVM),  checkRecipe(CheckRecipeVM), publishRecipe(PublishRecipeVM)
@@ -39,7 +43,7 @@ enum Scene {
     }
     
    
-    case loginScene(scene: LoginScene), discovery(scene: DiscoveryScene), createReceipeScene(scene: CreateRecipeScene), profileScene(scene: ProfileScene), recipeScene(scene: RecipeDetailScene), reportScene(scene: ReportScene), digitalContentsPickerScene(scene: DigitalContentsPickerScene)
+    case loginScene(scene: LoginScene), discovery(scene: DiscoveryScene), webSite(scene: WebSiteScene), createReceipeScene(scene: CreateRecipeScene), profileScene(scene: ProfileScene), recipeScene(scene: RecipeDetailScene), reportScene(scene: ReportScene), digitalContentsPickerScene(scene: DigitalContentsPickerScene)
     
 }
 

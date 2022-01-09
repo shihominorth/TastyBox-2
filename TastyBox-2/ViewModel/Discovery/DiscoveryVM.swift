@@ -58,6 +58,14 @@ class DiscoveryVM: ViewModelBase {
                 case 3:
                     self.toShoppinglist()
                     
+                case 4:
+                    
+                    self.toContactForm()
+                    
+                case 5:
+                    
+                    self.toAboutPage()
+                    
                 case 6:
                     self.logout()
                     
@@ -126,6 +134,22 @@ class DiscoveryVM: ViewModelBase {
         
         
         self.sceneCoodinator.transition(to: vc, type: .push)
+    }
+    
+    func toContactForm() {
+        
+        let scene: Scene = .webSite(scene: .contact)
+        self.sceneCoodinator.modalTransition(to: scene, type: .web)
+        
+        
+    }
+    
+    func toAboutPage() {
+        
+        let scene: Scene = .webSite(scene: .termsOfUseAndPrivacyPolicy)
+        
+        self.sceneCoodinator.modalTransition(to: scene, type: .web)
+        
     }
     
     func logout() {

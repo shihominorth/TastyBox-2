@@ -198,5 +198,12 @@ class LoginMainVM: ViewModelBase {
     
     
 
+    func toWebSite() {
+        
+        let scene: Scene = .webSite(scene: .termsOfUseAndPrivacyPolicy)
+        
+        self.sceneCoodinator.modalTransition(to: scene, type: .web)
+    }
+    
 }
 

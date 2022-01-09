@@ -13,6 +13,7 @@ import PhotosUI
 import RSKImageCropper
 import RxSwift
 import RxCocoa
+import SafariServices
 import SwiftMessages
 
 class SceneCoordinator: NSObject, SceneCoordinatorType {
@@ -145,7 +146,7 @@ class SceneCoordinator: NSObject, SceneCoordinatorType {
 //
             }
             else {
-                
+
                 guard let navigationController = currentViewController.navigationController else {
                     fatalError("Can't push a view controller without a current navigation controller")
                 }
@@ -265,6 +266,12 @@ class SceneCoordinator: NSObject, SceneCoordinatorType {
             }
 
             segue.perform()
+            
+        case .web:
+
+            currentViewController.present(viewController, animated: true) {
+                subject.onCompleted()
+            }
             
         default:
             break
@@ -426,6 +433,13 @@ class SceneCoordinator: NSObject, SceneCoordinatorType {
                     subject.onCompleted()
                 }
                 
+            }
+            
+            
+        case .web:
+
+            currentViewController.present(viewController, animated: true) {
+                subject.onCompleted()
             }
             
         default:
