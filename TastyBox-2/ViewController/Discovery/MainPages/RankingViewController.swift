@@ -27,7 +27,7 @@ class RankingViewController: UIViewController, BindableType {
         let flowLayout = UICollectionViewFlowLayout()
         
         flowLayout.sectionInset = UIEdgeInsets(top: 10, left: 5, bottom: 10, right: 5)
-        flowLayout.itemSize = CGSize(width: 405, height: 174)
+        flowLayout.itemSize = CGSize(width: self.view.frame.width * 0.95, height: 174)
         flowLayout.scrollDirection = .vertical
 
         collectionView.collectionViewLayout = flowLayout

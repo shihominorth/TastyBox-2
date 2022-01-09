@@ -38,6 +38,16 @@ class SelectDigitalContentsViewController: UIViewController, BindableType {
 //                DispatchQueue.main.async { [unowned self] in
 //                    showUI(for: status)
 //                }
+                
+                switch status {
+               
+                case .authorized, .limited:
+                    
+                    PHPhotoLibrary.shared().register(self)
+                    
+                default:
+                    break
+                }
             }
             
             
