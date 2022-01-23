@@ -2,6 +2,8 @@
 
 TastyBox is the app will suggest you the recipes you need. It helps you to find your breakfast, lucnch and dinner.
 
+![appicon](https://github.com/shihominorth/TastyBbox-2/blob/images/icon.png)
+
 
 ## Getting Started
 
