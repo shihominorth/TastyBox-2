@@ -1,7 +1,7 @@
 # TastyBox-2
-# Project Title
 
-One Paragraph of project description goes here
+TastyBox is the app will suggest you the recipes you need. It helps you to find your breakfast, lucnch and dinner.
+
 
 ## Getting Started
 
