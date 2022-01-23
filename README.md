@@ -23,6 +23,8 @@ command line
 
 ## Architecture
 
+![architecture](https://github.com/shihominorth/TastyBox-2/blob/images/Architecture.png)
+
 ## Technology
 
 - DB: Firebase Firestore, Storage
