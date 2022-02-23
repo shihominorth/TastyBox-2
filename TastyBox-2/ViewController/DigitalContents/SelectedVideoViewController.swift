@@ -205,7 +205,7 @@ class SelectedVideoViewController: UIViewController, BindableType {
             
             let interval = CMTime(value: 1, timescale: 2)
             
-            videoPlayerView.player?.addPeriodicTimeObserver(forInterval: interval, queue: DispatchQueue.main) { [weak self] progressTime in
+            videoPlayerView.player?.addPeriodicTimeObserver(forInterval: interval, queue: DispatchQueue.main) { progressTime in
                 
                 if let duration = videoPlayerView.player?.currentItem?.duration {
                     

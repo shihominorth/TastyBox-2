@@ -45,6 +45,8 @@ class AboutViewController: UIViewController, BindableType {
         segmentedControl.setTitleTextAttributes([NSAttributedString.Key.foregroundColor: UIColor.white], for: UIControl.State.selected)
     }
     
+    // VM内でagreeBtnを選択可能にするか後ほど管理する。
+    
     func bindViewModel() {
         
     }
@@ -70,15 +72,15 @@ class AboutViewController: UIViewController, BindableType {
         self.present(alert, animated: true)
     }
     
-    override func viewWillDisappear(_ animated: Bool) {
+//    override func viewWillDisappear(_ animated: Bool) {
 
-        if self.isMovingFromParent && viewModel.isAgreed != nil {
+//        if self.isMovingFromParent && viewModel.isAgreed != nil {
               
 //              let fbLoginManager = LoginManager()
 //              fbLoginManager.logOut()
               
-          }
-      }
+//          }
+//      }
     
     @IBAction func choiceAction(_ sender: Any) {
         

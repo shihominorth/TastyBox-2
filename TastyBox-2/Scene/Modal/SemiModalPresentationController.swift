@@ -72,9 +72,9 @@ final class SemiModalPresentationController: UIPresentationController {
         
         super.init(presentedViewController: presentedViewController, presenting: presentingViewController)
         
-        let _ = NotificationCenter.default.rx.notification(UIResponder.keyboardWillShowNotification)
-            .observe(on: MainScheduler.asyncInstance)
-            .subscribe(onNext: { [unowned self] notification in
+//        let _ = NotificationCenter.default.rx.notification(UIResponder.keyboardWillShowNotification)
+//            .observe(on: MainScheduler.asyncInstance)
+//            .subscribe(onNext: { [unowned _] notification in
                 
 //                if let keyboardSize = (notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue)?.cgRectValue, let duration = notification.userInfo?[UIResponder.keyboardAnimationDurationUserInfoKey] as? TimeInterval, let curveNumber = notification.userInfo?[UIResponder.keyboardAnimationCurveUserInfoKey] as? NSNumber
 //                {
@@ -104,14 +104,14 @@ final class SemiModalPresentationController: UIPresentationController {
 //                    }
                     
 //                }
-            })
-            .disposed(by: self.disposeBag)
+//            })
+//            .disposed(by: self.disposeBag)
         
         
-        NotificationCenter.default.rx.notification(UIResponder.keyboardWillHideNotification)
-            .observe(on: MainScheduler.asyncInstance)
-            .subscribe(onNext: {  [unowned self] notification in
-                
+//        NotificationCenter.default.rx.notification(UIResponder.keyboardWillHideNotification)
+//            .observe(on: MainScheduler.asyncInstance)
+//            .subscribe(onNext: {  [unowned self] notification in
+//
                 
 //                if  let keyboardSize = (notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue)?.cgRectValue, let duration = notification.userInfo?[UIResponder.keyboardAnimationDurationUserInfoKey] as? TimeInterval, let curveNumber = notification.userInfo?[UIResponder.keyboardAnimationCurveUserInfoKey] as? NSNumber
 //                {
@@ -141,8 +141,8 @@ final class SemiModalPresentationController: UIPresentationController {
 //
 //                }
                 
-            })
-            .disposed(by: self.disposeBag)
+//            })
+//            .disposed(by: self.disposeBag)
     }
     
     // MARK: Override Functions

@@ -84,7 +84,7 @@ extension RxFaceBookLoginDelegateProxy: DelegateProxyType {
 extension Reactive where Base: FBLoginButton {
     
     public var delegate: DelegateProxy<FBLoginButton, LoginButtonDelegate> {
-        return self.delegate
+        return RxFaceBookLoginDelegateProxy.proxy(for: base)
     }
     
     public var signIn: Observable<FirebaseAuth.User> {

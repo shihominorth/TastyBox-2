@@ -158,16 +158,14 @@ class MainDM: MainDMProtocol {
     
     static func getRecipesUsedIngredients(allIngredients: [Ingredient]) -> Observable<[Recipe]> {
         
-        var query: Query = db.collection("recipes")
-        
-        var limitLoop = 1
-        var max = 0
         // ingredients.countが４以下だとmaxが１またはそれ以下になるためクラッシュしてしまう。
         if allIngredients.isEmpty {
             
             return .just([])
             
         }
+        
+        // for loop が使えないため。
         else if allIngredients.count == 1 {
             
             let query = db.collection("recipes").whereField("genres.\(allIngredients[0].id)", isEqualTo: true)
@@ -238,11 +236,8 @@ class MainDM: MainDMProtocol {
             
             return getRecipesStream
             
-            //            max = 1
         }
-        //        else if allIngredients.count >= 5 {
-        
-        //            max = Int.random(in: 1 ... allIngredients.count)
+     
         
         let queries = getQueries(searchIngredientsOnceNumLimit: 3, ingredients: allIngredients)
         
@@ -273,55 +268,6 @@ class MainDM: MainDMProtocol {
         
         return getRecipesStream
         
-        //        }
-        //        else  {
-        //
-        //            let thirtyPercentOfIngredientsCount = Int(round(Double(allIngredients.count) * 0.3))
-        //
-        //            max = thirtyPercentOfIngredientsCount
-        //
-        //        }
-        //
-        //        if max == 1 {
-        //
-        //            limitLoop = 1
-        //
-        //        }
-        //        else {
-        //
-        //            let ramdomLimit = Int.random(in: 1 ... max)
-        //            limitLoop = ramdomLimit
-        //        }
-        //
-        //        var selectedIndice:[Int] = []
-        //
-        //        var randomIndex = Int.random(in: 0 ..< allIngredients.count)
-        //
-        //
-        //        while !selectedIndice.contains(randomIndex) {
-        //
-        //            if selectedIndice.contains(randomIndex) {
-        //
-        //                randomIndex = Int(arc4random_uniform(UInt32(allIngredients.count - 1)))
-        //
-        //            }
-        //            else {
-        //
-        //                selectedIndice.append(randomIndex)
-        //
-        //            }
-        //
-        //        }
-        //
-        //
-        //        for _ in 0 ..< limitLoop {
-        //
-        //            let id = allIngredients[randomIndex].id
-        //
-        //            query = query.whereField("genres.\(id)", isEqualTo: true)
-        //        }
-        //
-        //        return getRecipes(query: query)
         
     }
     

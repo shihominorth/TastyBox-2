@@ -360,7 +360,7 @@ class ShoppinglistVM: ViewModelBase {
                
                 if searchingTemp.isEmpty {
                     
-                    let filteredAllitems = items.filter { !$0.isBought }
+//                    let filteredAllitems = items.filter { !$0.isBought }
                     
 //                    let item = filteredAllitems[index]
                     
@@ -374,7 +374,7 @@ class ShoppinglistVM: ViewModelBase {
                 }
                 else {
                     
-                    let filteredSearchingTemp = searchingTemp.filter { !$0.isBought }
+//                    let filteredSearchingTemp = searchingTemp.filter { !$0.isBought }
 //                    let item = filteredSearchingTemp[index]
                     
                     if let indexAllItems = self.items.firstIndex(where: { $0.id == item.id }) {

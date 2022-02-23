@@ -71,7 +71,7 @@ extension Ingredient: Differentiable {
          return self.id
      }
      
-     func isContentEqual(to source: ShoppingItem) -> Bool {
+    private func isContentEqual(to source: ShoppingItem) -> Bool {
          return name == source.name
      }
 

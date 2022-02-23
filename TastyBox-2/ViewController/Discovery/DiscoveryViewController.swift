@@ -111,7 +111,7 @@ class DiscoveryViewController: UIViewController, BindableType {
                 
         viewModel.setDefaultViewControllers()
         
-        pageVC = self.children.first as! UIPageViewController
+        pageVC = (self.children.first as! UIPageViewController)
         pageVC?.delegate = self
         
     }

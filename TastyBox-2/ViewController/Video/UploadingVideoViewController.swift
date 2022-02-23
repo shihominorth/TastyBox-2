@@ -208,20 +208,20 @@ class UploadingVideoViewController: UIViewController, BindableType {
     
     func playVideo() {
         
-        viewModel.urlSubject?
-            .subscribe(onNext: { [unowned self] url in
-                
-                
-                
-                
-                
-            }, onError: { err in
-                
-                print(err)
-                
-            })
-            .disposed(by: viewModel.disposeBag)
-        
+//        viewModel.urlSubject?
+//            .subscribe(onNext: { [unowned self] url in
+//                
+//                
+//                
+//                
+//                
+//            }, onError: { err in
+//                
+//                print(err)
+//                
+//            })
+//            .disposed(by: viewModel.disposeBag)
+//        
         
         
     }

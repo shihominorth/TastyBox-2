@@ -63,13 +63,13 @@ extension RxUIImagePickerControllerDelegateProxy: DelegateProxyType {
 
 extension Reactive where Base: UIImagePickerController {
     
-    public var delegate: DelegateProxy<UIImagePickerController, UIImagePickerControllerDelegate> {
-        return self.delegate
+    public var delegate: DelegateProxy<UIImagePickerController,  (UIImagePickerControllerDelegate & UINavigationControllerDelegate)> {
+        return RxUIImagePickerControllerDelegateProxy.proxy(for: base)
     }
     
     public var imageData: Observable<Data> {
         
-        let proxy = RxUIImagePickerControllerDelegateProxy.proxy(for: base as! RxUIImagePickerControllerDelegateProxy.ParentObject)
+        let proxy = RxUIImagePickerControllerDelegateProxy.proxy(for: base as RxUIImagePickerControllerDelegateProxy.ParentObject)
         proxy.imageSubject = PublishSubject<Data>()
         
         return proxy.imageSubject.asObservable()

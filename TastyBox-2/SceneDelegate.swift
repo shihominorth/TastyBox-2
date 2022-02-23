@@ -53,7 +53,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         let vm = LoadingVM(sceneCoodinator: sceneCoordinator)
         let vc = LoadingScene.loading(vm).viewController()
         
-        if let nc = vc as? UINavigationController {
+        if let _ = vc as? UINavigationController {
             sceneCoordinator.transition(to: vc, type: .root)
         }
    

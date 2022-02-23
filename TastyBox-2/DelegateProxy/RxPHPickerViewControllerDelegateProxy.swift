@@ -49,7 +49,7 @@ class RxPHPickerViewControllerDelegateProxy: DelegateProxy<PHPickerViewControlle
         }
         else if provider.hasItemConformingToTypeIdentifier(UTType.video.identifier) ||  provider.hasItemConformingToTypeIdentifier(UTType.quickTimeMovie.identifier) {
             
-            guard let typeIdentifier = provider.registeredTypeIdentifiers.first else { return }
+            guard provider.registeredTypeIdentifiers.first != nil else { return }
            
             provider.loadFileRepresentation(forTypeIdentifier: "public.movie") { [weak self] url, err in
                 
@@ -58,7 +58,7 @@ class RxPHPickerViewControllerDelegateProxy: DelegateProxy<PHPickerViewControlle
                     self?.urlSubject.onError(err)
                     
                 }
-                else if let url = url as? URL {
+                else if let url = url {
                     
                     self?.urlSubject.onNext(url)
                     
@@ -91,7 +91,7 @@ extension RxPHPickerViewControllerDelegateProxy: DelegateProxyType {
 extension Reactive where Base: PHPickerViewController {
     
     public var delegate: DelegateProxy<PHPickerViewController, PHPickerViewControllerDelegate> {
-        return self.delegate
+        return RxPHPickerViewControllerDelegateProxy.proxy(for: base)
     }
     
     public var imageData: Observable<Data> {

@@ -88,7 +88,7 @@ extension RxRSKImageCropVCDelegateProxy: DelegateProxyType {
 extension Reactive where Base: RSKImageCropViewController {
     
     public var delegate: DelegateProxy<RSKImageCropViewController, RSKImageCropViewControllerDelegate> {
-        return self.delegate
+        return RxRSKImageCropVCDelegateProxy.proxy(for: base)
     }
     
     public var imageData: Observable<Data> {

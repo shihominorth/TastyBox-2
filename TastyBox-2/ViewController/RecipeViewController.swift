@@ -264,7 +264,7 @@ class RecipeViewController: UIViewController, BindableType {
             
             switch section.elements[indexPath.row] {
                 
-            case let .imageData(data, url):
+            case let .imageData(data, _):
                 
                 
                 if let cell = tableView.dequeueReusableCell(withIdentifier: "recipeMainTVCell", for: indexPath) as? RecipeMainImageTVCell {

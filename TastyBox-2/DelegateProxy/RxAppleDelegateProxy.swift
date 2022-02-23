@@ -113,8 +113,9 @@ extension RxAppleDelegateProxy: DelegateProxyType {
 }
 
 extension Reactive where Base: ASAuthorizationController {
+   
     public var delegate: DelegateProxy<ASAuthorizationController, ASAuthorizationControllerDelegate> {
-        return self.delegate
+        return RxAppleDelegateProxy.proxy(for: base)
     }
     
     @available(iOS 13, *)
@@ -129,7 +130,6 @@ extension Reactive where Base: ASAuthorizationController {
     @available(iOS 13, *)
     func startSignInWithAppleFlow(authorizationController: UIViewController) {
         let nonce = self.randomNonceString()
-//        self.currentNonce = nonce
         let appleIDProvider = ASAuthorizationAppleIDProvider()
         let request = appleIDProvider.createRequest()
         request.requestedScopes = [.fullName, .email]
