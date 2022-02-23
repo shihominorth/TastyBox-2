@@ -55,12 +55,11 @@ extension MyPostedRecipesTVCell {
         dataSource = RxPostedRecipeCollectionViewDataSource<Recipe, MyPostedRecipeCVCell>(identifier: MyPostedRecipeCVCell.identifier, configure: { row, recipe, cell in
             
             cell.vipImgView.isHidden = true
-            let placeHolder = SkeltonView()
             
 
             if let url = URL(string: recipe.imgString) {
             
-                cell.imgView.kf.setImage(with: url, placeholder: placeHolder, options: [.transition(.fade(1))])
+                cell.imgView.kf.setImage(with: url, options: [.transition(.fade(1))])
 
                 cell.vipImgView.isHidden = recipe.isVIP ? false : true
 
@@ -79,7 +78,7 @@ extension MyPostedRecipesTVCell: UICollectionViewDelegate, UICollectionViewDeleg
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
         
-        return  CGSize(width: (collectionView.frame.width - 2.0) / 3.0, height: (collectionView.frame.width - 2.0) / 3.0)
+        return CGSize(width: (collectionView.frame.width - 2.0) / 3.0, height: (collectionView.frame.width - 2.0) / 3.0)
     }
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumLineSpacingForSectionAt section: Int) -> CGFloat {

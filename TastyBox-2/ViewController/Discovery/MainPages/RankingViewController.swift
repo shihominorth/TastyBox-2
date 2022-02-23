@@ -50,10 +50,6 @@ class RankingViewController: UIViewController, BindableType {
     func bindViewModel() {
 
         setUpDataSource()
-        
-//        viewModel.getRecipsRanking()
-//            .bind(to: viewModel.recipesSubject)
-//            .disposed(by: viewModel.disposeBag)
 
             
         viewModel.recipesSubject
@@ -89,13 +85,13 @@ class RankingViewController: UIViewController, BindableType {
         
         dataSource = RxRecipeRankingCollectionViewDataSource(configure: { [unowned self] row, recipe, cell in
             
-            let placeHolder = SkeltonView()
+          
             
             var isCompletedImgShown = false
             
             if let publisher = self.viewModel.pubishers[recipe.userID], let publisherImgUrl = URL(string: publisher.imageURLString) {
                 
-                cell.publisherImgView.kf.setImage(with: publisherImgUrl, placeholder: placeHolder, options: [.transition(.fade(1))]) { result in
+                cell.publisherImgView.kf.setImage(with: publisherImgUrl, options: [.transition(.fade(1))]) { result in
                     
                     switch result {
                     case .success:
@@ -138,7 +134,7 @@ class RankingViewController: UIViewController, BindableType {
             
             if let recipeImgUrl = URL(string: recipe.imgString) {
                 
-                cell.imgView.kf.setImage(with: recipeImgUrl, placeholder: placeHolder, options: [.transition(.fade(1))]) { result in
+                cell.imgView.kf.setImage(with: recipeImgUrl, options: [.transition(.fade(1))]) { result in
                     
                     switch result {
                     case .success:

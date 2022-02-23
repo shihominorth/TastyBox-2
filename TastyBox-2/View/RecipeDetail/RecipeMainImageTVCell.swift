@@ -15,7 +15,6 @@ class RecipeMainImageTVCell: UITableViewCell {
     @IBOutlet weak var playVideoView: PlayVideoInsideTVCellView!
     @IBOutlet weak var slider: UISlider!
     
-    let placeHolder = SkeltonView()
     
     var imgString: String! {
        
@@ -23,7 +22,7 @@ class RecipeMainImageTVCell: UITableViewCell {
 
             if let url = URL(string: imgString) {
 
-                self.playVideoView.imgView.kf.setImage(with: url, placeholder: placeHolder, options: [.transition(.fade(1))])
+                self.playVideoView.imgView.kf.setImage(with: url, options: [.transition(.fade(1))])
 
             }
         

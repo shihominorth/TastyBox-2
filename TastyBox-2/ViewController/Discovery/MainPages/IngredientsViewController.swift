@@ -33,27 +33,11 @@ class IngredientsViewController: UIViewController, BindableType {
     
     /// navigationBarが隠れているかどうか(詳細から戻った一覧に戻った際の再描画に使用)
     var lastNavigationBarIsHidden = false
-    
-    let indicator = UIActivityIndicatorView(frame: CGRect(x: 0, y: 0, width: 50, height: 50))
-    
-//    fileprivate func showConnectingView() {
         
-//        let navigationBar = UINavigationBar()
-//        let height = UIScreen.main.bounds.height / 2 - navigationBar.frame.size.height - 50
-        
-//        indicator.transform = CGAffineTransform(scaleX: 2, y: 2)
-//        indicator.center = CGPoint(x: UIScreen.main.bounds.width / 2 , y: height)
-//        indicator.backgroundColor = #colorLiteral(red: 1, green: 0.5763723254, blue: 0, alpha: 0.5)
-//        indicator.color = .white
-//        indicator.layer.cornerRadius = 10
-        
-//        self.view.addSubview(indicator)
-//    }
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
-//        showConnectingView()
         let ingredientsCollectionViewFlowLayout = ThereeCellsFlowLayout()
         let recipesCollectionViewFlowLayout = ThereeCellsFlowLayout()
         
@@ -78,20 +62,6 @@ class IngredientsViewController: UIViewController, BindableType {
     }
     
     override func viewWillAppear(_ animated: Bool) {
-
-        
-            
-//            showConnectingView()
-            
-//            DispatchQueue.global(qos: .default).async {
-//
-//                // Do heavy work here
-//
-//                DispatchQueue.main.async { [weak self] in
-//                    // UI updates must be on main thread
-//                    self?.indicator.startAnimating()
-//                }
-//            }
         
         if lastNavigationBarIsHidden {
             self.navigationController?.setNavigationBarHidden(true, animated: false)
@@ -102,6 +72,26 @@ class IngredientsViewController: UIViewController, BindableType {
         viewModel.getRefrigeratorIngredients()
             .bind(to: viewModel.ingredientSubject)
             .disposed(by: viewModel.disposeBag)
+        
+        ingredientsCollectionView.isSkeletonable = true
+        recipesCollecitonView.isSkeletonable = true
+        
+        
+        ingredientsCollectionView.showAnimatedGradientSkeleton(usingGradient: .init(baseColor: .concrete), animation: nil, transition: .crossDissolve(0.25))
+        recipesCollecitonView.showAnimatedGradientSkeleton(usingGradient: .init(baseColor: .concrete), animation: nil, transition: .crossDissolve(0.25))
+        
+        
+        DispatchQueue.main.asyncAfter(deadline: .now() + 2.0) { [unowned self] in
+            
+            self.ingredientsCollectionView.stopSkeletonAnimation()
+            self.recipesCollecitonView.stopSkeletonAnimation()
+            self.view.hideSkeleton(reloadDataAfter: true, transition: .crossDissolve(0.25))
+            
+            self.ingredientsCollectionView.reloadData()
+            self.recipesCollecitonView.reloadData()
+            
+        }
+        
         
     }
  
@@ -221,36 +211,31 @@ class IngredientsViewController: UIViewController, BindableType {
         
         ingredientsDataSource = RxDefaultCollectionViewDataSource<String, IngredientOptionCVCell>(identifier: "ingredientsCVCell") { [unowned self] row, ingredient, cell in
  
+            cell.titleLbl.isSkeletonable = true
+            
             self.viewModel.selectedIngredientSubject
                 .map { $0 == row }
                 .bind(to: cell.isSelectedSubject)
                 .disposed(by: cell.disposeBag)
 
-            cell.titleLbl.isSkeletonable = true
-            cell.titleLbl.showAnimatedSkeleton()
-            
-            cell.titleLbl.hideSkeleton()
-            
+           
+                        
             cell.titleLbl.text = ingredient
+            
         }
         
         recipeDataSource = RxDefaultCollectionViewDataSource<Recipe, RecipeWithIngredientCVCell>(identifier: "recipeWithIngredientCVCell") { row, recipe, cell in
-                
-            let placeHolder = SkeltonView()
-            
+                            
             cell.imgView.isSkeletonable = true
             cell.titleLbel.isSkeletonable = true
-            
-            cell.titleLbel.showAnimatedSkeleton()
-            
+ 
             if let url = URL(string: recipe.imgString) {
                 
-                cell.imgView.kf.setImage(with: url, placeholder: placeHolder, options: [.transition(.fade(1))]) { result in
+                cell.imgView.kf.setImage(with: url) { result in
                     
                     switch result {
                     case .success:
                         
-                        cell.titleLbel.hideSkeleton()
                         cell.titleLbel.text = recipe.title
                         
                     default:
@@ -282,8 +267,5 @@ class IngredientsViewController: UIViewController, BindableType {
         }
     }
 }
-
-
-
 
 

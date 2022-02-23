@@ -14,13 +14,11 @@ class RecipeInstructionTVCell: UITableViewCell {
     @IBOutlet weak var stepLbl: UILabel!
     @IBOutlet weak var instructionLbl: UILabel!
    
-    var placeHolder: SkeltonView!
     var instruction: Instruction!
     
     override func awakeFromNib() {
         super.awakeFromNib()
 
-        placeHolder = SkeltonView()
     }
 
     override func setSelected(_ selected: Bool, animated: Bool) {
@@ -37,7 +35,7 @@ class RecipeInstructionTVCell: UITableViewCell {
        
         if let string = instruction.imageURL, let url = URL(string: string) {
             
-            imgView.kf.setImage(with: url, placeholder: placeHolder, options: [.transition(.fade(1))])
+            imgView.kf.setImage(with: url, options: [.transition(.fade(1))])
             
         }
     }
