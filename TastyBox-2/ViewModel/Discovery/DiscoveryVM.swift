@@ -19,16 +19,39 @@ class DiscoveryVM: ViewModelBase {
     let sceneCoodinator: SceneCoordinator
     let user: Firebase.User
     
-    let selectedIndexRelay: BehaviorRelay<Int>
+//    let selectedIndexRelay: BehaviorRelay<Int>
     let isMenuBarOpenedRelay: BehaviorRelay<Bool>
+    
+    var selectedIndex: Int
+    let pages: [String]
     
     init(sceneCoodinator: SceneCoordinator, user: Firebase.User) {
         
         self.sceneCoodinator = sceneCoodinator
         self.user = user
         self.presenter = DiscoveryPresenter(user: user, sceneCoordinator: self.sceneCoodinator)
-        self.selectedIndexRelay = BehaviorRelay<Int>(value: 1)
+//        self.selectedIndexRelay = BehaviorRelay<Int>(value: 1)
         self.isMenuBarOpenedRelay = BehaviorRelay<Bool>(value: false)
+        self.selectedIndex = 1
+        
+        
+        let label1 = "Subscribed Creator"
+        let label2 = "Your Ingredients Recipe"
+        let label3 = "Most Popular"
+//        let label4 = "Editor Choice"
+//        let label5 = "Cuisine Choice"
+//        let label6 = " VIP Only "
+        
+        self.pages = [label1, label2, label3]
+        
+        // appendする方がコンパイル時間が短くなるがvarにしなければならない
+        //
+//        pages.append(label1)
+//        pages.append(label2)
+//        pages.append(label3)
+//        arrayMenu.append(label4)
+//        arrayMenu.append(label5)
+//        arrayMenu.append(label6)
     }
     
     

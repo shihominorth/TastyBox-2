@@ -26,12 +26,7 @@ class LoginMainPageViewController: UIViewController, BindableType, KeyboardSetUp
     
     typealias ViewModelType = LoginMainVM
     
-    // Unhashed nonce.
-    fileprivate var currentNonce: String?
-    
-    var userImage: UIImage = #imageLiteral(resourceName: "imageFile")
-    
-    let vc =  UIStoryboard(name: "About", bundle: nil).instantiateViewController(withIdentifier: "about") as! AboutViewController
+        
     var tapRecognizer: UITapGestureRecognizer?
     
     @IBOutlet weak var emailTextField: UITextField!
@@ -94,6 +89,7 @@ class LoginMainPageViewController: UIViewController, BindableType, KeyboardSetUp
     }
     
     override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
+       
         if let tapRecognizers = self.view.gestureRecognizers?.filter({ $0.name == "dissmiss"}) {
             
             if !tapRecognizers.isEmpty {
@@ -364,10 +360,12 @@ extension LoginMainPageViewController: UITextFieldDelegate {
 }
 
 extension LoginMainPageViewController{
+    
     func roundCorners(view: UIView, cornerRadius: Double) {
         view.layer.cornerRadius = CGFloat(cornerRadius)
         view.clipsToBounds = true
     }
+    
 }
 
 extension UIImage {

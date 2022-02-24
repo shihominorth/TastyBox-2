@@ -14,9 +14,10 @@ import RxSwift
 class DiscoveryPresenter: NSObject {
 
     private var viewControllers: [UIViewController]
-    let sceneCoordinator: SceneCoordinator
-    let user: Firebase.User
+    private let sceneCoordinator: SceneCoordinator
+    private let user: Firebase.User
     private var currentViewController: UIViewController?
+       
     var pageVC: UIPageViewController?
     var sideMenuVC: SideMenuTableViewController?
     

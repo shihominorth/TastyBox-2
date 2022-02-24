@@ -43,6 +43,7 @@ class SelectDigitalContentsViewController: UIViewController, BindableType {
                
                 case .authorized, .limited:
                     
+                    //　ここで落ちる　appleのbugか？
                     PHPhotoLibrary.shared().register(self)
                     
                 default:

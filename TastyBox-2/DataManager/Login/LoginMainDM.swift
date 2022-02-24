@@ -286,6 +286,7 @@ class LoginMainDM: LoginMainProtocol {
     
     
     private static func randomNonceString(length: Int = 32) -> String {
+       
         precondition(length > 0)
         let charset: Array<Character> =
         Array("0123456789ABCDEFGHIJKLMNOPQRSTUVXYZabcdefghijklmnopqrstuvwxyz-._")

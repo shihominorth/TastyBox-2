@@ -108,12 +108,12 @@
                         </barButtonItem>
                     </navigationItem>
                     <connections>
-                        <outlet property="MenuCollectionView" destination="tCU-zL-brP" id="yoR-JD-hVD"/>
-                        <outlet property="SideMenuConstraint" destination="0Vn-oo-f2M" id="FWq-fS-wNe"/>
                         <outlet property="addRecipeNavBtn" destination="Rz5-PK-6xw" id="ywC-V3-6fJ"/>
                         <outlet property="collectionLayout" destination="eJ9-ei-LQs" id="KvM-Lc-BYU"/>
                         <outlet property="containerView" destination="ZCp-Wc-cAI" id="FHa-Ba-OzL"/>
+                        <outlet property="menuCollectionView" destination="tCU-zL-brP" id="yoR-JD-hVD"/>
                         <outlet property="menuNavBtn" destination="G39-xU-fFo" id="bDu-F9-vFW"/>
+                        <outlet property="sideMenuConstraint" destination="0Vn-oo-f2M" id="FWq-fS-wNe"/>
                         <outlet property="sideMenuContainerView" destination="0BJ-W3-msO" id="ehK-wD-4jN"/>
                     </connections>
                 </viewController>
