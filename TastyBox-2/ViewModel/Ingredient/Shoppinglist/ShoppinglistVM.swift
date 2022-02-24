@@ -104,11 +104,11 @@ class ShoppinglistVM: ViewModelBase {
             
             let index = self.items.count
             let vm =  EditShoppinglistVM(sceneCoodinator: self.sceneCoodinator, user: self.user, item: nil, lastIndex: index)
-            let vc = IngredientScene.editShoppinglist(vm).viewController()
+            let scene: Scene = .ingredient(scene: .editShoppinglist(vm))
             
             vm.delegate = self
             
-            return self.sceneCoodinator.transition(to: vc, type: .push).asObservable().map { _ in }
+            return self.sceneCoodinator.transition(to: scene, type: .push).asObservable().map { _ in }
         }
     }
     
@@ -133,12 +133,12 @@ class ShoppinglistVM: ViewModelBase {
         let vm = EditShoppinglistVM(sceneCoodinator: self.sceneCoodinator, user: self.user, item: editItem, lastIndex: index)
         
         
-        let vc = IngredientScene.editShoppinglist(vm).viewController()
+        let scene: Scene = .ingredient(scene: .editShoppinglist(vm))
 
         vm.delegate = self
 
         
-        self.sceneCoodinator.transition(to: vc, type: .push)
+        self.sceneCoodinator.transition(to: scene, type: .push)
         
     }
     

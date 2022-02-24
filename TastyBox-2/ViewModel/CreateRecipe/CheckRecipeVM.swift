@@ -152,7 +152,7 @@ class CheckRecipeVM {
         
         let scene = Scene.createReceipeScene(scene: .publishRecipe(vm))
         
-        self.sceneCoodinator.modalTransition(to: scene, type: .modalHalf)
+        self.sceneCoodinator.transition(to: scene, type: .modalHalf)
         
     }
     

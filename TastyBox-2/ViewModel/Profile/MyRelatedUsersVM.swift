@@ -56,7 +56,7 @@ extension MyRelatedUsersVM: ShowUserProfileDelegate {
 
         let scene: Scene = relatedUser.user.userID == user.uid ? .profileScene(scene: .myProfile(myProfileVM)) : .profileScene(scene: .profile(profileVM))
 
-        self.sceneCoordinator.modalTransition(to: scene, type: .push)
+        self.sceneCoordinator.transition(to: scene, type: .push)
         
     }
     
@@ -73,7 +73,7 @@ extension MyRelatedUsersVM: ManageMyRelatedUserDelegate {
     
         let scene: Scene = .profileScene(scene: .manageRelatedUser(vm))
         
-        self.sceneCoordinator.modalTransition(to: scene, type: .modalHalf)
+        self.sceneCoordinator.transition(to: scene, type: .modalHalf)
         
     }
     

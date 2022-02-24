@@ -84,9 +84,7 @@ class RankingViewController: UIViewController, BindableType {
     func setUpDataSource() {
         
         dataSource = RxRecipeRankingCollectionViewDataSource(configure: { [unowned self] row, recipe, cell in
-            
-          
-            
+  
             var isCompletedImgShown = false
             
             if let publisher = self.viewModel.pubishers[recipe.userID], let publisherImgUrl = URL(string: publisher.imageURLString) {

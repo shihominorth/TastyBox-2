@@ -86,7 +86,7 @@ class RegisterMyInfoProfileVM: ViewModelBase {
         
         let scene: Scene = .digitalContentsPickerScene(scene: .photo)
         
-        self.sceneCoodinator.modalTransition(to: scene, type: .photoPick(completion: { data in
+        self.sceneCoodinator.transition(to: scene, type: .photoPick(completion: { data in
             
             self.userImageSubject.onNext(data)
             
@@ -98,7 +98,7 @@ class RegisterMyInfoProfileVM: ViewModelBase {
         
         let scene: Scene = .digitalContentsPickerScene(scene: .camera)
         
-        self.sceneCoodinator.modalTransition(to: scene, type: .camera(completion: { data in
+        self.sceneCoodinator.transition(to: scene, type: .camera(completion: { data in
             
             self.userImageSubject.onNext(data)
             
@@ -128,7 +128,7 @@ class RegisterMyInfoProfileVM: ViewModelBase {
  
         let vm = DiscoveryVM(sceneCoodinator: self.sceneCoodinator, user: self.user)
         let scene: Scene = .discovery(scene: .main(vm))
-        self.sceneCoodinator.modalTransition(to: scene, type: .modal(presentationStyle: .fullScreen, modalTransisionStyle: .crossDissolve, hasNavigationController: true))
+        self.sceneCoodinator.transition(to: scene, type: .modal(presentationStyle: .fullScreen, modalTransisionStyle: .crossDissolve, hasNavigationController: true))
         
     }
  
@@ -154,8 +154,8 @@ class RegisterMyInfoProfileVM: ViewModelBase {
             try firebaseAuth.signOut()
             
             let vm = LoadingVM(sceneCoodinator: self.sceneCoodinator)
-            let vc = LoadingScene.loading(vm).viewController()
-            self.sceneCoodinator.transition(to: vc, type: .root)
+            let scene: Scene = .loadingScene(scene: .loading(vm))
+            self.sceneCoodinator.transition(to: scene, type: .root)
             
         } catch let signOutError as NSError {
             

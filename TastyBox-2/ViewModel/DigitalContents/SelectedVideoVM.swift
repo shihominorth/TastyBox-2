@@ -71,7 +71,7 @@ class SelectedVideoVM: ViewModelBase {
         
         let scene: Scene = .createReceipeScene(scene: .createRecipe(vm))
         
-        self.sceneCoodinator.modalTransition(to: scene, type: .push)
+        self.sceneCoodinator.transition(to: scene, type: .push)
            
         
     }

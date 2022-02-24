@@ -29,17 +29,17 @@ class LoadingVM {
                 
                 if isFirst {
                     
-                    let viewModel = RegisterMyInfoProfileVM(sceneCoodinator: self.sceneCoodinator, user: user)
-                    let firstScene = LoginScene.profileRegister(viewModel).viewController()
+                    let vm = RegisterMyInfoProfileVM(sceneCoodinator: self.sceneCoodinator, user: user)
+                    let firstScene: Scene = .loginScene(scene: .profileRegister(vm))
                     
                     self.sceneCoodinator.transition(to: firstScene, type: .push)
                     
                 } else {
                     
-                    let viewModel = DiscoveryVM(sceneCoodinator: self.sceneCoodinator, user: user)
-                    let vc = DiscoveryScene.discovery(viewModel).viewController()
+                    let vm = DiscoveryVM(sceneCoodinator: self.sceneCoodinator, user: user)
+                    let firstScene: Scene = .discovery(scene: .main(vm))
                     
-                    self.sceneCoodinator.transition(to: vc, type: .root)
+                    self.sceneCoodinator.transition(to: firstScene, type: .root)
                     
                 }
                 
@@ -64,7 +64,7 @@ class LoadingVM {
                 let scene: Scene = .loginScene(scene: .main(vm))
                 
 //                sceneCoodinator.modalTransition(to: firstScene, type: .push)
-                self.sceneCoodinator.modalTransition(to: scene, type: .modal(presentationStyle: .fullScreen, modalTransisionStyle: .crossDissolve, hasNavigationController: true))
+                self.sceneCoodinator.transition(to: scene, type: .modal(presentationStyle: .fullScreen, modalTransisionStyle: .crossDissolve, hasNavigationController: true))
 
                 
             } else {
@@ -74,7 +74,7 @@ class LoadingVM {
                 let scene: Scene = .loginScene(scene: .tutorial(vm))
                 
 //                self.sceneCoodinator.modalTransition(to: scene, type: .modal(presentationStyle: .fullScreen, modalTransisionStyle: .crossDissolve, hasNavigationController: false))
-                self.sceneCoodinator.modalTransition(to: scene, type: .push)
+                self.sceneCoodinator.transition(to: scene, type: .push)
 
                 
             }

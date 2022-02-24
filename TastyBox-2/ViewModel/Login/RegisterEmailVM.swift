@@ -37,11 +37,11 @@ class RegisterEmailVM: ViewModelBase {
     func aboutAction() -> CocoaAction {
         return CocoaAction { _ in
             
-            let viewModel = AboutViewModel(sceneCoodinator: self.sceneCoordinator, prevVC: .registerEmail, isAgreed: false)
-            let viewController = LoginScene.about(viewModel).viewController()
+            let vm = AboutViewModel(sceneCoodinator: self.sceneCoordinator, prevVC: .registerEmail, isAgreed: false)
+            let scene: Scene = .loginScene(scene: .about(vm))
             
             return self.sceneCoordinator
-                .transition(to: viewController, type: .push)
+                .transition(to: scene, type: .push)
                 .asObservable()
                 .map { _ in }
         }
@@ -96,15 +96,17 @@ class RegisterEmailVM: ViewModelBase {
         return CocoaAction { this in
             
             let vm = LoginMainVM(sceneCoodinator: self.sceneCoordinator)
-            return self.sceneCoordinator.transition(to: LoginScene.main(vm).viewController(), type: .modal(presentationStyle: nil, modalTransisionStyle: nil, hasNavigationController: false)).asObservable().map { _ in }
+            let scene: Scene = .loginScene(scene: .main(vm))
+            
+            return self.sceneCoordinator.transition(to: scene, type: .modal(presentationStyle: nil, modalTransisionStyle: nil, hasNavigationController: false)).asObservable().map { _ in }
         }
     }
     
     func toSetPassword(email: String) {
         
         let vm = SetPasswordVM(email: email, apiType: self.apiType, sceneCoordinator: self.sceneCoordinator)
-        let vc = LoginScene.setPassword(vm).viewController()
-        self.sceneCoordinator.transition(to: vc, type: .push)
+        let scene: Scene = .loginScene(scene: .setPassword(vm))
+        self.sceneCoordinator.transition(to: scene, type: .push)
     }
     //
     //    func showTermsAndConditions() -> CocoaAction {

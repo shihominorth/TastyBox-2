@@ -105,7 +105,7 @@ class DiscoveryVM: ViewModelBase {
         let vm = SelectDigitalContentsVM(sceneCoodinator: self.sceneCoodinator, user: self.user, kind: .recipeMain(.image), isEnableSelectOnlyOneDigitalContentType: false)
         let scene: Scene = .digitalContentsPickerScene(scene: .selectDigitalContents(vm))
 
-        self.sceneCoodinator.modalTransition(to: scene, type: .modal(presentationStyle: .fullScreen, modalTransisionStyle: .coverVertical, hasNavigationController: true))
+        self.sceneCoodinator.transition(to: scene, type: .modal(presentationStyle: .fullScreen, modalTransisionStyle: .coverVertical, hasNavigationController: true))
 
     }
     
@@ -113,33 +113,33 @@ class DiscoveryVM: ViewModelBase {
         
         let vm = MyProfileVM(sceneCoordinator: self.sceneCoodinator, user: self.user)
         
-        self.sceneCoodinator.modalTransition(to: .profileScene(scene: .myProfile(vm)), type: .push)
+        self.sceneCoodinator.transition(to: .profileScene(scene: .myProfile(vm)), type: .push)
         
     }
     
     func toRefrigerator() {
         
         let vm = RefrigeratorVM(sceneCoodinator: self.sceneCoodinator, user: self.user)
-        let vc = IngredientScene.refrigerator(vm).viewController()
+        let scene: Scene = .ingredient(scene: .refrigerator(vm))
         
-        
-        self.sceneCoodinator.transition(to:vc, type: .push)
+        self.sceneCoodinator.transition(to: scene, type: .push)
     }
     
     
     func toShoppinglist() {
         
         let vm = ShoppinglistVM(sceneCoodinator: self.sceneCoodinator, user: self.user)
-        let vc = IngredientScene.shoppinglist(vm).viewController()
+        let scene: Scene = .ingredient(scene: .shoppinglist(vm))
         
         
-        self.sceneCoodinator.transition(to: vc, type: .push)
+        self.sceneCoodinator.transition(to: scene, type: .push)
+        
     }
     
     func toContactForm() {
         
         let scene: Scene = .webSite(scene: .contact)
-        self.sceneCoodinator.modalTransition(to: scene, type: .web)
+        self.sceneCoodinator.transition(to: scene, type: .web)
         
         
     }
@@ -148,7 +148,7 @@ class DiscoveryVM: ViewModelBase {
         
         let scene: Scene = .webSite(scene: .termsOfUseAndPrivacyPolicy)
         
-        self.sceneCoodinator.modalTransition(to: scene, type: .web)
+        self.sceneCoodinator.transition(to: scene, type: .web)
         
     }
     
@@ -174,8 +174,8 @@ class DiscoveryVM: ViewModelBase {
             try firebaseAuth.signOut()
             
             let vm = LoadingVM(sceneCoodinator: self.sceneCoodinator)
-            let vc = LoadingScene.loading(vm).viewController()
-            self.sceneCoodinator.transition(to: vc, type: .root)
+            let scene: Scene = .loadingScene(scene: .loading(vm))
+            self.sceneCoodinator.transition(to: scene, type: .root)
             
         } catch let signOutError as NSError {
             
@@ -206,7 +206,7 @@ extension DiscoveryVM: SelectDegitalContentDelegate {
 //        self.sceneCoodinator.modalTransition(to: scene, type: .modal(presentationStyle: .fullScreen, modalTransisionStyle: .coverVertical, hasNavigationController: false))
 
         
-        self.sceneCoodinator.modalTransition(to: scene, type: .push)
+        self.sceneCoodinator.transition(to: scene, type: .push)
 
     }
     
@@ -217,7 +217,7 @@ extension DiscoveryVM: SelectDegitalContentDelegate {
         
 //        self.sceneCoodinator.modalTransition(to: scene, type: .modal(presentationStyle: .fullScreen, modalTransisionStyle: .coverVertical, hasNavigationController: false))
 
-        self.sceneCoodinator.modalTransition(to: scene, type: .push)
+        self.sceneCoodinator.transition(to: scene, type: .push)
         
     }
     

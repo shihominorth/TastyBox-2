@@ -235,7 +235,7 @@ class RecipeVM: ViewModelBase {
         let scene: Scene = .reportScene(scene: .report(vm))
         
         
-        self.sceneCoordinator.modalTransition(to: scene, type: .centerCard)
+        self.sceneCoordinator.transition(to: scene, type: .centerCard)
         
     }
     
@@ -245,7 +245,7 @@ class RecipeVM: ViewModelBase {
         let vm = ProfileVM(sceneCoordinator: self.sceneCoordinator, user: self.user, publisher: self.publisher)
         let scene: Scene = .profileScene(scene: .profile(vm))
         
-        self.sceneCoordinator.modalTransition(to: scene, type: .push)
+        self.sceneCoordinator.transition(to: scene, type: .push)
         
     }
     

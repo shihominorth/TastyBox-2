@@ -298,7 +298,7 @@ class CreateRecipeVM: ViewModelBase {
             }
             .subscribe(onNext: { [unowned self] vm in
                 
-                self.sceneCoodinator.modalTransition(to: .createReceipeScene(scene: .checkRecipe(vm)), type: .push)
+                self.sceneCoodinator.transition(to: .createReceipeScene(scene: .checkRecipe(vm)), type: .push)
                 
             })
             .disposed(by: disposeBag)
@@ -388,7 +388,7 @@ class CreateRecipeVM: ViewModelBase {
         let vm = SelectDigitalContentsVM(sceneCoodinator: self.sceneCoodinator, user: self.user, kind: kind, isEnableSelectOnlyOneDigitalContentType: true)
         let scene: Scene = .digitalContentsPickerScene(scene: .selectDigitalContents(vm))
         
-        self.sceneCoodinator.modalTransition(to: scene, type: .modal(presentationStyle: .fullScreen, modalTransisionStyle: .coverVertical, hasNavigationController: true))
+        self.sceneCoodinator.transition(to: scene, type: .modal(presentationStyle: .fullScreen, modalTransisionStyle: .coverVertical, hasNavigationController: true))
 
     }
     
@@ -399,7 +399,7 @@ class CreateRecipeVM: ViewModelBase {
     
         vm.delegate = self
         
-        self.sceneCoodinator.modalTransition(to: scene, type: .modal(presentationStyle: .fullScreen, modalTransisionStyle: .coverVertical, hasNavigationController: true))
+        self.sceneCoodinator.transition(to: scene, type: .modal(presentationStyle: .fullScreen, modalTransisionStyle: .coverVertical, hasNavigationController: true))
 
     }
     
@@ -408,7 +408,7 @@ class CreateRecipeVM: ViewModelBase {
         let subject = PublishSubject<Data>()
         let scene: Scene = .digitalContentsPickerScene(scene: .photo)
         
-        self.sceneCoodinator.modalTransition(to: scene, type: .photoPick(completion: { data in
+        self.sceneCoodinator.transition(to: scene, type: .photoPick(completion: { data in
             
             let str = String(decoding: data, as: UTF8.self)
             
@@ -432,7 +432,7 @@ class CreateRecipeVM: ViewModelBase {
         
         let scene: Scene = .digitalContentsPickerScene(scene: .photo)
         
-        self.sceneCoodinator.modalTransition(to: scene, type: .photoPick(completion: { data in
+        self.sceneCoodinator.transition(to: scene, type: .photoPick(completion: { data in
             
             self.sceneCoodinator.userDismissed()
             
@@ -467,7 +467,7 @@ class CreateRecipeVM: ViewModelBase {
         
         let scene: Scene = .digitalContentsPickerScene(scene: .video)
         
-        self.sceneCoodinator.modalTransition(to: scene, type: .videoPick(compeletion: { [unowned self] url in
+        self.sceneCoodinator.transition(to: scene, type: .videoPick(compeletion: { [unowned self] url in
             
             self.videoPlaySubject.onNext(url)
             
@@ -501,7 +501,7 @@ class CreateRecipeVM: ViewModelBase {
         vm.delegate = self
         let scene: Scene = .createReceipeScene(scene: .uploadingVideo(vm))
         
-        self.sceneCoodinator.modalTransition(to: scene, type: .modalHalf)
+        self.sceneCoodinator.transition(to: scene, type: .modalHalf)
         
     }
     
@@ -517,7 +517,7 @@ class CreateRecipeVM: ViewModelBase {
         
         let vm = SelectGenresVM(sceneCoordinator: self.sceneCoodinator, user: self.user, genres: genres)
         
-        self.sceneCoodinator.modalTransition(to: Scene.createReceipeScene(scene: .selectGenre(vm)), type: .modal(presentationStyle: .automatic, modalTransisionStyle: .coverVertical, hasNavigationController: true))
+        self.sceneCoodinator.transition(to: Scene.createReceipeScene(scene: .selectGenre(vm)), type: .modal(presentationStyle: .automatic, modalTransisionStyle: .coverVertical, hasNavigationController: true))
             .asObservable()
             .subscribe(onError: { err in
                 

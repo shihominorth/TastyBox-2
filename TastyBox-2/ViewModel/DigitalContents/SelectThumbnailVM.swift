@@ -39,7 +39,7 @@ class SelectThumbnailVM: ViewModelBase {
         
         vm.delegate = self
         
-        self.sceneCoodinator.modalTransition(to: scene, type: .modal(presentationStyle: .fullScreen, modalTransisionStyle: .coverVertical, hasNavigationController: true))
+        self.sceneCoodinator.transition(to: scene, type: .modal(presentationStyle: .fullScreen, modalTransisionStyle: .coverVertical, hasNavigationController: true))
         
         
     }
@@ -81,7 +81,7 @@ extension SelectThumbnailVM: SelectDegitalContentDelegate {
         
         vm.delegate = self
         
-        self.sceneCoodinator.modalTransition(to: scene, type: .modal(presentationStyle: .fullScreen, modalTransisionStyle: .coverVertical, hasNavigationController: false))
+        self.sceneCoodinator.transition(to: scene, type: .modal(presentationStyle: .fullScreen, modalTransisionStyle: .coverVertical, hasNavigationController: false))
     
     }
     

@@ -82,7 +82,7 @@ class SelectDigitalContentsVM: ViewModelBase {
             let vm = SelectedImageVM(sceneCoodinator: self.sceneCoodinator, user: self.user, kind: kind, asset: asset)
             let scene: Scene = .digitalContentsPickerScene(scene: .selectedImage(vm))
             
-            self.sceneCoodinator.modalTransition(to: scene, type: .push)
+            self.sceneCoodinator.transition(to: scene, type: .push)
             
         }
       
@@ -94,7 +94,7 @@ class SelectDigitalContentsVM: ViewModelBase {
         let vm = SelectedVideoVM(sceneCoodinator: self.sceneCoodinator, user: self.user, asset: asset)
         let scene: Scene = .digitalContentsPickerScene(scene: .selectedVideo(vm))
         
-        self.sceneCoodinator.modalTransition(to: scene, type: .push)
+        self.sceneCoodinator.transition(to: scene, type: .push)
         
     }
   

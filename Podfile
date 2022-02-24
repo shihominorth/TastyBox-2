@@ -71,4 +71,7 @@ pod 'SwiftyJSON'
 pod 'GoogleAPIClientForREST/Sheets'
 pod 'GoogleAPIClientForREST/Drive'
 
+require 'open3'
+Open3.capture3("ruby update_run_script_setting.rb --no-only --project=TastyBox-2.xcodeproj --target=TastyBox-2 --phases='[CP] Embed Pods Frameworks','[CP] Copy Pods Resources','Copy Carthage Framework'")
+
 end

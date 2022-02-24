@@ -11,7 +11,7 @@ import RxSwift
 protocol SceneCoordinatorType {
   /// transition to another scene
   @discardableResult
-  func transition(to scene: UIViewController, type: SceneTransitionType) -> Completable
+  func transition(to scene: Scene, type: SceneTransitionType) -> Completable
 
   /// pop scene from navigation stack or dismiss current modal
   @discardableResult

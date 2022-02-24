@@ -74,7 +74,7 @@ class LoginMainVM: ViewModelBase {
 //        if let user = self.user {
         let vm = RegisterMyInfoProfileVM(sceneCoodinator: sceneCoodinator, user: user)
         let scene: Scene = .loginScene(scene: .profileRegister(vm))
-        self.sceneCoodinator.modalTransition(to: scene, type: .push)
+        self.sceneCoodinator.transition(to: scene, type: .push)
 //        }
        
     }
@@ -83,7 +83,7 @@ class LoginMainVM: ViewModelBase {
 
         let vm = DiscoveryVM(sceneCoodinator: self.sceneCoodinator, user: user)
         let scene: Scene = .discovery(scene: .main(vm))
-        self.sceneCoodinator.modalTransition(to: scene, type: .root)
+        self.sceneCoodinator.transition(to: scene, type: .root)
 
     }
     
@@ -174,7 +174,7 @@ class LoginMainVM: ViewModelBase {
             let scene:Scene = .loginScene(scene: .resetPassword(vm))
             
             return self.sceneCoodinator
-                .modalTransition(to: scene, type: .push)
+                .transition(to: scene, type: .push)
                 .asObservable()
                 //Cannot convert return expression of type 'Observable<Never>' to return type 'Observable<Void>'
                 .map { _ in }  // 上記のエラーがこれで解決する
@@ -190,7 +190,7 @@ class LoginMainVM: ViewModelBase {
             let scene: Scene = .loginScene(scene: .emailVerify(vm))
            
             return self.sceneCoodinator
-                .modalTransition(to: scene, type: .push)
+                .transition(to: scene, type: .push)
                 .asObservable()
                 .map {_ in }
         }
@@ -202,7 +202,7 @@ class LoginMainVM: ViewModelBase {
         
         let scene: Scene = .webSite(scene: .termsOfUseAndPrivacyPolicy)
         
-        self.sceneCoodinator.modalTransition(to: scene, type: .web)
+        self.sceneCoodinator.transition(to: scene, type: .web)
     }
     
 }

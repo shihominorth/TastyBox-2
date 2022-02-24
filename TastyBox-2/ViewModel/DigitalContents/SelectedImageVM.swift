@@ -73,7 +73,7 @@ class SelectedImageVM: ViewModelBase {
             let vm = CreateRecipeVM(sceneCoodinator: self.sceneCoodinator, user: self.user, imgData: imgData, videoUrl: nil, kind: .image)
             let scene: Scene = .createReceipeScene(scene: .createRecipe(vm))
             
-            self.sceneCoodinator.modalTransition(to: scene, type: .push)
+            self.sceneCoodinator.transition(to: scene, type: .push)
             
             
         case .recipeMain(.thumbnail):

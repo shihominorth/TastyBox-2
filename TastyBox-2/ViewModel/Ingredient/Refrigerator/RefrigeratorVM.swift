@@ -66,9 +66,10 @@ class RefrigeratorVM: ViewModelBase {
             
             let index = self.items.count
             let vm =  EditItemRefrigeratorVM(sceneCoodinator: self.sceneCoodinator, user: self.user, item: nil, lastIndex: index)
-            let vc = IngredientScene.editRefrigerator(vm).viewController()
+            let scene: Scene = .ingredient(scene: .editRefrigerator(vm))
+          
+            return self.sceneCoodinator.transition(to: scene, type: .push).asObservable().map { _ in }
             
-            return self.sceneCoodinator.transition(to: vc, type: .push).asObservable().map { _ in }
         }
     }
     
@@ -83,9 +84,9 @@ class RefrigeratorVM: ViewModelBase {
             vm =  EditItemRefrigeratorVM(sceneCoodinator: self.sceneCoodinator, user: self.user, item: self.searchingTemp[index], lastIndex: index)
         }
         
-        let vc = IngredientScene.editRefrigerator(vm).viewController()
+        let scene: Scene = .ingredient(scene: .editRefrigerator(vm))
         
-        self.sceneCoodinator.transition(to: vc, type: .push)
+        self.sceneCoodinator.transition(to: scene, type: .push)
         
     }
     

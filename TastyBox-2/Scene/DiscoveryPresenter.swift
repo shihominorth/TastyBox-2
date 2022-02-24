@@ -114,7 +114,7 @@ extension DiscoveryPresenter: toRecipeDetailDelegate {
         let vm = RecipeVM(sceneCoordinator: self.sceneCoordinator, user: self.user, recipe: recipe)
         let scene: Scene = .recipeScene(scene: .recipe(vm))
         
-        self.sceneCoordinator.modalTransition(to: scene, type: .push)
+        self.sceneCoordinator.transition(to: scene, type: .push)
         
     }
     

@@ -10,6 +10,11 @@ import RxSwift
 
 enum Scene {
     
+    enum LoadingScene {
+        case loading(LoadingVM), tutorial(TutorialVM)
+    }
+
+    
     enum LoginScene {
         case main(LoginMainVM), resetPassword(ResetPasswordVM), emailVerify(RegisterEmailVM), setPassword(SetPasswordVM), profileRegister(RegisterMyInfoProfileVM), about(AboutViewModel), tutorial(TutorialVM)
     }
@@ -21,6 +26,11 @@ enum Scene {
     enum WebSiteScene {
         case termsOfUseAndPrivacyPolicy, contact
     }
+    
+    enum IngredientScene {
+        case refrigerator(RefrigeratorVM), editRefrigerator(EditItemRefrigeratorVM), shoppinglist(ShoppinglistVM), editShoppinglist(EditShoppinglistVM)
+    }
+
 
     enum CreateRecipeScene {
         case createRecipe(CreateRecipeVM), selectGenre(SelectGenresVM), uploadingVideo(UploadingVideoVM),  checkRecipe(CheckRecipeVM), publishRecipe(PublishRecipeVM)
@@ -43,34 +53,23 @@ enum Scene {
     }
     
    
-    case loginScene(scene: LoginScene), discovery(scene: DiscoveryScene), webSite(scene: WebSiteScene), createReceipeScene(scene: CreateRecipeScene), profileScene(scene: ProfileScene), recipeScene(scene: RecipeDetailScene), reportScene(scene: ReportScene), digitalContentsPickerScene(scene: DigitalContentsPickerScene)
+    case loadingScene(scene: LoadingScene), loginScene(scene: LoginScene), discovery(scene: DiscoveryScene), webSite(scene: WebSiteScene), ingredient(scene: IngredientScene), createReceipeScene(scene: CreateRecipeScene), profileScene(scene: ProfileScene), recipeScene(scene: RecipeDetailScene), reportScene(scene: ReportScene), digitalContentsPickerScene(scene: DigitalContentsPickerScene)
     
 }
 
-enum LoadingScene {
-    case loading(LoadingVM), tutorial(TutorialVM)
-}
 
-enum LoginScene {
-    case main(LoginMainVM), resetPassword(ResetPasswordVM), emailVerify(RegisterEmailVM), setPassword(SetPasswordVM), profileRegister(RegisterMyInfoProfileVM), about(AboutViewModel), tutorial(TutorialVM)
-}
+//enum LoginScene {
+//    case main(LoginMainVM), resetPassword(ResetPasswordVM), emailVerify(RegisterEmailVM), setPassword(SetPasswordVM), profileRegister(RegisterMyInfoProfileVM), about(AboutViewModel), tutorial(TutorialVM)
+//}
 
-enum DiscoveryScene {
-    case discovery(DiscoveryVM) //, ranking(RankingVM)
-}
+//enum DiscoveryScene {
+//    case discovery(DiscoveryVM) //, ranking(RankingVM)
+//}
 
 enum MainScene {
     case timeline(TimelineVM), ingredients(IngredientsVM), ranking(RankingVM)
 }
 
-enum IngredientScene {
-    case refrigerator(RefrigeratorVM), editRefrigerator(EditItemRefrigeratorVM), shoppinglist(ShoppinglistVM), editShoppinglist(EditShoppinglistVM)
-}
-
-
-//enum CreateRecipeScene {
-//    case createRecipe(CreateRecipeVM), selectGenre(SelectGenresVM), checkRecipe(CheckRecipeVM)
-//}
 
 enum ImagePickScene {
     case photo, video

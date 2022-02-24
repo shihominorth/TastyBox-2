@@ -27,7 +27,7 @@ class TutorialVM: ViewModelBase {
         let vm = LoginMainVM(sceneCoodinator: self.sceneCoodinator)
         let scene: Scene = .loginScene(scene: .main(vm))
         
-        self.sceneCoodinator.modalTransition(to: scene, type: .modal(presentationStyle: .fullScreen, modalTransisionStyle: .crossDissolve, hasNavigationController: false))
+        self.sceneCoodinator.transition(to: scene, type: .modal(presentationStyle: .fullScreen, modalTransisionStyle: .crossDissolve, hasNavigationController: false))
         
     }
     

@@ -34,11 +34,11 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
             
             let sceneCoordinator = SceneCoordinator(window: window!)
             
-            let viewModel = SetPasswordVM(email: email, sceneCoordinator: sceneCoordinator)
+            let vm = SetPasswordVM(email: email, sceneCoordinator: sceneCoordinator)
             
-            let vc = LoginScene.setPassword(viewModel).viewController()
+            let scene: Scene = .loginScene(scene: .setPassword(vm))
             
-            sceneCoordinator.transition(to: vc, type: .root)
+            sceneCoordinator.transition(to: scene, type: .root)
             
         }
     }
@@ -51,13 +51,11 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         let sceneCoordinator = SceneCoordinator(window: window!)
 
         let vm = LoadingVM(sceneCoodinator: sceneCoordinator)
-        let vc = LoadingScene.loading(vm).viewController()
+        let scene: Scene = .loadingScene(scene: .loading(vm))
         
-        if let _ = vc as? UINavigationController {
-            sceneCoordinator.transition(to: vc, type: .root)
-        }
+        sceneCoordinator.transition(to: scene, type: .root)
+        
    
-        guard let _ = (scene as? UIWindowScene) else { return }
     }
     
     func scene(_ scene: UIScene, openURLContexts URLContexts: Set<UIOpenURLContext>) {

@@ -64,7 +64,7 @@ class MyProfileVM: ViewModelBase {
         
         let vm = RecipeVM(sceneCoordinator: self.sceneCoordinator, user: self.user, recipe: recipe)
         
-        self.sceneCoordinator.modalTransition(to: .recipeScene(scene: .recipe(vm)), type: .push)
+        self.sceneCoordinator.transition(to: .recipeScene(scene: .recipe(vm)), type: .push)
             
         
     }
@@ -73,7 +73,7 @@ class MyProfileVM: ViewModelBase {
         
         let vm = MyRelatedUsersVM(sceneCoordinator: self.sceneCoordinator, user: self.user, isFollowing: isFollowing)
         
-        self.sceneCoordinator.modalTransition(to: .profileScene(scene: .myRelatedUsers(vm)), type: .push)
+        self.sceneCoordinator.transition(to: .profileScene(scene: .myRelatedUsers(vm)), type: .push)
         
     }
 }
