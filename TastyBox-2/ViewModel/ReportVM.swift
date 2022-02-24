@@ -23,7 +23,7 @@ enum ReportKind: String {
     case recipe, comment, post
 }
 
-class ReportVM: ViewModelBase {
+final class ReportVM: ViewModelBase {
     
     let sceneCoordinator: SceneCoordinator
     let kind: ReportKind

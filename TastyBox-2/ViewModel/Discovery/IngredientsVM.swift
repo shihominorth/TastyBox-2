@@ -10,7 +10,7 @@ import Firebase
 import RxSwift
 
 
-class IngredientsVM: ViewModelBase {
+final class IngredientsVM: ViewModelBase {
     
     let user: Firebase.User
     let apiType: MainDMProtocol.Type

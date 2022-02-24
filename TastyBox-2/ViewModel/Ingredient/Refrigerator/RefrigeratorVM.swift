@@ -16,7 +16,7 @@ enum List: String {
     case shoppinglist, refrigerator
 }
 
-class RefrigeratorVM: ViewModelBase {
+final class RefrigeratorVM: ViewModelBase {
     
     let sceneCoodinator: SceneCoordinator
     let apiType: RefrigeratorProtocol.Type

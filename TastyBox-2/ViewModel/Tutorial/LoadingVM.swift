@@ -10,7 +10,7 @@ import Firebase
 import RxSwift
 import SCLAlertView
 
-class LoadingVM {
+final class LoadingVM {
     
     let sceneCoodinator: SceneCoordinator
     let apiType: LoginMainProtocol.Type

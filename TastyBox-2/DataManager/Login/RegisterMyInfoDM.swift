@@ -17,7 +17,7 @@ protocol RegisterMyInfoProtocol: AnyObject {
     static func userRegister(userName: String?, email: String?, familySize: String?, cuisineType: String?, accountImage: Data?) -> Observable<Void>
 }
 
-class RegisterMyInfoDM: RegisterMyInfoProtocol {
+final class RegisterMyInfoDM: RegisterMyInfoProtocol {
     
     static var firestoreService: FirestoreServices {
         return FirestoreServices()

@@ -9,7 +9,7 @@ import Foundation
 import Firebase
 import RxCocoa
 
-class EditShoppinglistVM: ViewModelBase {
+final class EditShoppinglistVM: ViewModelBase {
    
     let sceneCoodinator: SceneCoordinator
     let apiType: RefrigeratorProtocol.Type

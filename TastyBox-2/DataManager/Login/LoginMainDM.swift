@@ -30,7 +30,7 @@ protocol LoginMainProtocol: AnyObject {
 
 }
 
-class LoginMainDM: LoginMainProtocol {
+final class LoginMainDM: LoginMainProtocol {
     
     let bag = DisposeBag()
     static let uid = Auth.auth().currentUser?.uid

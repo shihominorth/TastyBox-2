@@ -10,7 +10,7 @@ import Firebase
 import RxSwift
 
 
-class ProfileVM: ViewModelBase {
+final class ProfileVM: ViewModelBase {
    
     let sceneCoordinator: SceneCoordinator
     let user: Firebase.User

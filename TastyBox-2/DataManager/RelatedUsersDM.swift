@@ -20,7 +20,7 @@ protocol RelatedUsersProtocol {
     
 }
 
-class RelatedUsersDM: RelatedUsersProtocol {
+final class RelatedUsersDM: RelatedUsersProtocol {
     
     static var services: FirestoreServices {
         

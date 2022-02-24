@@ -19,7 +19,7 @@ protocol MyProfileDMProtocol: AnyObject {
     
 }
 
-class MyProfileDM: MyProfileDMProtocol {
+final class MyProfileDM: MyProfileDMProtocol {
  
     static var firestoreService: FirestoreServices {
         

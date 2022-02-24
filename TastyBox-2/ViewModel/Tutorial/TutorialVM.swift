@@ -7,7 +7,7 @@
 
 import Foundation
 
-class TutorialVM: ViewModelBase {
+final class TutorialVM: ViewModelBase {
 
     let sceneCoodinator: SceneCoordinator
     let apiType: LoginMainProtocol.Type

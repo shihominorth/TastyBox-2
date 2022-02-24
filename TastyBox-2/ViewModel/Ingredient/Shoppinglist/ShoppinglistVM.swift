@@ -13,7 +13,7 @@ import RxCocoa
 import RxSwift
 import RxTimelane
 
-class ShoppinglistVM: ViewModelBase {
+final class ShoppinglistVM: ViewModelBase {
     
     let sceneCoodinator: SceneCoordinator
     let apiType: RefrigeratorProtocol.Type

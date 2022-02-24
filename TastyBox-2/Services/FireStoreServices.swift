@@ -9,7 +9,7 @@ import Foundation
 import Firebase
 import RxSwift
 
-class FirestoreServices {
+final class FirestoreServices {
     
     let db: Firestore
     

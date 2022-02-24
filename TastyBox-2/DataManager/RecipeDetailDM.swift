@@ -21,7 +21,7 @@ protocol RecipeDetailProtocol: AnyObject {
     static func isFollowingPublisher(user: Firebase.User, publisherID: String) -> Observable<Bool>
 }
 
-class RecipeDetailDM: RecipeDetailProtocol {
+final class RecipeDetailDM: RecipeDetailProtocol {
     
     static let db = Firestore.firestore()
     static var services: FirestoreServices {

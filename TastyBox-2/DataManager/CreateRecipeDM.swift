@@ -56,7 +56,7 @@ protocol CreateRecipeDMProtocol: AnyObject {
     
 }
 
-class CreateRecipeDM: CreateRecipeDMProtocol {
+final class CreateRecipeDM: CreateRecipeDMProtocol {
 
     static let db = Firestore.firestore()
     static let storage = Storage.storage().reference()

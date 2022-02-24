@@ -12,7 +12,7 @@ import RxSwift
 import RxRelay
 import SCLAlertView
 
-class ResetPasswordVM: ViewModelBase {
+final class ResetPasswordVM: ViewModelBase {
     
     let dataManager = ResetPasswordDM()
     let apiType: ResetPasswordProtocol.Type

@@ -10,7 +10,7 @@ import Firebase
 import Photos
 import RxSwift
 
-class SelectedImageVM: ViewModelBase {
+final class SelectedImageVM: ViewModelBase {
     
     let sceneCoodinator: SceneCoordinator
     let user: Firebase.User

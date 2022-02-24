@@ -9,7 +9,7 @@ import Foundation
 import Firebase
 import RxSwift
 
-class StorageService {
+final class StorageService {
     
     func addImage(path: StorageReference, image: Data) -> Observable<Data> {
         

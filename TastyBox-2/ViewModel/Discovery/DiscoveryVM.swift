@@ -13,7 +13,7 @@ import Photos
 import RxSwift
 import RxCocoa
 
-class DiscoveryVM: ViewModelBase {
+final class DiscoveryVM: ViewModelBase {
     
     let presenter: DiscoveryPresenter
     let sceneCoodinator: SceneCoordinator

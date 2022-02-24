@@ -12,7 +12,7 @@ import RxSwift
 import RxCocoa
 import RxRelay
 
-class CheckRecipeVM {
+final class CheckRecipeVM {
     
     let sceneCoodinator: SceneCoordinator
     let user: Firebase.User

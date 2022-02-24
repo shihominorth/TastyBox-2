@@ -17,7 +17,7 @@ protocol ManageMyRelatedUserDelegate: AnyObject {
     func manage(user: RelatedUser, isFollowing: Bool)
 }
 
-class MyRelatedUsersVM: ViewModelBase {
+final class MyRelatedUsersVM: ViewModelBase {
  
     let sceneCoordinator: SceneCoordinator
     let user: Firebase.User

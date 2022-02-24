@@ -22,7 +22,7 @@ protocol ProfileDMProtocol: AnyObject {
     
 }
 
-class ProfileDM: ProfileDMProtocol {
+final class ProfileDM: ProfileDMProtocol {
     
     static let db = Firestore.firestore()
     static let storage = Storage.storage().reference()

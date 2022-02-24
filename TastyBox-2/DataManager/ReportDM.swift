@@ -21,7 +21,7 @@ protocol ReportProtocol: AnyObject {
 
 }
 
-class ReportDM: ReportProtocol {
+final class ReportDM: ReportProtocol {
 
     static let db = Firestore.firestore()
     

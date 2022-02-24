@@ -12,7 +12,7 @@ protocol ManageUserDelegate: AnyObject {
     func delete(follower: RelatedUser)
 }
 
-class ManageMyRelatedUserVM: ViewModelBase {
+final class ManageMyRelatedUserVM: ViewModelBase {
     
     let sceneCoordinator: SceneCoordinator
     let user: Firebase.User

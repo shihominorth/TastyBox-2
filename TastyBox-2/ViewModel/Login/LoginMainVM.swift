@@ -17,7 +17,7 @@ import RxRelay
 import SCLAlertView
 
 
-class LoginMainVM: ViewModelBase {
+final class LoginMainVM: ViewModelBase {
     
     let sceneCoodinator: SceneCoordinator
     let apiType: LoginMainProtocol.Type

@@ -26,7 +26,7 @@ protocol RegisterAccountProtocol {
 }
 
 
-class RegisterAccountDM: RegisterAccountProtocol {
+final class RegisterAccountDM: RegisterAccountProtocol {
 
     enum registerStatus {
         case failed(RegisterErrors), success

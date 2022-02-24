@@ -12,7 +12,7 @@ enum isFrom {
     case main, registerEmail
 }
 
-class AboutViewModel {
+final class AboutViewModel {
     
     let sceneCoodinator: SceneCoordinator
     let isAgreed: Bool

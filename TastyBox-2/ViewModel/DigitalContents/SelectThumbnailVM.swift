@@ -14,7 +14,7 @@ protocol SelectThumbnailDelegate: AnyObject {
     func selectedThumbnail(imageData: Data)
 }
 
-class SelectThumbnailVM: ViewModelBase {
+final class SelectThumbnailVM: ViewModelBase {
     
     var sceneCoodinator: SceneCoordinator
     let user: Firebase.User

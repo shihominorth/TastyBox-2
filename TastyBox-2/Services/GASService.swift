@@ -14,7 +14,7 @@ enum GASServiceErr: Error {
     case noPostUrlRegistered
 }
 
-class GASService {
+final class GASService {
     
     func post(parameters: Parameters) -> Observable<JSON> {
         

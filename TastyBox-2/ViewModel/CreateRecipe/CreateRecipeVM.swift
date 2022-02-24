@@ -20,7 +20,7 @@ enum RecipeInput {
     case mainPhoto(Observable<Data>), isAddedVideo(Observable<Bool>), videoURL(Observable<URL>), title(Observable<String>), time(Observable<String>), serving(Observable<String>), isVIP(Observable<Bool>), selectedGenres(Observable<[Genre]>), ingredients(Observable<[Ingredient]>), instructions(Observable<[Instruction]>)
 }
 
-class CreateRecipeVM: ViewModelBase {
+final class CreateRecipeVM: ViewModelBase {
     
     let sceneCoodinator: SceneCoordinator
     let user: Firebase.User

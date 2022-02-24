@@ -14,7 +14,7 @@ protocol UploadingVideoVMDelegate: AnyObject {
     func addVideo(isAdded: Bool)
 }
 
-class UploadingVideoVM: ViewModelBase {
+final class UploadingVideoVM: ViewModelBase {
         
     let sceneCoodinator: SceneCoordinator
     let user: Firebase.User

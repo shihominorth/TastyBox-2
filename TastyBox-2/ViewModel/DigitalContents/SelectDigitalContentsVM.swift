@@ -25,7 +25,7 @@ protocol SelectDegitalContentDelegate: AnyObject {
     func selectedVideo(asset: PHAsset)
 }
 
-class SelectDigitalContentsVM: ViewModelBase {
+final class SelectDigitalContentsVM: ViewModelBase {
     
     var assets: PHFetchResult<PHAsset>
 

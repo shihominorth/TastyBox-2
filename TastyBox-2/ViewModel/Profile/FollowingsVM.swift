@@ -9,7 +9,7 @@ import Foundation
 import Firebase
 import RxSwift
 
-class FolllowingsVM: ViewModelBase {
+final class FolllowingsVM: ViewModelBase {
     
     let user: Firebase.User
     let apiType: RelatedUsersProtocol.Type

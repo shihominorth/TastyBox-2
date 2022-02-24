@@ -10,7 +10,7 @@ import RxSwift
 import RxCocoa
 import Action
 
-class SetPasswordVM: ViewModelBase {
+final class SetPasswordVM: ViewModelBase {
     
     let sceneCoordinator: SceneCoordinator
     let apiType: RegisterAccountProtocol.Type

@@ -11,7 +11,7 @@ import RxSwift
 import RxCocoa
 import SCLAlertView
 
-class MyProfileVM: ViewModelBase {
+final class MyProfileVM: ViewModelBase {
     
     let sceneCoordinator: SceneCoordinator
     let user: Firebase.User

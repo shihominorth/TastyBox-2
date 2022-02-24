@@ -15,7 +15,7 @@ protocol SelectGenreProtocol: AnyObject {
     func addGenre(genres: [Genre])
 }
 
-class SelectGenresVM: ViewModelBase {
+final class SelectGenresVM: ViewModelBase {
     
     let sceneCoordinator: SceneCoordinator
     let user: Firebase.User

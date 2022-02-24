@@ -17,7 +17,7 @@ protocol ResetPasswordProtocol: AnyObject {
     static func resetPassword(email: String?) -> Completable
 }
 
-class ResetPasswordDM: ResetPasswordProtocol {
+final class ResetPasswordDM: ResetPasswordProtocol {
     
    static func resetPassword(email: String?) -> Completable {
  

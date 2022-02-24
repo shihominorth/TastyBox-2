@@ -8,7 +8,7 @@
 import Foundation
 import AVKit
 
-class VideoPlayerLooped {
+final class VideoPlayerLooped {
     
     public var videoPlayer:AVQueuePlayer?
     public var videoPlayerLayer:AVPlayerLayer?

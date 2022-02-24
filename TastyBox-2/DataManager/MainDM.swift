@@ -24,7 +24,7 @@ protocol MainDMProtocol {
     static func getPublishers(ids: [String]) -> Observable<[String: User]>
 }
 
-class MainDM: MainDMProtocol {
+final class MainDM: MainDMProtocol {
     
     
     static let db = Firestore.firestore()

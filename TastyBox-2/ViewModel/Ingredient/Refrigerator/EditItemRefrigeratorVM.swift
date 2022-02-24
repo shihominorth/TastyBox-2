@@ -11,7 +11,7 @@ import Firebase
 import RxSwift
 import RxCocoa
 
-class EditItemRefrigeratorVM: ViewModelBase {
+final class EditItemRefrigeratorVM: ViewModelBase {
     
     let sceneCoodinator: SceneCoordinator
     let apiType: RefrigeratorProtocol.Type

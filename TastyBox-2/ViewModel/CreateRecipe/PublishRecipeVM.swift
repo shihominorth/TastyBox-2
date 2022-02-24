@@ -12,7 +12,7 @@ import RxSwift
 import SCLAlertView
 import SwiftUI
 
-class PublishRecipeVM: ViewModelBase {
+final class PublishRecipeVM: ViewModelBase {
     
     let sceneCoodinator: SceneCoordinator
     let user: Firebase.User

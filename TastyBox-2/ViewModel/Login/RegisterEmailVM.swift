@@ -12,7 +12,7 @@ import Firebase
 import RxSwift
 import SCLAlertView
 
-class RegisterEmailVM: ViewModelBase {
+final class RegisterEmailVM: ViewModelBase {
     
     
     let apiType: RegisterAccountProtocol.Type

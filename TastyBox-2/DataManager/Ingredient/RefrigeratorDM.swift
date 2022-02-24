@@ -33,7 +33,7 @@ protocol RefrigeratorProtocol: AnyObject {
     
 }
 
-class RefrigeratorDM: RefrigeratorProtocol {
+final class RefrigeratorDM: RefrigeratorProtocol {
     
     static let db = Firestore.firestore().collection("users")
     

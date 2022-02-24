@@ -8,7 +8,7 @@
 import Foundation
 import SwiftMessages
 
-class CenterCardSegue: SwiftMessagesSegue {
+final class CenterCardSegue: SwiftMessagesSegue {
     
     override public  init(identifier: String?, source: UIViewController, destination: UIViewController) {
         super.init(identifier: identifier, source: source, destination: destination)

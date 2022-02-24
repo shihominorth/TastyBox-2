@@ -14,7 +14,7 @@ import RxCocoa
 import RxRelay
 import SCLAlertView
 
-class RegisterMyInfoProfileVM: ViewModelBase {
+final class RegisterMyInfoProfileVM: ViewModelBase {
     
     let apiType: RegisterMyInfoProtocol.Type
     let sceneCoodinator: SceneCoordinator

@@ -14,7 +14,7 @@ import RxRelay
 import SCLAlertView
 import RxDataSources
 
-class RecipeVM: ViewModelBase {
+final class RecipeVM: ViewModelBase {
 
     typealias Section = ArraySection<RecipeDetailSectionItem.RawValue, RecipeDetailSectionItem>
     
