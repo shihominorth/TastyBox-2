@@ -72,6 +72,7 @@ final class RefrigeratorDM: RefrigeratorProtocol {
             
             
             self.db.document(userID).collection(listName.rawValue).document(id ?? uniqueIdString).setData(data, merge: true) { err in
+                
                 if let err = err {
                     
                     observer.onError(err)

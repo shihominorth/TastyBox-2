@@ -18,16 +18,16 @@ import RxCocoa
 import Action
 
 protocol LoginMainProtocol: AnyObject {
-
-    static var firestoreService: FirestoreServices { get }
+    
+//    static var firestoreService: FirestoreServices { get }
     static var isRegisterMyInfo: Observable<Bool> { get }
-    static func isTutorialDone(user: Firebase.User) -> Observable<Bool> 
+    static func isTutorialDone(user: Firebase.User) -> Observable<Bool>
     static func login(email: String?, password: String?) -> Observable<AuthDataResult>
     static func createUser(email: String, password: String) -> Observable<Firebase.User>
     static func loginWithGoogle(viewController presenting: UIViewController) -> Observable<Firebase.User>
     static func startSignInWithAppleFlow(authorizationController: UIViewController) ->  Observable<Firebase.User>
     static func logined(user: Firebase.User) -> Observable<Firebase.User>
-
+    
 }
 
 final class LoginMainDM: LoginMainProtocol {
@@ -38,7 +38,7 @@ final class LoginMainDM: LoginMainProtocol {
     // Unhashed nonce.
     fileprivate static var currentNonce: String?
     
-    static var firestoreService: FirestoreServices {
+    private static var firestoreService: FirestoreServices {
         return FirestoreServices()
     }
     //    var isNewUser: Bool? //　observable<bool>にするべき
@@ -48,34 +48,21 @@ final class LoginMainDM: LoginMainProtocol {
     
     static var isRegisterMyInfo: Observable<Bool> {
         
+        guard let uid = self.uid else {
+            return .error(LoginErrors.invailedUser)
+        }
         
-        return Observable.create { observer in
-            
-            guard let uid = self.uid else {
+        let path = Firestore.firestore().collection("users").document(uid)
+        
+        
+        return firestoreService.getDocument(path: path)
+            .flatMapLatest { doc in
                 
-                observer.onError(LoginErrors.invailedUser)
-                
-                return Disposables.create()
-            }
-            
-            
-            Firestore.firestore().collection("users").document(uid).getDocument { doc, err in
-                
-                if let err = err {
-                    observer.onError(err)
+                return Observable.create { observer in
                     
-                } else {
+                    let data = doc.data()
                     
-                    if let doc = doc {
-                        
-                        let data = doc.data()
-                        
-                        guard let isFirst = data?["isFirst"] as? Bool else {
-                            
-                            observer.onNext(true)
-                            return
-                            
-                        }
+                    if let isFirst = data?["isFirst"] as? Bool {
                         
                         observer.onNext(isFirst)
                         
@@ -84,29 +71,29 @@ final class LoginMainDM: LoginMainProtocol {
                         
                         observer.onNext(true)
                         
+                        
                     }
                     
+                    return Disposables.create()
                 }
             }
-            
-            return Disposables.create()
-        }
+        
         
     }
     
     static func isTutorialDone(user: Firebase.User) -> Observable<Bool> {
         
         let path = db.collection("users").document(user.uid)
-
+        
         return firestoreService.getDocument(path: path)
             .map { doc in
                 
                 guard let data = doc.data(),
                       let isTutorialDone = data["isTutorialDone"] as? Bool else {
-                            
-                    return false
-                
-                }
+                          
+                          return false
+                          
+                      }
                 
                 return isTutorialDone
                 
@@ -286,7 +273,7 @@ final class LoginMainDM: LoginMainProtocol {
     
     
     private static func randomNonceString(length: Int = 32) -> String {
-       
+        
         precondition(length > 0)
         let charset: Array<Character> =
         Array("0123456789ABCDEFGHIJKLMNOPQRSTUVXYZabcdefghijklmnopqrstuvwxyz-._")
@@ -358,27 +345,18 @@ final class LoginMainDM: LoginMainProtocol {
     
     static func logined(user: Firebase.User) -> Observable<Firebase.User> {
         
-        return Observable.create { observer in
+        let path =  Firestore.firestore().collection("users").document(user.uid)
+        
+        return firestoreService.setData(path: path, data: [
             
-            Firestore.firestore().collection("users").document(user.uid).setData([
-                
-                "id": user.uid,
-                "isVIP": false,
-                "isFirst": false
-                
-            ] , merge: true) { err in
-                if let err = err {
-                    
-                    observer.onError(err)
-                    
-                } else {
-                    
-                    observer.onNext(user)
-                }
-            }
+            "id": user.uid,
+            "isVIP": false,
+            "isFirst": false
             
-            return Disposables.create()
+        ] , isEnableMerge: true).map { _ in
+            return user
         }
+
     }
     
     

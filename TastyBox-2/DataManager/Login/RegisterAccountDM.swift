@@ -27,7 +27,7 @@ protocol RegisterAccountProtocol {
 
 
 final class RegisterAccountDM: RegisterAccountProtocol {
-
+    
     enum registerStatus {
         case failed(RegisterErrors), success
     }
@@ -35,71 +35,71 @@ final class RegisterAccountDM: RegisterAccountProtocol {
     
     // https://qiita.com/mtkmr/items/078b715d9965fea1bd04
     // 作り直し
-
+    
     static func sendEmailWithLink(email: String?) -> Observable<Bool> {
         
         return Observable.create { observer in
-           
-            guard let email = email, !email.isEmpty else {
             
+            guard let email = email, !email.isEmpty else {
+                
                 observer.onError(LoginErrors.invailedEmail)
                 return Disposables.create()
                 
             } //ユーザーのメールアドレス
-
-                let actionCodeSettings = ActionCodeSettings() //メールリンクの作成方法をFirebaseに伝えるオブジェクト
-                actionCodeSettings.handleCodeInApp = true //ログインをアプリ内で完結させる必要があります
+            
+            let actionCodeSettings = ActionCodeSettings() //メールリンクの作成方法をFirebaseに伝えるオブジェクト
+            actionCodeSettings.handleCodeInApp = true //ログインをアプリ内で完結させる必要があります
             actionCodeSettings.dynamicLinkDomain = "tastybox2.page.link"
-                actionCodeSettings.setIOSBundleID(Bundle.main.bundleIdentifier!)
+            actionCodeSettings.setIOSBundleID(Bundle.main.bundleIdentifier!)
             //iOSデバイス内でログインリンクを開くアプリのBundle ID
-                //リンクURL
-                var components = URLComponents()
-                components.scheme = "https"
-                components.host = "tastyboxver2.page.link" //Firebaseコンソールで作成したダイナミックリンクURLドメイン
-           
-                let queryItemEmailName = "email" //URLにemail情報(パラメータ)を追加する
-                let emailTypeQueryItem = URLQueryItem(name: queryItemEmailName, value: email)
-                components.queryItems = [emailTypeQueryItem]
-           
+            //リンクURL
+            var components = URLComponents()
+            components.scheme = "https"
+            components.host = "tastyboxver2.page.link" //Firebaseコンソールで作成したダイナミックリンクURLドメイン
+            
+            let queryItemEmailName = "email" //URLにemail情報(パラメータ)を追加する
+            let emailTypeQueryItem = URLQueryItem(name: queryItemEmailName, value: email)
+            components.queryItems = [emailTypeQueryItem]
+            
             guard let linkParameter = components.url else {
                 
                 observer.onError(LoginErrors.invailedUrl)
                 
                 return Disposables.create()
             }
-                actionCodeSettings.url = linkParameter
+            actionCodeSettings.url = linkParameter
             
             //ユーザーのメールアドレスに認証リンクを送信
-               Auth.auth().sendSignInLink(toEmail: email, actionCodeSettings: actionCodeSettings) { err in
+            Auth.auth().sendSignInLink(toEmail: email, actionCodeSettings: actionCodeSettings) { err in
                 if let err = err {
                     
                     observer.onError(err)
                     
-                   } else {
+                } else {
                     print("送信完了")
-
+                    
                     //後で認証に使用するのでローカルにメールアドレスを保存しておく
                     UserDefaults.standard.set(email, forKey: "email")
-
+                    
                     //・・・
                     //アラートを表示するなど、ユーザーにメールの確認を促す処理
-                       observer.onNext(true)
-//                    DynamicLinks.performDiagnostics(completion: nil)
-                   }
-                   
-
-               }
+                    observer.onNext(true)
+                    //                    DynamicLinks.performDiagnostics(completion: nil)
+                }
+                
+                
+            }
             
             return Disposables.create()
         }
-       
-
+        
+        
     }
     
     static func signUpWithPassword(email: String, password: String) -> Completable {
-
+        
         return Completable.create { completable in
-
+            
             print("success to sign up.")
             Auth.auth().createUser(withEmail: email, password: password) { result, err in
                 
@@ -125,10 +125,10 @@ final class RegisterAccountDM: RegisterAccountProtocol {
             
             return Disposables.create()
         }
-
+        
     }
     
-
+    
     
     
     static func registerEmail<T: Any>(email: String, password: String) ->  Observable<T> {
@@ -154,29 +154,29 @@ final class RegisterAccountDM: RegisterAccountProtocol {
                     return
                 }
                 
-//                if let changeRequest = Auth.auth().currentUser?.createProfileChangeRequest(){
-//                    changeRequest.commitChanges(completion: { err in
-//                        if let err = error {
-//                            observer.onError(err)
-//                        }
-//                    })
-//                }
+                //                if let changeRequest = Auth.auth().currentUser?.createProfileChangeRequest(){
+                //                    changeRequest.commitChanges(completion: { err in
+                //                        if let err = error {
+                //                            observer.onError(err)
+                //                        }
+                //                    })
+                //                }
                 
                 Auth.auth().currentUser?.sendEmailVerification { err in
                     observer.onError(RegisterErrors.failedTosendEmailVerification)
                     return
                 }
                 
-//                if let isEmailVerified = result?.user.isEmailVerified as? T {
-//                    observer.onNext(isEmailVerified)
-//                } else {
-//                    observer.onError(RegisterErrors.invailedUser)
-//                }
+                //                if let isEmailVerified = result?.user.isEmailVerified as? T {
+                //                    observer.onNext(isEmailVerified)
+                //                } else {
+                //                    observer.onError(RegisterErrors.invailedUser)
+                //                }
             }
             
             Auth.auth().createUser(withEmail: email, password: password) { (result, error) in
                 
-              
+                
                 
             }
             

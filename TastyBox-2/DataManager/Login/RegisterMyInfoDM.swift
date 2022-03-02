@@ -102,6 +102,8 @@ final class RegisterMyInfoDM: RegisterMyInfoProtocol {
         
         return .create { observer in
             
+        // guard letが使えないから。
+            
             if let displayName = Auth.auth().currentUser?.displayName {
                 
                 if userName == displayName {
