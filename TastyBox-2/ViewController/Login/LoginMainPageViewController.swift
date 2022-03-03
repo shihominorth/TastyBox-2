@@ -18,6 +18,7 @@ import RxSwift
 import RxCocoa
 import RxTimelane
 import SafariServices
+import SCLAlertView
 
 class LoginMainPageViewController: UIViewController, BindableType, KeyboardSetUpProtocol {
     
@@ -88,20 +89,20 @@ class LoginMainPageViewController: UIViewController, BindableType, KeyboardSetUp
         
     }
     
-    override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
-       
-        if let tapRecognizers = self.view.gestureRecognizers?.filter({ $0.name == "dissmiss"}) {
-            
-            if !tapRecognizers.isEmpty {
-                let _ = tapRecognizers.map {
-                    $0.cancelsTouchesInView = false
-                    self.view.removeGestureRecognizer($0)
-                }
-                
-            }
-            
-        }
-    }
+//    override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
+//
+//        if let tapRecognizers = self.view.gestureRecognizers?.filter({ $0.name == "dissmiss"}) {
+//
+//            if !tapRecognizers.isEmpty {
+//                let _ = tapRecognizers.map {
+//                    $0.cancelsTouchesInView = false
+//                    self.view.removeGestureRecognizer($0)
+//                }
+//
+//            }
+//
+//        }
+//    }
     
     
     
@@ -134,6 +135,48 @@ class LoginMainPageViewController: UIViewController, BindableType, KeyboardSetUp
             .bind(to: viewModel.isEnableLoginBtnSubject)
             .disposed(by: viewModel.disposeBag)
         
+        //MARK: ログイン処理の流れをここに書くか、ログインエラーが出た場合のみここに書くか　詳細はnotionに記載
+        
+        self.googleLoginBtn.rx.controlEvent(.touchUpInside)
+            .throttle(.microseconds(1000), scheduler: MainScheduler.instance)
+            .observe(on: MainScheduler.instance)
+            .do(onNext: { [unowned self] in
+                
+                self.showsViewDuringLogin()
+                
+            })
+            .map { self }
+            .bind(to: viewModel.googleBtnTappedStream)
+            .disposed(by: self.viewModel.disposeBag)
+        
+        
+        self.viewModel.loginErrStream
+            .subscribe(onNext: { err in
+                
+                self.hideViewDuringLogin()
+                
+                guard let reason = err.handleAuthenticationError() else {
+                        
+                    SCLAlertView().showTitle(
+                        "Error", // Title of view
+                        subTitle: "You can't login.",
+                        timeout: .none, // String of view
+                        completeText: "Done", // Optional button value, default: ""
+                        style: .error, // Styles - see below.
+                        colorStyle: 0xA429FF,
+                        colorTextButton: 0xFFFFFF
+                    )
+                        
+                    return
+                }
+                    
+                reason.showErrNotification()
+
+            })
+            .disposed(by: viewModel.disposeBag)
+        
+            
+      // ここまで
         
         let successStream = PublishSubject<Firebase.User>()
         let failedStream = PublishSubject<Error>()
@@ -200,31 +243,31 @@ class LoginMainPageViewController: UIViewController, BindableType, KeyboardSetUp
             .disposed(by: viewModel.disposeBag)
         
         
-        let googleLoginStream = googleLoginBtn.rx.controlEvent(.touchUpInside)
-            .throttle(.milliseconds(1000), scheduler: MainScheduler.instance)
-            .observe(on: MainScheduler.asyncInstance)
-            .do(onNext: { _ in
-               
-                self.showsViewDuringLogin()
-                
-            })
-            .flatMapLatest { _ in
-                 self.viewModel.googleLogin(presenting: self)
-            }
-            .share(replay: 1, scope: .forever)
-            .debug("google login")
+//        let googleLoginStream = googleLoginBtn.rx.controlEvent(.touchUpInside)
+//            .throttle(.milliseconds(1000), scheduler: MainScheduler.instance)
+//            .observe(on: MainScheduler.asyncInstance)
+//            .do(onNext: { _ in
+//
+//                self.showsViewDuringLogin()
+//
+//            })
+//            .flatMapLatest { _ in
+//                 self.viewModel.googleLogin(presenting: self)
+//            }
+//            .share(replay: 1, scope: .forever)
+//            .debug("google login")
         
-        let googleLoginSucceededStream = googleLoginStream.compactMap { $0.element }
-        let googleLoginFailedStream = googleLoginStream.compactMap { $0.error }
-        
-        googleLoginSucceededStream
-            .bind(to: successStream)
-            .disposed(by: viewModel.disposeBag)
-        
-        googleLoginFailedStream
-            .bind(to: failedStream)
-            .disposed(by: viewModel.disposeBag)
-        
+//        let googleLoginSucceededStream = googleLoginStream.compactMap { $0.element }
+//        let googleLoginFailedStream = googleLoginStream.compactMap { $0.error }
+//        
+//        googleLoginSucceededStream
+//            .bind(to: successStream)
+//            .disposed(by: viewModel.disposeBag)
+//        
+//        googleLoginFailedStream
+//            .bind(to: failedStream)
+//            .disposed(by: viewModel.disposeBag)
+//        
         
         let appleLoginBtn = ASAuthorizationAppleIDButton(authorizationButtonType: .default, authorizationButtonStyle: .black)
         

@@ -203,34 +203,37 @@ final class LoginMainDM: LoginMainProtocol {
                     
                     return
                 }
-                
-                guard
-                    let authentication = user?.authentication,
-                    let idToken = authentication.idToken
                 else {
-                    observer.onError(LoginErrors.invailedAuthentication)
-                    return
-                }
-                
-                let credential = GoogleAuthProvider.credential(withIDToken: idToken,
-                                                               accessToken: authentication.accessToken)
-                
-                Auth.auth().signIn(with: credential) { authResult, err in
-                    
-                    if let err = err {
-                        
-                        observer.onError(err)
-                        
-                    } else {
-                        
-                        if let user = authResult?.user {
-                            
-                            observer.onNext(user)
-                            
-                        }
+                   
+                    guard
+                        let authentication = user?.authentication,
+                        let idToken = authentication.idToken
+                    else {
+                        observer.onError(LoginErrors.invailedAuthentication)
+                        return
                     }
                     
+                    let credential = GoogleAuthProvider.credential(withIDToken: idToken,
+                                                                   accessToken: authentication.accessToken)
+                    
+                    Auth.auth().signIn(with: credential) { authResult, err in
+                        
+                        if let err = err {
+                            
+                            observer.onError(err)
+                            
+                        } else {
+                            
+                            if let user = authResult?.user {
+                                
+                                observer.onNext(user)
+                                
+                            }
+                        }
+                        
+                    }
                 }
+                
             }
             
             return Disposables.create()

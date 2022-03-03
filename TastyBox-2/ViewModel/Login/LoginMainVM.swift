@@ -15,6 +15,7 @@ import GoogleSignIn
 import RxSwift
 import RxRelay
 import SCLAlertView
+import CloudKit
 
 
 final class LoginMainVM: ViewModelBase {
@@ -26,6 +27,48 @@ final class LoginMainVM: ViewModelBase {
     let emailSubject: BehaviorSubject<String>
     let passwordSubject: BehaviorSubject<String>
     
+    let googleBtnTappedStream: PublishSubject<UIViewController>
+    
+    var googleLoginedStream: Observable<Firebase.User> {
+        return googleLoginAction.elements
+    }
+    
+    var googleLoginErrStream: Observable<Error> {
+        return googleLoginAction.errors
+            .flatMapLatest { actionErr -> Observable<Error> in
+                
+                if case .underlyingError(let err) = actionErr {
+                    return .just(err)
+                }
+                else {
+                    return .empty()
+                }
+                
+            }
+    }
+    
+    let loginedStream: PublishSubject<Firebase.User>
+    let loginErrStream: PublishSubject<Error>
+    
+    var isRegisteredStream: Observable<Bool> {
+        return isRegisteredMyInfoAction.elements
+    }
+    
+    var isRegisteredErrStream: Observable<Error> {
+       
+        return isRegisteredMyInfoAction.errors
+            .flatMapLatest { actionErr -> Observable<Error> in
+                
+                if case .underlyingError(let err) = actionErr {
+                    return .just(err)
+                }
+                else {
+                    return .empty()
+                }
+                
+            }
+    }
+    
     init(sceneCoodinator: SceneCoordinator, apiType: LoginMainProtocol.Type = LoginMainDM.self) {
         
         self.sceneCoodinator = sceneCoodinator
@@ -33,8 +76,67 @@ final class LoginMainVM: ViewModelBase {
         self.isEnableLoginBtnSubject = BehaviorRelay<Bool>(value: false)
         self.emailSubject = BehaviorSubject<String>(value: "")
         self.passwordSubject = BehaviorSubject<String>(value: "")
+        self.googleBtnTappedStream = PublishSubject<UIViewController>()
+        
+        self.loginedStream = PublishSubject<Firebase.User>()
+        self.loginErrStream = PublishSubject<Error>()
+        
+        super.init()
+        
+        
+        self.googleBtnTappedStream
+            .bind(to: googleLoginAction.inputs)
+            .disposed(by: disposeBag)
+        
+        
+        self.googleLoginedStream
+            .bind(to: self.loginedStream)
+            .disposed(by: disposeBag)
+        
+        self.googleLoginErrStream
+            .bind(to: self.loginErrStream)
+            .disposed(by: disposeBag)
+        
+        self.loginedStream
+            .do(onNext: { user in
+                
+                self.user = user
+                
+            })
+            .bind(to: isRegisteredMyInfoAction.inputs)
+            .disposed(by: disposeBag)
+        
+        
+        self.isRegisteredStream
+            .subscribe(onNext: { [unowned self] isFirst in
+                
+                self.goToNext(isFirst: isFirst)
+                
+            })
+            .disposed(by: disposeBag)
+        
+        self.isRegisteredErrStream
+            .subscribe(onNext: { err in
+                
+                print(err)
+                
+                self.goToNext(isFirst: false)
+                
+            })
+            .disposed(by: self.disposeBag)
+        
 
     }
+    
+    private lazy var isRegisteredMyInfoAction: Action<Firebase.User, Bool> = { this in
+        
+        return Action { user in
+            
+            return self.apiType.isRegisterMyInfo
+            
+        }
+        
+    }(self)
     
     
     //    Singleは一回のみElementかErrorを送信することが保証されているObservableです。
@@ -44,13 +146,13 @@ final class LoginMainVM: ViewModelBase {
        
 
        return self.apiType.isRegisterMyInfo
-            .catch({ err in
-            
-                err.handleAuthenticationError()?.generateErrAlert()
-                
-                return .empty()
-            
-            })
+//            .catch({ err in
+//            
+//                err.handleAuthenticationError()?.generateErrAlert()
+//                
+//                return .empty()
+//            
+//            })
             
     }
     
@@ -86,6 +188,16 @@ final class LoginMainVM: ViewModelBase {
         self.sceneCoodinator.transition(to: scene, type: .root)
 
     }
+    
+    private lazy var googleLoginAction: Action<UIViewController, Firebase.User> = { this in
+        
+        return Action { vc in
+                
+            return this.apiType.loginWithGoogle(viewController: vc)
+            
+        }
+        
+    }(self)
     
     
     func googleLogin(presenting vc: UIViewController) -> Observable<Event<Firebase.User>> {
