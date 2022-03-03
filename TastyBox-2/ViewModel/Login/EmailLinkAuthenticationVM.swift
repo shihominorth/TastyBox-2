@@ -12,22 +12,54 @@ import Firebase
 import RxSwift
 import SCLAlertView
 
-final class RegisterEmailVM: ViewModelBase {
+final class EmailLinkAuthenticationVM: ViewModelBase {
     
     
-    let apiType: RegisterAccountProtocol.Type
+    private let apiType: RegisterAccountProtocol.Type
     
-    var isRegistered: Single<Bool>?
+    var isRegistered: Single<Bool>? // singleだとcompletedが流れて
     
-    let sceneCoordinator: SceneCoordinator
+    private let sceneCoordinator: SceneCoordinator
+    
+    let emailSubject: PublishSubject<String>
+    let sendLinkTrigger: PublishSubject<Void>
+   
+    var successStream: Observable<Void> {
+        return sendEmailWithLink.elements
+    }
+    
+    var errorStream: Observable<Error> {
+       
+        return sendEmailWithLink.errors
+            .flatMapLatest { actionErr -> Observable<Error> in
+                
+                if case .underlyingError(let err) = actionErr {
+                    return .just(err)
+                }
+                
+                return .empty()
+            }
+            
+    }
     
     init(apiType: RegisterAccountProtocol.Type = RegisterAccountDM.self, sceneCoordinator: SceneCoordinator) {
+        
         self.apiType = apiType
         self.sceneCoordinator = sceneCoordinator
+        self.emailSubject = PublishSubject<String>()
+        self.sendLinkTrigger = PublishSubject<Void>()
+        
+        super.init()
+        
+        self.sendLinkTrigger
+            .withLatestFrom(self.emailSubject)
+            .bind(to: sendEmailWithLink.inputs)
+            .disposed(by: disposeBag)
         
     }
     
     func registerEmail(email: String?, password: String?) {
+       
         guard let email = email, let password = password else { return }
         
         isRegistered = self.apiType.registerEmail(email: email, password: password).asSingle()
@@ -48,46 +80,13 @@ final class RegisterEmailVM: ViewModelBase {
         
     }
     
-    lazy var sendEmailWithLink: Action<String, Void> = { this in
+   private lazy var sendEmailWithLink: Action<String, Void> = { this in
         
         return Action { email in
    
-          return self.apiType.sendEmailWithLink(email: email)
-                    .do(onNext: { isCompleted in
-                       
-                        SCLAlertView().showTitle(
-                            "Sent Email Validation", // Title of view
-                            subTitle: "Please Check your email and open the link.",
-                            timeout: .none, // String of view
-                            completeText: "OK", // Optional button value, default: ""
-                            style: .success, // Styles - see below.
-                            colorStyle: 0xA429FF,
-                            colorTextButton: 0xFFFFFF
-                        )
-                        
-                    }, onError: { err in
-                        
-                        guard let reason = err.handleAuthenticationError() else {
-                            
-                            SCLAlertView().showTitle(
-                                "Error", // Title of view
-                                subTitle: "You can't login.",
-                                timeout: .none, // String of view
-                                completeText: "Done", // Optional button value, default: ""
-                                style: .error, // Styles - see below.
-                                colorStyle: 0xA429FF,
-                                colorTextButton: 0xFFFFFF
-                            )
-                            
-                            return
-                        }
-                        
-                        reason.showErrNotification()
-                        
-                    })
-                        .map { _ in }
+          return this.apiType.sendEmailWithLink(email: email)
+                .map { _ in }
                 
-            
         }
         
     }(self)

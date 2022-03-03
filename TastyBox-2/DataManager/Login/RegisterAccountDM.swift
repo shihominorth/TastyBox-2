@@ -119,6 +119,7 @@ final class RegisterAccountDM: RegisterAccountProtocol {
     static func failedSignUp() -> Completable {
         
         return Completable.create { completable in
+            
             print("failed to sign up.")
             
             completable(.completed)

@@ -186,7 +186,7 @@ final class LoginMainVM: ViewModelBase {
         
         return CocoaAction { task in
             
-            let vm = RegisterEmailVM(sceneCoordinator: self.sceneCoodinator)
+            let vm = EmailLinkAuthenticationVM(sceneCoordinator: self.sceneCoodinator)
             let scene: Scene = .loginScene(scene: .emailVerify(vm))
            
             return self.sceneCoodinator

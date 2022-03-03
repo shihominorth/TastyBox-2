@@ -657,10 +657,10 @@
             </objects>
             <point key="canvasLocation" x="3781.1594202898555" y="-372.32142857142856"/>
         </scene>
-        <!--Email Register View Controller-->
+        <!--Email Link Authentication View Controller-->
         <scene sceneID="US5-YQ-Axf">
             <objects>
-                <viewController storyboardIdentifier="EmailRegister" id="9IK-EB-0Nw" customClass="EmailRegisterViewController" customModule="TastyBox_2" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="EmailRegister" id="9IK-EB-0Nw" customClass="EmailLinkAuthenticationViewController" customModule="TastyBox_2" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="4Ya-Ad-yLp">
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>

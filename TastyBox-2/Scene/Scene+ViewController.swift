@@ -144,7 +144,7 @@ extension Scene {
             
         case .emailVerify(let viewModel):
             
-            var vc = storyboard.instantiateViewController(withIdentifier: "EmailRegister") as! EmailRegisterViewController
+            var vc = storyboard.instantiateViewController(withIdentifier: "EmailRegister") as! EmailLinkAuthenticationViewController
             
             vc.bindViewModel(to: viewModel)
             
