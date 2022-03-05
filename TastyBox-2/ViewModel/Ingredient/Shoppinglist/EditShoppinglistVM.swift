@@ -63,8 +63,6 @@ final class EditShoppinglistVM: ViewModelBase {
                 }
              
                 
-            }, onDisposed: {
-                print("disposed")
             })
             .disposed(by: self.disposeBag)
         

@@ -50,6 +50,22 @@ class ShoppinglistViewController: UIViewController, BindableType {
         searchBar.rx.setDelegate(self).disposed(by: viewModel.disposeBag)
         tableView.rx.setDelegate(self).disposed(by: viewModel.disposeBag)
         
+//        viewModel.getItems()
+//            .subscribe(onNext: { [unowned self] isGottenItem in
+//
+//                showSearchedResult()
+//
+//            })
+//            .disposed(by: viewModel.disposeBag)
+//
+//
+        
+        
+    }
+    
+    
+    override func viewWillAppear(_ animated: Bool) {
+        
         viewModel.getItems()
             .subscribe(onNext: { [unowned self] isGottenItem in
                 
@@ -60,22 +76,6 @@ class ShoppinglistViewController: UIViewController, BindableType {
         
         
         
-        
-    }
-    
-    
-    override func viewWillAppear(_ animated: Bool) {
-        
-        //        viewModel.getItems()
-        //            .subscribe(onNext: { [unowned self] isGottenItem in
-        //
-        //                showSearchedResult()
-        //
-        //            })
-        //            .disposed(by: viewModel.disposeBag)
-        //
-        //
-        //
     }
     
     override func viewWillDisappear(_ animated: Bool) {
@@ -107,8 +107,14 @@ class ShoppinglistViewController: UIViewController, BindableType {
     
     func setUpTableView() {
         
-        let footerView = UIView()
-        tableView.tableFooterView = footerView
+        let emptyView = UIView()
+        tableView.tableFooterView = emptyView
+        
+        if #available(iOS 15.0, *) {
+            tableView.sectionHeaderTopPadding = 0.0
+        }
+        
+        tableView.contentInset = UIEdgeInsets(top: 0, left: 0, bottom: 155, right: 0)
         
         tableView.register(ShoppinglistHeaderView.self, forHeaderFooterViewReuseIdentifier: "shoppingHeader")
         //MARK: why is the background of cell is grey when the cell is selected?
@@ -396,37 +402,12 @@ class ShoppinglistViewController: UIViewController, BindableType {
             })
     }
     
-    fileprivate func setHasEmptyCell() {
-        
-        if !self.viewModel.items.isEmpty {
-            
-            let lastIndexPath = IndexPath(row: self.viewModel.items.count - 1, section: 0)
-            let cellRect = self.tableView.rectForRow(at: lastIndexPath)
-            let cellRectInView = self.tableView.convert(cellRect, to: self.navigationController?.view)
-            
-            if self.tableView.frame.minY + self.tableView.verticalScrollIndicatorInsets.top <= cellRectInView.minY
-                && cellRectInView.maxY <= self.tableView.frame.maxY {
-                
-                let hasEmptyCell = addBtn.frame.origin.y <= cellRectInView.maxY
-                
-                self.viewModel.hasEmptyCell.accept(hasEmptyCell)
-                
-                
-            } else {
-                
-                self.viewModel.hasEmptyCell.accept(true)
-                
-            }
-        }
-    }
-    
     fileprivate func showSearchedResult() {
         
         searchBar.rx.text.orEmpty
             .subscribe(onNext: { [unowned self] text in
                 
                 self.tableView.beginUpdates()
-                self.setHasEmptyCell()
                 self.tableView.endUpdates()
                 
                 
@@ -441,27 +422,27 @@ class ShoppinglistViewController: UIViewController, BindableType {
 extension ShoppinglistViewController: UITableViewDelegate {
     
     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
-        
+
         guard section == 0 else { return nil }
-        
+
         guard let view = tableView.dequeueReusableHeaderFooterView(withIdentifier: "shoppingHeader") as? ShoppinglistHeaderView  else { return nil }
-        
+
         viewModel.isTableViewEditable.bind(to: view.btn.rx.isHidden).disposed(by: view.bag)
-        
+
         view.btn.rx.tap
             .debounce(.microseconds(1000), scheduler: MainScheduler.instance)
             .asDriver(onErrorJustReturn: ())
             .asObservable()
             .flatMap { [unowned self] in self.viewModel.showsBoughtItems() }
             .subscribe(onNext: { isShown in
-                
+
                 view.isShowBoughtItems(isShown: isShown)
 
             })
             .disposed(by: view.bag)
-        
+
         return view
-        
+
     }
     
     func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
@@ -500,15 +481,8 @@ extension ShoppinglistViewController: UITableViewDelegate {
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         
-        if indexPath.section == 0 {
-            
-            return UITableView.automaticDimension
-        }
-        else {
-            
-            return viewModel.hasEmptyCell.value ? 140 : 0.0
-        }
-        
+        return UITableView.automaticDimension
+     
     }
     
     func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
@@ -516,6 +490,7 @@ extension ShoppinglistViewController: UITableViewDelegate {
         if section == 0 {
             return 40.0
         }
+        
         return 0.0
     }
     
