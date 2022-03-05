@@ -24,11 +24,7 @@ final class RefrigeratorVM: ViewModelBase {
     var user: FirebaseAuth.User!
     var err = NSError()
     
-    let empty = RefrigeratorItem(key: "___________________empty", name: "", amount: "", index: 0)
-    
-    var emptyHeight: CGFloat = 140.0
-    var hasEmptyCell: BehaviorRelay<Bool> = BehaviorRelay<Bool>(value: false)
-    
+        
     var items: [RefrigeratorItem] = []
     var searchingTemp:[RefrigeratorItem] = []
     var deletingTemp:[DeletingIngredient] = []
@@ -42,7 +38,7 @@ final class RefrigeratorVM: ViewModelBase {
     
     lazy var dataSource: RxRefrigeratorTableViewDataSource<RefrigeratorItem, RefrigeratorTVCell> = {
         
-        return RxRefrigeratorTableViewDataSource<RefrigeratorItem, RefrigeratorTVCell>(identifier: RefrigeratorTVCell.identifier, emptyValue: self.empty) { section, row, element, cell in
+        return RxRefrigeratorTableViewDataSource<RefrigeratorItem, RefrigeratorTVCell>(identifier: RefrigeratorTVCell.identifier) { section, row, element, cell in
             
             if section == 0 {
                 cell.configure(item: element)

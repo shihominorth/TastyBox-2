@@ -91,6 +91,8 @@ class RefrigeratorViewController: UIViewController, BindableType {
         let footerView = UIView()
         tableView.tableFooterView = footerView
         
+        tableView.contentInset = UIEdgeInsets(top: 0, left: 0, bottom: 155, right: 0)
+        
         //MARK: why is the background of cell is grey when the cell is selected?
         // make it grey before tableview.rx.itemSelected....
         tableView.rx.itemSelected
@@ -356,31 +358,8 @@ class RefrigeratorViewController: UIViewController, BindableType {
             })
     }
     
-    fileprivate func setHasEmptyCell() {
-       
-        if !self.viewModel.items.isEmpty {
-            
-            let lastIndexPath = IndexPath(row: self.viewModel.items.count - 1, section: 0)
-            let cellRect = self.tableView.rectForRow(at: lastIndexPath)
-            let cellRectInView = self.tableView.convert(cellRect, to: self.navigationController?.view)
-            
-            if self.tableView.frame.minY + self.tableView.verticalScrollIndicatorInsets.top <= cellRectInView.minY
-                && cellRectInView.maxY <= self.tableView.frame.maxY {
-                
-                let hasEmptyCell = addBtn.frame.origin.y <= cellRectInView.maxY
-
-                self.viewModel.hasEmptyCell.accept(hasEmptyCell)
-              
-
-            } else {
-                
-                self.viewModel.hasEmptyCell.accept(true)
-                
-            }
-        }
-    }
-    
     fileprivate func showSearchedResult() {
+
         searchBar.rx.text.orEmpty
             .subscribe(onNext: { [unowned self] text in
                 
@@ -389,7 +368,6 @@ class RefrigeratorViewController: UIViewController, BindableType {
                 }
                 
                 self.tableView.beginUpdates()
-                self.setHasEmptyCell()
                 self.tableView.endUpdates()
                 
                 
@@ -440,14 +418,7 @@ extension RefrigeratorViewController: UITableViewDelegate {
   
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         
-        if indexPath.section == 0 {
-            
-            return UITableView.automaticDimension
-        }
-        else {
-          
-            return viewModel.hasEmptyCell.value ? 140 : 0.0
-        }
+        return UITableView.automaticDimension
 
     }
     

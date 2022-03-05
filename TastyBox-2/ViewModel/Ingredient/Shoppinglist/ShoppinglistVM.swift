@@ -46,7 +46,7 @@ final class ShoppinglistVM: ViewModelBase {
     
     lazy var dataSource: RxRefrigeratorTableViewDataSource<ShoppingItem, ShoppinglistTVCell> = {
         
-        return RxRefrigeratorTableViewDataSource<ShoppingItem, ShoppinglistTVCell>(identifier: ShoppinglistTVCell.identifier, emptyValue: self.empty) { [unowned self] section, row, element, cell in
+        return RxRefrigeratorTableViewDataSource<ShoppingItem, ShoppinglistTVCell>(identifier: ShoppinglistTVCell.identifier) { [unowned self] section, row, element, cell in
             
             if section == 0 {
                 cell.configure(item: element)

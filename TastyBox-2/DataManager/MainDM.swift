@@ -341,28 +341,35 @@ final class MainDM: MainDMProtocol {
             
             var query = db.collection("recipes").whereField("genres.\(ingredients[firstSearchIngredientsOnceNum].id)", isEqualTo: true)
             
-            for _ in 1 ..< searchIngredientsOnceNum {
+            //MARK: 見直し必要！
+            // Thread 1: Fatal error: Range requires lowerBound <= upperBound
+            
+            if searchIngredientsOnceNum > 2 {
                 
-                var randomIndex: Int {
+                for _ in 1 ..< searchIngredientsOnceNum {
                     
-                    var result = Int.random(in: 0 ..< searchIngredientsOnceNumLimit)
-                    
-                    while randomIndice.contains(result) {
+                    var randomIndex: Int {
                         
-                        result = Int.random(in: 0 ..< searchIngredientsOnceNumLimit)
+                        var result = Int.random(in: 0 ..< searchIngredientsOnceNumLimit)
                         
+                        while randomIndice.contains(result) {
+                            
+                            result = Int.random(in: 0 ..< searchIngredientsOnceNumLimit)
+                            
+                            
+                        }
                         
+                        randomIndice.append(result)
+                        
+                        return result
                     }
                     
-                    randomIndice.append(result)
+                    query = query.whereField("genres.\(ingredients[randomIndex].id)", isEqualTo: true)
                     
-                    return result
                 }
                 
-                query = query.whereField("genres.\(ingredients[randomIndex].id)", isEqualTo: true)
-                
             }
-            
+           
             tempQueries.append(query)
         }
         
