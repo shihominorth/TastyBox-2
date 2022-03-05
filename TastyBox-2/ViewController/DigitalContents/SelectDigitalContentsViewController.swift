@@ -35,10 +35,7 @@ class SelectDigitalContentsViewController: UIViewController, BindableType {
             
             // Request permission to access photo library
             PHPhotoLibrary.requestAuthorization(for: .readWrite) { [unowned self] (status) in
-//                DispatchQueue.main.async { [unowned self] in
-//                    showUI(for: status)
-//                }
-                
+
                 switch status {
                
                 case .authorized, .limited:
@@ -91,7 +88,7 @@ class SelectDigitalContentsViewController: UIViewController, BindableType {
             .subscribe(onNext: { [unowned self] in
                 
                 self.dismiss(animated: true) {
-                    self.viewModel.sceneCoodinator.userDismissed()
+                    self.viewModel.userDismissed()
                 }
                 
             })

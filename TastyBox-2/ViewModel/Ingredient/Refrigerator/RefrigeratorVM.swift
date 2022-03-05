@@ -18,8 +18,8 @@ enum List: String {
 
 final class RefrigeratorVM: ViewModelBase {
     
-    let sceneCoodinator: SceneCoordinator
-    let apiType: RefrigeratorProtocol.Type
+    private let sceneCoodinator: SceneCoordinator
+    private let apiType: RefrigeratorProtocol.Type
     
     var user: FirebaseAuth.User!
     var err = NSError()

@@ -12,9 +12,10 @@ import RxSwift
 
 final class RelatedUsersVM: ViewModelBase {
     
-    let sceneCoordinator: SceneCoordinator
+    private let sceneCoordinator: SceneCoordinator
+    private let apiType: ProfileDMProtocol.Type
     let user: Firebase.User
-    let apiType: ProfileDMProtocol.Type
+   
     let selectIndexSubject: BehaviorSubject<Int>
     
     let presenter: RelatedUserPresenter

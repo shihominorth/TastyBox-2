@@ -18,9 +18,9 @@ final class RecipeVM: ViewModelBase {
 
     typealias Section = ArraySection<RecipeDetailSectionItem.RawValue, RecipeDetailSectionItem>
     
-    let sceneCoordinator: SceneCoordinator
+    private let sceneCoordinator: SceneCoordinator
+    private let apiType: RecipeDetailProtocol.Type
     let user: Firebase.User
-    let apiType: RecipeDetailProtocol.Type
     let recipe: Recipe
     var sections: [Section]
     var evaluations:[Evaluation]

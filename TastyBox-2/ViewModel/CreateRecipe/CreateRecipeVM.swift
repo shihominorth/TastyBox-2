@@ -22,10 +22,10 @@ enum RecipeInput {
 
 final class CreateRecipeVM: ViewModelBase {
     
-    let sceneCoodinator: SceneCoordinator
+    private let sceneCoodinator: SceneCoordinator
     let user: Firebase.User
     
-    let apiType: CreateRecipeDMProtocol.Type
+    private let apiType: CreateRecipeDMProtocol.Type
     
     let keyboardOpen = NotificationCenter.default.rx.notification(UIResponder.keyboardWillShowNotification).observe(on: MainScheduler.instance)
     
@@ -531,6 +531,12 @@ final class CreateRecipeVM: ViewModelBase {
             .disposed(by: disposeBag)
         
         
+    }
+    
+    func pop() {
+        
+        self.sceneCoodinator.pop(animated: true)
+    
     }
     
 }

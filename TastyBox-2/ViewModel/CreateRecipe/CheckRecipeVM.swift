@@ -14,10 +14,9 @@ import RxRelay
 
 final class CheckRecipeVM {
     
-    let sceneCoodinator: SceneCoordinator
+    private let sceneCoodinator: SceneCoordinator
+    private let apiType: CreateRecipeDMProtocol.Type
     let user: Firebase.User
-    
-    let apiType: CreateRecipeDMProtocol.Type
     
     //    var mainPhoto: Data
     //    var url: URL? = nil

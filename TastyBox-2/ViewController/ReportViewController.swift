@@ -175,7 +175,7 @@ extension ReportViewController: UITableViewDelegate, UITableViewDataSource {
                 .subscribe(onNext: { [unowned self] isCompleted in
                     
                     self.dismiss(animated: true) {
-                        self.viewModel.sceneCoordinator.userDismissed()
+                        self.viewModel.userDismissed()
                     }
   
                 })
@@ -185,7 +185,7 @@ extension ReportViewController: UITableViewDelegate, UITableViewDataSource {
                 .subscribe(onNext: { [unowned self] in
                     
                     self.dismiss(animated: true) {
-                        self.viewModel.sceneCoordinator.userDismissed()
+                        self.viewModel.userDismissed()
                     }
                     
                 })

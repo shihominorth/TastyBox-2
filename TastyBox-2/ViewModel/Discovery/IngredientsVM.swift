@@ -12,9 +12,9 @@ import RxSwift
 
 final class IngredientsVM: ViewModelBase {
     
+    private let apiType: MainDMProtocol.Type
     let user: Firebase.User
-    let apiType: MainDMProtocol.Type
-    
+
     var recipes: [Recipe]
     let recipesSubject: BehaviorSubject<[Recipe]>
    

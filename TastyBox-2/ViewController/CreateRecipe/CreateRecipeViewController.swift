@@ -78,7 +78,7 @@ class CreateRecipeViewController: UIViewController, BindableType {
             .asObservable()
             .subscribe(onNext: { _ in
                 
-                self.viewModel.sceneCoodinator.pop(animated: true)
+                self.viewModel.pop()
                 
             })
             .disposed(by: viewModel.disposeBag)

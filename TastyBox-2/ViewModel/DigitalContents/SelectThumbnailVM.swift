@@ -16,9 +16,10 @@ protocol SelectThumbnailDelegate: AnyObject {
 
 final class SelectThumbnailVM: ViewModelBase {
     
-    var sceneCoodinator: SceneCoordinator
+    private var sceneCoodinator: SceneCoordinator
+    private let apiType: CreateRecipeDMProtocol.Type
+    
     let user: Firebase.User
-    let apiType: CreateRecipeDMProtocol.Type
     var imageDataSubject: BehaviorSubject<Data>
     
     weak var delegate: SelectThumbnailDelegate?

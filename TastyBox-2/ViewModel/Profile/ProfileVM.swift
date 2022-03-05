@@ -12,9 +12,9 @@ import RxSwift
 
 final class ProfileVM: ViewModelBase {
    
-    let sceneCoordinator: SceneCoordinator
+    private let sceneCoordinator: SceneCoordinator
+    private let apiType: ProfileDMProtocol.Type
     let user: Firebase.User
-    let apiType: ProfileDMProtocol.Type
     var recipes: [Recipe]
     var profileUser: User
     let profileImageDataSubject: PublishSubject<Data>

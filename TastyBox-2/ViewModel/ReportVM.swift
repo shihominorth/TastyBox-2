@@ -25,13 +25,14 @@ enum ReportKind: String {
 
 final class ReportVM: ViewModelBase {
     
-    let sceneCoordinator: SceneCoordinator
+    private let sceneCoordinator: SceneCoordinator
+    private let apiType:  ReportProtocol.Type
+    
     let kind: ReportKind
     let id: String
     let reasons: [ReportReason]
     let selectedSubject: PublishSubject<Int>
-    let apiType:  ReportProtocol.Type
-    
+
     init(kind: ReportKind, id: String, sceneCoordinator: SceneCoordinator, apiType: ReportProtocol.Type = ReportDM.self) {
         
         self.kind = kind
@@ -61,5 +62,12 @@ final class ReportVM: ViewModelBase {
         return self.apiType.report(kind: kind, contentID: id, reason: reasons[row])
         
     }
+    
+    func userDismissed() {
+        
+        self.sceneCoordinator.userDismissed()
+        
+    }
+    
     
 }

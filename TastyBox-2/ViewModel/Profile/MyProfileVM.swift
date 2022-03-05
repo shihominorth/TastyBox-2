@@ -13,9 +13,9 @@ import SCLAlertView
 
 final class MyProfileVM: ViewModelBase {
     
-    let sceneCoordinator: SceneCoordinator
+    private let sceneCoordinator: SceneCoordinator
+    private let apiType: MyProfileDMProtocol.Type
     let user: Firebase.User
-    let apiType: MyProfileDMProtocol.Type
     
     let myProfileImageDataSubject: PublishSubject<Data>
     let followingsNumSubject: BehaviorSubject<Int>

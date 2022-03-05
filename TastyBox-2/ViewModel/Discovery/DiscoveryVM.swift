@@ -16,8 +16,8 @@ import RxCocoa
 final class DiscoveryVM: ViewModelBase {
     
     let presenter: DiscoveryPresenter
-    let sceneCoodinator: SceneCoordinator
-    let user: Firebase.User
+    private let sceneCoodinator: SceneCoordinator
+    private let user: Firebase.User
     
 //    let selectedIndexRelay: BehaviorRelay<Int>
     let isMenuBarOpenedRelay: BehaviorRelay<Bool>

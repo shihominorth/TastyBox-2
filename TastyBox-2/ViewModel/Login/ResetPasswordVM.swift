@@ -15,7 +15,7 @@ import SCLAlertView
 final class ResetPasswordVM: ViewModelBase {
     
     let dataManager = ResetPasswordDM()
-    let apiType: ResetPasswordProtocol.Type
+   private let apiType: ResetPasswordProtocol.Type
     let cancelAction: CocoaAction
     
     init(coordinator: SceneCoordinator, cancelAction: CocoaAction? = nil, apiType: ResetPasswordProtocol.Type = ResetPasswordDM.self) {
@@ -23,6 +23,7 @@ final class ResetPasswordVM: ViewModelBase {
         self.apiType = apiType
         
         self.cancelAction = CocoaAction {
+
             if let cancelAction = cancelAction {
                 cancelAction.execute(())
             }

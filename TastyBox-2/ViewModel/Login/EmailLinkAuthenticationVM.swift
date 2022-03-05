@@ -17,9 +17,9 @@ final class EmailLinkAuthenticationVM: ViewModelBase {
     
     private let apiType: RegisterAccountProtocol.Type
     
-    var isRegistered: Single<Bool>? // singleだとcompletedが流れて
-    
     private let sceneCoordinator: SceneCoordinator
+    
+    var isRegistered: Single<Bool>? // singleだとcompletedが流れて
     
     let emailSubject: PublishSubject<String>
     let sendLinkTrigger: PublishSubject<Void>

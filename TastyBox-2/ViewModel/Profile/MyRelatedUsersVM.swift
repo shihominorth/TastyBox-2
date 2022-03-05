@@ -19,9 +19,10 @@ protocol ManageMyRelatedUserDelegate: AnyObject {
 
 final class MyRelatedUsersVM: ViewModelBase {
  
-    let sceneCoordinator: SceneCoordinator
+    private let sceneCoordinator: SceneCoordinator
+    private let apiType: MyProfileDMProtocol.Type
+   
     let user: Firebase.User
-    let apiType: MyProfileDMProtocol.Type
     let selectIndexSubject: BehaviorSubject<Int>
     
     let presenter: RelatedUserPresenter

@@ -14,9 +14,10 @@ protocol ManageUserDelegate: AnyObject {
 
 final class ManageMyRelatedUserVM: ViewModelBase {
     
-    let sceneCoordinator: SceneCoordinator
+    private let sceneCoordinator: SceneCoordinator
+    private let apiType: MyProfileDMProtocol.Type
+    
     let user: Firebase.User
-    let apiType: MyProfileDMProtocol.Type
     let manageUser: RelatedUser
     weak var delegate: ManageUserDelegate?
     

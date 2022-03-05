@@ -11,8 +11,8 @@ import RxSwift
 
 final class FolllowingsVM: ViewModelBase {
     
+    private let apiType: RelatedUsersProtocol.Type
     let user: Firebase.User
-    let apiType: RelatedUsersProtocol.Type
     
     let usersSubject: BehaviorSubject<[RelatedUser]>
     let userID: String

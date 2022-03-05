@@ -29,7 +29,7 @@ final class SelectDigitalContentsVM: ViewModelBase {
     
     var assets: PHFetchResult<PHAsset>
 
-    let sceneCoodinator: SceneCoordinator
+    private let sceneCoordinator: SceneCoordinator
     let user: Firebase.User
     var kind: DigitalContentsFor
     var isHiddenSegment: BehaviorSubject<Bool>
@@ -39,7 +39,7 @@ final class SelectDigitalContentsVM: ViewModelBase {
     init(sceneCoodinator: SceneCoordinator, user: Firebase.User, kind: DigitalContentsFor, isEnableSelectOnlyOneDigitalContentType: Bool) {
         
         self.assets = PHFetchResult<PHAsset>()
-        self.sceneCoodinator = sceneCoodinator
+        self.sceneCoordinator = sceneCoodinator
         self.user = user
         self.kind = kind
         self.isHiddenSegment = BehaviorSubject<Bool>(value: isEnableSelectOnlyOneDigitalContentType)
@@ -68,10 +68,10 @@ final class SelectDigitalContentsVM: ViewModelBase {
         
         if let delegate = delegate {
             
-            self.sceneCoodinator.pop(animated: true) { [weak self] in
+            self.sceneCoordinator.pop(animated: true) { [weak self] in
                 
                 guard let strognSelf = self else { return }
-                delegate.selectedImage(asset: asset, kind: strognSelf.kind, sceneCoordinator: strognSelf.sceneCoodinator)
+                delegate.selectedImage(asset: asset, kind: strognSelf.kind, sceneCoordinator: strognSelf.sceneCoordinator)
 
             }
             
@@ -79,10 +79,10 @@ final class SelectDigitalContentsVM: ViewModelBase {
         }
         else {
             
-            let vm = SelectedImageVM(sceneCoodinator: self.sceneCoodinator, user: self.user, kind: kind, asset: asset)
+            let vm = SelectedImageVM(sceneCoodinator: self.sceneCoordinator, user: self.user, kind: kind, asset: asset)
             let scene: Scene = .digitalContentsPickerScene(scene: .selectedImage(vm))
             
-            self.sceneCoodinator.transition(to: scene, type: .push)
+            self.sceneCoordinator.transition(to: scene, type: .push)
             
         }
       
@@ -91,11 +91,18 @@ final class SelectDigitalContentsVM: ViewModelBase {
     
     func toSelectVideoVC(asset: PHAsset) {
         
-        let vm = SelectedVideoVM(sceneCoodinator: self.sceneCoodinator, user: self.user, asset: asset)
+        let vm = SelectedVideoVM(sceneCoodinator: self.sceneCoordinator, user: self.user, asset: asset)
         let scene: Scene = .digitalContentsPickerScene(scene: .selectedVideo(vm))
         
-        self.sceneCoodinator.transition(to: scene, type: .push)
+        self.sceneCoordinator.transition(to: scene, type: .push)
         
     }
+    
+    func userDismissed() {
+        
+        self.sceneCoordinator.userDismissed()
+        
+    }
+    
   
 }

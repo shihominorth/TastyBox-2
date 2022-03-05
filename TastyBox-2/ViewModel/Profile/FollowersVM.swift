@@ -12,8 +12,9 @@ import RxSwift
 
 final class FollowersVM: ViewModelBase {
     
+    private let apiType: RelatedUsersProtocol.Type
+    
     let user: Firebase.User
-    let apiType: RelatedUsersProtocol.Type
     
     var users: [RelatedUser]
     let usersSubject: BehaviorSubject<[RelatedUser]>

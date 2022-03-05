@@ -14,7 +14,7 @@ enum isFrom {
 
 final class AboutViewModel {
     
-    let sceneCoodinator: SceneCoordinator
+    private let sceneCoodinator: SceneCoordinator
     let isAgreed: Bool
     
     //必要なさそう

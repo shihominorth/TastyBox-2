@@ -9,8 +9,8 @@ import Foundation
 
 final class TutorialVM: ViewModelBase {
 
-    let sceneCoodinator: SceneCoordinator
-    let apiType: LoginMainProtocol.Type
+    private let sceneCoodinator: SceneCoordinator
+    private let apiType: LoginMainProtocol.Type
     
     var explainations: [Tutorial]
     

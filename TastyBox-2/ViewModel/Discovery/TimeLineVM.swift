@@ -11,8 +11,9 @@ import RxSwift
 
 final class TimelineVM: ViewModelBase {
     
+    private let apiType: MainDMProtocol.Type
     let user: Firebase.User
-    let apiType: MainDMProtocol.Type
+
     let postsSubject:PublishSubject<[Timeline]>
     var recipes: [Recipe]
     var publishers: [String: User]

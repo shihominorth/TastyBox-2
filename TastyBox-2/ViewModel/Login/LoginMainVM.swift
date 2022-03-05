@@ -20,9 +20,10 @@ import CloudKit
 
 final class LoginMainVM: ViewModelBase {
     
-    let sceneCoodinator: SceneCoordinator
-    let apiType: LoginMainProtocol.Type
+    private let sceneCoodinator: SceneCoordinator
+    private let apiType: LoginMainProtocol.Type
     var user: FirebaseAuth.User?
+    
     let isEnableLoginBtnSubject: BehaviorRelay<Bool>
     let emailSubject: BehaviorSubject<String>
     let passwordSubject: BehaviorSubject<String>

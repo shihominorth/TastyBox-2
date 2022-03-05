@@ -12,7 +12,7 @@ import RxSwift
 
 final class SelectedVideoVM: ViewModelBase {
     
-    let sceneCoodinator: SceneCoordinator
+    private let sceneCoodinator: SceneCoordinator
     let user: Firebase.User
     let apiType: CreateRecipeDMProtocol.Type
     let asset: PHAsset

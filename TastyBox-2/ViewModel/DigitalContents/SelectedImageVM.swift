@@ -12,7 +12,7 @@ import RxSwift
 
 final class SelectedImageVM: ViewModelBase {
     
-    let sceneCoodinator: SceneCoordinator
+    private let sceneCoodinator: SceneCoordinator
     let user: Firebase.User
     let kind: DigitalContentsFor
     let asset: PHAsset

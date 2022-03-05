@@ -12,8 +12,8 @@ import SCLAlertView
 
 final class LoadingVM {
     
-    let sceneCoodinator: SceneCoordinator
-    let apiType: LoginMainProtocol.Type
+    private let sceneCoodinator: SceneCoordinator
+    private let apiType: LoginMainProtocol.Type
     
     init(sceneCoodinator: SceneCoordinator, apiType: LoginMainProtocol.Type = LoginMainDM.self) {
         self.sceneCoodinator = sceneCoodinator

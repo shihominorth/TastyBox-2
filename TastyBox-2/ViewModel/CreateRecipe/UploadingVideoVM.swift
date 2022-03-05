@@ -16,7 +16,7 @@ protocol UploadingVideoVMDelegate: AnyObject {
 
 final class UploadingVideoVM: ViewModelBase {
         
-    let sceneCoodinator: SceneCoordinator
+    private let sceneCoodinator: SceneCoordinator
     let user: Firebase.User
     
     var url: URL

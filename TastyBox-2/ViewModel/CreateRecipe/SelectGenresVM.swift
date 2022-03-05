@@ -17,10 +17,10 @@ protocol SelectGenreProtocol: AnyObject {
 
 final class SelectGenresVM: ViewModelBase {
     
-    let sceneCoordinator: SceneCoordinator
-    let user: Firebase.User
+    private let sceneCoordinator: SceneCoordinator
+    private let apiType: CreateRecipeDMProtocol.Type
     
-    let apiType: CreateRecipeDMProtocol.Type
+    let user: Firebase.User
     
     weak var delegate: SelectGenreProtocol?
     
@@ -410,6 +410,13 @@ final class SelectGenresVM: ViewModelBase {
             
             return Disposables.create()
         }
+        
+    }
+    
+    
+    func userDismissed() {
+        
+        self.sceneCoordinator.userDismissed()
         
     }
     

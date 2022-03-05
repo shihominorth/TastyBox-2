@@ -16,8 +16,8 @@ import SCLAlertView
 
 final class RegisterMyInfoProfileVM: ViewModelBase {
     
-    let apiType: RegisterMyInfoProtocol.Type
-    let sceneCoodinator: SceneCoordinator
+    private let apiType: RegisterMyInfoProtocol.Type
+    private let sceneCoodinator: SceneCoordinator
     let user: Firebase.User
     
     let defaultUserImageData = #imageLiteral(resourceName: "defaultUserImage").pngData()

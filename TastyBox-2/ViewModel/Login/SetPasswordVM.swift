@@ -12,8 +12,8 @@ import Action
 
 final class SetPasswordVM: ViewModelBase {
     
-    let sceneCoordinator: SceneCoordinator
-    let apiType: RegisterAccountProtocol.Type
+    private let sceneCoordinator: SceneCoordinator
+    private let apiType: RegisterAccountProtocol.Type
     let email: String
     let isMatchedTriger = PublishRelay<Bool>()
     
