@@ -91,6 +91,7 @@ class RefrigeratorViewController: UIViewController, BindableType {
         let footerView = UIView()
         tableView.tableFooterView = footerView
         
+        tableView.contentInset = UIEdgeInsets(top: 0, left: 0, bottom: 155, right: 0)
 
         //MARK: why is the background of cell is grey when the cell is selected?
         // make it grey before tableview.rx.itemSelected....
