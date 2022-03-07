@@ -33,7 +33,7 @@ class IngredientsViewController: UIViewController, BindableType {
     
     /// navigationBarが隠れているかどうか(詳細から戻った一覧に戻った際の再描画に使用)
     var lastNavigationBarIsHidden = false
-        
+    
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -43,7 +43,7 @@ class IngredientsViewController: UIViewController, BindableType {
         
         ingredientsCollectionViewFlowLayout.sectionInset = UIEdgeInsets(top: 3, left: 5, bottom: 3, right: 5)
         ingredientsCollectionViewFlowLayout.estimatedItemSize = UICollectionViewFlowLayout.automaticSize
-       
+        
         ingredientsCollectionView.collectionViewLayout = ingredientsCollectionViewFlowLayout
         
         let width = (recipesCollecitonView.frame.width - 11) / 2
@@ -52,7 +52,7 @@ class IngredientsViewController: UIViewController, BindableType {
         recipesCollectionViewFlowLayout.sectionInset = UIEdgeInsets(top: 10, left: 5, bottom: 10, right: 5)
         
         recipesCollecitonView.collectionViewLayout = recipesCollectionViewFlowLayout
-       
+        
         navigationController?.setNavigationBarHidden(false, animated: false)
         
         view.backgroundColor = #colorLiteral(red: 0.9998771548, green: 0.9969214797, blue: 0.8987136483, alpha: 1)
@@ -94,7 +94,7 @@ class IngredientsViewController: UIViewController, BindableType {
         
         
     }
- 
+    
     
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
@@ -106,7 +106,7 @@ class IngredientsViewController: UIViewController, BindableType {
     func bindViewModel() {
         
         setUpDataSource()
-
+        
         viewModel.ingredientSubject
             .map { ingredients in
                 
@@ -119,7 +119,7 @@ class IngredientsViewController: UIViewController, BindableType {
             }
             .bind(to: ingredientsCollectionView.rx.items(dataSource: ingredientsDataSource))
             .disposed(by: viewModel.disposeBag)
-   
+        
         
         viewModel.ingredientSubject
             .debug("get recipe")
@@ -146,39 +146,38 @@ class IngredientsViewController: UIViewController, BindableType {
             .bind(to: recipesCollecitonView.rx.items(dataSource: recipeDataSource))
             .disposed(by: viewModel.disposeBag)
         
-
+        
         let selectIngredientsCollectionViewIndexPath =
         ingredientsCollectionView.rx.itemSelected.share(replay: 1, scope: .forever)
             .do(onNext: { [unowned self] indexPath in
-                
+                    
                 self.viewModel.selectedIngredientSubject.onNext(indexPath.row)
-                
+                    
             })
-            
-        
+                    
+                    
         let selectedSingleIngredientIndexPath = selectIngredientsCollectionViewIndexPath.filter { $0.row != 0 }
-        
-        
-        Observable.combineLatest(selectedSingleIngredientIndexPath, viewModel.ingredientSubject) { indexPath, ingredients in
-            
-            return ingredients[indexPath.row - 1]
-            
-        }
-        .flatMapLatest { [unowned self] ingredient in
-            self.viewModel.getRecipes(ingredient: ingredient)
-        }
-        .subscribe(onNext: { recipes in
-
-            self.viewModel.recipesSubject.onNext(recipes)
-
-        })
-        .disposed(by: viewModel.disposeBag)
+                    
+                    
+        selectedSingleIngredientIndexPath
+            .withLatestFrom(self.viewModel.ingredientSubject) { indexPath, ingredients in
+                return ingredients[indexPath.row]
+            }
+            .flatMapLatest { [unowned self] ingredient in
+                self.viewModel.getRecipes(ingredient: ingredient)
+            }
+            .subscribe(onNext: { recipes in
+                        
+                self.viewModel.recipesSubject.onNext(recipes)
+                        
+            })
+            .disposed(by: viewModel.disposeBag)
         
         recipesCollecitonView.rx.itemSelected
             .map { [unowned self] indexPath in
-            
+                
                 return self.viewModel.recipes[indexPath.row]
-            
+                
             }
             .subscribe(onNext: { [unowned self] recipe in
                 
@@ -210,25 +209,25 @@ class IngredientsViewController: UIViewController, BindableType {
     func setUpDataSource() {
         
         ingredientsDataSource = RxDefaultCollectionViewDataSource<String, IngredientOptionCVCell>(identifier: "ingredientsCVCell") { [unowned self] row, ingredient, cell in
- 
+            
             cell.titleLbl.isSkeletonable = true
             
             self.viewModel.selectedIngredientSubject
                 .map { $0 == row }
                 .bind(to: cell.isSelectedSubject)
                 .disposed(by: cell.disposeBag)
-
-           
-                        
+            
+            
+            
             cell.titleLbl.text = ingredient
             
         }
         
         recipeDataSource = RxDefaultCollectionViewDataSource<Recipe, RecipeWithIngredientCVCell>(identifier: "recipeWithIngredientCVCell") { row, recipe, cell in
-                            
+            
             cell.imgView.isSkeletonable = true
             cell.titleLbel.isSkeletonable = true
- 
+            
             if let url = URL(string: recipe.imgString) {
                 
                 cell.imgView.kf.setImage(with: url) { result in
@@ -244,7 +243,7 @@ class IngredientsViewController: UIViewController, BindableType {
                     
                 }
             }
-
+            
         }
         
     }
