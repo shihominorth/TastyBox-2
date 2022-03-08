@@ -65,7 +65,7 @@ pod 'SkeletonView'
 pod 'Alamofire'
 
 #json
-pod 'SwiftyJSON'
+#pod 'SwiftyJSON'
 
 #Google Spread Sheet
 pod 'GoogleAPIClientForREST/Sheets'

@@ -2,7 +2,7 @@
 //  SelectDigitalContentsVM.swift
 //  TastyBox-2
 //
-//  Created by 北島　志帆美 on 2021-12-13.
+//  Created by 北島　志帆美 on 2022-03-08.
 //
 
 import Foundation
@@ -106,3 +106,4 @@ final class SelectDigitalContentsVM: ViewModelBase {
     
   
 }
+
