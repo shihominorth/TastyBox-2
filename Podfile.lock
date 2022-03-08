@@ -613,6 +613,7 @@ PODS:
   - SwiftMessages (9.0.6):
     - SwiftMessages/App (= 9.0.6)
   - SwiftMessages/App (9.0.6)
+  - SwiftyJSON (5.0.1)
   - TimelaneCore (2.0.0)
 
 DEPENDENCIES:
@@ -643,6 +644,7 @@ DEPENDENCIES:
   - SCLAlertView
   - SkeletonView
   - SwiftMessages
+  - SwiftyJSON
 
 SPEC REPOS:
   trunk:
@@ -702,6 +704,7 @@ SPEC REPOS:
     - SCLAlertView
     - SkeletonView
     - SwiftMessages
+    - SwiftyJSON
     - TimelaneCore
 
 SPEC CHECKSUMS:
@@ -761,8 +764,9 @@ SPEC CHECKSUMS:
   SCLAlertView: 6a77bb2edfc65e04dbe57725546cb4107a506b85
   SkeletonView: 915a80ecc2b6421ab7ac0f0212321c0cc1406472
   SwiftMessages: f0c7ef4705a570ad6c5e208b611f4333e660ed92
+  SwiftyJSON: 2f33a42c6fbc52764d96f13368585094bfd8aa5e
   TimelaneCore: 5822c4be9992c7009938babf881561ec03b63acc
 
-PODFILE CHECKSUM: 45957847e419ee73407893a9d93991ea2f209764
+PODFILE CHECKSUM: eb8b8310808244fb581a00d35de25b3fa53b2e9a
 
 COCOAPODS: 1.11.2

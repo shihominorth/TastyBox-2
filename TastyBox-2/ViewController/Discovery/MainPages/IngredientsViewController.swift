@@ -43,6 +43,7 @@ class IngredientsViewController: UIViewController, BindableType {
         
         ingredientsCollectionViewFlowLayout.sectionInset = UIEdgeInsets(top: 3, left: 5, bottom: 3, right: 5)
         ingredientsCollectionViewFlowLayout.estimatedItemSize = UICollectionViewFlowLayout.automaticSize
+        ingredientsCollectionViewFlowLayout.scrollDirection = .horizontal
         
         ingredientsCollectionView.collectionViewLayout = ingredientsCollectionViewFlowLayout
         
@@ -145,23 +146,22 @@ class IngredientsViewController: UIViewController, BindableType {
             })
             .bind(to: recipesCollecitonView.rx.items(dataSource: recipeDataSource))
             .disposed(by: viewModel.disposeBag)
+                
+                
+        ingredientsCollectionView.rx.itemSelected
+            .throttle(.milliseconds(1500), scheduler: MainScheduler.instance)
+                .do(onNext: { [unowned self] in
+                    self.ingredientsCollectionView.scrollToItem(at: $0, at: .centeredHorizontally, animated: true)
+                })
+                .map { $0.row }
+                .bind(to: viewModel.selectedIngredientSubject)
+                .disposed(by: viewModel.disposeBag)
         
         
-        let selectIngredientsCollectionViewIndexPath =
-        ingredientsCollectionView.rx.itemSelected.share(replay: 1, scope: .forever)
-            .do(onNext: { [unowned self] indexPath in
-                    
-                self.viewModel.selectedIngredientSubject.onNext(indexPath.row)
-                    
-            })
-                    
-                    
-        let selectedSingleIngredientIndexPath = selectIngredientsCollectionViewIndexPath.filter { $0.row != 0 }
-                    
-                    
-        selectedSingleIngredientIndexPath
-            .withLatestFrom(self.viewModel.ingredientSubject) { indexPath, ingredients in
-                return ingredients[indexPath.row]
+        viewModel.selectedIngredientSubject
+            .filter { $0 != 0 }
+            .withLatestFrom(self.viewModel.ingredientSubject) { row, ingredients in
+                return ingredients[row - 1]
             }
             .flatMapLatest { [unowned self] ingredient in
                 self.viewModel.getRecipes(ingredient: ingredient)
@@ -172,6 +172,24 @@ class IngredientsViewController: UIViewController, BindableType {
                         
             })
             .disposed(by: viewModel.disposeBag)
+        
+        viewModel.selectedIngredientSubject
+            .filter { $0 == 0 }
+            .withLatestFrom(viewModel.ingredientSubject)
+            .flatMapLatest { [unowned self] in
+                self.viewModel.getRecipes(allIngredients: $0)
+            }
+            .catch { err in
+
+                return .empty()
+            }
+            .subscribe(onNext: { recipes in
+
+                self.viewModel.recipesSubject.onNext(recipes)
+
+            })
+            .disposed(by: viewModel.disposeBag)
+        
         
         recipesCollecitonView.rx.itemSelected
             .map { [unowned self] indexPath in
@@ -185,38 +203,24 @@ class IngredientsViewController: UIViewController, BindableType {
                 
             })
             .disposed(by: viewModel.disposeBag)
-        
-        selectIngredientsCollectionViewIndexPath
-            .filter { $0.row == 0 }
-            .withLatestFrom(viewModel.ingredientSubject)
-            .flatMapLatest { [unowned self] in
-                self.viewModel.getRecipes(allIngredients: $0)
-            }
-            .catch { err in
-                
-                return .empty()
-            }
-            .subscribe(onNext: { recipes in
-                
-                self.viewModel.recipesSubject.onNext(recipes)
-                
-            })
-            .disposed(by: viewModel.disposeBag)
-        
     }
     
     
     func setUpDataSource() {
         
         ingredientsDataSource = RxDefaultCollectionViewDataSource<String, IngredientOptionCVCell>(identifier: "ingredientsCVCell") { [unowned self] row, ingredient, cell in
-            
-            cell.titleLbl.isSkeletonable = true
-            
+
             self.viewModel.selectedIngredientSubject
-                .map { $0 == row }
-                .bind(to: cell.isSelectedSubject)
+                .throttle(.milliseconds(1000), latest: false, scheduler: MainScheduler.instance)
+                .map { selectedRow in
+                    selectedRow == row
+                }
+                .subscribe(onNext: { isCellSelected in
+                    
+                    cell.setViewColors(isCellSelected: isCellSelected)
+                    
+                })
                 .disposed(by: cell.disposeBag)
-            
             
             
             cell.titleLbl.text = ingredient
@@ -249,6 +253,7 @@ class IngredientsViewController: UIViewController, BindableType {
     }
     
     func updateNavigationBarHiding(scrollDiff: CGFloat) {
+        
         let boundaryValue: CGFloat = 100.0
         
         /// navigationBar表示

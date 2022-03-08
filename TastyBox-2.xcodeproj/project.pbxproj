@@ -100,7 +100,6 @@
 		6F71EBF227237082001BF538 /* GenreTVCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F71EBF127237082001BF538 /* GenreTVCell.swift */; };
 		6F71EBF427237536001BF538 /* RxGenreCollectionViewDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F71EBF327237536001BF538 /* RxGenreCollectionViewDataSource.swift */; };
 		6F74C4252719BAB9007BB9E6 /* DiscoveryPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F74C4242719BAB8007BB9E6 /* DiscoveryPresenter.swift */; };
-		6F74C4292719DC61007BB9E6 /* CreateRecipeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F74C4282719DC61007BB9E6 /* CreateRecipeViewController.swift */; };
 		6F74C42B2719DEE7007BB9E6 /* CreateRecipeVM.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F74C42A2719DEE7007BB9E6 /* CreateRecipeVM.swift */; };
 		6F74C42E2719E4D5007BB9E6 /* CreateRecipe.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 6F74C42C2719E20A007BB9E6 /* CreateRecipe.storyboard */; };
 		6F77D4852726DF8D00F1FCD9 /* CheckTimeNServingTVCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F77D4842726DF8D00F1FCD9 /* CheckTimeNServingTVCell.swift */; };
@@ -193,6 +192,7 @@
 		6FDB4F552768514400E0C630 /* SelectedImageViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FDB4F542768514400E0C630 /* SelectedImageViewController.swift */; };
 		6FDB4F5727685A8400E0C630 /* SelectedImageVM.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FDB4F5627685A8400E0C630 /* SelectedImageVM.swift */; };
 		6FDB4F592768641E00E0C630 /* DigitalContents.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 6FDB4F582768641E00E0C630 /* DigitalContents.storyboard */; };
+		6FDBA27627D7078100B8F141 /* CreateRecipeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FDBA27527D7078100B8F141 /* CreateRecipeViewController.swift */; };
 		6FE15ED0271AA3A80047D3D8 /* CreateRecipeTableViewCells.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FE15ECF271AA3A80047D3D8 /* CreateRecipeTableViewCells.swift */; };
 		6FE15ED3271AA6B50047D3D8 /* EditMainImageTVCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FE15ED2271AA6B50047D3D8 /* EditMainImageTVCell.swift */; };
 		6FE15ED5271AB7B20047D3D8 /* EditMainImageCVCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FE15ED4271AB7B20047D3D8 /* EditMainImageCVCell.swift */; };
@@ -333,7 +333,6 @@
 		6F71EBF127237082001BF538 /* GenreTVCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GenreTVCell.swift; sourceTree = "<group>"; };
 		6F71EBF327237536001BF538 /* RxGenreCollectionViewDataSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RxGenreCollectionViewDataSource.swift; sourceTree = "<group>"; };
 		6F74C4242719BAB8007BB9E6 /* DiscoveryPresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiscoveryPresenter.swift; sourceTree = "<group>"; };
-		6F74C4282719DC61007BB9E6 /* CreateRecipeViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateRecipeViewController.swift; sourceTree = "<group>"; };
 		6F74C42A2719DEE7007BB9E6 /* CreateRecipeVM.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateRecipeVM.swift; sourceTree = "<group>"; };
 		6F74C42C2719E20A007BB9E6 /* CreateRecipe.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = CreateRecipe.storyboard; sourceTree = "<group>"; };
 		6F77D4842726DF8D00F1FCD9 /* CheckTimeNServingTVCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = CheckTimeNServingTVCell.swift; path = "/Users/kitajimashihomi/portfolio/TastyBox-2/TastyBox-2/View/CheckCreatedRecipe/CheckTimeNServingTVCell.swift"; sourceTree = "<absolute>"; };
@@ -429,6 +428,7 @@
 		6FDB4F542768514400E0C630 /* SelectedImageViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SelectedImageViewController.swift; sourceTree = "<group>"; };
 		6FDB4F5627685A8400E0C630 /* SelectedImageVM.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SelectedImageVM.swift; sourceTree = "<group>"; };
 		6FDB4F582768641E00E0C630 /* DigitalContents.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = DigitalContents.storyboard; sourceTree = "<group>"; };
+		6FDBA27527D7078100B8F141 /* CreateRecipeViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateRecipeViewController.swift; sourceTree = "<group>"; };
 		6FE15ECF271AA3A80047D3D8 /* CreateRecipeTableViewCells.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateRecipeTableViewCells.swift; sourceTree = "<group>"; };
 		6FE15ED2271AA6B50047D3D8 /* EditMainImageTVCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditMainImageTVCell.swift; sourceTree = "<group>"; };
 		6FE15ED4271AB7B20047D3D8 /* EditMainImageCVCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditMainImageCVCell.swift; sourceTree = "<group>"; };
@@ -895,10 +895,10 @@
 		6FB970C827250D5900350F84 /* CreateRecipe */ = {
 			isa = PBXGroup;
 			children = (
-				6F74C4282719DC61007BB9E6 /* CreateRecipeViewController.swift */,
 				6FB970B22724FA7A00350F84 /* CheckCreatedRecipeViewController.swift */,
 				6F01F3CF27296D7F003CA769 /* PublishRecipeOptionsViewController.swift */,
 				6F01F3D3272BB29C003CA769 /* SearchGenresViewController.swift */,
+				6FDBA27527D7078100B8F141 /* CreateRecipeViewController.swift */,
 			);
 			path = CreateRecipe;
 			sourceTree = "<group>";
@@ -1339,7 +1339,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				6F74C4292719DC61007BB9E6 /* CreateRecipeViewController.swift in Sources */,
 				6FB70D1C276F885D0099BC63 /* ProfileVM.swift in Sources */,
 				6F4EA996273ECD5300A4B9F4 /* RecipeGenresTVCell.swift in Sources */,
 				6F0E6964272024E6002BD547 /* CGImage+.swift in Sources */,
@@ -1432,6 +1431,7 @@
 				6FADF982274C0D04008FC605 /* Notification+.swift in Sources */,
 				6FDB4F5727685A8400E0C630 /* SelectedImageVM.swift in Sources */,
 				6F71EBF427237536001BF538 /* RxGenreCollectionViewDataSource.swift in Sources */,
+				6FDBA27627D7078100B8F141 /* CreateRecipeViewController.swift in Sources */,
 				6FDB4F552768514400E0C630 /* SelectedImageViewController.swift in Sources */,
 				6F9A0D1C27101FFA00DABB45 /* SemiModalPresenter.swift in Sources */,
 				6FB970BD27250A3100350F84 /* CheckEvaluateRecipeTVCell.swift in Sources */,
