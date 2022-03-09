@@ -210,20 +210,16 @@ class IngredientsViewController: UIViewController, BindableType {
         
         ingredientsDataSource = RxDefaultCollectionViewDataSource<String, IngredientOptionCVCell>(identifier: "ingredientsCVCell") { [unowned self] row, ingredient, cell in
 
+            cell.row = row
+            cell.titleLbl.text = ingredient
+            
             self.viewModel.selectedIngredientSubject
-                .throttle(.milliseconds(1000), latest: false, scheduler: MainScheduler.instance)
-                .map { selectedRow in
-                    selectedRow == row
-                }
-                .subscribe(onNext: { isCellSelected in
+                .subscribe(onNext: { index in
                     
-                    cell.setViewColors(isCellSelected: isCellSelected)
-                    
+                    cell.setViewColors(selectedIndex: index)
+                
                 })
                 .disposed(by: cell.disposeBag)
-            
-            
-            cell.titleLbl.text = ingredient
             
         }
         

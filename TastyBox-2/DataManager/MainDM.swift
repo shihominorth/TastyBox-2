@@ -157,119 +157,350 @@ final class MainDM: MainDMProtocol {
     }
     
     static func getRecipesUsedIngredients(allIngredients: [Ingredient]) -> Observable<[Recipe]> {
-        
-        // ingredients.countが４以下だとmaxが１またはそれ以下になるためクラッシュしてしまう。
-        if allIngredients.isEmpty {
+    
+        if allIngredients.count >= 3 {
             
-            return .just([])
+           
+            let getReceipesWithThereeIngredients  = getReceipesWithThereeIngredients(allIngredients: allIngredients)
             
-        }
-        
-        // for loop が使えないため。
-        else if allIngredients.count == 1 {
             
-            let query = db.collection("recipes").whereField("genres.\(allIngredients[0].id)", isEqualTo: true)
-            
-            return getRecipes(query: query)
-            
-        }
-        else if allIngredients.count < 5 {
-            
-            // if count is 3
-            
-            var queries: [Query] = []
-            
-            //　全てのingredientsを含んだrecipeを呼ぶクエリ
-            var allIngeredientContainsQuery = db.collection("recipes").whereField("genres.\(allIngredients[0].id)", isEqualTo: true)
-            
-            if allIngredients.count > 1 {
-                
-                for index in 1 ..< allIngredients.count {
+           return getReceipesWithThereeIngredients
+                .flatMap { recipes -> Observable<[Recipe]> in
                     
-                    allIngeredientContainsQuery = allIngeredientContainsQuery.whereField("genres.\(allIngredients[index].id)", isEqualTo: true)
-                    
-                }
-                
-            }
-            
-            
-            queries.append(allIngeredientContainsQuery)
-            
-            // 2個 Ingredientが含まれてるrecipeを探す
-            let multipleIngredientsContainsQuery = self.getRecipesByAllWays(allIngredients: allIngredients)
-            queries.append(contentsOf: multipleIngredientsContainsQuery)
-            
-            
-            // 一つ一つ調べる
-            for ingredient in allIngredients {
-                
-                let query = db.collection("recipes").whereField("genres.\(ingredient.id)", isEqualTo: true)
-                
-                queries.append(query)
-                
-            }
-            
-            var getRecipesStream = getRecipes(query: queries[0])
-            
-            queries.enumerated().forEach { index, query in
-                
-                if index != 0 {
-                    
-                    getRecipesStream = getRecipesStream
-                        .flatMap({ recipes in
-                            
-                            return getRecipes(query: query)
-                                .map { newRecipes in
+                    if recipes.count < 19 {
+                        
+                        return getReceipesWithTwoIngredients(allIngredients: allIngredients)
+                            .flatMap { recipes -> Observable<[Recipe]> in
+                                
+                                if recipes.count < 19 {
                                     
-                                    var result = recipes
-                                    result.append(contentsOf: newRecipes)
-                                    
-                                    return result
-                                    
+                                    return getReceipesWithOneIngredients(allIngredients: allIngredients)
                                 }
-                            
-                        })
+                                
+                                return .just(recipes)
+                            }
+                    }
+                    
+                    return .just(recipes)
                     
                 }
-                
-            }
             
-            return getRecipesStream
-            
-        }
-     
-        
-        let queries = getQueries(searchIngredientsOnceNumLimit: 3, ingredients: allIngredients)
-        
-        var getRecipesStream = getRecipes(query: queries[0])
-        
-        queries.enumerated().forEach { index, query in
-            
-            if index != 0 {
-                
-                getRecipesStream = getRecipesStream
-                    .flatMap({ recipes in
-                        
-                        return getRecipes(query: query)
-                            .map { newRecipes in
-                                
-                                var result = recipes
-                                result.append(contentsOf: newRecipes)
-                                
-                                return result
-                                
-                            }
-                        
-                    })
-                
-            }
             
         }
         
-        return getRecipesStream
+        else if allIngredients.count == 2 {
+            
+            return getReceipesWithTwoIngredients(allIngredients: allIngredients)
+                .flatMap { recipes -> Observable<[Recipe]> in
+                    
+                    if recipes.count < 19 {
+                        
+                        return getReceipesWithOneIngredients(allIngredients: allIngredients)
+                    }
+                    
+                    return .just(recipes)
+                }
+            
+        }
         
+        else if allIngredients.count == 1 {
+            return getReceipesWithOneIngredients(allIngredients: allIngredients)
+        }
+        
+        return .just([])
+    
+    }
+    
+    
+    static func getReceipesWithThereeIngredients(allIngredients: [Ingredient]) -> Observable<[Recipe]> {
+        
+        
+        // 3つの組み合わせ
+        var indices:[[Int]] = []
+        var selectedIngredientsIndice:[[Int]] = []
+        
+        
+        // 材料３つの組み合わせを作る
+        for index in 0..<allIngredients.count - 2 {
+        
+            let result = [index, index + 1, index + 2]
+            
+            indices.append(result)
+            
+        }
+
+        // 組み合わせの数は３個
+        let selectedIngredientIndex = Int.random(in: 0...Int(Double(selectedIngredientsIndice.count) * 0.5))
+        
+        for _ in 0..<3 {
+            
+            let ramdomIndex = Int.random(in: 0..<indices.count)
+            
+            if !selectedIngredientsIndice.contains(where: { $0[0] == indices[ramdomIndex][0]}) {
+                
+                selectedIngredientsIndice.append(indices[ramdomIndex])
+                
+                
+            }
+
+        }
+        
+        let threeIngredientsComboQueries = selectedIngredientsIndice.map { indiceArr -> Query in
+            
+            let selectIngredients = indiceArr.map { allIngredients[$0] }
+            
+            var allIngeredientContainsQuery: Query = db.collection("recipes")
+                            
+            selectIngredients.forEach { ingredient in
+                
+               allIngeredientContainsQuery = allIngeredientContainsQuery.whereField("genres.\(ingredient.id)", isEqualTo: true)
+                
+            }
+            
+            return allIngeredientContainsQuery
+        }
+        
+            
+      
+        return Observable.just(threeIngredientsComboQueries)
+            .debug("got three combo queries")
+            .flatMap { queries -> Observable<[QueryDocumentSnapshot]> in
+                
+                if queries.count > 1 {
+                
+                    for query in queries {
+                    
+                        return firestoreService.getDocuments(query: query)
+                    
+                    }
+                    
+                }
+                else if queries.count == 1 {
+                    
+                    return firestoreService.getDocuments(query: queries[0])
+                }
+      
+                return .just([])
+                
+            }
+            .flatMap {
+                Recipe.generateNewRecipes(docs: $0)
+            }
         
     }
+    
+    static func getReceipesWithTwoIngredients(allIngredients: [Ingredient]) -> Observable<[Recipe]> {
+        
+        // 2つの組み合わせ
+        var indices:[[Int]] = []
+        var selectedIngredientsIndice:[[Int]] = []
+        
+        
+        // 材料2つの組み合わせを作る
+        for index in 0...allIngredients.count - 2 {
+        
+            let result = [index, index + 1, index + 2]
+            
+            indices.append(result)
+            
+        }
+
+        // 組み合わせの数は３個
+        var limit: Int {
+            
+            let temp = Int(ceil(Double(selectedIngredientsIndice.count) * 0.5))
+            
+            if temp == 1 {
+                return 2
+            }
+            
+            return temp
+            
+        }
+        
+        let selectedIngredientIndex = Int.random(in: 0...Int(Double(selectedIngredientsIndice.count) * 0.5))
+        
+        for _ in 0 ..< selectedIngredientIndex {
+            
+            let ramdomIndex = Int.random(in: 0..<allIngredients.count)
+            
+            if !selectedIngredientsIndice.contains(where: { $0[0] == indices[ramdomIndex][0]}) {
+                
+                selectedIngredientsIndice.append(indices[ramdomIndex])
+                
+                
+            }
+
+        }
+        
+        let threeIngredientsComboQueries = selectedIngredientsIndice.map { indiceArr -> Query in
+            
+            let selectIngredients = indiceArr.map { allIngredients[$0] }
+            
+            var allIngeredientContainsQuery: Query = db.collection("recipes")
+                            
+            selectIngredients.forEach { ingredient in
+                
+               allIngeredientContainsQuery = allIngeredientContainsQuery.whereField("genres.\(ingredient.id)", isEqualTo: true)
+                
+            }
+            
+            return allIngeredientContainsQuery
+        }
+        
+            
+      
+        return Observable.just(threeIngredientsComboQueries)
+            .flatMap { queries -> Observable<[QueryDocumentSnapshot]> in
+                
+                if queries.count > 1 {
+                
+                    for query in queries {
+                    
+                        return firestoreService.getDocuments(query: query)
+                    
+                    }
+                    
+                }
+                else if queries.count == 1 {
+                    
+                    return firestoreService.getDocuments(query: queries[0])
+                }
+      
+                return .just([])
+                
+            }
+            .flatMap {
+                Recipe.generateNewRecipes(docs: $0)
+            }
+    
+    }
+    
+    static func getReceipesWithOneIngredients(allIngredients: [Ingredient]) -> Observable<[Recipe]> {
+    
+        let queries = allIngredients.map { ingredient -> Query in
+            
+            return db.collection("recipes").whereField("genres.\(ingredient.id)", isEqualTo: true)
+        
+        }
+        
+        if queries.count > 1 {
+        
+            for query in queries {
+            
+                // ここでradishが含まれるレシピがゲットできない
+                return firestoreService.getDocuments(query: query)
+                    .flatMap {
+                        Recipe.generateNewRecipes(docs: $0)
+                    }
+            
+            }
+            
+        }
+        else if queries.count == 1 {
+            
+            return firestoreService.getDocuments(query: queries[0])
+                .flatMap {
+                    Recipe.generateNewRecipes(docs: $0)
+                }
+        }
+
+        return .just([])
+    
+    }
+//    static func getRecipesUsedIngredients(allIngredients: [Ingredient]) -> Observable<[Recipe]> {
+//
+//        // ingredients.countが４以下だとmaxが１またはそれ以下になるためクラッシュしてしまう。
+//        if allIngredients.isEmpty {
+//
+//            return .just([])
+//
+//        }
+//
+//        // for loop が使えないため。
+//        else if allIngredients.count == 1 {
+//
+//            let query = db.collection("recipes").whereField("genres.\(allIngredients[0].id)", isEqualTo: true)
+//
+//            return getRecipes(query: query)
+//
+//        }
+//        else if allIngredients.count < 5 {
+//
+//            // if count is 3
+//
+//            var queries: [Query] = []
+//
+//            //　全てのingredientsを含んだrecipeを呼ぶクエリ
+//            var allIngeredientContainsQuery = db.collection("recipes").whereField("genres.\(allIngredients[0].id)", isEqualTo: true)
+//
+//            if allIngredients.count > 1 {
+//
+//                for index in 1 ..< allIngredients.count {
+//
+//                    allIngeredientContainsQuery = allIngeredientContainsQuery.whereField("genres.\(allIngredients[index].id)", isEqualTo: true)
+//
+//                }
+//
+//            }
+//
+//
+//            queries.append(allIngeredientContainsQuery)
+//
+//            // 2個 Ingredientが含まれてるrecipeを探す
+//            let multipleIngredientsContainsQuery = self.getRecipesByAllWays(allIngredients: allIngredients)
+//            queries.append(contentsOf: multipleIngredientsContainsQuery)
+//
+//
+//            // 一つ一つ調べる
+//            for ingredient in allIngredients {
+//
+//                let query = db.collection("recipes").whereField("genres.\(ingredient.id)", isEqualTo: true)
+//
+//                queries.append(query)
+//
+//            }
+//
+//            var getRecipesStream = getRecipes(query: queries[0])
+//
+//            queries.enumerated().forEach { index, query in
+//
+//                if index != 0 {
+//
+//                    getRecipesStream = getRecipesStream
+//                        .flatMap({ recipes in
+//
+//                            return getRecipes(query: query)
+//                                .map { newRecipes in
+//
+//                                    var result = recipes
+//                                    result.append(contentsOf: newRecipes)
+//
+//                                    return result
+//
+//                                }
+//
+//                        })
+//
+//                }
+//
+//            }
+//
+//            return getRecipesStream
+//
+//        }
+//
+//
+//        let queries = getQueries(searchIngredientsOnceNumLimit: 3, ingredients: allIngredients)
+//
+//        var getRecipesStream = getRecipes(query: queries[0])
+//
+
+//
+//        return getRecipesStream
+//
+//
+//    }
     
     // ways:　通り
     // 2 ingredients
@@ -452,26 +683,26 @@ final class MainDM: MainDMProtocol {
     
     static func getRecipeDocument(id: String, completion: @escaping (QueryDocumentSnapshot?) -> Void, errBlock: @escaping (Error) -> Void){
         
-        
+
         db.collection("recipes").document(id).getDocument { doc, err in
-            
+
             if let err = err {
-                
+
                 errBlock(err)
-                
+
             }
             else {
-                
+
                 let doc = doc as? QueryDocumentSnapshot
                 completion(doc)
-                
+
             }
-            
+
         }
-        
-        
+
+
     }
-    
+
     
     static func getPublisherDocuments(ids: [String]) -> Observable<[DocumentSnapshot]> {
         
