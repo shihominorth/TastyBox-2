@@ -7,7 +7,7 @@
 
 import UIKit
 
-class RecipeVIPTVCell: UITableViewCell {
+final class RecipeVIPTVCell: UITableViewCell {
 
     @IBOutlet weak var isVIPSwitch: UISwitch!
     override func awakeFromNib() {

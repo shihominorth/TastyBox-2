@@ -9,7 +9,7 @@ import UIKit
 import Kingfisher
 import RxSwift
 
-class RecipePublisherTVCell: UITableViewCell {
+final fclass RecipePublisherTVCell: UITableViewCell {
 
     @IBOutlet weak var publisherNameLbl: UILabel!
     @IBOutlet weak var publisherBtn: UIButton!

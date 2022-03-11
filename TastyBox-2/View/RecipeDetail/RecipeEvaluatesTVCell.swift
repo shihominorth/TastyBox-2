@@ -8,7 +8,7 @@
 import UIKit
 import RxSwift
 
-class RecipeEvaluatesTVCell: UITableViewCell {
+final class RecipeEvaluatesTVCell: UITableViewCell {
 
     @IBOutlet weak var collectionView: UICollectionView!
     

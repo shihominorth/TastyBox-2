@@ -7,7 +7,7 @@
 
 import UIKit
 
-class CheckPublisherTVCell: UITableViewCell {
+final class CheckPublisherTVCell: UITableViewCell {
 
     @IBOutlet weak var userNameLbl: UILabel!
     @IBOutlet weak var userImgViewBtn: UIImageView!

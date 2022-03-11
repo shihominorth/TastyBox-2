@@ -7,7 +7,7 @@
 
 import UIKit
 
-class MainMyProfileTVCell: UITableViewCell {
+final class MainMyProfileTVCell: UITableViewCell {
     
     @IBOutlet weak var myProfileImgView: UIImageView!
     @IBOutlet weak var nameLbl: UILabel!

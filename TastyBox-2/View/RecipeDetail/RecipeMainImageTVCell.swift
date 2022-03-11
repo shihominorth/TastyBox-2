@@ -10,7 +10,7 @@ import AVFoundation
 import Kingfisher
 import RxSwift
 
-class RecipeMainImageTVCell: UITableViewCell {
+final class RecipeMainImageTVCell: UITableViewCell {
 
     @IBOutlet weak var playVideoView: PlayVideoInsideTVCellView!
     @IBOutlet weak var slider: UISlider!

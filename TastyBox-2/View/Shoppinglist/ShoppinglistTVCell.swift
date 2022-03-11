@@ -9,7 +9,7 @@ import UIKit
 import RxCocoa
 import RxSwift
 
-class ShoppinglistTVCell: UITableViewCell {
+final class ShoppinglistTVCell: UITableViewCell {
 
     @IBOutlet weak var checkMarkBtn: UIButton!
     @IBOutlet weak var nameLbl: UILabel!

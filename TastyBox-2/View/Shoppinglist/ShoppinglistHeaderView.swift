@@ -9,7 +9,7 @@ import UIKit
 import RxSwift
 import RxCocoa
 
-class ShoppinglistHeaderView: UITableViewHeaderFooterView {
+final class ShoppinglistHeaderView: UITableViewHeaderFooterView {
 
     let btn = UIButton(frame: CGRect(x: 0, y: 0, width: 30, height: 30))
     var img = UIImage(systemName: "checkmark.circle")

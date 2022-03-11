@@ -9,7 +9,7 @@ import UIKit
 import AVFoundation
 import RxSwift
 
-class CheckMainImageTVCell: UITableViewCell {
+final class CheckMainImageTVCell: UITableViewCell {
 
     @IBOutlet weak var slider: UISlider!
     @IBOutlet weak var playVideoView: PlayVideoInsideTVCellView!

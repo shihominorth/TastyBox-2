@@ -7,7 +7,7 @@
 
 import UIKit
 
-class NormalTimelineTVCell: UITableViewCell {
+final class NormalTimelineTVCell: UITableViewCell {
 
     @IBOutlet weak var upperLineView: UIView!
     @IBOutlet weak var userImgView: UIImageView!

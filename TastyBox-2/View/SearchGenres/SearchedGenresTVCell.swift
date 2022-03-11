@@ -9,7 +9,7 @@ import UIKit
 import RxSwift
 import RxCocoa
 
-class SearchedGenresTVCell: UITableViewCell {
+final class SearchedGenresTVCell: UITableViewCell {
 
     @IBOutlet weak var collectionView: UICollectionView!
 

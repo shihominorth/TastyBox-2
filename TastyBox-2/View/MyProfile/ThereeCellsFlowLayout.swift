@@ -8,7 +8,7 @@
 import UIKit
 
 
-class ThereeCellsFlowLayout: UICollectionViewFlowLayout {
+final class ThereeCellsFlowLayout: UICollectionViewFlowLayout {
     
     override func layoutAttributesForElements(in rect: CGRect) -> [UICollectionViewLayoutAttributes]? {
         return super.layoutAttributesForElements(in: rect)?

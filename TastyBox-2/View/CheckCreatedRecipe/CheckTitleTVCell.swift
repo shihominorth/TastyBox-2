@@ -7,7 +7,7 @@
 
 import UIKit
 
-class CheckTitleTVCell: UITableViewCell {
+final class CheckTitleTVCell: UITableViewCell {
 
     @IBOutlet weak var titleLbl: UILabel!
     

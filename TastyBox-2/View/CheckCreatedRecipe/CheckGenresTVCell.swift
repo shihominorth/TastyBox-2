@@ -8,7 +8,7 @@
 import UIKit
 import RxSwift
 
-class CheckGenresTVCell: UITableViewCell {
+final class CheckGenresTVCell: UITableViewCell {
 
     @IBOutlet weak var collectionView: UICollectionView!
     @IBOutlet weak var expandBtn: UIButton!

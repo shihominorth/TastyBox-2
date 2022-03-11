@@ -7,7 +7,7 @@
 
 import UIKit
 
-class RecipeRankingCVCell: UICollectionViewCell {
+final class RecipeRankingCVCell: UICollectionViewCell {
     
     @IBOutlet weak var rankingLbl: UILabel!
     @IBOutlet weak var titleLbl: UILabel!

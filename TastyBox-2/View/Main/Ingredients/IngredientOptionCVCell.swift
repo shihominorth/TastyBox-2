@@ -8,7 +8,7 @@
 import UIKit
 import RxSwift
 
-class IngredientOptionCVCell: UICollectionViewCell {
+final class IngredientOptionCVCell: UICollectionViewCell {
     
     var disposeBag = DisposeBag()
     @IBOutlet weak var titleLbl: UILabel!

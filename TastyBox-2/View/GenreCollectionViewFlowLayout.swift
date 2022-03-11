@@ -7,7 +7,7 @@
 
 import UIKit
 
-class GenreCollectionViewFlowLayout: UICollectionViewFlowLayout, UICollectionViewDelegateFlowLayout {
+final class GenreCollectionViewFlowLayout: UICollectionViewFlowLayout, UICollectionViewDelegateFlowLayout {
     
     var numlines = 0
 

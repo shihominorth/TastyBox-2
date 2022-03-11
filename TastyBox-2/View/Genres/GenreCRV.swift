@@ -7,7 +7,7 @@
 
 import UIKit
 
-class GenreCRV: UICollectionReusableView {
+final class GenreCRV: UICollectionReusableView {
    
     @IBOutlet weak var titleLbl: UILabel!
     

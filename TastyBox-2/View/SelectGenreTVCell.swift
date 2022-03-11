@@ -7,7 +7,7 @@
 
 import UIKit
 
-class SelectGenreTVCell: UITableViewCell {
+final class SelectGenreTVCell: UITableViewCell {
 
     @IBOutlet weak var selectBtn: UIButton!
 //    var isSelectedGenre = false

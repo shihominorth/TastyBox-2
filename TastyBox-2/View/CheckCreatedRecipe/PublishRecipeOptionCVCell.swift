@@ -7,7 +7,7 @@
 
 import UIKit
 
-class PublishRecipeOptionCVCell: UICollectionViewCell {
+final class PublishRecipeOptionCVCell: UICollectionViewCell {
     
     @IBOutlet weak var imgView: UIImageView!
     @IBOutlet weak var titleLbl: UILabel!

@@ -9,7 +9,7 @@ import UIKit
 import RxSwift
 import RxCocoa
 
-class SelectGenresCRV: UICollectionReusableView {
+final class SelectGenresCRV: UICollectionReusableView {
         
     @IBOutlet weak var txtView: GenreTxtView!
     

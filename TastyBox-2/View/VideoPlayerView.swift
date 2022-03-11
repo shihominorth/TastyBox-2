@@ -11,7 +11,7 @@ import Photos
 import RxSwift
 import RxCocoa
 
-class VideoPlayerView: UIView {
+final class VideoPlayerView: UIView {
     
     let indicator: UIActivityIndicatorView = {
         

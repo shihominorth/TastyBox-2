@@ -8,7 +8,7 @@
 import UIKit
 import RxSwift
 
-class MyProfileNumTVCell: UITableViewCell {
+final class MyProfileNumTVCell: UITableViewCell {
 
     @IBOutlet weak var myPosetedRecipeNumBtn: UIButton!
     @IBOutlet weak var mySavedRecipesBtn: UIButton!

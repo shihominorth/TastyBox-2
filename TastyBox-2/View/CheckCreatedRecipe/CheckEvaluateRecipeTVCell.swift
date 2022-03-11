@@ -7,7 +7,7 @@
 
 import UIKit
 
-class CheckEvaluateRecipeTVCell: UITableViewCell {
+final class CheckEvaluateRecipeTVCell: UITableViewCell {
 
     @IBOutlet weak var collectionView: UICollectionView!
     

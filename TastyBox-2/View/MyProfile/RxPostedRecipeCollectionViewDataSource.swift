@@ -10,7 +10,7 @@ import RxSwift
 import RxCocoa
 import DifferenceKit
 
-class RxPostedRecipeCollectionViewDataSource<E: Differentiable, Cell: UICollectionViewCell>: NSObject, RxCollectionViewDataSourceType, UICollectionViewDataSource {
+final class RxPostedRecipeCollectionViewDataSource<E: Differentiable, Cell: UICollectionViewCell>: NSObject, RxCollectionViewDataSourceType, UICollectionViewDataSource {
 
     
     typealias Element = [E]

@@ -8,7 +8,7 @@
 import UIKit
 import RxSwift
 
-class ContainerControlView: UIView {
+final class ContainerControlView: UIView {
     
     var playerBtn: UIButton = {
         

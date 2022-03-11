@@ -10,7 +10,7 @@ import RxSwift
 import RxCocoa
 import RxTimelane
 
-class GenreTVCell: UITableViewCell {
+final class GenreTVCell: UITableViewCell {
     
     @IBOutlet weak var collectionView: UICollectionView!
     

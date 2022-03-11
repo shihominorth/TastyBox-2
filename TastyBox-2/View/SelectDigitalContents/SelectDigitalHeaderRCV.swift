@@ -7,7 +7,7 @@
 
 import UIKit
 
-class SelectDigitalHeaderRCV: UICollectionReusableView {
+final class SelectDigitalHeaderRCV: UICollectionReusableView {
     
     let segmentControl = UISegmentedControl(items: ["Images", "Videos"])
     

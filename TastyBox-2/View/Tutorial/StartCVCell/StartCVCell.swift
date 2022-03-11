@@ -8,7 +8,8 @@
 import UIKit
 import RxSwift
 
-class StartCVCell: UICollectionViewCell {
+final class StartCVCell: UICollectionViewCell {
+   
     @IBOutlet weak var solicitationLbl: UILabel!
     @IBOutlet weak var signUpwithAccountBtn: UIButton!
     @IBOutlet weak var anonymousBtn: UIButton!

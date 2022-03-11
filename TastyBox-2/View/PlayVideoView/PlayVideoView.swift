@@ -29,7 +29,7 @@ enum PlayViewStatus {
 }
 
 
-class PlayVideoView: UIView {
+final class PlayVideoView: UIView {
     
    
     

@@ -7,11 +7,11 @@
 
 import UIKit
 
-class EditMainImageCVCell: UICollectionViewCell {
+final class EditMainImageCVCell: UICollectionViewCell {
     @IBOutlet weak var imgView: UIImageView!
     
 }
 
-class EditMainVideoCVCell: UICollectionViewCell {
+final class EditMainVideoCVCell: UICollectionViewCell {
     @IBOutlet weak var imgView: UIImageView!
 }

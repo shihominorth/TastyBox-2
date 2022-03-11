@@ -7,7 +7,7 @@
 
 import UIKit
 
-class RecipeEvaluateCVCell: UICollectionViewCell {
+final class RecipeEvaluateCVCell: UICollectionViewCell {
     
     @IBOutlet weak var imgView: UIImageView! {
         didSet {

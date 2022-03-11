@@ -7,7 +7,7 @@
 
 import UIKit
 
-class SearchGenreTxtViewTVCell: UITableViewCell {
+final class SearchGenreTxtViewTVCell: UITableViewCell {
 
     @IBOutlet weak var txtView: GenreTxtView!
     

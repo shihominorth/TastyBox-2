@@ -7,7 +7,7 @@
 
 import UIKit
 
-class TutorialCVCell: UICollectionViewCell {
+final class TutorialCVCell: UICollectionViewCell {
     @IBOutlet weak var imgView: UIImageView!
     @IBOutlet weak var titleLbl: UILabel!
     @IBOutlet weak var contextLbl: UILabel!

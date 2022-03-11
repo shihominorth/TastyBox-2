@@ -7,7 +7,7 @@
 
 import UIKit
 
-class CheckGenresCVCell: UICollectionViewCell {
+final class CheckGenresCVCell: UICollectionViewCell {
     
     @IBOutlet weak var titleLbl: UILabel!
     

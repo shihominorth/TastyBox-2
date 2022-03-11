@@ -11,7 +11,7 @@ import SkeletonView
 import RxSwift
 import RxCocoa
 
-class MyPostedRecipesTVCell: UITableViewCell {
+final class MyPostedRecipesTVCell: UITableViewCell {
 
     @IBOutlet weak var collectionView: UICollectionView! {
         didSet {

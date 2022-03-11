@@ -9,7 +9,7 @@ import UIKit
 import AVKit
 import AVFoundation
 
-class PlayVideoInsideTVCellView: UIView {
+final class PlayVideoInsideTVCellView: UIView {
 
     @IBOutlet weak var imgView: UIImageView!
     

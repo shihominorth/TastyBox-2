@@ -8,7 +8,7 @@
 import UIKit
 import RxSwift
 
-class ReportAlertViewTVCell: UITableViewCell {
+final class ReportAlertViewTVCell: UITableViewCell {
 
     @IBOutlet weak var selectedImgView: UIImageView!
     @IBOutlet weak var titleLbl: UILabel!

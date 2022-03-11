@@ -9,7 +9,7 @@ import UIKit
 import Kingfisher
 import SkeletonView
 
-class CheckInstructionTVCell: UITableViewCell {
+final class CheckInstructionTVCell: UITableViewCell {
 
     @IBOutlet weak var imgView: UIImageView!
     @IBOutlet weak var stepLbl: UILabel!

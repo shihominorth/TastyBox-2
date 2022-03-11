@@ -7,7 +7,7 @@
 
 import UIKit
 
-class IngredientsHeaderView: UITableViewHeaderFooterView {
+final class IngredientsHeaderView: UITableViewHeaderFooterView {
     
     let label = UILabel()
 

@@ -8,7 +8,7 @@
 import UIKit
 import Kingfisher
 
-class RecipeInstructionTVCell: UITableViewCell {
+final class RecipeInstructionTVCell: UITableViewCell {
 
     @IBOutlet weak var imgView: UIImageView!
     @IBOutlet weak var stepLbl: UILabel!

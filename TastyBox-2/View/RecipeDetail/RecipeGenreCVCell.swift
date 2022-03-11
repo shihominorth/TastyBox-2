@@ -7,7 +7,7 @@
 
 import UIKit
 
-class RecipeGenreCVCell: UICollectionViewCell {
+final class RecipeGenreCVCell: UICollectionViewCell {
     
     @IBOutlet weak var titleLbl: UILabel!
     

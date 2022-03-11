@@ -7,7 +7,7 @@
 
 import UIKit
 
-class SelectDigitalContentsCVCell: UICollectionViewCell {
+final class SelectDigitalContentsCVCell: UICollectionViewCell {
     
     @IBOutlet weak var selectedNumImgView: UIImageView!
     @IBOutlet weak var contentImgView: UIImageView!

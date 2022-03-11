@@ -7,7 +7,7 @@
 
 import UIKit
 
-class RecipeWithIngredientCVCell: UICollectionViewCell {
+final class RecipeWithIngredientCVCell: UICollectionViewCell {
     
     @IBOutlet weak var imgView: UIImageView!
     @IBOutlet weak var titleLbel: UILabel!

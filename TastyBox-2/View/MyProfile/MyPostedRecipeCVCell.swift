@@ -9,7 +9,7 @@ import UIKit
 import SkeletonView
 
 
-class MyPostedRecipeCVCell: UICollectionViewCell {
+final class MyPostedRecipeCVCell: UICollectionViewCell {
 
     static var identifier: String {
         return "myPostedImg"

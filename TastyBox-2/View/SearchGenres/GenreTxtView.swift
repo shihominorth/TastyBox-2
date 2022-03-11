@@ -9,7 +9,7 @@ import UIKit
 import RxSwift
 import RxCocoa
 
-class GenreTxtView: UITextView {
+final class GenreTxtView: UITextView {
     
     
     var placeHolder: String = "" {

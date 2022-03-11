@@ -10,7 +10,7 @@ import RxSwift
 import RxCocoa
 import Lottie
 
-class EditMainImageTVCell: UITableViewCell {
+final class EditMainImageTVCell: UITableViewCell {
 
     @IBOutlet weak var collectionView: UICollectionView!
     

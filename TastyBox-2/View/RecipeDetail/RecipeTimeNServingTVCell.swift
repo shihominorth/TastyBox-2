@@ -7,7 +7,7 @@
 
 import UIKit
 
-class RecipeTimeNServingTVCell: UITableViewCell {
+final class RecipeTimeNServingTVCell: UITableViewCell {
 
     @IBOutlet weak var timeLbl: UILabel!
     @IBOutlet weak var servingLbl: UILabel!

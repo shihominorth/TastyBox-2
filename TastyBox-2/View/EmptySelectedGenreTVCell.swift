@@ -7,7 +7,7 @@
 
 import UIKit
 
-class EmptySelectedGenreTVCell: UITableViewCell {
+final class EmptySelectedGenreTVCell: UITableViewCell {
     
     let addBtn = UIButton()
     

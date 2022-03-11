@@ -8,7 +8,7 @@
 import UIKit
 import RxSwift
 
-class SearchBarRCV: UICollectionReusableView {
+final class SearchBarRCV: UICollectionReusableView {
         
     
     @IBOutlet weak var searchBar: UISearchBar!

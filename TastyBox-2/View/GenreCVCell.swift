@@ -7,7 +7,7 @@
 
 import UIKit
 
-class GenreCVCell: UICollectionViewCell {
+final class GenreCVCell: UICollectionViewCell {
     
     @IBOutlet weak var titleLbl: UILabel!
     var isSelectedGenre = false

@@ -9,7 +9,7 @@ import UIKit
 import RxSwift
 import RxCocoa
 
-class EditTitleRecipeTVCell: UITableViewCell {
+final class EditTitleRecipeTVCell: UITableViewCell {
     
     @IBOutlet weak var txtField: UITextField!
     var disposeBag = DisposeBag()
@@ -28,7 +28,7 @@ class EditTitleRecipeTVCell: UITableViewCell {
     }
 }
 
-class EditTimeNSearvingTVCell: UITableViewCell {
+final class EditTimeNSearvingTVCell: UITableViewCell {
     
     @IBOutlet weak var timeTxtField: UITextField!
     @IBOutlet weak var servingTxtField: UITextField!
@@ -50,7 +50,7 @@ class EditTimeNSearvingTVCell: UITableViewCell {
     }
 }
 
-class EditIngredientsHeaderCell: UITableViewCell {
+final class EditIngredientsHeaderCell: UITableViewCell {
     
     @IBOutlet weak var addBtn: UIButton!
     @IBOutlet weak var editBtn: UIButton!
@@ -71,7 +71,7 @@ class EditIngredientsHeaderCell: UITableViewCell {
     }
 }
 
-class EditIngredientsTVCell: UITableViewCell {
+final class EditIngredientsTVCell: UITableViewCell {
     
     @IBOutlet weak var nameTxtField: UITextField!
     @IBOutlet weak var amountTxtField: UITextField!
@@ -92,7 +92,7 @@ class EditIngredientsTVCell: UITableViewCell {
     }
 }
 
-class EditInstructionHeaderTVCell: UITableViewCell {
+final class EditInstructionHeaderTVCell: UITableViewCell {
     
     @IBOutlet weak var addBtn: UIButton!
     @IBOutlet weak var editBtn: UIButton!
