@@ -104,8 +104,9 @@ class RegisterMyInfoProfileTableViewController: UITableViewController, UIPickerV
                 
         self.viewModel.userImageSubject
             .observe(on: MainScheduler.instance)
-            .flatMapLatest { [unowned self] in
-                self.processImage(imageData: $0)
+                .flatMapLatest { _ -> Observable<Data> in
+                return .just(Data())
+//                self.processImage(imageData: $0)
             }
             .do(onNext: { [unowned self] _ in
                     

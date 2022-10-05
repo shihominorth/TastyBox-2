@@ -20,8 +20,8 @@ final class RegisterMyInfoProfileVM: ViewModelBase {
     private let sceneCoodinator: SceneCoordinator
     let user: Firebase.User
     
-    let defaultUserImageData = #imageLiteral(resourceName: "defaultUserImage").pngData()
-    var userImageSubject: BehaviorSubject<Data>!
+    let defaultUserImageData =  #imageLiteral(resourceName: "defaultUserImage")
+    var userImageSubject: BehaviorSubject<URL>!
     var isEnableDone = BehaviorRelay(value: false)
     var observeTxtFields = BehaviorRelay<String>(value: "")
     
@@ -44,7 +44,7 @@ final class RegisterMyInfoProfileVM: ViewModelBase {
         self.user = user
         
         self.photoPickerSubject = PublishSubject<Data>()
-        self.userImageSubject = BehaviorSubject<Data>(value: Data())
+        self.userImageSubject = BehaviorSubject<URL>(value: URL(fileURLWithPath: ""))
         
         cuisineTypeOptions = ["Chinese Food", "Japanese Food", "Thai food"]
         familySizeOptions = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15", "16", "17", "18", "19", "20"]
@@ -54,32 +54,19 @@ final class RegisterMyInfoProfileVM: ViewModelBase {
         
         userName.accept(displayName)
         email.accept(userEmail)
-        
+                
     }
     
-    func getUserImage() -> Observable<Data> {
+    func getUserImage() -> Observable<URL> {
         
         return self.apiType.getUserImage(user: self.user)
             .catch { err in
                 
-                if let userImageURL = self.user.photoURL, let userImageData = try? Data(contentsOf: userImageURL) {
-                    return Observable.just(userImageData)
+                if let userImageURL = self.user.photoURL {
+                    return Observable.just(userImageURL)
                 }
-                
-                else if let defaultUserImageData = self.defaultUserImageData {
-                    return Observable.just(defaultUserImageData)
-                }
-                
                 return .empty()
-                
             }
-//            .do(onNext: { [unowned self] data in
-//
-//                self.userImage.onNext(data)
-//                
-//            })
-                
-                
     }
     
     func toPickPhoto() {
@@ -88,7 +75,7 @@ final class RegisterMyInfoProfileVM: ViewModelBase {
         
         self.sceneCoodinator.transition(to: scene, type: .photoPick(completion: { data in
             
-            self.userImageSubject.onNext(data)
+//            self.userImageSubject.onNext(data)
             
         }))
         
@@ -100,7 +87,7 @@ final class RegisterMyInfoProfileVM: ViewModelBase {
         
         self.sceneCoodinator.transition(to: scene, type: .camera(completion: { data in
             
-            self.userImageSubject.onNext(data)
+//            self.userImageSubject.onNext(data)
             
         }))
         
@@ -108,10 +95,10 @@ final class RegisterMyInfoProfileVM: ViewModelBase {
     
     func registerUser() -> Observable<Void> {
         
-        return Observable.combineLatest(userName.asObservable(), email.asObservable(), familySize.asObservable(), cuisineType.asObservable(), userImageSubject.asObservable())
-            .flatMap { [unowned self] (name, email, familySize, cuisineType, userImage)  in
-               
-                self.apiType.userRegister(userName: name, email: email, familySize: familySize, cuisineType: cuisineType, accountImage: userImage)
+        return Observable.combineLatest(userName, email, familySize, cuisineType)
+            .flatMap { [unowned self] (name, email, familySize, cuisineType)  in
+                
+                self.apiType.userRegister(userName: name, email: email, familySize: familySize, cuisineType: cuisineType, accountImage: Data())
             }
             .catch { err in
                 
@@ -125,15 +112,15 @@ final class RegisterMyInfoProfileVM: ViewModelBase {
     }
     
     func goToNext() {
- 
+        
         let vm = DiscoveryViewModel(sceneCoodinator: self.sceneCoodinator, user: self.user)
         let scene: Scene = .discovery(scene: .main(vm))
         self.sceneCoodinator.transition(to: scene, type: .modal(presentationStyle: .fullScreen, modalTransisionStyle: .crossDissolve, hasNavigationController: true))
         
     }
- 
+    
     func switchAccount() {
-  
+        
         let firebaseAuth = Auth.auth()
         
         if let providerData = firebaseAuth.currentUser?.providerData {
@@ -165,7 +152,7 @@ final class RegisterMyInfoProfileVM: ViewModelBase {
                 reason.generateErrAlert()
             }
             
-    
+            
         }
         
         

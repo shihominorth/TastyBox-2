@@ -29,11 +29,9 @@ final class LoadingVM: ViewModelBase {
             self.apiType.isRegisteredMyInfo
                 .retry(3)
                 .catch { err in
-                    
                     err.handleFireStoreError()?.generateErrAlert()
                     
                     return .empty()
-                    
                 }
                 .subscribe(onNext: { isFirst in
                 

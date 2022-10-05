@@ -26,15 +26,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
                )
         
         UINavigationBar.appearance().tintColor = UIColor.systemOrange
-
-//        
-//        self.window = UIWindow(frame: UIScreen.main.bounds)
-//        let sceneCoordinator = SceneCoordinator(window: self.window!)
-//
-//        let vm = LoadingVM(sceneCoodinator: sceneCoordinator)
-//        let vc = LoadingScene.loading(vm).viewController()
-//        
-//        sceneCoordinator.transition(to: vc, type: .root)
         
         return true
     }

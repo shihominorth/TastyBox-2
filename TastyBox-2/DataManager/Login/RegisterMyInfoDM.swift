@@ -13,7 +13,7 @@ import RxCocoa
 protocol RegisterMyInfoProtocol: AnyObject {
     static var firestoreService: FirestoreServices { get }
     static var storageService: StorageService { get }
-    static func getUserImage(user: Firebase.User) -> Observable<Data>
+    static func getUserImage(user: Firebase.User) -> Observable<URL>
     static func userRegister(userName: String?, email: String?, familySize: String?, cuisineType: String?, accountImage: Data?) -> Observable<Void>
 }
 
@@ -27,7 +27,7 @@ final class RegisterMyInfoDM: RegisterMyInfoProtocol {
         return StorageService()
     }
     
-    static func getUserImage(user: Firebase.User) -> Observable<Data> {
+    static func getUserImage(user: Firebase.User) -> Observable<URL> {
         
         return Observable.create { observer in
             
@@ -37,13 +37,7 @@ final class RegisterMyInfoDM: RegisterMyInfoProtocol {
                     observer.onError(err)
                 }
                 else if let url = url {
-                    
-                    guard let data = try? Data(contentsOf: url) else {
-                        return
-                    }
-                    
-                    observer.onNext(data)
-                    
+                    observer.onNext(url)
                 }
                 
             }

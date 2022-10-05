@@ -9,7 +9,7 @@
 	<key>CFBundleExecutable</key>
 	<string>$(EXECUTABLE_NAME)</string>
 	<key>CFBundleIdentifier</key>
-	<string>$(PRODUCT_BUNDLE_IDENTIFIER)</string>
+	<string>com.tastybox.shihomikitajima</string>
 	<key>CFBundleInfoDictionaryVersion</key>
 	<string>6.0</string>
 	<key>CFBundleName</key>
@@ -23,10 +23,7 @@
 		<dict>
 			<key>CFBundleURLSchemes</key>
 			<array>
-                <string>fb795255847888817</string>
-               <!--
-				<string>fb572134794034624</string>
-               -->
+				<string>fb795255847888817</string>
 			</array>
 		</dict>
 		<dict>
@@ -34,7 +31,7 @@
 			<string>Editor</string>
 			<key>CFBundleURLSchemes</key>
 			<array>
-				<string>com.googleusercontent.apps.556238051319-tor3ebui23u04ntgb383qvct8kjur78k</string>
+				<string>com.googleusercontent.apps.376923987395-f8g62fv1jdg40trj7ukqm9ddm86cmvj0</string>
 			</array>
 		</dict>
 		<dict>
@@ -44,45 +41,36 @@
 			<string>TastyBox-2</string>
 			<key>CFBundleURLSchemes</key>
 			<array>
-                <string>com.shihomikitajima.version2.TastyBox</string>
-                <!--
-                <string>795255847888817</string>
-                -->
+				<string>com.shihomikitajima.version2.TastyBox</string>
 			</array>
 		</dict>
 	</array>
 	<key>CFBundleVersion</key>
 	<string>1</string>
 	<key>FacebookAppID</key>
-    <string>795255847888817</string>
-    <!--
-	<string>572134794034624</string>
-    -->
+	<string>1483909698785197</string>
 	<key>FacebookClientToken</key>
-    <!--
-	<string>5c732294db2fb9e272ea0460866b7ae7</string>
-    -->
-    <string>1477c4ffe0e77add65970b4ad911f9d5</string>
+	<string>e4e98f5c9830476aed0d5dab11d558d9</string>
 	<key>FacebookDisplayName</key>
 	<string>TastyBox</string>
-    <key>LSApplicationQueriesSchemes</key>
-    <array>
-      <string>fbapi</string>
-      <string>fbapi20130214</string>
-      <string>fbapi20130410</string>
-      <string>fbapi20130702</string>
-      <string>fbapi20131010</string>
-      <string>fbapi20131219</string>
-      <string>fbapi20140410</string>
-      <string>fbapi20140116</string>
-      <string>fbapi20150313</string>
-      <string>fbapi20150629</string>
-      <string>fbapi20160328</string>
-      <string>fbauth</string>
-      <string>fb-messenger-share-api</string>
-      <string>fbauth2</string>
-      <string>fbshareextension</string>
-    </array>
+	<key>LSApplicationQueriesSchemes</key>
+	<array>
+		<string>fbapi</string>
+		<string>fbapi20130214</string>
+		<string>fbapi20130410</string>
+		<string>fbapi20130702</string>
+		<string>fbapi20131010</string>
+		<string>fbapi20131219</string>
+		<string>fbapi20140410</string>
+		<string>fbapi20140116</string>
+		<string>fbapi20150313</string>
+		<string>fbapi20150629</string>
+		<string>fbapi20160328</string>
+		<string>fbauth</string>
+		<string>fb-messenger-share-api</string>
+		<string>fbauth2</string>
+		<string>fbshareextension</string>
+	</array>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
 	<key>NSAppTransportSecurity</key>
@@ -91,9 +79,9 @@
 		<true/>
 	</dict>
 	<key>NSCameraUsageDescription</key>
-	<string>"This app needs to access your camera. The picture you took will be used for your image, recipe image and so on.</string>
+	<string>&quot;This app needs to access your camera. The picture you took will be used for your image, recipe image and so on.</string>
 	<key>NSPhotoLibraryUsageDescription</key>
-	<string>"This app needs to access your camera roll. We use your photos and movies for uploading posts.</string>
+	<string>&quot;This app needs to access your camera roll. We use your photos and movies for uploading posts.</string>
 	<key>UIApplicationSceneManifest</key>
 	<dict>
 		<key>UIApplicationSupportsMultipleScenes</key>
