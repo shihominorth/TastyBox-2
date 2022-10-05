@@ -38,9 +38,12 @@ class CheckCreatedRecipeViewController: UIViewController, BindableType {
             self.playerItem = AVPlayerItem(url: url)
             self.player =  AVPlayer(playerItem: self.playerItem)
             
-            
+            // loopのため
+    
             self.player.addObserver(self, forKeyPath: "actionAtItemEnd", options: [.new], context: nil)
-            self.player.addObserver(self, forKeyPath: "currentItem.loadedTimeRanges", options: [.new], context: nil)
+            
+            // slliderのため
+//            self.player.addObserver(self, forKeyPath: "currentItem.loadedTimeRanges", options: [.new], context: nil)
             NotificationCenter.default.addObserver(self, selector: #selector(playerDidFinishPlaying), name: .AVPlayerItemDidPlayToEndTime, object: nil)
             
         }

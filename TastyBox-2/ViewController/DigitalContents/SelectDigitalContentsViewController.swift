@@ -51,7 +51,7 @@ class SelectDigitalContentsViewController: UIViewController, BindableType {
             
         }
         
-        if status == .denied {
+        else if status == .denied {
             
             
             SCLAlertView().showTitle(
@@ -104,11 +104,6 @@ class SelectDigitalContentsViewController: UIViewController, BindableType {
         
     }
 
-    override func viewWillDisappear(_ animated: Bool) {
-        
-//        self.viewModel.sceneCoodinator.userDismissed()
-        
-    }
     
     deinit {
         
@@ -130,7 +125,7 @@ class SelectDigitalContentsViewController: UIViewController, BindableType {
             .throttle(.milliseconds(1000), scheduler: MainScheduler.instance)
             .subscribe(onNext: { [unowned self] row in
             
-
+                // allows multiple insert/delete/reload/move calls to be animated simultaneously. Nestable.
                 self.collectionView.performBatchUpdates({
 
                     if row == 0 {

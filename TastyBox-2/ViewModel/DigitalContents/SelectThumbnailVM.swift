@@ -66,6 +66,9 @@ final class SelectThumbnailVM: ViewModelBase {
     
 }
 
+// MARK: discovery vm とここで使っているデリゲート
+// 分けた方がいい
+
 extension SelectThumbnailVM: SelectDegitalContentDelegate {
     
     func selectedVideo(asset: PHAsset) {

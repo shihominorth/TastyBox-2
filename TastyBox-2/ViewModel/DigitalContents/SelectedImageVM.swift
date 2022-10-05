@@ -27,39 +27,37 @@ final class SelectedImageVM: ViewModelBase {
         self.kind = kind
         self.asset = asset
         self.isHiddenSubject = BehaviorSubject<Bool>(value: false)
-        
-        super.init()
-        
+                
     }
     
-    func getImageData() -> Observable<Data?> {
-        
-        return .create { [unowned self] observer in
-            
-            let requestOption = PHContentEditingInputRequestOptions()
-            requestOption.isNetworkAccessAllowed = true
-            
-            self.asset.requestContentEditingInput(with: requestOption) { (contentEditingInput: PHContentEditingInput?, _) -> Void in
-                
-                let ciImage = CIImage(contentsOf: contentEditingInput!.fullSizeImageURL!)!
-                let image = UIImage(ciImage: ciImage.oriented(forExifOrientation: contentEditingInput!.fullSizeImageOrientation))
-                
-                if let data = image.convertToData() {
-                    
-                    observer.onNext(data)
-                    
-                }
-                else {
-                    
-                    observer.onNext(nil)
-                    
-                }
-            }
-            
-            return Disposables.create()
-        }
-        
-    }
+//    func getImageData() -> Observable<Data?> {
+//
+//        return .create { [unowned self] observer in
+//
+//            let requestOption = PHContentEditingInputRequestOptions()
+//            requestOption.isNetworkAccessAllowed = true
+//
+//            self.asset.requestContentEditingInput(with: requestOption) { (contentEditingInput: PHContentEditingInput?, _) -> Void in
+//
+//                let ciImage = CIImage(contentsOf: contentEditingInput!.fullSizeImageURL!)!
+//                let image = UIImage(ciImage: ciImage.oriented(forExifOrientation: contentEditingInput!.fullSizeImageOrientation))
+//
+//                if let data = image.convertToData() {
+//
+//                    observer.onNext(data)
+//
+//                }
+//                else {
+//
+//                    observer.onNext(nil)
+//
+//                }
+//            }
+//
+//            return Disposables.create()
+//        }
+//
+//    }
     
     func addImage(imgData: Data) {
         

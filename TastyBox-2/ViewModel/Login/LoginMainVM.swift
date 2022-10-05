@@ -133,7 +133,7 @@ final class LoginMainVM: ViewModelBase {
         
         return Action { user in
             
-            return self.apiType.isRegisterMyInfo
+            return self.apiType.isRegisteredMyInfo
             
         }
         
@@ -146,7 +146,7 @@ final class LoginMainVM: ViewModelBase {
     func isRegisteredMyInfo(user: Firebase.User) -> Observable<Bool> {
        
 
-       return self.apiType.isRegisterMyInfo
+       return self.apiType.isRegisteredMyInfo
 //            .catch({ err in
 //            
 //                err.handleAuthenticationError()?.generateErrAlert()

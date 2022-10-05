@@ -42,7 +42,7 @@ class TutorialViewController: UIViewController, BindableType {
         let nib = UINib(nibName: "StartCVCell", bundle: nil)
         self.collectionView.register(nib, forCellWithReuseIdentifier: "start")
 
-        let flowLayout = FlowLayout()
+        let flowLayout = TutorialFlowLayout()
         flowLayout.scrollDirection = .horizontal
         flowLayout.itemSize = cellSize
         flowLayout.minimumInteritemSpacing = collectionView.bounds.height
@@ -177,7 +177,7 @@ extension TutorialViewController: UICollectionViewDelegateFlowLayout {
  
     func scrollViewWillBeginDragging(_ scrollView: UIScrollView) {
         let collectionView = scrollView as! UICollectionView
-        guard let flowLayout = collectionView.collectionViewLayout as? FlowLayout else {
+        guard let flowLayout = collectionView.collectionViewLayout as? TutorialFlowLayout else {
             return
         }
         flowLayout.prepareForPaging()

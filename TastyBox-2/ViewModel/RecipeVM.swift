@@ -57,7 +57,8 @@ final class RecipeVM: ViewModelBase {
         
     }
     
-    func generateSections(recipe: Recipe, genres: [Genre],  publisher: User, ingredients: [Ingredient], instructions: [Instruction]) -> Observable<[Section]> {
+    // recipe vcを開いて初めて取ってくるデータがあるため
+    private func generateSections(recipe: Recipe, genres: [Genre],  publisher: User, ingredients: [Ingredient], instructions: [Instruction]) -> Observable<[Section]> {
         
         
         return .create { observer in
@@ -182,6 +183,7 @@ final class RecipeVM: ViewModelBase {
     }
     
     func getLikedNum() -> Observable<Int> {
+        
         return self.apiType.getLikedNum(recipe: recipe)
             .catch { err in
                 

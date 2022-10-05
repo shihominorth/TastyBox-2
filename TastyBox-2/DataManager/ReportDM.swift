@@ -83,7 +83,8 @@ final class ReportDM: ReportProtocol {
         return gasService.post(parameters: parameters)
             .catch({ err in
                 
-                err.handleFireStoreError()?.showErrNotification()
+                // vcでする
+//                err.handleFireStoreError()?.showErrNotification()
                 
                 print(err)
                 

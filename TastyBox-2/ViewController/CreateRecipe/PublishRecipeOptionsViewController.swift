@@ -48,6 +48,7 @@ class PublishRecipeOptionsViewController: UIViewController, BindableType {
                 if isCompleted {
                     
                     DispatchQueue.main.async {
+                        
                         self.presentingViewController?.presentingViewController?.dismiss(animated: true) {
                             
                             self.viewModel.sceneCoodinator.userDismissed()

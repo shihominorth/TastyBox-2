@@ -75,6 +75,7 @@ final class RecipeDetailDM: RecipeDetailProtocol {
                             
                             let result = docs.compactMap { $0 }
                             
+                            // genresIDs.count - 1 が-1になるのを避けるため
                             if genresIDs.count == 1 {
                                 
                                 observer.onNext(result)

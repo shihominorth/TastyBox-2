@@ -406,6 +406,7 @@ class RecipeViewController: UIViewController, BindableType {
                     
                     tappedFollowBtn.bind(to: viewModel.tappedFollowBtn).disposed(by: cell.disposeBag)
                     
+                    // Actionでできる？でもActionは確かエラーが出たときの処理（条件分岐）の処理のもの
                     let willUnFollowing = tappedFollowBtn
                         .filter { $0 }
                     

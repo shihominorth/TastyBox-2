@@ -537,13 +537,13 @@ extension CreateRecipeViewController: UITableViewDelegate, UITableViewDataSource
                         self.viewModel.instructions[indexPath.row].text = text
                         self.viewModel.instructionsSubject.onNext(self.viewModel.instructions)
                     })
-                        .bind(onNext: { [unowned self] text in
-                            
-                            self.tableView.beginUpdates()
-                            self.tableView.endUpdates()
-                            
-                            
-                        })
+                    .bind(onNext: { [unowned self] text in
+                        
+                        self.tableView.beginUpdates()
+                        self.tableView.endUpdates()
+                        
+                        
+                    })
                         .disposed(by: cell.disposeBag)
                         
                         cell.imgSubject
@@ -557,10 +557,11 @@ extension CreateRecipeViewController: UITableViewDelegate, UITableViewDataSource
                         })
                         .disposed(by: cell.disposeBag)
                         
-                        viewModel.keyboardOpen
-                        .subscribe(onNext: { [weak self] notification in
-                            if let keyboardSize = (notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue)?.cgRectValue, let strongSelf =  self {
-                                
+                viewModel.keyboardOpen
+                    .subscribe(onNext: { [weak self] notification in
+                        
+                        if let keyboardSize = (notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue)?.cgRectValue, let strongSelf =  self {
+                            
                                 if cell.txtView.isFirstResponder  {
                                     
                                     if strongSelf.view.frame.origin.y == 0 {
@@ -571,14 +572,14 @@ extension CreateRecipeViewController: UITableViewDelegate, UITableViewDataSource
                                     
                                 }
                                 
-                            }
-                        })
-                        .disposed(by: cell.disposeBag)
+                        }
+                    })
+                    .disposed(by: cell.disposeBag)
                         
-                        cell.tapped
-                        .flatMapLatest { [unowned self] in self.viewModel.instructionsToImagePicker(index: indexPath.row) }
-                        .bind(to: cell.imgSubject)
-                        .disposed(by: cell.disposeBag)
+                cell.tapped
+                    .flatMapLatest { [unowned self] in self.viewModel.instructionsToImagePicker(index: indexPath.row) }
+                    .bind(to: cell.imgSubject)
+                    .disposed(by: cell.disposeBag)
                 
                 return cell
             }

@@ -155,6 +155,7 @@ class SearchGenresViewController: UIViewController, BindableType {
 
                 self.dismiss(animated: true) {
                     
+                    // 前のvc（create recipe vc)に渡す
                     self.viewModel.delegate?.addGenre(genres: genres)
 
                 }
@@ -227,30 +228,32 @@ extension SearchGenresViewController: UITableViewDelegate, UITableViewDataSource
                 cell.txtView.layer.borderWidth = 1
                 cell.selectionStyle = .none
                 
+                //一回だけ下の処理をしたい
                 if !viewModel.isDisplayed {
                 
                     cell.txtView.text = viewModel.text
-
+                
                     viewModel.isDisplayed = true
-
-                    cell.txtView.rx.text
-                        .debounce(.milliseconds(300), scheduler: MainScheduler.instance)
-                         .subscribe(onNext: { text in
-
-                             if let text = text {
-                                 
-                                 self.viewModel.differenceTxtSubject.onNext(text)
-                                
-                                 let textCount: Int = text.count
-                                 guard textCount >= 1 else { return }
-                                 cell.txtView.scrollRangeToVisible(NSRange(location: textCount - 1, length: 1))
-                             }
-                             
-                           
-                         })
-                         .disposed(by: self.viewModel.disposeBag)
-                    
                 }
+                 
+                cell.txtView.rx.text
+                    .debounce(.milliseconds(300), scheduler: MainScheduler.instance)
+                    .subscribe(onNext: { text in
+
+                        if let text = text {
+                                 
+                            self.viewModel.differenceTxtSubject.onNext(text)
+                                
+                            let textCount: Int = text.count
+                            guard textCount >= 1 else { return }
+                            cell.txtView.scrollRangeToVisible(NSRange(location: textCount - 1, length: 1))
+                            
+                        }
+                             
+                    })
+                    .disposed(by: self.viewModel.disposeBag)
+                    
+//                }
                 
                 return cell
             }

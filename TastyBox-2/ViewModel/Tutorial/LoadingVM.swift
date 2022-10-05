@@ -10,7 +10,7 @@ import Firebase
 import RxSwift
 import SCLAlertView
 
-final class LoadingVM {
+final class LoadingVM: ViewModelBase {
     
     private let sceneCoodinator: SceneCoordinator
     private let apiType: LoginMainProtocol.Type
@@ -23,9 +23,19 @@ final class LoadingVM {
     func goToNextVC() {
         
         // login already
+        
         if let user = Auth.auth().currentUser {
-            
-            let _ = isRegisteredMyInfo(user: user).subscribe(onSuccess: { isFirst in
+        
+            self.apiType.isRegisteredMyInfo
+                .retry(3)
+                .catch { err in
+                    
+                    err.handleFireStoreError()?.generateErrAlert()
+                    
+                    return .empty()
+                    
+                }
+                .subscribe(onNext: { isFirst in
                 
                 if isFirst {
                     
@@ -43,12 +53,7 @@ final class LoadingVM {
                     
                 }
                 
-            }, onFailure: { err in
-                
-                print(err)
-                err.handleAuthenticationError()?.showErrNotification()
-                
-            })
+            }).disposed(by: disposeBag)
             
             
         }
@@ -88,31 +93,4 @@ final class LoadingVM {
 //
 //    }
     
-    func isRegisteredMyInfo(user: FirebaseAuth.User) -> Single<Bool> {
-        
-        return Single.create { single in
-            
-            Firestore.firestore().collection("users").document(user.uid).addSnapshotListener { data, err in
-                
-                if let err = err {
-                    single(.failure(err))
-                } else {
-                    
-                    guard let data = data else { return }
-                    guard let isFirst = data.get("isFirst") as? Bool else {
-                        
-                        single(.success(true))
-                        return
-                        
-                    }
-                    
-                    single(.success(isFirst))
-                    
-                }
-                
-            }
-            
-            return Disposables.create()
-        }
-    }
 }

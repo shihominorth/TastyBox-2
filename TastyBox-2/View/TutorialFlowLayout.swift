@@ -7,7 +7,7 @@
 
 import UIKit
 
-final class FlowLayout: UICollectionViewFlowLayout {
+final class TutorialFlowLayout: UICollectionViewFlowLayout {
 
     private var layoutAttributesForPaging: [UICollectionViewLayoutAttributes]?
 

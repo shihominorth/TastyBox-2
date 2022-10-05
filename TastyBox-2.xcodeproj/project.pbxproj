@@ -89,7 +89,7 @@
 		6F512A2926F417CD00826657 /* TutorialVM.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F512A2826F417CD00826657 /* TutorialVM.swift */; };
 		6F512A2C26F42DE300826657 /* TutorialViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F512A2B26F42DE200826657 /* TutorialViewController.swift */; };
 		6F512A3026F45BF200826657 /* TutorialCVCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F512A2F26F45BF200826657 /* TutorialCVCell.swift */; };
-		6F512A3226F467A300826657 /* FlowLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F512A3126F467A300826657 /* FlowLayout.swift */; };
+		6F512A3226F467A300826657 /* TutorialFlowLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F512A3126F467A300826657 /* TutorialFlowLayout.swift */; };
 		6F54460E275149C900579138 /* StorageService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F54460D275149C900579138 /* StorageService.swift */; };
 		6F54461027523AD100579138 /* RxRSKImageCropVCDelegateProxy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F54460F27523AD000579138 /* RxRSKImageCropVCDelegateProxy.swift */; };
 		6F5446122752571C00579138 /* RxUIImagePickerControllerDelegateProxy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F5446112752571B00579138 /* RxUIImagePickerControllerDelegateProxy.swift */; };
@@ -320,7 +320,7 @@
 		6F512A2826F417CD00826657 /* TutorialVM.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TutorialVM.swift; sourceTree = "<group>"; };
 		6F512A2B26F42DE200826657 /* TutorialViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TutorialViewController.swift; sourceTree = "<group>"; };
 		6F512A2F26F45BF200826657 /* TutorialCVCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TutorialCVCell.swift; sourceTree = "<group>"; };
-		6F512A3126F467A300826657 /* FlowLayout.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FlowLayout.swift; sourceTree = "<group>"; };
+		6F512A3126F467A300826657 /* TutorialFlowLayout.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TutorialFlowLayout.swift; sourceTree = "<group>"; };
 		6F54460D275149C900579138 /* StorageService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StorageService.swift; sourceTree = "<group>"; };
 		6F54460F27523AD000579138 /* RxRSKImageCropVCDelegateProxy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RxRSKImageCropVCDelegateProxy.swift; sourceTree = "<group>"; };
 		6F5446112752571B00579138 /* RxUIImagePickerControllerDelegateProxy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RxUIImagePickerControllerDelegateProxy.swift; sourceTree = "<group>"; };
@@ -1051,7 +1051,7 @@
 		6FEA390F26D8C362002F81A3 /* View */ = {
 			isa = PBXGroup;
 			children = (
-				6F512A3126F467A300826657 /* FlowLayout.swift */,
+				6F512A3126F467A300826657 /* TutorialFlowLayout.swift */,
 				6FB970B12724F98100350F84 /* CheckCreatedRecipe */,
 				6F120F8D27DB013D003F8CE0 /* Tutorial */,
 				6FE9EB5526F9BA30000AF9D4 /* RefrigeratorTVCell.swift */,
@@ -1504,7 +1504,7 @@
 				6F11951627720072002510EC /* MyRelatedUsersVM.swift in Sources */,
 				6FEF088026F2A4B000C02CDD /* Recipe.swift in Sources */,
 				6FD4277D2763B39200472C94 /* ReportViewController.swift in Sources */,
-				6F512A3226F467A300826657 /* FlowLayout.swift in Sources */,
+				6F512A3226F467A300826657 /* TutorialFlowLayout.swift in Sources */,
 				6FEF088F26F2AD1000C02CDD /* SideMenuTableViewController.swift in Sources */,
 				6F927B9427538176006F95BF /* TimelineViewController.swift in Sources */,
 				6FE9EB5D26FC8269000AF9D4 /* RxRefrigeratorTableViewDataSource.swift in Sources */,

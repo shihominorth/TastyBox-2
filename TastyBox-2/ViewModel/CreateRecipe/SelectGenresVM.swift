@@ -24,12 +24,13 @@ final class SelectGenresVM: ViewModelBase {
     
     weak var delegate: SelectGenreProtocol?
     
+    var isDisplayed = false
     var text = ""
-    var selectedArrGenres = ReplaySubject<[String]>.create(bufferSize: 1)
-    var items = BehaviorRelay<[Genre]>(value: [])
+    let selectedArrGenres = ReplaySubject<[String]>.create(bufferSize: 1)
+    let items = BehaviorRelay<[Genre]>(value: [])
     //    var searchedItems: [SectionOfGenre] = []
     var searchedItems:[Genre] = []
-    var selectedGenres = BehaviorRelay<[Genre]>(value: [])
+    let selectedGenres = BehaviorRelay<[Genre]>(value: [])
     
     let dissapperSubject = PublishSubject<Void>()
     let searchTextSubject = PublishSubject<String>()
@@ -38,10 +39,9 @@ final class SelectGenresVM: ViewModelBase {
     
     let differenceTxtSubject = ReplaySubject<String>.create(bufferSize: 1)
     
-    var isDisplayed = false
-    var isEditingSubject = BehaviorRelay<Bool>(value: false)
+    let isEditingSubject = BehaviorRelay<Bool>(value: false)
     
-    var selectedGenreSubject = BehaviorRelay<Genre?>(value: nil)
+    let selectedGenreSubject = BehaviorRelay<Genre?>(value: nil)
     
     var isNewTagInputs: Observable<Bool> {
         

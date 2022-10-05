@@ -20,7 +20,7 @@ import Action
 protocol LoginMainProtocol: AnyObject {
     
 //    static var firestoreService: FirestoreServices { get }
-    static var isRegisterMyInfo: Observable<Bool> { get }
+    static var isRegisteredMyInfo: Observable<Bool> { get }
     static func isTutorialDone(user: Firebase.User) -> Observable<Bool>
     static func login(email: String?, password: String?) -> Observable<AuthDataResult>
     static func createUser(email: String, password: String) -> Observable<Firebase.User>
@@ -46,7 +46,7 @@ final class LoginMainDM: LoginMainProtocol {
     //    一回イベントを送信すると、disposeされるようになってます。
     
     
-    static var isRegisterMyInfo: Observable<Bool> {
+    static var isRegisteredMyInfo: Observable<Bool> {
         
         guard let uid = self.uid else {
             return .error(LoginErrors.invailedUser)
