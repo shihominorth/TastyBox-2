@@ -5,21 +5,19 @@
 //  Created by 北島　志帆美 on 2021-09-16.
 //
 
-import UIKit
 import Firebase
 import FirebaseAuth
-import FBSDKLoginKit
-//import Crashlytics
-import RxSwift
+//import FBSDKLoginKit
 import RxCocoa
+import RxSwift
+import UIKit
 
 
-class DiscoveryViewController: UIViewController, BindableType {
+final class DiscoveryViewController: UIViewController, BindableType {
     
+    typealias ViewModelType = DiscoveryViewModel
     
-    typealias ViewModelType = DiscoveryVM
-    
-    var viewModel: DiscoveryVM!
+    var viewModel: DiscoveryViewModel!
     
     @IBOutlet weak var menuNavBtn: UIBarButtonItem!
     @IBOutlet weak var addRecipeNavBtn: UIBarButtonItem!
@@ -33,66 +31,35 @@ class DiscoveryViewController: UIViewController, BindableType {
         }
     }
     
-    
     var pageVC: UIPageViewController?
-
     
     @IBOutlet weak var sideMenuConstraint: NSLayoutConstraint!
     @IBOutlet weak var menuCollectionView: UICollectionView!
     
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        self.title = "TastyBox"
-        
-        let appearance = UINavigationBarAppearance()
-        appearance.backgroundColor = #colorLiteral(red: 0.9994645715, green: 0.9797875285, blue: 0.7697802186, alpha: 1)
-        appearance.titleTextAttributes = [.foregroundColor: UIColor.orange]
-
-        navigationController?.navigationBar.standardAppearance = appearance
-        navigationController?.navigationBar.compactAppearance = appearance
-        navigationController?.navigationBar.scrollEdgeAppearance = appearance
- 
-                
-        initialContentView()
+        setUpViews()
         
         viewModel.sideMenuTapped()
-        
-        // 後ほどリアクティブに
-        
-        //        NotificationCenter.default.addObserver(self, selector: #selector(toggleSideMenu), name: NSNotification.Name("ToggleSideMenu"), object: nil)
-        NotificationCenter.default.addObserver(self, selector: #selector(showSearch), name: NSNotification.Name("ShowSearch"), object: nil)
-        //        NotificationCenter.default.addObserver(self, selector: #selector(AddRecipe), name: NSNotification.Name("AddRecipe"), object: nil)
-        //        NotificationCenter.default.addObserver(self, selector: #selector(showLogout), name: NSNotification.Name("ShowLogout"), object: nil)
-
-        self.menuCollectionView.showsHorizontalScrollIndicator = false
-        
-        // 将来的にTwitterのnavigation barような挙動にする
-        self.navigationController?.hidesBarsOnTap = false
-        
-                
         viewModel.setDefaultViewControllers()
         
-        pageVC = (self.children.first as! UIPageViewController)
-        pageVC?.delegate = self
+        NotificationCenter.default.addObserver(self, selector: #selector(showSearch), name: NSNotification.Name("ShowSearch"), object: nil)
         
-        self.menuCollectionView.scrollToItem(at: NSIndexPath(item: viewModel.selectedIndex, section: 0) as IndexPath, at: .centeredHorizontally, animated: true)
-
-        
+        setUpMenuCollectinoView()
     }
     
-     
     override func viewWillDisappear(_ animated: Bool) {
-        
         disappearSideMenu()
     }
     
-    
     func bindViewModel() {
-        
         self.addRecipeNavBtn.rx.tap
             .throttle(.microseconds(1000), scheduler: MainScheduler.instance)
-            .debug("add recipe btn")
+            .catch { err in
+                return .empty()
+            }
             .subscribe(onNext: { [unowned self] in self.viewModel.toCreateRecipeVC() })
             .disposed(by: viewModel.disposeBag)
         
@@ -103,7 +70,6 @@ class DiscoveryViewController: UIViewController, BindableType {
             }
             .flatMap { [unowned self] in self.viewModel.setIsMenuBarOpenedRelay() }
             .subscribe(onNext: { [unowned self] isOpened in
-                
                 self.toggleSideMenu(isOpend: isOpened)
                 
                 if isOpened {
@@ -112,42 +78,69 @@ class DiscoveryViewController: UIViewController, BindableType {
                 else {
                     self.removeBlurView()
                 }
-                
-            }, onError: { err in
-                print(err)
             })
             .disposed(by: viewModel.disposeBag)
-  
-
         
         self.menuCollectionView.rx.itemSelected
+            .catch { err in
+                return .empty()
+            }
             .subscribe(onNext: { [unowned self] indexPath in
-
                 self.focusCell(indexPath: indexPath)
                 self.viewModel.selectPageTitle(row: indexPath.row)
-                
-
             })
             .disposed(by: viewModel.disposeBag)
-
+    }
+    
+    private func setUpViews() {
+        setUpNavigationBar()
+        initialContentView()
+        setUpPageViewController()
+    }
+    
+    func setUpNavigationBar() {
+        
+        self.title = "TastyBox"
+        
+        let appearance = UINavigationBarAppearance()
+        appearance.backgroundColor = #colorLiteral(red: 0.9994645715, green: 0.9797875285, blue: 0.7697802186, alpha: 1)
+        appearance.titleTextAttributes = [.foregroundColor: UIColor.orange]
+        
+        navigationController?.navigationBar.standardAppearance = appearance
+        navigationController?.navigationBar.compactAppearance = appearance
+        navigationController?.navigationBar.scrollEdgeAppearance = appearance
+        
+        self.navigationController?.hidesBarsOnTap = false
+        
+    }
+    
+    func setUpPageViewController() {
+        guard let pageViewController = self.children.first as? UIPageViewController else {
+            return
+        }
+        pageViewController.delegate = self
+    }
+    
+    private func setUpMenuCollectinoView() {
+        self.menuCollectionView.showsHorizontalScrollIndicator = false
+        
+        self.menuCollectionView.scrollToItem(at: IndexPath(item: viewModel.selectedIndex, section: 0), at: .centeredHorizontally, animated: true)
     }
     
     
-    fileprivate func disappearSideMenu() {
-       
-        if let viewWithTag = self.view.viewWithTag(100) {
-            
-            viewWithTag.removeFromSuperview()
-            //            sideMenuOpen = false
-            viewModel.isMenuBarOpenedRelay.accept(false)
-            
-            sideMenuConstraint.constant = -230 //-160
-            
-            UIView.animate(withDuration: 0.3) {
-                self.view.layoutIfNeeded()
-            }
-        }
+    private func disappearSideMenu() {
         
+        guard let viewWithTag = self.view.viewWithTag(100) else {
+            return
+        }
+        viewWithTag.removeFromSuperview()
+        viewModel.isMenuBarOpenedRelay.accept(false)
+        
+        sideMenuConstraint.constant = -230 //-160
+        
+        UIView.animate(withDuration: 0.3) {
+            self.view.layoutIfNeeded()
+        }
     }
     
     @IBAction func SearchBarItem() {
@@ -157,26 +150,18 @@ class DiscoveryViewController: UIViewController, BindableType {
     
     
     func initialContentView(){
-        
         self.containerView.isHidden = false
-        
     }
     
-
-    
     func toggleSideMenu(isOpend: Bool) {
-        
         sideMenuConstraint.constant = isOpend ? 0 : -230
         
         UIView.animate(withDuration: 0.3) {
             self.view.layoutIfNeeded()
         }
-        
     }
     
     func insertblurView()  {
-        
-        
         // Init a UIVisualEffectView which going to do the blur for us
         let blurView = UIVisualEffectView()
         // Make its frame equal the main view frame so that every pixel is under blurred
@@ -195,91 +180,56 @@ class DiscoveryViewController: UIViewController, BindableType {
         
         self.view.insertSubview(blurView, at: 2)
         
-        
-        
     }
     
     
     func removeBlurView() {
-        
-        if let viewWithTag = self.view.viewWithTag(100) {
-            
-            viewWithTag.removeFromSuperview()
-            
+        guard let viewWithTag = self.view.viewWithTag(100) else {
+            return
         }
+        viewWithTag.removeFromSuperview()
     }
-    
-    
     
     @objc func closeSideMenu() {
         
-        if let viewWithTag = self.view.viewWithTag(100) {
-            
-            viewWithTag.removeFromSuperview()
-            
-            sideMenuConstraint.constant = -230 //-160
-            
-            UIView.animate(withDuration: 0.3) {
-                self.view.layoutIfNeeded()
-            }
+        guard let viewWithTag = self.view.viewWithTag(100) else {
+            return
+        }
+        viewWithTag.removeFromSuperview()
+        
+        sideMenuConstraint.constant = -230 //-160
+        
+        UIView.animate(withDuration: 0.3) {
+            self.view.layoutIfNeeded()
         }
     }
     
     @objc func showSearch(){
         UIView.animate(withDuration: 1.0) {
-            print("show Search")
             guard self.navigationController?.topViewController == self else { return }
             self.performSegue(withIdentifier: "searchPage", sender: nil)
         }
     }
-
+    
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-       
+        
         guard let identifier = segue.identifier else { return }
-
+        
         if identifier == "toSideMenu" {
             
             //これはsegueでやった方が楽
             viewModel.presenter.sideMenuVC = segue.destination as? SideMenuTableViewController
         }
         else if identifier == "showPageVC" {
-           
-            if let pageVC = segue.destination as? UIPageViewController {
             
+            if let pageVC = segue.destination as? UIPageViewController {
+                
                 viewModel.presenter.pageVC = pageVC
-    
+                
             }
-
+            
         }
-        
-    }
-    
-    
-}
-
-
-extension DiscoveryViewController: UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout{
-    
-    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return viewModel.pages.count
-    }
-    
-    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        
-        
-        let cell = menuCollectionView.dequeueReusableCell(withReuseIdentifier: "MenuCell", for: indexPath) as! MenuCollectionViewCell
-        cell.MenuLabel.text = viewModel.pages[indexPath.row]
-        
-        let active = (indexPath.row == viewModel.selectedIndex)
-        cell.focusCell(active: active)
-
-        return cell
-    }
-    
-    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
- 
-        self.navigationController?.setNavigationBarHidden(false, animated: true)
         
     }
     
@@ -289,12 +239,12 @@ extension DiscoveryViewController: UICollectionViewDelegate, UICollectionViewDat
     //　わざわざIndexPath（タップされた場合）かInt型（pageVCがスクロールされた場合）に変換しないといけない
     
     // 分けた方がわかりやすいのでは？
-
+    
     
     // 指定したindexPathのセルを選択状態にして移動させる。(collectionViewなので表示されていないセルは存在しない)
     func focusCell(indexPath: IndexPath) {
         // 以前選択されていたセルを非選択状態にする(collectionViewなので表示されていないセルは存在しない)
-        if let previousCell = self.menuCollectionView?.cellForItem(at: NSIndexPath(item: viewModel.selectedIndex, section: 0) as IndexPath) as? MenuCollectionViewCell {
+        if let previousCell = self.menuCollectionView?.cellForItem(at: IndexPath(item: viewModel.selectedIndex, section: 0)) as? MenuCollectionViewCell {
             previousCell.focusCell(active: false)
         }
         
@@ -312,11 +262,33 @@ extension DiscoveryViewController: UICollectionViewDelegate, UICollectionViewDat
     
 }
 
+extension DiscoveryViewController: UICollectionViewDataSource {
+    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+        return viewModel.pages.count
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+        
+        guard let cell = menuCollectionView.dequeueReusableCell(withReuseIdentifier: "MenuCell", for: indexPath) as? MenuCollectionViewCell else {
+            return .init()
+        }
+        cell.MenuLabel.text = viewModel.pages[indexPath.row]
+        
+        let active = (indexPath.row == viewModel.selectedIndex)
+        cell.focusCell(active: active)
+        
+        return cell
+    }
+}
 
-
+extension DiscoveryViewController: UICollectionViewDelegate, UICollectionViewDelegateFlowLayout {
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        self.navigationController?.setNavigationBarHidden(false, animated: true)
+    }
+}
 
 class MenuCollectionViewCell: UICollectionViewCell{
-
+    
     @IBOutlet weak var MenuLabel: UILabel!
     var disposeBag = DisposeBag()
     
@@ -336,35 +308,29 @@ class MenuCollectionViewCell: UICollectionViewCell{
 
 extension DiscoveryViewController : UIPageViewControllerDelegate {
     func pageViewController(_ pageViewController: UIPageViewController, didFinishAnimating finished: Bool, previousViewControllers: [UIViewController], transitionCompleted completed: Bool) {
-
+        
         var index = 0
-
-        if let currentViewController = pageViewController.viewControllers?.first {
-
-            if currentViewController is TimelineViewController {
-
-                index = 0
-
-            }
-            else if currentViewController is IngredientsViewController {
-                index = 1
-            }
-            else if currentViewController is RankingViewController {
-
-                index = 2
-            }
-
-//            // MenuViewControllerの特定のセルにフォーカスをあてる
-            let indexPath = IndexPath(row: index, section: 0)
-            self.focusCell(indexPath: indexPath)
-            self.menuCollectionView?.scrollToItem(at: indexPath as IndexPath, at: .centeredHorizontally, animated: true)
-
-
+        
+        guard let currentViewController = pageViewController.viewControllers?.first else {
+            return
         }
-
-
+        
+        if currentViewController is TimelineViewController {
+            index = 0
+        }
+        else if currentViewController is IngredientsViewController {
+            index = 1
+        }
+        else if currentViewController is RankingViewController {
+            index = 2
+        }
+        //            // MenuViewControllerの特定のセルにフォーカスをあてる
+        let indexPath = IndexPath(row: index, section: 0)
+        self.focusCell(indexPath: indexPath)
+        self.menuCollectionView?.scrollToItem(at: indexPath, at: .centeredHorizontally, animated: true)
+        
     }
-
+    
 }
 
 

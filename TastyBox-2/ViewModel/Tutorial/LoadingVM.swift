@@ -46,7 +46,7 @@ final class LoadingVM: ViewModelBase {
                     
                 } else {
                     
-                    let vm = DiscoveryVM(sceneCoodinator: self.sceneCoodinator, user: user)
+                    let vm = DiscoveryViewModel(sceneCoodinator: self.sceneCoodinator, user: user)
                     let firstScene: Scene = .discovery(scene: .main(vm))
                     
                     self.sceneCoodinator.transition(to: firstScene, type: .root)

@@ -13,7 +13,7 @@ import Photos
 import RxSwift
 import RxCocoa
 
-final class DiscoveryVM: ViewModelBase {
+final class DiscoveryViewModel: ViewModelBase {
     
     let presenter: DiscoveryPresenter
     private let sceneCoodinator: SceneCoordinator
@@ -215,7 +215,7 @@ final class DiscoveryVM: ViewModelBase {
     }
 }
 
-extension DiscoveryVM: SelectDegitalContentDelegate {
+extension DiscoveryViewModel: SelectDegitalContentDelegate {
     
     func selectedImage(imageData: Data) {
         
