@@ -263,7 +263,7 @@ final class CreateRecipeVM: ViewModelBase {
     
     func goToNext(){
         
-        Observable.zip(self.mainImgDataSubject.asObservable(), isAddedSubject.asObservable(), videoPlaySubject.asObservable(), titleSubject.asObservable(), selectedTimeSubject.asObservable(), servingSubject.asObservable(), isVIPSubject.asObservable(), selectedGenres.asObservable())
+        Observable.combineLatest (self.mainImgDataSubject, isAddedSubject, videoPlaySubject, titleSubject, selectedTimeSubject, servingSubject, isVIPSubject, selectedGenres)
             .flatMap { mainImageData, isAdded, url, title, timeString, serving, isVIP, genres  -> Observable<CheckRecipeVM> in
                 
                 let url = isAdded ? url : nil

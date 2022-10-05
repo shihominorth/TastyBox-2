@@ -86,7 +86,6 @@ final class DiscoveryViewController: UIViewController, BindableType {
                 return .empty()
             }
             .subscribe(onNext: { [unowned self] indexPath in
-                self.focusCell(indexPath: indexPath)
                 self.viewModel.selectPageTitle(row: indexPath.row)
             })
             .disposed(by: viewModel.disposeBag)
@@ -244,17 +243,16 @@ final class DiscoveryViewController: UIViewController, BindableType {
     // 指定したindexPathのセルを選択状態にして移動させる。(collectionViewなので表示されていないセルは存在しない)
     func focusCell(indexPath: IndexPath) {
         // 以前選択されていたセルを非選択状態にする(collectionViewなので表示されていないセルは存在しない)
-        if let previousCell = self.menuCollectionView?.cellForItem(at: IndexPath(item: viewModel.selectedIndex, section: 0)) as? MenuCollectionViewCell {
-            previousCell.focusCell(active: false)
-        }
+//        if let previousCell = self.menuCollectionView?.cellForItem(at: IndexPath(item: viewModel.selectedIndex, section: 0)) as? MenuCollectionViewCell {
+//            previousCell.focusCell(active: false)
+            // 現在選択されている位置を状態としてViewControllerに覚えさせておく
+            viewModel.selectedIndex = indexPath.row
+//        }
         
         // 新しく選択したセルを選択状態にする(collectionViewなので表示されていないセルは存在しない)
-        if let nextCell = self.menuCollectionView?.cellForItem(at: indexPath) as? MenuCollectionViewCell {
-            nextCell.focusCell(active: true)
-        }
-        // 現在選択されている位置を状態としてViewControllerに覚えさせておく
-        viewModel.selectedIndex = indexPath.row
-        
+//        if let nextCell = self.menuCollectionView?.cellForItem(at: indexPath) as? MenuCollectionViewCell {
+//            nextCell.focusCell(active: true)
+//        }
         // .CenteredHorizontallyでを指定して、CollectionViewのboundsの中央にindexPathのセルが来るようにする
         self.menuCollectionView?.scrollToItem(at: indexPath, at: .centeredHorizontally, animated: true)
     }
@@ -273,10 +271,16 @@ extension DiscoveryViewController: UICollectionViewDataSource {
             return .init()
         }
         cell.MenuLabel.text = viewModel.pages[indexPath.row]
+                
+        if indexPath.row == 1 {
+            cell.focusCell(active: true)
+        }
         
-        let active = (indexPath.row == viewModel.selectedIndex)
-        cell.focusCell(active: active)
-        
+        collectionView.rx.itemSelected
+            .map { $0.row == indexPath.row }
+            .bind(to: cell.isSelectedBehavoirSubject)
+            .disposed(by: cell.disposeBag)
+                
         return cell
     }
 }
@@ -287,10 +291,22 @@ extension DiscoveryViewController: UICollectionViewDelegate, UICollectionViewDel
     }
 }
 
-class MenuCollectionViewCell: UICollectionViewCell{
+private class MenuCollectionViewCell: UICollectionViewCell {
     
     @IBOutlet weak var MenuLabel: UILabel!
+    let isSelectedBehavoirSubject = BehaviorRelay(value: false)
     var disposeBag = DisposeBag()
+    
+    override func awakeFromNib() {
+        super.awakeFromNib()
+        disposeBag = DisposeBag()
+        
+        isSelectedBehavoirSubject
+            .subscribe(onNext: { isSelectedCell in
+                self.focusCell(active: isSelectedCell)
+            })
+            .disposed(by: disposeBag)
+    }
     
     func focusCell(active: Bool) {
         let color = active ? #colorLiteral(red: 1, green: 0.9882352941, blue: 0.6549019608, alpha: 1) : #colorLiteral(red: 0.9882352941, green: 0.8862745098, blue: 0.4549019608, alpha: 1)
@@ -298,12 +314,6 @@ class MenuCollectionViewCell: UICollectionViewCell{
         let labelColor = active ? #colorLiteral(red: 0.6745098039, green: 0.5568627451, blue: 0.4078431373, alpha: 1) : #colorLiteral(red: 0.9960784314, green: 0.6509803922, blue: 0.1921568627, alpha: 1)
         MenuLabel.textColor = labelColor
     }
-    
-    override func awakeFromNib() {
-        super.awakeFromNib()
-        disposeBag = DisposeBag()
-    }
-    
 }
 
 extension DiscoveryViewController : UIPageViewControllerDelegate {
