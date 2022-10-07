@@ -67,7 +67,7 @@ enum Scene {
 //}
 
 enum MainScene {
-    case timeline(TimelineVM), ingredients(IngredientsVM), ranking(RankingVM)
+    case timeline(TimelineViewModel), ingredients(IngredientsViewModel), ranking(RankingViewModel)
 }
 
 

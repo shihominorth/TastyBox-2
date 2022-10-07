@@ -19,11 +19,13 @@ protocol stopPagingDelegate:  AnyObject {
 
 class IngredientsViewController: UIViewController, BindableType {
     
-    typealias ViewModelType = IngredientsVM
-    var viewModel: IngredientsVM!
+    typealias ViewModelType = IngredientsViewModel
+    var viewModel: IngredientsViewModel!
     
     @IBOutlet weak var ingredientsCollectionView: UICollectionView!
     @IBOutlet weak var recipesCollecitonView: UICollectionView!
+    
+    @IBOutlet weak var zeroView: UIView!
     
     var ingredientsDataSource: RxDefaultCollectionViewDataSource<String, IngredientOptionCVCell>!
     var recipeDataSource: RxDefaultCollectionViewDataSource<Recipe, RecipeWithIngredientCVCell>!
@@ -44,6 +46,8 @@ class IngredientsViewController: UIViewController, BindableType {
         ingredientsCollectionViewFlowLayout.sectionInset = UIEdgeInsets(top: 3, left: 5, bottom: 3, right: 5)
         ingredientsCollectionViewFlowLayout.estimatedItemSize = UICollectionViewFlowLayout.automaticSize
         ingredientsCollectionViewFlowLayout.scrollDirection = .horizontal
+        
+//        ingredientsCollectionViewFlowLayout.itemSize = CGSize(width: width + 10, height: ingredientsCollectionView.frame.height - 6)
         
         ingredientsCollectionView.collectionViewLayout = ingredientsCollectionViewFlowLayout
         
@@ -83,19 +87,14 @@ class IngredientsViewController: UIViewController, BindableType {
         
         
         DispatchQueue.main.asyncAfter(deadline: .now() + 2.0) { [unowned self] in
-            
             self.ingredientsCollectionView.stopSkeletonAnimation()
             self.recipesCollecitonView.stopSkeletonAnimation()
             self.view.hideSkeleton(reloadDataAfter: true, transition: .crossDissolve(0.25))
             
             self.ingredientsCollectionView.reloadData()
             self.recipesCollecitonView.reloadData()
-            
         }
-        
-        
     }
-    
     
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
@@ -142,6 +141,7 @@ class IngredientsViewController: UIViewController, BindableType {
             .do(onNext: {
                 
                 self.viewModel.recipes = $0
+                self.zeroView.isHidden = $0.isEmpty ? false : true
                 
             })
             .bind(to: recipesCollecitonView.rx.items(dataSource: recipeDataSource))
@@ -243,22 +243,26 @@ class IngredientsViewController: UIViewController, BindableType {
                     
                 }
             }
-            
         }
-        
     }
     
-    func updateNavigationBarHiding(scrollDiff: CGFloat) {
-        
+    private func estimatedFrame(text: String, font: UIFont) -> CGRect {
+        let size = CGSize(width: 200, height: 1_000) // temporary size
+        let options = NSStringDrawingOptions.usesFontLeading.union(.usesLineFragmentOrigin)
+        return NSString(string: text).boundingRect(with: size,
+                                                   options: options,
+                                                   attributes: [NSAttributedString.Key.font: font],
+                                                   context: nil)
+    }
+    
+    private func updateNavigationBarHiding(scrollDiff: CGFloat) {
         let boundaryValue: CGFloat = 100.0
-        
         /// navigationBar表示
         if scrollDiff > boundaryValue {
             navigationController?.setNavigationBarHidden(false, animated: true)
             lastNavigationBarIsHidden = false
             return
         }
-        
         /// navigationBar非表示
         else if scrollDiff < -boundaryValue {
             navigationController?.setNavigationBarHidden(true, animated: true)

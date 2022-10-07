@@ -13,7 +13,7 @@ protocol toRecipeDetailDelegate: AnyObject {
     func selectedRecipe(recipe: Recipe)
 }
 
-final class RankingVM: ViewModelBase {
+final class RankingViewModel: ViewModelBase {
     
     let user: Firebase.User
     let apiType: MainDMProtocol.Type

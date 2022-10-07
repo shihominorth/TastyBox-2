@@ -9,7 +9,7 @@ import Foundation
 import Firebase
 import RxSwift
 
-final class TimelineVM: ViewModelBase {
+final class TimelineViewModel: ViewModelBase {
     
     private let apiType: MainDMProtocol.Type
     let user: Firebase.User

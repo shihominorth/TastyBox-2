@@ -17,8 +17,6 @@ import SafariServices
 import SwiftMessages
 
 class SceneCoordinator: NSObject, SceneCoordinatorType {
-    
-    
     private var window: UIWindow
     private var currentViewController: UIViewController
     private var semiModalPresenter: SemiModalPresenter
@@ -43,15 +41,11 @@ class SceneCoordinator: NSObject, SceneCoordinatorType {
     
     @discardableResult
     func transition(to scene: Scene, type: SceneTransitionType) -> Completable {
-        
         let subject = PublishSubject<Void>()
         let viewController = scene.viewController()
         
-        
         switch type {
-            
         case .root:
-            
             currentViewController = SceneCoordinator.actualViewController(for: viewController)
             window.rootViewController = viewController
             subject.onCompleted()
@@ -62,20 +56,15 @@ class SceneCoordinator: NSObject, SceneCoordinatorType {
                 fatalError("Can't push a view controller without a current navigation controller")
             }
             
-            // Challenge 3: set ourselves as the navigation controller's delegate. This needs to be done
-            // prior to `navigationController.rx.delegate` as it takes care of preserving the configured delegate
             navigationController.delegate = self
             
-            // one-off subscription to be notified when push complete
             _ = navigationController.rx.delegate
                 .sentMessage(#selector(UINavigationControllerDelegate.navigationController(_:didShow:animated:)))
                 .map { _ in }
                 .bind(to: subject)
-           
+            
             DispatchQueue.main.async {
-            
                 navigationController.pushViewController(viewController, animated: true)
-            
             }
             
         case .pushFromBottom:
@@ -84,11 +73,8 @@ class SceneCoordinator: NSObject, SceneCoordinatorType {
                 fatalError("Can't push a view controller without a current navigation controller")
             }
             
-            // Challenge 3: set ourselves as the navigation controller's delegate. This needs to be done
-            // prior to `navigationController.rx.delegate` as it takes care of preserving the configured delegate
             navigationController.delegate = self
             
-            // one-off subscription to be notified when push complete
             _ = navigationController.rx.delegate
                 .sentMessage(#selector(UINavigationControllerDelegate.navigationController(_:didShow:animated:)))
                 .map { _ in }
@@ -101,7 +87,7 @@ class SceneCoordinator: NSObject, SceneCoordinatorType {
             transition.subtype = .fromLeft
             navigationController.view.layer.add(transition, forKey: kCATransition)
             navigationController.pushViewController(viewController, animated: false)
-           
+            
             
         case let .modal(presentationStyle, transitionStyle, hasNavigationController):
             
@@ -110,49 +96,23 @@ class SceneCoordinator: NSObject, SceneCoordinatorType {
             
             if hasNavigationController {
                 
-//                guard let navigationController = currentViewController.navigationController else {
-//                    fatalError("Can't push a view controller without a current navigation controller")
-//                }
-                
-                // Challenge 3: set ourselves as the navigation controller's delegate. This needs to be done
-                // prior to `navigationController.rx.delegate` as it takes care of preserving the configured delegate
-//                navigationController.delegate = self
-                
-                // one-off subscription to be notified when push complete
-                //                _ = navigationController.rx.delegate
-                //                    .sentMessage(#selector(UINavigationControllerDelegate.navigationController(_:didShow:animated:)))
-                //                    .map { _ in }
-                //                    .bind(to: subject)
-                
-//                currentViewController.present(viewController, animated: true) { [unowned self] in
-                    
-                    
                 if let navigationController = viewController as? UINavigationController {
-//
-//                        self.currentViewController = SceneCoordinator.actualViewController(for: navigationController)
-                        navigationController.delegate = self
-                        
-                        currentViewController.present(viewController, animated: true) {
-                            subject.onCompleted()
-                        }
-
-                        currentViewController = SceneCoordinator.actualViewController(for: viewController)
-
+                    
+                    navigationController.delegate = self
+                    
+                    currentViewController.present(viewController, animated: true) {
+                        subject.onCompleted()
                     }
-//
-//                    subject.onCompleted()
-//
-//                }
-//
+                    
+                    currentViewController = SceneCoordinator.actualViewController(for: viewController)
+                }
             }
             else {
-
+                
                 guard let navigationController = currentViewController.navigationController else {
                     fatalError("Can't push a view controller without a current navigation controller")
                 }
                 
-                // Challenge 3: set ourselves as the navigation controller's delegate. This needs to be done
-                // prior to `navigationController.rx.delegate` as it takes care of preserving the configured delegate
                 navigationController.delegate = self
                 
                 currentViewController.present(viewController, animated: true) {
@@ -160,7 +120,6 @@ class SceneCoordinator: NSObject, SceneCoordinatorType {
                 }
                 
                 currentViewController = SceneCoordinator.actualViewController(for: viewController)
-
             }
             
             
@@ -179,7 +138,7 @@ class SceneCoordinator: NSObject, SceneCoordinatorType {
             if let viewController = viewController as? PHPickerViewController {
                 
                 if !(currentViewController is PHPickerViewController)  {
-                   
+                    
                     viewController.modalPresentationStyle = .automatic
                     viewController.modalTransitionStyle = .coverVertical
                     
@@ -197,7 +156,7 @@ class SceneCoordinator: NSObject, SceneCoordinatorType {
                         .disposed(by: disposeBag)
                 }
                 
-               
+                
             }
             
         case .videoPick(let compeltion):
@@ -205,7 +164,7 @@ class SceneCoordinator: NSObject, SceneCoordinatorType {
             if let viewController = viewController as? PHPickerViewController {
                 
                 if !(currentViewController is PHPickerViewController)  {
-                   
+                    
                     viewController.modalPresentationStyle = .automatic
                     viewController.modalTransitionStyle = .coverVertical
                     
@@ -215,16 +174,10 @@ class SceneCoordinator: NSObject, SceneCoordinatorType {
                     
                     viewController.rx.videoUrl
                         .subscribe(onNext: { url in
-                            
-                           compeltion(url)
-
-                            
+                            compeltion(url)
                         })
                         .disposed(by: disposeBag)
-
                 }
-                
-               
             }
         case .camera(let completion):
             
@@ -245,9 +198,9 @@ class SceneCoordinator: NSObject, SceneCoordinatorType {
             }
             
         case .centerCard:
-          
+            
             let segue = CenterCardSegue(identifier: nil, source: currentViewController, destination: viewController) { [unowned self] in
-               
+                
                 self.currentViewController = SceneCoordinator.actualViewController(for: viewController)
                 subject.onCompleted()
                 
@@ -264,11 +217,11 @@ class SceneCoordinator: NSObject, SceneCoordinatorType {
                 
                 segue.containerView.heightAnchor.constraint(equalToConstant: viewControllerHeight).isActive = true
             }
-
+            
             segue.perform()
             
         case .web:
-
+            
             currentViewController.present(viewController, animated: true) {
                 subject.onCompleted()
             }
@@ -282,213 +235,33 @@ class SceneCoordinator: NSObject, SceneCoordinatorType {
             .ignoreElements().asCompletable()
     }
     
-//    @discardableResult
-//    func transition(to viewController: UIViewController, type: SceneTransitionType) -> Completable {
-//
-//        let subject = PublishSubject<Void>()
-////        let dissappearsubject = PublishSubje/t<Void>()
-//
-//        switch type {
-//        case .root:
-//
-//            currentViewController = SceneCoordinator.actualViewController(for: viewController)
-//            window.rootViewController = viewController
-//            subject.onCompleted()
-//
-//        case .push:
-//            guard let navigationController = currentViewController.navigationController else {
-//                fatalError("Can't push a view controller without a current navigation controller")
-//            }
-//
-//            // Challenge 3: set ourselves as the navigation controller's delegate. This needs to be done
-//            // prior to `navigationController.rx.delegate` as it takes care of preserving the configured delegate
-//            navigationController.delegate = self
-//
-//            // one-off subscription to be notified when push complete
-//            _ = navigationController.rx.delegate
-//                .sentMessage(#selector(UINavigationControllerDelegate.navigationController(_:didShow:animated:)))
-//                .map { _ in }
-//                .bind(to: subject)
-//
-//            navigationController.pushViewController(viewController, animated: true)
-//
-//        case .modal(let presentationStyle, let transitionStyle, let hasNavigationController):
-//
-//            viewController.modalPresentationStyle = presentationStyle ?? .fullScreen
-//            viewController.modalTransitionStyle =  transitionStyle ?? .flipHorizontal
-//
-//
-//
-//            if hasNavigationController {
-//
-//                guard let navigationController = currentViewController.navigationController else {
-//                    fatalError("Can't push a view controller without a current navigation controller")
-//                }
-//
-//                // Challenge 3: set ourselves as the navigation controller's delegate. This needs to be done
-//                // prior to `navigationController.rx.delegate` as it takes care of preserving the configured delegate
-//                navigationController.delegate = self
-//
-//                // one-off subscription to be notified when push complete
-//                _ = navigationController.rx.delegate
-//                    .sentMessage(#selector(UINavigationControllerDelegate.navigationController(_:didShow:animated:)))
-//                    .map { _ in }
-//                    .bind(to: subject)
-//
-//                currentViewController.present(viewController, animated: true) { [unowned self] in
-//
-//                    if let presenter = viewController.presentedViewController {
-//
-//                        self.currentViewController = SceneCoordinator.actualViewController(for: presenter)
-//                        subject.onCompleted()
-//
-//                    }
-//
-//                }
-//
-//            }
-//            else{
-//
-//                currentViewController.present(viewController, animated: true) {
-////                    subject.onCompleted()
-//
-//                    if let presenter = viewController.presentedViewController {
-//
-//                        self.currentViewController = SceneCoordinator.actualViewController(for: presenter)
-//                        subject.onCompleted()
-//
-//                    }
-//                }
-//
-//            }
-//
-//
-//        case .usePresentNC:
-//
-//            guard let navigationController = currentViewController as? UINavigationController else {
-//                fatalError("Can't push a view controller without a current navigation controller")
-//            }
-//
-//            // Challenge 3: set ourselves as the navigation controller's delegate. This needs to be done
-//            // prior to `navigationController.rx.delegate` as it takes care of preserving the configured delegate
-//            navigationController.delegate = self
-//
-//            // one-off subscription to be notified when push complete
-//            _ = navigationController.rx.delegate
-//                .sentMessage(#selector(UINavigationControllerDelegate.navigationController(_:didShow:animated:)))
-//                .map { _ in }
-//                .bind(to: subject)
-//
-//            navigationController.pushViewController(viewController, animated: true)
-//
-//        case .VCAsRoot:
-//
-//            if let nc = currentViewController as? UINavigationController {
-//
-//                currentViewController = SceneCoordinator.actualViewController(for: viewController)
-//                window.rootViewController = nc
-//                subject.onCompleted()
-//
-//            }
-//
-//        case .modalHalf:
-//
-//            //            if #available(iOS 15.0, *) {
-//            //
-//            //                if let presentationController = viewController.presentationController as? UISheetPresentationController {
-//            //                    presentationController.detents = [.medium(), .large()] /// set here!
-//            //                    presentationController.prefersScrollingExpandsWhenScrolledToEdge = true // ハンドルを表示
-//            //
-//            //                }
-//            //
-//            //                currentViewController.present(viewController, animated: true)
-//            //            }
-//            //            else {
-//
-//            if let navigationController = viewController as? UINavigationController, let firstViewController = navigationController.viewControllers.first {
-//                semiModalPresenter.viewController = firstViewController
-//            }
-//            else {
-//
-//                semiModalPresenter.viewController = viewController
-//
-//            }
-//
-//            currentViewController.present(viewController, animated: true) { [unowned self] in
-//
-//                self.currentViewController = SceneCoordinator.actualViewController(for: viewController)
-//                self.semiModalPresenter.dissmissDelegate = self
-//                subject.onCompleted()
-//
-//            }
-//
-//        case .imagePick:
-//
-//            if viewController is PHPickerViewController && !(currentViewController is PHPickerViewController) {
-//
-//                viewController.modalPresentationStyle = .automatic
-//                viewController.modalTransitionStyle = .coverVertical
-//
-//                currentViewController.present(viewController, animated: true) {
-//                    subject.onCompleted()
-//                }
-//
-//            }
-//
-//
-//        case .web:
-//
-//            currentViewController.present(viewController, animated: true) {
-//                subject.onCompleted()
-//            }
-//
-//        default:
-//            break
-//        }
-//
-//
-//
-//        return subject.asObservable()
-//            .take(1)
-//            .ignoreElements().asCompletable()
-//    }
-    
     
     @discardableResult
     func pop(animated: Bool, completion: (() -> Void)? = nil) -> Completable {
         let subject = PublishSubject<Void>()
-
-           
-            if let presenter = currentViewController.presentingViewController {
-                // dismiss a modal controller
-                currentViewController.dismiss(animated: animated) {
-                    self.currentViewController = SceneCoordinator.actualViewController(for: presenter)
-                    subject.onCompleted()
-                    completion?()
-                }
-                
-            } else if let navigationController = currentViewController.navigationController {
-                // challenge 3: we don't need to set ourselves as delegate of the navigation controller again,
-                // as this has been done during the push transition
-                
-                // navigate up the stack
-                // one-off subscription to be notified when pop complete
-                _ = navigationController.rx.delegate
-                    .sentMessage(#selector(UINavigationControllerDelegate.navigationController(_:didShow:animated:)))
-                    .map { _ in }
-                    .bind(to: subject)
-                guard navigationController.popViewController(animated: animated) != nil else {
-                    fatalError("can't navigate back from \(currentViewController)")
-                }
-                
-                // challenge 3: we don't need this line anymore
-                // currentViewController = SceneCoordinator.actualViewController(for: navigationController.viewControllers.last!)
-                
-            } else {
-                fatalError("Not a modal, no navigation controller: can't navigate back from \(currentViewController)")
-            }
         
-   
+        
+        if let presenter = currentViewController.presentingViewController {
+            // dismiss a modal controller
+            currentViewController.dismiss(animated: animated) {
+                self.currentViewController = SceneCoordinator.actualViewController(for: presenter)
+                subject.onCompleted()
+                completion?()
+            }
+            
+        } else if let navigationController = currentViewController.navigationController {
+            _ = navigationController.rx.delegate
+                .sentMessage(#selector(UINavigationControllerDelegate.navigationController(_:didShow:animated:)))
+                .map { _ in }
+                .bind(to: subject)
+            guard navigationController.popViewController(animated: animated) != nil else {
+                fatalError("can't navigate back from \(currentViewController)")
+            }
+        } else {
+            fatalError("Not a modal, no navigation controller: can't navigate back from \(currentViewController)")
+        }
+        
+        
         return subject.asObservable()
             .take(1)
             .ignoreElements().asCompletable()
@@ -520,26 +293,20 @@ class SceneCoordinator: NSObject, SceneCoordinatorType {
                 
             }
             else {
-            
+                
                 completion?(false)
-            
+                
             }
         }
-        
-      
         
         return subject.asObservable()
             .take(1)
             .ignoreElements().asCompletable()
-        
     }
     
     //    @discardableResult
     func dismissedViewControllerUnderNavigationController(viewController: UIViewController) {
-        
         currentViewController = viewController
-        
-        
     }
     
     func cropImage(cropMode: RSKImageCropMode, imageData: Data) -> Observable<Data> {
@@ -553,13 +320,8 @@ class SceneCoordinator: NSObject, SceneCoordinatorType {
         imageCropVC.chooseButton.setTitle("Done", for: .normal)
         
         currentViewController.present(imageCropVC, animated: true)
-
-        
-        
         return imageCropVC.rx.imageData.map { $0 }
-        
     }
-    
 }
 
 

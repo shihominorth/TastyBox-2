@@ -12,8 +12,8 @@ import Kingfisher
 
 class TimelineViewController: UIViewController, BindableType {
     
-    typealias ViewModelType = TimelineVM
-    var viewModel: TimelineVM!
+    typealias ViewModelType = TimelineViewModel
+    var viewModel: TimelineViewModel!
     
     var dataSource: RxNoCellTypeTableViewDataSource<Timeline>!
     
@@ -21,17 +21,12 @@ class TimelineViewController: UIViewController, BindableType {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
-        
     }
     
     override func viewWillAppear(_ animated: Bool) {
-        
         viewModel.getMyTimeline()
             .bind(to: viewModel.postsSubject)
             .disposed(by: viewModel.disposeBag)
-        
-        
     }
     
     

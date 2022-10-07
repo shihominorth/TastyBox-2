@@ -14,7 +14,6 @@ import UIKit
 
 
 final class DiscoveryViewController: UIViewController, BindableType {
-    
     typealias ViewModelType = DiscoveryViewModel
     
     var viewModel: DiscoveryViewModel!
@@ -47,7 +46,7 @@ final class DiscoveryViewController: UIViewController, BindableType {
         
         NotificationCenter.default.addObserver(self, selector: #selector(showSearch), name: NSNotification.Name("ShowSearch"), object: nil)
         
-        setUpMenuCollectinoView()
+        setUpMenuCollectinonView()
     }
     
     override func viewWillDisappear(_ animated: Bool) {
@@ -64,7 +63,7 @@ final class DiscoveryViewController: UIViewController, BindableType {
             .disposed(by: viewModel.disposeBag)
         
         self.menuNavBtn.rx.tap
-            .debounce(.microseconds(1000), scheduler: MainScheduler.instance)
+            .throttle(.microseconds(1000), scheduler: MainScheduler.instance)
             .catch { err in
                 return .empty()
             }
@@ -120,10 +119,12 @@ final class DiscoveryViewController: UIViewController, BindableType {
         pageViewController.delegate = self
     }
     
-    private func setUpMenuCollectinoView() {
+    private func setUpMenuCollectinonView() {
         self.menuCollectionView.showsHorizontalScrollIndicator = false
         
-        self.menuCollectionView.scrollToItem(at: IndexPath(item: viewModel.selectedIndex, section: 0), at: .centeredHorizontally, animated: true)
+        menuCollectionView.isPagingEnabled = false
+        menuCollectionView.scrollToItem(at: IndexPath(row: 1, section: 0), at: .centeredHorizontally, animated: true)
+        menuCollectionView.isPagingEnabled = true
     }
     
     
@@ -148,11 +149,11 @@ final class DiscoveryViewController: UIViewController, BindableType {
     }
     
     
-    func initialContentView(){
+    private func initialContentView(){
         self.containerView.isHidden = false
     }
     
-    func toggleSideMenu(isOpend: Bool) {
+    private func toggleSideMenu(isOpend: Bool) {
         sideMenuConstraint.constant = isOpend ? 0 : -230
         
         UIView.animate(withDuration: 0.3) {
@@ -160,7 +161,7 @@ final class DiscoveryViewController: UIViewController, BindableType {
         }
     }
     
-    func insertblurView()  {
+    private func insertblurView()  {
         // Init a UIVisualEffectView which going to do the blur for us
         let blurView = UIVisualEffectView()
         // Make its frame equal the main view frame so that every pixel is under blurred
@@ -182,7 +183,7 @@ final class DiscoveryViewController: UIViewController, BindableType {
     }
     
     
-    func removeBlurView() {
+    private func removeBlurView() {
         guard let viewWithTag = self.view.viewWithTag(100) else {
             return
         }
@@ -218,13 +219,13 @@ final class DiscoveryViewController: UIViewController, BindableType {
         if identifier == "toSideMenu" {
             
             //これはsegueでやった方が楽
-            viewModel.presenter.sideMenuVC = segue.destination as? SideMenuTableViewController
+            viewModel.presenter.sideMenuViewController = segue.destination as? SideMenuTableViewController
         }
         else if identifier == "showPageVC" {
             
             if let pageVC = segue.destination as? UIPageViewController {
                 
-                viewModel.presenter.pageVC = pageVC
+                viewModel.presenter.pageViewController = pageVC
                 
             }
             
@@ -232,31 +233,10 @@ final class DiscoveryViewController: UIViewController, BindableType {
         
     }
     
-    //なぜここをリアクティブ化しないのか？
-    
-    //  self.viewModel.selectPageTitle(row: indexPath.row)があるかどうか
-    //　わざわざIndexPath（タップされた場合）かInt型（pageVCがスクロールされた場合）に変換しないといけない
-    
-    // 分けた方がわかりやすいのでは？
-    
-    
-    // 指定したindexPathのセルを選択状態にして移動させる。(collectionViewなので表示されていないセルは存在しない)
-    func focusCell(indexPath: IndexPath) {
-        // 以前選択されていたセルを非選択状態にする(collectionViewなので表示されていないセルは存在しない)
-//        if let previousCell = self.menuCollectionView?.cellForItem(at: IndexPath(item: viewModel.selectedIndex, section: 0)) as? MenuCollectionViewCell {
-//            previousCell.focusCell(active: false)
-            // 現在選択されている位置を状態としてViewControllerに覚えさせておく
-            viewModel.selectedIndex = indexPath.row
-//        }
-        
-        // 新しく選択したセルを選択状態にする(collectionViewなので表示されていないセルは存在しない)
-//        if let nextCell = self.menuCollectionView?.cellForItem(at: indexPath) as? MenuCollectionViewCell {
-//            nextCell.focusCell(active: true)
-//        }
+    private func focusCell(indexPath: IndexPath) {
         // .CenteredHorizontallyでを指定して、CollectionViewのboundsの中央にindexPathのセルが来るようにする
         self.menuCollectionView?.scrollToItem(at: indexPath, at: .centeredHorizontally, animated: true)
-    }
-    
+    }    
     
 }
 

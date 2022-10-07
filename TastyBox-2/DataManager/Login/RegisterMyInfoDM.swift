@@ -42,7 +42,6 @@ final class RegisterMyInfoDM: RegisterMyInfoProtocol {
                 
             }
             
-            
             return Disposables.create()
         }
     }

@@ -11,8 +11,8 @@ import RxSwift
 
 class RankingViewController: UIViewController, BindableType {
       
-    typealias ViewModelType = RankingVM
-    var viewModel: RankingVM!
+    typealias ViewModelType = RankingViewModel
+    var viewModel: RankingViewModel!
 
     @IBOutlet weak var collectionView: UICollectionView!
     
