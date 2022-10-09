@@ -46,11 +46,12 @@
 		6F119522277704CA002510EC /* FollowersVM.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F119521277704C9002510EC /* FollowersVM.swift */; };
 		6F11952427784839002510EC /* ManageRelatedUserViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F11952327784838002510EC /* ManageRelatedUserViewController.swift */; };
 		6F11952627784B08002510EC /* ManageMyRelatedUserVM.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F11952527784B08002510EC /* ManageMyRelatedUserVM.swift */; };
+		6F15785E28F339EC00F0CAAD /* TastyBox2.entitlements in Sources */ = {isa = PBXBuildFile; fileRef = 6F15785D28F3391000F0CAAD /* TastyBox2.entitlements */; };
+		6F15786328F3448D00F0CAAD /* DiscoveryTestCases.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F15786228F3448D00F0CAAD /* DiscoveryTestCases.swift */; };
+		6F15786528F347DD00F0CAAD /* CheckTimeNServingTVCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F15786428F347DD00F0CAAD /* CheckTimeNServingTVCell.swift */; };
 		6F194CBA271C77A40084F829 /* VideoPlayer.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 6F194CB9271C77A40084F829 /* VideoPlayer.storyboard */; };
 		6F194CBC271C7F190084F829 /* UploadingVideoViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F194CBB271C7F190084F829 /* UploadingVideoViewController.swift */; };
 		6F1A092328EEAEF2008AF33B /* ZeroView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 6F1A092228EEAEF2008AF33B /* ZeroView.xib */; };
-		6F1A092728EEB0A1008AF33B /* 16112.png in Resources */ = {isa = PBXBuildFile; fileRef = 6F1A092628EEB0A0008AF33B /* 16112.png */; };
-		6F246AE728F32764000D58DC /* DiscoveryUnitTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F246AE628F32764000D58DC /* DiscoveryUnitTests.swift */; };
 		6F26D4E826DF9E360050BA84 /* AboutVM.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F26D4E726DF9E360050BA84 /* AboutVM.swift */; };
 		6F26D4EA26DFBDF60050BA84 /* DiscoveryVM.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F26D4E926DFBDF60050BA84 /* DiscoveryVM.swift */; };
 		6F2BBA8A26EDDA6B003B0D5F /* RxAppleDelegateProxy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F2BBA8926EDDA6B003B0D5F /* RxAppleDelegateProxy.swift */; };
@@ -105,7 +106,6 @@
 		6F74C4252719BAB9007BB9E6 /* DiscoveryPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F74C4242719BAB8007BB9E6 /* DiscoveryPresenter.swift */; };
 		6F74C42B2719DEE7007BB9E6 /* CreateRecipeVM.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F74C42A2719DEE7007BB9E6 /* CreateRecipeVM.swift */; };
 		6F74C42E2719E4D5007BB9E6 /* CreateRecipe.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 6F74C42C2719E20A007BB9E6 /* CreateRecipe.storyboard */; };
-		6F77D4852726DF8D00F1FCD9 /* CheckTimeNServingTVCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F77D4842726DF8D00F1FCD9 /* CheckTimeNServingTVCell.swift */; };
 		6F77D487272825C800F1FCD9 /* CheckEvaluateRecipeCVCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F77D486272825C800F1FCD9 /* CheckEvaluateRecipeCVCell.swift */; };
 		6F77D489272853FE00F1FCD9 /* PlayVideoInsideTVCellView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F77D488272853FD00F1FCD9 /* PlayVideoInsideTVCellView.swift */; };
 		6F7CF29A27494DF5006963BA /* IngredientsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F7CF29927494DF5006963BA /* IngredientsViewModel.swift */; };
@@ -294,12 +294,14 @@
 		6F119521277704C9002510EC /* FollowersVM.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FollowersVM.swift; sourceTree = "<group>"; };
 		6F11952327784838002510EC /* ManageRelatedUserViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ManageRelatedUserViewController.swift; sourceTree = "<group>"; };
 		6F11952527784B08002510EC /* ManageMyRelatedUserVM.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ManageMyRelatedUserVM.swift; sourceTree = "<group>"; };
+		6F15785D28F3391000F0CAAD /* TastyBox2.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = TastyBox2.entitlements; sourceTree = "<group>"; };
+		6F15786128F3448C00F0CAAD /* TastyBox2Tests-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "TastyBox2Tests-Bridging-Header.h"; sourceTree = "<group>"; };
+		6F15786228F3448D00F0CAAD /* DiscoveryTestCases.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiscoveryTestCases.swift; sourceTree = "<group>"; };
+		6F15786428F347DD00F0CAAD /* CheckTimeNServingTVCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = CheckTimeNServingTVCell.swift; path = TastyBox2/View/CheckCreatedRecipe/CheckTimeNServingTVCell.swift; sourceTree = "<group>"; };
 		6F194CB9271C77A40084F829 /* VideoPlayer.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = VideoPlayer.storyboard; sourceTree = "<group>"; };
 		6F194CBB271C7F190084F829 /* UploadingVideoViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UploadingVideoViewController.swift; sourceTree = "<group>"; };
 		6F1A092228EEAEF2008AF33B /* ZeroView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ZeroView.xib; sourceTree = "<group>"; };
-		6F1A092628EEB0A0008AF33B /* 16112.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = 16112.png; sourceTree = "<group>"; };
-		6F246ADD28F32730000D58DC /* TastyBox_2Tests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = TastyBox_2Tests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
-		6F246AE628F32764000D58DC /* DiscoveryUnitTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiscoveryUnitTests.swift; sourceTree = "<group>"; };
+		6F246ADD28F32730000D58DC /* TastyBox2Tests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = TastyBox2Tests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		6F26D4E726DF9E360050BA84 /* AboutVM.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AboutVM.swift; sourceTree = "<group>"; };
 		6F26D4E926DFBDF60050BA84 /* DiscoveryVM.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiscoveryVM.swift; sourceTree = "<group>"; };
 		6F2BBA8926EDDA6B003B0D5F /* RxAppleDelegateProxy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RxAppleDelegateProxy.swift; sourceTree = "<group>"; };
@@ -387,7 +389,6 @@
 		6F9E04222700CAE0005DCEF4 /* ShoppinglistTVCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShoppinglistTVCell.swift; sourceTree = "<group>"; };
 		6F9E042A27017B91005DCEF4 /* ShoppinglistHeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShoppinglistHeaderView.swift; sourceTree = "<group>"; };
 		6F9E042C2701DCE8005DCEF4 /* BalloonView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BalloonView.swift; sourceTree = "<group>"; };
-		6FA70A9726E6660000474FE5 /* TastyBox-2.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = "TastyBox-2.entitlements"; sourceTree = "<group>"; };
 		6FA70A9826E7A1FE00474FE5 /* SetPasswordViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SetPasswordViewController.swift; sourceTree = "<group>"; };
 		6FA70A9A26E7A69400474FE5 /* SetPasswordVM.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SetPasswordVM.swift; sourceTree = "<group>"; };
 		6FA70A9C26E8EA5600474FE5 /* ViewController+.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ViewController+.swift"; sourceTree = "<group>"; };
@@ -396,7 +397,7 @@
 		6FAAB4C22720CCB400B42C67 /* SearchBarRCV.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchBarRCV.swift; sourceTree = "<group>"; };
 		6FAAB4C42720CCDC00B42C67 /* SearchBarRCV.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = SearchBarRCV.xib; sourceTree = "<group>"; };
 		6FADF981274C0D04008FC605 /* Notification+.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Notification+.swift"; sourceTree = "<group>"; };
-		6FB06F3926D67E0100E110B4 /* TastyBox_2.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = TastyBox_2.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		6FB06F3926D67E0100E110B4 /* TastyBox2.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = TastyBox2.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		6FB06F3C26D67E0100E110B4 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		6FB06F3E26D67E0100E110B4 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
 		6FB06F4326D67E0100E110B4 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
@@ -608,12 +609,13 @@
 			path = Video;
 			sourceTree = "<group>";
 		};
-		6F246ADE28F32731000D58DC /* TastyBox_2Tests */ = {
+		6F246ADE28F32731000D58DC /* TastyBox2Tests */ = {
 			isa = PBXGroup;
 			children = (
-				6F246AE628F32764000D58DC /* DiscoveryUnitTests.swift */,
+				6F15786228F3448D00F0CAAD /* DiscoveryTestCases.swift */,
+				6F15786128F3448C00F0CAAD /* TastyBox2Tests-Bridging-Header.h */,
 			);
-			path = TastyBox_2Tests;
+			path = TastyBox2Tests;
 			sourceTree = "<group>";
 		};
 		6F26D4EB26DFBE010050BA84 /* Discovery */ = {
@@ -890,8 +892,9 @@
 		6FB06F3026D67E0100E110B4 = {
 			isa = PBXGroup;
 			children = (
-				6FB06F3B26D67E0100E110B4 /* TastyBox_2 */,
-				6F246ADE28F32731000D58DC /* TastyBox_2Tests */,
+				6F15786428F347DD00F0CAAD /* CheckTimeNServingTVCell.swift */,
+				6FB06F3B26D67E0100E110B4 /* TastyBox2 */,
+				6F246ADE28F32731000D58DC /* TastyBox2Tests */,
 				6FB06F3A26D67E0100E110B4 /* Products */,
 				45ADD427D57A033E99108C72 /* Pods */,
 				85E184E109DC3F54BD23BA66 /* Frameworks */,
@@ -901,17 +904,17 @@
 		6FB06F3A26D67E0100E110B4 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				6FB06F3926D67E0100E110B4 /* TastyBox_2.app */,
-				6F246ADD28F32730000D58DC /* TastyBox_2Tests.xctest */,
+				6FB06F3926D67E0100E110B4 /* TastyBox2.app */,
+				6F246ADD28F32730000D58DC /* TastyBox2Tests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
 		};
-		6FB06F3B26D67E0100E110B4 /* TastyBox_2 */ = {
+		6FB06F3B26D67E0100E110B4 /* TastyBox2 */ = {
 			isa = PBXGroup;
 			children = (
+				6F15785D28F3391000F0CAAD /* TastyBox2.entitlements */,
 				6FC062C326ECC9AF0016B990 /* LoginErrors.swift */,
-				6FA70A9726E6660000474FE5 /* TastyBox-2.entitlements */,
 				6FD8439928EDDE3700B54BC6 /* GoogleService-Info.plist */,
 				6FB06F3C26D67E0100E110B4 /* AppDelegate.swift */,
 				6FB06F3E26D67E0100E110B4 /* SceneDelegate.swift */,
@@ -922,7 +925,6 @@
 				6FF66BA126D7AF570024495E /* ViewModel */,
 				6FF66B7926D693350024495E /* Storyboard */,
 				6FB06F4526D67E0600E110B4 /* Assets.xcassets */,
-				6F1A092628EEB0A0008AF33B /* 16112.png */,
 				6FB06F4726D67E0600E110B4 /* LaunchScreen.storyboard */,
 				6FB06F4A26D67E0600E110B4 /* Info.plist */,
 				6F018B9A26DB69E8006416D3 /* Scene */,
@@ -933,7 +935,7 @@
 				6F927BDB27576CEB006F95BF /* VideoPlayerLooped.swift */,
 				6FD427842764794100472C94 /* Segues.swift */,
 			);
-			path = TastyBox_2;
+			path = TastyBox2;
 			sourceTree = "<group>";
 		};
 		6FB70D1A276F88450099BC63 /* Profile */ = {
@@ -1249,9 +1251,9 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		6F246ADC28F32730000D58DC /* TastyBox_2Tests */ = {
+		6F246ADC28F32730000D58DC /* TastyBox2Tests */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 6F246AE328F32731000D58DC /* Build configuration list for PBXNativeTarget "TastyBox_2Tests" */;
+			buildConfigurationList = 6F246AE328F32731000D58DC /* Build configuration list for PBXNativeTarget "TastyBox2Tests" */;
 			buildPhases = (
 				514092AB5607775FE868A416 /* [CP] Check Pods Manifest.lock */,
 				6F246AD928F32730000D58DC /* Sources */,
@@ -1263,14 +1265,14 @@
 			dependencies = (
 				6F246AE228F32731000D58DC /* PBXTargetDependency */,
 			);
-			name = TastyBox_2Tests;
+			name = TastyBox2Tests;
 			productName = "TastyBox-2Tests";
-			productReference = 6F246ADD28F32730000D58DC /* TastyBox_2Tests.xctest */;
+			productReference = 6F246ADD28F32730000D58DC /* TastyBox2Tests.xctest */;
 			productType = "com.apple.product-type.bundle.unit-test";
 		};
-		6FB06F3826D67E0100E110B4 /* TastyBox_2 */ = {
+		6FB06F3826D67E0100E110B4 /* TastyBox2 */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 6FB06F4D26D67E0600E110B4 /* Build configuration list for PBXNativeTarget "TastyBox_2" */;
+			buildConfigurationList = 6FB06F4D26D67E0600E110B4 /* Build configuration list for PBXNativeTarget "TastyBox2" */;
 			buildPhases = (
 				D928936C0845379D4C83BA8C /* [CP] Check Pods Manifest.lock */,
 				6FB06F3626D67E0100E110B4 /* Frameworks */,
@@ -1284,9 +1286,9 @@
 			);
 			dependencies = (
 			);
-			name = TastyBox_2;
+			name = TastyBox2;
 			productName = "TastyBox-2";
-			productReference = 6FB06F3926D67E0100E110B4 /* TastyBox_2.app */;
+			productReference = 6FB06F3926D67E0100E110B4 /* TastyBox2.app */;
 			productType = "com.apple.product-type.application";
 		};
 /* End PBXNativeTarget section */
@@ -1322,8 +1324,8 @@
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				6FB06F3826D67E0100E110B4 /* TastyBox_2 */,
-				6F246ADC28F32730000D58DC /* TastyBox_2Tests */,
+				6FB06F3826D67E0100E110B4 /* TastyBox2 */,
+				6F246ADC28F32730000D58DC /* TastyBox2Tests */,
 			);
 		};
 /* End PBXProject section */
@@ -1360,7 +1362,6 @@
 				6F512A2226F3FA5100826657 /* Tutorial.storyboard in Resources */,
 				6FE9EB4926F98A05000AF9D4 /* Ingredient.storyboard in Resources */,
 				6F06EBE526F5FD0100F2218B /* StartCVCell.xib in Resources */,
-				6F1A092728EEB0A1008AF33B /* 16112.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1469,7 +1470,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				6F246AE728F32764000D58DC /* DiscoveryUnitTests.swift in Sources */,
+				6F15786328F3448D00F0CAAD /* DiscoveryTestCases.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1477,6 +1478,8 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				6F15786528F347DD00F0CAAD /* CheckTimeNServingTVCell.swift in Sources */,
+				6F15785E28F339EC00F0CAAD /* TastyBox2.entitlements in Sources */,
 				6FB70D1C276F885D0099BC63 /* ProfileVM.swift in Sources */,
 				6F4EA996273ECD5300A4B9F4 /* RecipeGenresTVCell.swift in Sources */,
 				6F0E6964272024E6002BD547 /* CGImage+.swift in Sources */,
@@ -1580,7 +1583,6 @@
 				6F3BF4D927397143005C24A5 /* RecipeDetailDM.swift in Sources */,
 				6FD4278327646F4100472C94 /* ReportAlertViewTVCell.swift in Sources */,
 				6FB70D1E276F8AB70099BC63 /* ProfileDM.swift in Sources */,
-				6F77D4852726DF8D00F1FCD9 /* CheckTimeNServingTVCell.swift in Sources */,
 				6FB970C527250C3F00350F84 /* CheckPublisherTVCell.swift in Sources */,
 				6F3BF4C8273302A2005C24A5 /* MainMyProfileTVCell.swift in Sources */,
 				6FC062C226ECA3D90016B990 /* Notification.swift in Sources */,
@@ -1691,7 +1693,7 @@
 /* Begin PBXTargetDependency section */
 		6F246AE228F32731000D58DC /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			target = 6FB06F3826D67E0100E110B4 /* TastyBox_2 */;
+			target = 6FB06F3826D67E0100E110B4 /* TastyBox2 */;
 			targetProxy = 6F246AE128F32731000D58DC /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
@@ -1737,10 +1739,11 @@
 				PRODUCT_BUNDLE_IDENTIFIER = "testApp.TastyBox-2Tests";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_OBJC_BRIDGING_HEADER = "TastyBox2Tests/TastyBox2Tests-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/TastyBox-2.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/TastyBox-2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/TastyBox2.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/TastyBox2";
 			};
 			name = Debug;
 		};
@@ -1765,9 +1768,10 @@
 				PRODUCT_BUNDLE_IDENTIFIER = "testApp.TastyBox-2Tests";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_OBJC_BRIDGING_HEADER = "TastyBox2Tests/TastyBox2Tests-Bridging-Header.h";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/TastyBox-2.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/TastyBox-2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/TastyBox2.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/TastyBox2";
 			};
 			name = Release;
 		};
@@ -1895,12 +1899,12 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				ASSETCATALOG_WARNINGS = NO;
 				CLANG_ENABLE_MODULES = YES;
-				CODE_SIGN_ENTITLEMENTS = "TastyBox-2/TastyBox-2.entitlements";
+				CODE_SIGN_ENTITLEMENTS = TastyBox2/TastyBox2.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = JXVL9HBQR6;
-				ENABLE_TESTABILITY = NO;
+				ENABLE_TESTABILITY = YES;
 				"EXCLUDED_ARCHS[sdk=iphonesimulator*]" = arm64;
-				INFOPLIST_FILE = "TastyBox-2/Info.plist";
+				INFOPLIST_FILE = TastyBox2/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = TastyBox;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -1925,11 +1929,12 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				ASSETCATALOG_WARNINGS = NO;
 				CLANG_ENABLE_MODULES = YES;
-				CODE_SIGN_ENTITLEMENTS = "TastyBox-2/TastyBox-2.entitlements";
+				CODE_SIGN_ENTITLEMENTS = TastyBox2/TastyBox2.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = JXVL9HBQR6;
+				ENABLE_TESTABILITY = YES;
 				"EXCLUDED_ARCHS[sdk=iphonesimulator*]" = arm64;
-				INFOPLIST_FILE = "TastyBox-2/Info.plist";
+				INFOPLIST_FILE = TastyBox2/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = TastyBox;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -1945,7 +1950,7 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		6F246AE328F32731000D58DC /* Build configuration list for PBXNativeTarget "TastyBox_2Tests" */ = {
+		6F246AE328F32731000D58DC /* Build configuration list for PBXNativeTarget "TastyBox2Tests" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				6F246AE428F32731000D58DC /* Debug */,
@@ -1963,7 +1968,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		6FB06F4D26D67E0600E110B4 /* Build configuration list for PBXNativeTarget "TastyBox_2" */ = {
+		6FB06F4D26D67E0600E110B4 /* Build configuration list for PBXNativeTarget "TastyBox2" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				6FB06F4E26D67E0600E110B4 /* Debug */,

@@ -1,7 +1,7 @@
 # Uncomment the next line to define a global platform for your project
 # platform :ios, '9.0'
 
-target 'TastyBox_2' do
+target 'TastyBox2' do
   # Comment the next line if you don't want to use dynamic frameworks
   use_frameworks!
   inhibit_all_warnings!
@@ -71,7 +71,7 @@ target 'TastyBox_2' do
   pod 'GoogleAPIClientForREST/Sheets'
   pod 'GoogleAPIClientForREST/Drive'
   
-  target 'TastyBox_2Tests' do
+  target 'TastyBox2Tests' do
     inherit! :search_paths
   end
   
