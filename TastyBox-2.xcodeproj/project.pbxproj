@@ -235,6 +235,7 @@
 		6FFFB87127468F00006B7985 /* RankingViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FFFB87027468F00006B7985 /* RankingViewModel.swift */; };
 		6FFFB8742746A61C006B7985 /* MainDM.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FFFB8732746A61C006B7985 /* MainDM.swift */; };
 		6FFFB8762746AB7C006B7985 /* RxRecipeRankingCollectionViewDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FFFB8752746AB7B006B7985 /* RxRecipeRankingCollectionViewDataSource.swift */; };
+		732DE813135DB6288E28CEEA /* Pods_TastyBox_2Tests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 05E49A8061EEB432B19A16CB /* Pods_TastyBox_2Tests.framework */; };
 		DBFCC13DECCA32ED657C5F95 /* Pods_TastyBox_2.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1F1CF882957C39AAB229AAF4 /* Pods_TastyBox_2.framework */; };
 /* End PBXBuildFile section */
 
@@ -249,8 +250,11 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		05E49A8061EEB432B19A16CB /* Pods_TastyBox_2Tests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_TastyBox_2Tests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		1F1CF882957C39AAB229AAF4 /* Pods_TastyBox_2.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_TastyBox_2.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		217A18CA318CF3F501A72A86 /* Pods-TastyBox-2.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-TastyBox-2.release.xcconfig"; path = "Target Support Files/Pods-TastyBox-2/Pods-TastyBox-2.release.xcconfig"; sourceTree = "<group>"; };
+		569E54F7522AEEE2EDD6AF12 /* Pods-TastyBox_2Tests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-TastyBox_2Tests.release.xcconfig"; path = "Target Support Files/Pods-TastyBox_2Tests/Pods-TastyBox_2Tests.release.xcconfig"; sourceTree = "<group>"; };
+		5DF4255B4B6D2CB2F4216382 /* Pods-TastyBox_2.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-TastyBox_2.release.xcconfig"; path = "Target Support Files/Pods-TastyBox_2/Pods-TastyBox_2.release.xcconfig"; sourceTree = "<group>"; };
 		6F018B9B26DB6AEC006416D3 /* Scene.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Scene.swift; sourceTree = "<group>"; };
 		6F018B9D26DB7E30006416D3 /* SceneCoordinatorType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneCoordinatorType.swift; sourceTree = "<group>"; };
 		6F018B9F26DB7E5F006416D3 /* SceneCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneCoordinator.swift; sourceTree = "<group>"; };
@@ -294,7 +298,7 @@
 		6F194CBB271C7F190084F829 /* UploadingVideoViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UploadingVideoViewController.swift; sourceTree = "<group>"; };
 		6F1A092228EEAEF2008AF33B /* ZeroView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ZeroView.xib; sourceTree = "<group>"; };
 		6F1A092628EEB0A0008AF33B /* 16112.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = 16112.png; sourceTree = "<group>"; };
-		6F246ADD28F32730000D58DC /* TastyBox-2Tests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "TastyBox-2Tests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
+		6F246ADD28F32730000D58DC /* TastyBox_2Tests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = TastyBox_2Tests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		6F246AE628F32764000D58DC /* DiscoveryUnitTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiscoveryUnitTests.swift; sourceTree = "<group>"; };
 		6F26D4E726DF9E360050BA84 /* AboutVM.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AboutVM.swift; sourceTree = "<group>"; };
 		6F26D4E926DFBDF60050BA84 /* DiscoveryVM.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiscoveryVM.swift; sourceTree = "<group>"; };
@@ -392,7 +396,7 @@
 		6FAAB4C22720CCB400B42C67 /* SearchBarRCV.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchBarRCV.swift; sourceTree = "<group>"; };
 		6FAAB4C42720CCDC00B42C67 /* SearchBarRCV.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = SearchBarRCV.xib; sourceTree = "<group>"; };
 		6FADF981274C0D04008FC605 /* Notification+.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Notification+.swift"; sourceTree = "<group>"; };
-		6FB06F3926D67E0100E110B4 /* TastyBox-2.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "TastyBox-2.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		6FB06F3926D67E0100E110B4 /* TastyBox_2.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = TastyBox_2.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		6FB06F3C26D67E0100E110B4 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		6FB06F3E26D67E0100E110B4 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
 		6FB06F4326D67E0100E110B4 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
@@ -483,7 +487,9 @@
 		6FFFB87027468F00006B7985 /* RankingViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RankingViewModel.swift; sourceTree = "<group>"; };
 		6FFFB8732746A61C006B7985 /* MainDM.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainDM.swift; sourceTree = "<group>"; };
 		6FFFB8752746AB7B006B7985 /* RxRecipeRankingCollectionViewDataSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RxRecipeRankingCollectionViewDataSource.swift; sourceTree = "<group>"; };
+		83AB7ADEED9204927EFC997F /* Pods-TastyBox_2.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-TastyBox_2.debug.xcconfig"; path = "Target Support Files/Pods-TastyBox_2/Pods-TastyBox_2.debug.xcconfig"; sourceTree = "<group>"; };
 		840B4C21FD416BA303CC7E19 /* Pods-TastyBox-2.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-TastyBox-2.debug.xcconfig"; path = "Target Support Files/Pods-TastyBox-2/Pods-TastyBox-2.debug.xcconfig"; sourceTree = "<group>"; };
+		B1998FB1A7DE4B9B8A398535 /* Pods-TastyBox_2Tests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-TastyBox_2Tests.debug.xcconfig"; path = "Target Support Files/Pods-TastyBox_2Tests/Pods-TastyBox_2Tests.debug.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -491,6 +497,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				732DE813135DB6288E28CEEA /* Pods_TastyBox_2Tests.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -510,6 +517,10 @@
 			children = (
 				840B4C21FD416BA303CC7E19 /* Pods-TastyBox-2.debug.xcconfig */,
 				217A18CA318CF3F501A72A86 /* Pods-TastyBox-2.release.xcconfig */,
+				83AB7ADEED9204927EFC997F /* Pods-TastyBox_2.debug.xcconfig */,
+				5DF4255B4B6D2CB2F4216382 /* Pods-TastyBox_2.release.xcconfig */,
+				B1998FB1A7DE4B9B8A398535 /* Pods-TastyBox_2Tests.debug.xcconfig */,
+				569E54F7522AEEE2EDD6AF12 /* Pods-TastyBox_2Tests.release.xcconfig */,
 			);
 			path = Pods;
 			sourceTree = "<group>";
@@ -597,12 +608,12 @@
 			path = Video;
 			sourceTree = "<group>";
 		};
-		6F246ADE28F32731000D58DC /* TastyBox-2Tests */ = {
+		6F246ADE28F32731000D58DC /* TastyBox_2Tests */ = {
 			isa = PBXGroup;
 			children = (
 				6F246AE628F32764000D58DC /* DiscoveryUnitTests.swift */,
 			);
-			path = "TastyBox-2Tests";
+			path = TastyBox_2Tests;
 			sourceTree = "<group>";
 		};
 		6F26D4EB26DFBE010050BA84 /* Discovery */ = {
@@ -880,7 +891,7 @@
 			isa = PBXGroup;
 			children = (
 				6FB06F3B26D67E0100E110B4 /* TastyBox_2 */,
-				6F246ADE28F32731000D58DC /* TastyBox-2Tests */,
+				6F246ADE28F32731000D58DC /* TastyBox_2Tests */,
 				6FB06F3A26D67E0100E110B4 /* Products */,
 				45ADD427D57A033E99108C72 /* Pods */,
 				85E184E109DC3F54BD23BA66 /* Frameworks */,
@@ -890,8 +901,8 @@
 		6FB06F3A26D67E0100E110B4 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				6FB06F3926D67E0100E110B4 /* TastyBox-2.app */,
-				6F246ADD28F32730000D58DC /* TastyBox-2Tests.xctest */,
+				6FB06F3926D67E0100E110B4 /* TastyBox_2.app */,
+				6F246ADD28F32730000D58DC /* TastyBox_2Tests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -1230,6 +1241,7 @@
 			isa = PBXGroup;
 			children = (
 				1F1CF882957C39AAB229AAF4 /* Pods_TastyBox_2.framework */,
+				05E49A8061EEB432B19A16CB /* Pods_TastyBox_2Tests.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -1237,10 +1249,11 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		6F246ADC28F32730000D58DC /* TastyBox-2Tests */ = {
+		6F246ADC28F32730000D58DC /* TastyBox_2Tests */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 6F246AE328F32731000D58DC /* Build configuration list for PBXNativeTarget "TastyBox-2Tests" */;
+			buildConfigurationList = 6F246AE328F32731000D58DC /* Build configuration list for PBXNativeTarget "TastyBox_2Tests" */;
 			buildPhases = (
+				514092AB5607775FE868A416 /* [CP] Check Pods Manifest.lock */,
 				6F246AD928F32730000D58DC /* Sources */,
 				6F246ADA28F32730000D58DC /* Frameworks */,
 				6F246ADB28F32730000D58DC /* Resources */,
@@ -1250,14 +1263,14 @@
 			dependencies = (
 				6F246AE228F32731000D58DC /* PBXTargetDependency */,
 			);
-			name = "TastyBox-2Tests";
+			name = TastyBox_2Tests;
 			productName = "TastyBox-2Tests";
-			productReference = 6F246ADD28F32730000D58DC /* TastyBox-2Tests.xctest */;
+			productReference = 6F246ADD28F32730000D58DC /* TastyBox_2Tests.xctest */;
 			productType = "com.apple.product-type.bundle.unit-test";
 		};
-		6FB06F3826D67E0100E110B4 /* TastyBox-2 */ = {
+		6FB06F3826D67E0100E110B4 /* TastyBox_2 */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 6FB06F4D26D67E0600E110B4 /* Build configuration list for PBXNativeTarget "TastyBox-2" */;
+			buildConfigurationList = 6FB06F4D26D67E0600E110B4 /* Build configuration list for PBXNativeTarget "TastyBox_2" */;
 			buildPhases = (
 				D928936C0845379D4C83BA8C /* [CP] Check Pods Manifest.lock */,
 				6FB06F3626D67E0100E110B4 /* Frameworks */,
@@ -1271,9 +1284,9 @@
 			);
 			dependencies = (
 			);
-			name = "TastyBox-2";
+			name = TastyBox_2;
 			productName = "TastyBox-2";
-			productReference = 6FB06F3926D67E0100E110B4 /* TastyBox-2.app */;
+			productReference = 6FB06F3926D67E0100E110B4 /* TastyBox_2.app */;
 			productType = "com.apple.product-type.application";
 		};
 /* End PBXNativeTarget section */
@@ -1309,8 +1322,8 @@
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				6FB06F3826D67E0100E110B4 /* TastyBox-2 */,
-				6F246ADC28F32730000D58DC /* TastyBox-2Tests */,
+				6FB06F3826D67E0100E110B4 /* TastyBox_2 */,
+				6F246ADC28F32730000D58DC /* TastyBox_2Tests */,
 			);
 		};
 /* End PBXProject section */
@@ -1360,15 +1373,37 @@
 			files = (
 			);
 			inputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-TastyBox-2/Pods-TastyBox-2-resources-${CONFIGURATION}-input-files.xcfilelist",
+				"${PODS_ROOT}/Target Support Files/Pods-TastyBox_2/Pods-TastyBox_2-resources-${CONFIGURATION}-input-files.xcfilelist",
 			);
 			name = "[CP] Copy Pods Resources";
 			outputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-TastyBox-2/Pods-TastyBox-2-resources-${CONFIGURATION}-output-files.xcfilelist",
+				"${PODS_ROOT}/Target Support Files/Pods-TastyBox_2/Pods-TastyBox_2-resources-${CONFIGURATION}-output-files.xcfilelist",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-TastyBox-2/Pods-TastyBox-2-resources.sh\"\n";
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-TastyBox_2/Pods-TastyBox_2-resources.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		514092AB5607775FE868A416 /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-TastyBox_2Tests-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
 			showEnvVarsInLog = 0;
 		};
 		65FF170CFA21284DC4D36480 /* [CP] Embed Pods Frameworks */ = {
@@ -1377,15 +1412,15 @@
 			files = (
 			);
 			inputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-TastyBox-2/Pods-TastyBox-2-frameworks-${CONFIGURATION}-input-files.xcfilelist",
+				"${PODS_ROOT}/Target Support Files/Pods-TastyBox_2/Pods-TastyBox_2-frameworks-${CONFIGURATION}-input-files.xcfilelist",
 			);
 			name = "[CP] Embed Pods Frameworks";
 			outputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-TastyBox-2/Pods-TastyBox-2-frameworks-${CONFIGURATION}-output-files.xcfilelist",
+				"${PODS_ROOT}/Target Support Files/Pods-TastyBox_2/Pods-TastyBox_2-frameworks-${CONFIGURATION}-output-files.xcfilelist",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-TastyBox-2/Pods-TastyBox-2-frameworks.sh\"\n";
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-TastyBox_2/Pods-TastyBox_2-frameworks.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
 		6F06D6BA2717DF1400D4277A /* ShellScript */ = {
@@ -1420,7 +1455,7 @@
 			outputFileListPaths = (
 			);
 			outputPaths = (
-				"$(DERIVED_FILE_DIR)/Pods-TastyBox-2-checkManifestLockResult.txt",
+				"$(DERIVED_FILE_DIR)/Pods-TastyBox_2-checkManifestLockResult.txt",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
@@ -1656,7 +1691,7 @@
 /* Begin PBXTargetDependency section */
 		6F246AE228F32731000D58DC /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			target = 6FB06F3826D67E0100E110B4 /* TastyBox-2 */;
+			target = 6FB06F3826D67E0100E110B4 /* TastyBox_2 */;
 			targetProxy = 6F246AE128F32731000D58DC /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
@@ -1683,6 +1718,7 @@
 /* Begin XCBuildConfiguration section */
 		6F246AE428F32731000D58DC /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = B1998FB1A7DE4B9B8A398535 /* Pods-TastyBox_2Tests.debug.xcconfig */;
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
@@ -1710,6 +1746,7 @@
 		};
 		6F246AE528F32731000D58DC /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 569E54F7522AEEE2EDD6AF12 /* Pods-TastyBox_2Tests.release.xcconfig */;
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
@@ -1852,7 +1889,7 @@
 		};
 		6FB06F4E26D67E0600E110B4 /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 840B4C21FD416BA303CC7E19 /* Pods-TastyBox-2.debug.xcconfig */;
+			baseConfigurationReference = 83AB7ADEED9204927EFC997F /* Pods-TastyBox_2.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
@@ -1882,7 +1919,7 @@
 		};
 		6FB06F4F26D67E0600E110B4 /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 217A18CA318CF3F501A72A86 /* Pods-TastyBox-2.release.xcconfig */;
+			baseConfigurationReference = 5DF4255B4B6D2CB2F4216382 /* Pods-TastyBox_2.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
@@ -1908,7 +1945,7 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		6F246AE328F32731000D58DC /* Build configuration list for PBXNativeTarget "TastyBox-2Tests" */ = {
+		6F246AE328F32731000D58DC /* Build configuration list for PBXNativeTarget "TastyBox_2Tests" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				6F246AE428F32731000D58DC /* Debug */,
@@ -1926,7 +1963,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		6FB06F4D26D67E0600E110B4 /* Build configuration list for PBXNativeTarget "TastyBox-2" */ = {
+		6FB06F4D26D67E0600E110B4 /* Build configuration list for PBXNativeTarget "TastyBox_2" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				6FB06F4E26D67E0600E110B4 /* Debug */,
