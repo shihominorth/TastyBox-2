@@ -18,7 +18,20 @@ protocol SelectDigitalDataDiscoveryViewModelDelegate: AnyObject {
     func selectedVideo(asset: PHAsset)
 }
 
-final class DiscoveryViewModel: ViewModelBase {
+protocol DiscoveryViewModelLike: AnyObject {
+    func setDefaultViewControllers()
+    func sideMenuTapped()
+    func setIsMenuBarOpenedRelay() -> Observable<Bool>
+    func selectPageTitle(row: Int)
+    func toCreateRecipeVC()
+    func toMyProfile()
+    func toRefrigerator()
+    func toContactForm()
+    func toAboutPage()
+    func logout()
+}
+
+final class DiscoveryViewModel: ViewModelBase, DiscoveryViewModelLike {
     
     let presenter: DiscoveryPresenter
     private let sceneCoodinator: SceneCoordinator
@@ -49,11 +62,9 @@ final class DiscoveryViewModel: ViewModelBase {
     func sideMenuTapped() {
         self.presenter.sideMenuViewController?.tableView.rx.itemSelected
             .subscribe(onNext: { [unowned self] indexPath in
-                
                 presenter.sideMenuViewController?.tableView.deselectRow(at: indexPath, animated: true)
                 
                 switch indexPath.row {
-                    
                 case 0:
                     self.toMyProfile()
                 case 1:

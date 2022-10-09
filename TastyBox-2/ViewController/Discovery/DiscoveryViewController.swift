@@ -30,7 +30,7 @@ final class DiscoveryViewController: UIViewController, BindableType {
         }
     }
     
-    var pageVC: UIPageViewController?
+    private var pageVC: UIPageViewController?
     
     @IBOutlet weak var sideMenuConstraint: NSLayoutConstraint!
     @IBOutlet weak var menuCollectionView: UICollectionView!
@@ -44,7 +44,7 @@ final class DiscoveryViewController: UIViewController, BindableType {
         viewModel.sideMenuTapped()
         viewModel.setDefaultViewControllers()
         
-        NotificationCenter.default.addObserver(self, selector: #selector(showSearch), name: NSNotification.Name("ShowSearch"), object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(showSearch), name: NSNotification.Name("showSearch"), object: nil)
         
         setUpMenuCollectinonView()
     }
@@ -96,7 +96,7 @@ final class DiscoveryViewController: UIViewController, BindableType {
         setUpPageViewController()
     }
     
-    func setUpNavigationBar() {
+    private func setUpNavigationBar() {
         
         self.title = "TastyBox"
         
@@ -144,8 +144,7 @@ final class DiscoveryViewController: UIViewController, BindableType {
     }
     
     @IBAction func SearchBarItem() {
-        print("Tab search Button")
-        NotificationCenter.default.post(name: NSNotification.Name("ShowSearch"), object: nil)
+        NotificationCenter.default.post(name: NSNotification.Name("showSearch"), object: nil)
     }
     
     
