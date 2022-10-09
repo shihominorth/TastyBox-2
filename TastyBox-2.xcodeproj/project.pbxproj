@@ -50,6 +50,7 @@
 		6F194CBC271C7F190084F829 /* UploadingVideoViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F194CBB271C7F190084F829 /* UploadingVideoViewController.swift */; };
 		6F1A092328EEAEF2008AF33B /* ZeroView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 6F1A092228EEAEF2008AF33B /* ZeroView.xib */; };
 		6F1A092728EEB0A1008AF33B /* 16112.png in Resources */ = {isa = PBXBuildFile; fileRef = 6F1A092628EEB0A0008AF33B /* 16112.png */; };
+		6F246AE728F32764000D58DC /* DiscoveryUnitTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F246AE628F32764000D58DC /* DiscoveryUnitTests.swift */; };
 		6F26D4E826DF9E360050BA84 /* AboutVM.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F26D4E726DF9E360050BA84 /* AboutVM.swift */; };
 		6F26D4EA26DFBDF60050BA84 /* DiscoveryVM.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F26D4E926DFBDF60050BA84 /* DiscoveryVM.swift */; };
 		6F2BBA8A26EDDA6B003B0D5F /* RxAppleDelegateProxy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F2BBA8926EDDA6B003B0D5F /* RxAppleDelegateProxy.swift */; };
@@ -238,7 +239,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
-		6F1A091B28EEA803008AF33B /* PBXContainerItemProxy */ = {
+		6F246AE128F32731000D58DC /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 6FB06F3126D67E0100E110B4 /* Project object */;
 			proxyType = 1;
@@ -291,9 +292,10 @@
 		6F11952527784B08002510EC /* ManageMyRelatedUserVM.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ManageMyRelatedUserVM.swift; sourceTree = "<group>"; };
 		6F194CB9271C77A40084F829 /* VideoPlayer.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = VideoPlayer.storyboard; sourceTree = "<group>"; };
 		6F194CBB271C7F190084F829 /* UploadingVideoViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UploadingVideoViewController.swift; sourceTree = "<group>"; };
-		6F1A091728EEA802008AF33B /* TastyBox-2Tests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "TastyBox-2Tests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 		6F1A092228EEAEF2008AF33B /* ZeroView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ZeroView.xib; sourceTree = "<group>"; };
 		6F1A092628EEB0A0008AF33B /* 16112.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = 16112.png; sourceTree = "<group>"; };
+		6F246ADD28F32730000D58DC /* TastyBox-2Tests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "TastyBox-2Tests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
+		6F246AE628F32764000D58DC /* DiscoveryUnitTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiscoveryUnitTests.swift; sourceTree = "<group>"; };
 		6F26D4E726DF9E360050BA84 /* AboutVM.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AboutVM.swift; sourceTree = "<group>"; };
 		6F26D4E926DFBDF60050BA84 /* DiscoveryVM.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiscoveryVM.swift; sourceTree = "<group>"; };
 		6F2BBA8926EDDA6B003B0D5F /* RxAppleDelegateProxy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RxAppleDelegateProxy.swift; sourceTree = "<group>"; };
@@ -485,7 +487,7 @@
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
-		6F1A091428EEA802008AF33B /* Frameworks */ = {
+		6F246ADA28F32730000D58DC /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -595,9 +597,10 @@
 			path = Video;
 			sourceTree = "<group>";
 		};
-		6F1A091828EEA803008AF33B /* TastyBox-2Tests */ = {
+		6F246ADE28F32731000D58DC /* TastyBox-2Tests */ = {
 			isa = PBXGroup;
 			children = (
+				6F246AE628F32764000D58DC /* DiscoveryUnitTests.swift */,
 			);
 			path = "TastyBox-2Tests";
 			sourceTree = "<group>";
@@ -876,8 +879,8 @@
 		6FB06F3026D67E0100E110B4 = {
 			isa = PBXGroup;
 			children = (
-				6FB06F3B26D67E0100E110B4 /* TastyBox-2 */,
-				6F1A091828EEA803008AF33B /* TastyBox-2Tests */,
+				6FB06F3B26D67E0100E110B4 /* TastyBox_2 */,
+				6F246ADE28F32731000D58DC /* TastyBox-2Tests */,
 				6FB06F3A26D67E0100E110B4 /* Products */,
 				45ADD427D57A033E99108C72 /* Pods */,
 				85E184E109DC3F54BD23BA66 /* Frameworks */,
@@ -888,12 +891,12 @@
 			isa = PBXGroup;
 			children = (
 				6FB06F3926D67E0100E110B4 /* TastyBox-2.app */,
-				6F1A091728EEA802008AF33B /* TastyBox-2Tests.xctest */,
+				6F246ADD28F32730000D58DC /* TastyBox-2Tests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
 		};
-		6FB06F3B26D67E0100E110B4 /* TastyBox-2 */ = {
+		6FB06F3B26D67E0100E110B4 /* TastyBox_2 */ = {
 			isa = PBXGroup;
 			children = (
 				6FC062C326ECC9AF0016B990 /* LoginErrors.swift */,
@@ -919,7 +922,7 @@
 				6F927BDB27576CEB006F95BF /* VideoPlayerLooped.swift */,
 				6FD427842764794100472C94 /* Segues.swift */,
 			);
-			path = "TastyBox-2";
+			path = TastyBox_2;
 			sourceTree = "<group>";
 		};
 		6FB70D1A276F88450099BC63 /* Profile */ = {
@@ -1234,22 +1237,22 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		6F1A091628EEA802008AF33B /* TastyBox-2Tests */ = {
+		6F246ADC28F32730000D58DC /* TastyBox-2Tests */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 6F1A091D28EEA803008AF33B /* Build configuration list for PBXNativeTarget "TastyBox-2Tests" */;
+			buildConfigurationList = 6F246AE328F32731000D58DC /* Build configuration list for PBXNativeTarget "TastyBox-2Tests" */;
 			buildPhases = (
-				6F1A091328EEA802008AF33B /* Sources */,
-				6F1A091428EEA802008AF33B /* Frameworks */,
-				6F1A091528EEA802008AF33B /* Resources */,
+				6F246AD928F32730000D58DC /* Sources */,
+				6F246ADA28F32730000D58DC /* Frameworks */,
+				6F246ADB28F32730000D58DC /* Resources */,
 			);
 			buildRules = (
 			);
 			dependencies = (
-				6F1A091C28EEA803008AF33B /* PBXTargetDependency */,
+				6F246AE228F32731000D58DC /* PBXTargetDependency */,
 			);
 			name = "TastyBox-2Tests";
 			productName = "TastyBox-2Tests";
-			productReference = 6F1A091728EEA802008AF33B /* TastyBox-2Tests.xctest */;
+			productReference = 6F246ADD28F32730000D58DC /* TastyBox-2Tests.xctest */;
 			productType = "com.apple.product-type.bundle.unit-test";
 		};
 		6FB06F3826D67E0100E110B4 /* TastyBox-2 */ = {
@@ -1282,7 +1285,7 @@
 				LastSwiftUpdateCheck = 1400;
 				LastUpgradeCheck = 1250;
 				TargetAttributes = {
-					6F1A091628EEA802008AF33B = {
+					6F246ADC28F32730000D58DC = {
 						CreatedOnToolsVersion = 14.0;
 						LastSwiftMigration = 1400;
 						TestTargetID = 6FB06F3826D67E0100E110B4;
@@ -1307,13 +1310,13 @@
 			projectRoot = "";
 			targets = (
 				6FB06F3826D67E0100E110B4 /* TastyBox-2 */,
-				6F1A091628EEA802008AF33B /* TastyBox-2Tests */,
+				6F246ADC28F32730000D58DC /* TastyBox-2Tests */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
-		6F1A091528EEA802008AF33B /* Resources */ = {
+		6F246ADB28F32730000D58DC /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -1427,10 +1430,11 @@
 /* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
-		6F1A091328EEA802008AF33B /* Sources */ = {
+		6F246AD928F32730000D58DC /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				6F246AE728F32764000D58DC /* DiscoveryUnitTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1650,10 +1654,10 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
-		6F1A091C28EEA803008AF33B /* PBXTargetDependency */ = {
+		6F246AE228F32731000D58DC /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = 6FB06F3826D67E0100E110B4 /* TastyBox-2 */;
-			targetProxy = 6F1A091B28EEA803008AF33B /* PBXContainerItemProxy */;
+			targetProxy = 6F246AE128F32731000D58DC /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 
@@ -1677,7 +1681,7 @@
 /* End PBXVariantGroup section */
 
 /* Begin XCBuildConfiguration section */
-		6F1A091E28EEA803008AF33B /* Debug */ = {
+		6F246AE428F32731000D58DC /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
@@ -1704,7 +1708,7 @@
 			};
 			name = Debug;
 		};
-		6F1A091F28EEA803008AF33B /* Release */ = {
+		6F246AE528F32731000D58DC /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
@@ -1904,11 +1908,11 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		6F1A091D28EEA803008AF33B /* Build configuration list for PBXNativeTarget "TastyBox-2Tests" */ = {
+		6F246AE328F32731000D58DC /* Build configuration list for PBXNativeTarget "TastyBox-2Tests" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				6F1A091E28EEA803008AF33B /* Debug */,
-				6F1A091F28EEA803008AF33B /* Release */,
+				6F246AE428F32731000D58DC /* Debug */,
+				6F246AE528F32731000D58DC /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
