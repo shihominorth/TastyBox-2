@@ -14,9 +14,9 @@ import UIKit
 
 
 final class DiscoveryViewController: UIViewController, BindableType {
-    typealias ViewModelType = DiscoveryViewModel
+    typealias ViewModelType = DiscoveryViewModelLike
     
-    var viewModel: DiscoveryViewModel!
+    var viewModel: DiscoveryViewModelLike!
     
     @IBOutlet weak var menuNavBtn: UIBarButtonItem!
     @IBOutlet weak var addRecipeNavBtn: UIBarButtonItem!
@@ -212,24 +212,21 @@ final class DiscoveryViewController: UIViewController, BindableType {
     
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        
         guard let identifier = segue.identifier else { return }
         
         if identifier == "toSideMenu" {
-            
             //これはsegueでやった方が楽
-            viewModel.presenter.sideMenuViewController = segue.destination as? SideMenuTableViewController
+            guard let sideMenuTableViewController =  segue.destination as? SideMenuTableViewController else {
+                return
+            }
+            viewModel.setSideMenuTableViewToPresenter(tableView: sideMenuTableViewController)
         }
         else if identifier == "showPageVC" {
-            
-            if let pageVC = segue.destination as? UIPageViewController {
-                
-                viewModel.presenter.pageViewController = pageVC
-                
+            guard let pageViewController = segue.destination as? UIPageViewController else {
+                return
             }
-            
+            viewModel.setPageviewControllerToPresenter(pageViewController: pageViewController)
         }
-        
     }
     
     private func focusCell(indexPath: IndexPath) {
@@ -245,7 +242,6 @@ extension DiscoveryViewController: UICollectionViewDataSource {
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        
         guard let cell = menuCollectionView.dequeueReusableCell(withReuseIdentifier: "MenuCell", for: indexPath) as? MenuCollectionViewCell else {
             return .init()
         }

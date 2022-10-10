@@ -10,59 +10,65 @@ import FBSDKLoginKit
 import Foundation
 import Firebase
 import Photos
-import RxSwift
 import RxCocoa
+import RxSwift
 
 protocol SelectDigitalDataDiscoveryViewModelDelegate: AnyObject {
     func selectedImage(asset: PHAsset, kind: DigitalContentsFor, sceneCoordinator: SceneCoordinator)
     func selectedVideo(asset: PHAsset)
 }
 
-protocol DiscoveryViewModelLike: AnyObject {
+protocol DiscoveryViewModelLike: AnyObject where Self: ViewModelBase {
+    var navigator: DiscoveryNavigatorLike? { get set }
+    var isMenuBarOpenedRelay:  BehaviorRelay<Bool> { get set }
+    var pages: [String] { get set }
+    
+    func setSideMenuTableViewToPresenter(tableView: SideMenuTableViewController)
+    func setPageviewControllerToPresenter(pageViewController: UIPageViewController)
     func setDefaultViewControllers()
+    func toCreateRecipeVC()
     func sideMenuTapped()
     func setIsMenuBarOpenedRelay() -> Observable<Bool>
     func selectPageTitle(row: Int)
-    func toCreateRecipeVC()
-    func toMyProfile()
-    func toRefrigerator()
-    func toContactForm()
-    func toAboutPage()
-    func logout()
 }
 
 final class DiscoveryViewModel: ViewModelBase, DiscoveryViewModelLike {
+    weak var navigator: DiscoveryNavigatorLike?
     
-    let presenter: DiscoveryPresenter
     private let sceneCoodinator: SceneCoordinator
     private let user: Firebase.User
     
     //    let selectedIndexRelay: BehaviorRelay<Int>
-    let isMenuBarOpenedRelay: BehaviorRelay<Bool>
+    var isMenuBarOpenedRelay: BehaviorRelay<Bool>
     
     var selectedIndex: Int
-    let pages: [String]
-    
-    init(sceneCoodinator: SceneCoordinator, user: Firebase.User) {
+    var pages: [String]
         
+    init(sceneCoodinator: SceneCoordinator, user: Firebase.User, pages: [String] = ["Subscribed Creator",  "Your Ingredients Recipe", "Most Popular"]) {
         self.sceneCoodinator = sceneCoodinator
         self.user = user
-        self.presenter = DiscoveryPresenter(user: user, sceneCoordinator: self.sceneCoodinator)
         self.isMenuBarOpenedRelay = BehaviorRelay<Bool>(value: false)
         self.selectedIndex = 1
         
         self.pages = ["Subscribed Creator",  "Your Ingredients Recipe", "Most Popular"]
     }
     
-    
     func setDefaultViewControllers() {
-        presenter.setDefaultViewController()
+        navigator?.setDefaultViewController()
+    }
+    
+    func setSideMenuTableViewToPresenter(tableView: SideMenuTableViewController) {
+        self.navigator?.sideMenuViewController = tableView
+    }
+    
+    func setPageviewControllerToPresenter(pageViewController: UIPageViewController) {
+        self.navigator?.pageViewController = pageViewController
     }
     
     func sideMenuTapped() {
-        self.presenter.sideMenuViewController?.tableView.rx.itemSelected
+        self.navigator?.sideMenuViewController?.tableView.rx.itemSelected
             .subscribe(onNext: { [unowned self] indexPath in
-                presenter.sideMenuViewController?.tableView.deselectRow(at: indexPath, animated: true)
+                navigator?.sideMenuViewController?.tableView.deselectRow(at: indexPath, animated: true)
                 
                 switch indexPath.row {
                 case 0:
@@ -97,7 +103,7 @@ final class DiscoveryViewModel: ViewModelBase, DiscoveryViewModelLike {
     }
     
     func selectPageTitle(row: Int) {
-        self.presenter.setViewControllers(row: row)
+        navigator?.setViewControllers(row: row)
     }
     
     
@@ -108,13 +114,13 @@ final class DiscoveryViewModel: ViewModelBase, DiscoveryViewModelLike {
         self.sceneCoodinator.transition(to: scene, type: .modal(presentationStyle: .fullScreen, modalTransisionStyle: .coverVertical, hasNavigationController: true))
     }
     
-    func toMyProfile() {
+    private func toMyProfile() {
         let vm = MyProfileVM(sceneCoordinator: self.sceneCoodinator, user: self.user)
         
         self.sceneCoodinator.transition(to: .profileScene(scene: .myProfile(vm)), type: .push)
     }
     
-    func toRefrigerator() {
+    private func toRefrigerator() {
         let vm = RefrigeratorVM(sceneCoodinator: self.sceneCoodinator, user: self.user)
         let scene: Scene = .ingredient(scene: .refrigerator(vm))
         
@@ -122,25 +128,25 @@ final class DiscoveryViewModel: ViewModelBase, DiscoveryViewModelLike {
     }
     
     
-    func toShoppinglist() {
+    private func toShoppinglist() {
         let vm = ShoppinglistVM(sceneCoodinator: self.sceneCoodinator, user: self.user)
         let scene: Scene = .ingredient(scene: .shoppinglist(vm))
         
         self.sceneCoodinator.transition(to: scene, type: .push)
     }
     
-    func toContactForm() {
+    private func toContactForm() {
         let scene: Scene = .webSite(scene: .contact)
         self.sceneCoodinator.transition(to: scene, type: .web)
     }
     
-    func toAboutPage() {
+    private func toAboutPage() {
         let scene: Scene = .webSite(scene: .termsOfUseAndPrivacyPolicy)
         
         self.sceneCoodinator.transition(to: scene, type: .web)
     }
     
-    func logout() {
+    private func logout() {
         
         let firebaseAuth = Auth.auth()
         
@@ -178,7 +184,6 @@ final class DiscoveryViewModel: ViewModelBase, DiscoveryViewModelLike {
 
 extension DiscoveryViewModel: SelectDigitalDataDiscoveryViewModelDelegate {
     func selectedImage(asset: PHAsset, kind: DigitalContentsFor, sceneCoordinator: SceneCoordinator) {
-        
         let vm = SelectedImageVM(sceneCoodinator: self.sceneCoodinator, user: self.user, kind: kind, asset: asset)
         let scene: Scene = .digitalContentsPickerScene(scene: .selectedImage(vm))
         
@@ -187,7 +192,6 @@ extension DiscoveryViewModel: SelectDigitalDataDiscoveryViewModelDelegate {
     }
     
     func selectedVideo(asset: PHAsset) {
-        
         let vm = SelectedVideoVM(sceneCoodinator: self.sceneCoodinator, user: self.user, asset: asset)
         let scene: Scene = .digitalContentsPickerScene(scene: .selectedVideo(vm))
         
