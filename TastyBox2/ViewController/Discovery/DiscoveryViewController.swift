@@ -14,9 +14,9 @@ import UIKit
 
 
 final class DiscoveryViewController: UIViewController, BindableType {
-    typealias ViewModelType = DiscoveryViewModel
+    typealias ViewModelType = DiscoveryViewModelLike
     
-    var viewModel: DiscoveryViewModel!
+    var viewModel: DiscoveryViewModelLike!
     
     @IBOutlet weak var menuNavBtn: UIBarButtonItem!
     @IBOutlet weak var addRecipeNavBtn: UIBarButtonItem!
@@ -30,7 +30,7 @@ final class DiscoveryViewController: UIViewController, BindableType {
         }
     }
     
-    var pageVC: UIPageViewController?
+    private var pageVC: UIPageViewController?
     
     @IBOutlet weak var sideMenuConstraint: NSLayoutConstraint!
     @IBOutlet weak var menuCollectionView: UICollectionView!
@@ -44,7 +44,7 @@ final class DiscoveryViewController: UIViewController, BindableType {
         viewModel.sideMenuTapped()
         viewModel.setDefaultViewControllers()
         
-        NotificationCenter.default.addObserver(self, selector: #selector(showSearch), name: NSNotification.Name("ShowSearch"), object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(showSearch), name: NSNotification.Name("showSearch"), object: nil)
         
         setUpMenuCollectinonView()
     }
@@ -96,7 +96,7 @@ final class DiscoveryViewController: UIViewController, BindableType {
         setUpPageViewController()
     }
     
-    func setUpNavigationBar() {
+    private func setUpNavigationBar() {
         
         self.title = "TastyBox"
         
@@ -144,8 +144,7 @@ final class DiscoveryViewController: UIViewController, BindableType {
     }
     
     @IBAction func SearchBarItem() {
-        print("Tab search Button")
-        NotificationCenter.default.post(name: NSNotification.Name("ShowSearch"), object: nil)
+        NotificationCenter.default.post(name: NSNotification.Name("showSearch"), object: nil)
     }
     
     
@@ -213,24 +212,21 @@ final class DiscoveryViewController: UIViewController, BindableType {
     
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        
         guard let identifier = segue.identifier else { return }
         
         if identifier == "toSideMenu" {
-            
             //これはsegueでやった方が楽
-            viewModel.presenter.sideMenuViewController = segue.destination as? SideMenuTableViewController
+            guard let sideMenuTableViewController =  segue.destination as? SideMenuTableViewController else {
+                return
+            }
+            viewModel.setSideMenuTableViewToPresenter(tableView: sideMenuTableViewController)
         }
         else if identifier == "showPageVC" {
-            
-            if let pageVC = segue.destination as? UIPageViewController {
-                
-                viewModel.presenter.pageViewController = pageVC
-                
+            guard let pageViewController = segue.destination as? UIPageViewController else {
+                return
             }
-            
+            viewModel.setPageviewControllerToPresenter(pageViewController: pageViewController)
         }
-        
     }
     
     private func focusCell(indexPath: IndexPath) {
@@ -246,7 +242,6 @@ extension DiscoveryViewController: UICollectionViewDataSource {
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        
         guard let cell = menuCollectionView.dequeueReusableCell(withReuseIdentifier: "MenuCell", for: indexPath) as? MenuCollectionViewCell else {
             return .init()
         }

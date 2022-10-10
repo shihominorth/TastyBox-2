@@ -7,6 +7,7 @@
 
 import Foundation
 import Firebase
+import FirebaseAuth
 
 extension Error {
     
@@ -16,7 +17,7 @@ extension Error {
         return err
     }
     
-    private func rawValue(authenticationError: FirebaseAuth.AuthErrorCode) -> Int {
+    private func rawValue(authenticationError: Firebase.AuthErrorCode.Code) -> Int {
         return authenticationError.rawValue
     }
     
@@ -80,7 +81,7 @@ extension Error {
     }
   
 
-    private func rawValue(firestoreErr: FirestoreErrorCode) -> Int {
+    private func rawValue(firestoreErr: Firebase.FirestoreErrorCode.Code) -> Int {
         return firestoreErr.rawValue
     }
     

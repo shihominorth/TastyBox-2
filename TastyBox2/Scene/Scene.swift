@@ -20,7 +20,7 @@ enum Scene {
     }
     
     enum DiscoveryScene {
-        case main(DiscoveryViewModel)
+        case main(DiscoveryViewModelLike)
     }
     
     enum WebSiteScene {

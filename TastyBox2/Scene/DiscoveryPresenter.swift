@@ -10,7 +10,15 @@ import RxCocoa
 import RxSwift
 import UIKit
 
-class DiscoveryPresenter: NSObject {
+protocol DiscoveryNavigatorLike: AnyObject {
+    var pageViewController: UIPageViewController? { get set }
+    var sideMenuViewController: SideMenuTableViewController? { get set }
+    
+    func setDefaultViewController()
+    func setViewControllers(row: Int)
+}
+
+class DiscoveryPresenter: NSObject, DiscoveryNavigatorLike {
     private var viewControllers: [UIViewController]
     private let sceneCoordinator: SceneCoordinator
     private let user: Firebase.User
