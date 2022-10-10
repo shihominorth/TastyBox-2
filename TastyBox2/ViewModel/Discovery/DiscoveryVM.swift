@@ -21,6 +21,7 @@ protocol SelectDigitalDataDiscoveryViewModelDelegate: AnyObject {
 protocol DiscoveryViewModelLike: AnyObject where Self: ViewModelBase {
     var isMenuBarOpenedRelay:  BehaviorRelay<Bool> { get set }
     var pages: [String] { get set }
+    var selectedIndex: Int { get set }
     
     func setSideMenuTableViewToPresenter(tableView: SideMenuTableViewController)
     func setPageviewControllerToPresenter(pageViewController: UIPageViewController)

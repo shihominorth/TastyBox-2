@@ -7,11 +7,11 @@
 
 import Foundation
 import Firebase
+import RxRelay
 import RxSwift
 
 
 final class IngredientsViewModel: ViewModelBase {
-    
     private let apiType: MainDMProtocol.Type
     let user: Firebase.User
 
@@ -19,7 +19,7 @@ final class IngredientsViewModel: ViewModelBase {
     let recipesSubject: BehaviorSubject<[Recipe]>
    
     let ingredientCollectionViewSubject: BehaviorSubject<[Ingredient]>
-    let ingredientSubject: BehaviorSubject<[Ingredient]>
+    let ingredientRelay: BehaviorRelay<[Ingredient]>
     
     let selectedIngredientSubject: BehaviorSubject<Int>
     
@@ -38,7 +38,7 @@ final class IngredientsViewModel: ViewModelBase {
      
         self.recipesSubject = BehaviorSubject<[Recipe]>(value: [])
      
-        self.ingredientSubject = BehaviorSubject<[Ingredient]>(value: [])
+        self.ingredientRelay = BehaviorRelay<[Ingredient]>(value: [])
         self.ingredientCollectionViewSubject = BehaviorSubject<[Ingredient]>(value: [])
     }
     

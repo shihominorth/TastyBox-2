@@ -18,7 +18,7 @@ class TimelineViewController: UIViewController, BindableType {
     var dataSource: RxNoCellTypeTableViewDataSource<Timeline>!
     
     @IBOutlet weak var tableView: UITableView!
-    
+
     override func viewDidLoad() {
         super.viewDidLoad()
     }

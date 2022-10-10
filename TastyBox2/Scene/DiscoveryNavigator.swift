@@ -59,7 +59,7 @@ class DiscoveryNavigator: NSObject, DiscoveryNavigatorLike {
             }
         })
         
-        pageViewController?.delegate = self
+//        pageViewController?.delegate = self
         pageViewController?.dataSource = self
     }
     
@@ -97,7 +97,7 @@ extension DiscoveryNavigator: toRecipeDetailDelegate {
     }
 }
 
-extension DiscoveryNavigator: UIPageViewControllerDelegate, UIPageViewControllerDataSource {
+extension DiscoveryNavigator: UIPageViewControllerDataSource {
     func presentationCount(for pageViewController: UIPageViewController) -> Int {
         return viewControllers.count
     }
@@ -106,14 +106,14 @@ extension DiscoveryNavigator: UIPageViewControllerDelegate, UIPageViewController
         guard let currentViewController = pageViewController.viewControllers?.first, let index = viewControllers.firstIndex(where: { String(describing: currentViewController) == String(describing: $0) }) else {
             return nil
         }
-        
+
         if index - 1 >= 0 {
             return viewControllers[index - 1]
         }
-        
+
         return nil
     }
-    
+
     func pageViewController(_ pageViewController: UIPageViewController, viewControllerAfter viewController: UIViewController) -> UIViewController? {
         guard let currentViewController = pageViewController.viewControllers?.first, let index = viewControllers.firstIndex(where: { String(describing: currentViewController) == String(describing: $0) }) else {
             return nil
@@ -121,7 +121,7 @@ extension DiscoveryNavigator: UIPageViewControllerDelegate, UIPageViewController
         if index + 1 < viewControllers.count {
             return viewControllers[index + 1]
         }
-        
+
         return nil
     }
 }
