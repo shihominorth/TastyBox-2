@@ -111,7 +111,7 @@
 		6F71EBF027234E68001BF538 /* EmptySelectedGenreTVCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F71EBEF27234E68001BF538 /* EmptySelectedGenreTVCell.swift */; };
 		6F71EBF227237082001BF538 /* GenreTVCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F71EBF127237082001BF538 /* GenreTVCell.swift */; };
 		6F71EBF427237536001BF538 /* RxGenreCollectionViewDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F71EBF327237536001BF538 /* RxGenreCollectionViewDataSource.swift */; };
-		6F74C4252719BAB9007BB9E6 /* DiscoveryPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F74C4242719BAB8007BB9E6 /* DiscoveryPresenter.swift */; };
+		6F74C4252719BAB9007BB9E6 /* DiscoveryNavigator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F74C4242719BAB8007BB9E6 /* DiscoveryNavigator.swift */; };
 		6F74C42B2719DEE7007BB9E6 /* CreateRecipeVM.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F74C42A2719DEE7007BB9E6 /* CreateRecipeVM.swift */; };
 		6F74C42E2719E4D5007BB9E6 /* CreateRecipe.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 6F74C42C2719E20A007BB9E6 /* CreateRecipe.storyboard */; };
 		6F77D487272825C800F1FCD9 /* CheckEvaluateRecipeCVCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F77D486272825C800F1FCD9 /* CheckEvaluateRecipeCVCell.swift */; };
@@ -390,7 +390,7 @@
 		6F71EBEF27234E68001BF538 /* EmptySelectedGenreTVCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmptySelectedGenreTVCell.swift; sourceTree = "<group>"; };
 		6F71EBF127237082001BF538 /* GenreTVCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GenreTVCell.swift; sourceTree = "<group>"; };
 		6F71EBF327237536001BF538 /* RxGenreCollectionViewDataSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RxGenreCollectionViewDataSource.swift; sourceTree = "<group>"; };
-		6F74C4242719BAB8007BB9E6 /* DiscoveryPresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiscoveryPresenter.swift; sourceTree = "<group>"; };
+		6F74C4242719BAB8007BB9E6 /* DiscoveryNavigator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiscoveryNavigator.swift; sourceTree = "<group>"; };
 		6F74C42A2719DEE7007BB9E6 /* CreateRecipeVM.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateRecipeVM.swift; sourceTree = "<group>"; };
 		6F74C42C2719E20A007BB9E6 /* CreateRecipe.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = CreateRecipe.storyboard; sourceTree = "<group>"; };
 		6F77D4842726DF8D00F1FCD9 /* CheckTimeNServingTVCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = CheckTimeNServingTVCell.swift; path = "/Users/kitajimashihomi/portfolio/TastyBox-2/TastyBox-2/View/CheckCreatedRecipe/CheckTimeNServingTVCell.swift"; sourceTree = "<absolute>"; };
@@ -576,7 +576,7 @@
 				6F018BA326DB82B7006416D3 /* SceneTransitionType.swift */,
 				6F9A0D0C27101A8300DABB45 /* Modal */,
 				6F9A0D1E2710B74200DABB45 /* EditShoppingItemDelegate.swift */,
-				6F74C4242719BAB8007BB9E6 /* DiscoveryPresenter.swift */,
+				6F74C4242719BAB8007BB9E6 /* DiscoveryNavigator.swift */,
 				6F119517277210FB002510EC /* RelatedUsersPreseter.swift */,
 			);
 			path = Scene;
@@ -1697,7 +1697,7 @@
 				6F9A0D0E27101ACA00DABB45 /* SemiModalDismissInteractiveTransition.swift in Sources */,
 				6F9E042B27017B91005DCEF4 /* ShoppinglistHeaderView.swift in Sources */,
 				6FBCB92B26D7CBD500C050B2 /* ResetPasswordViewController.swift in Sources */,
-				6F74C4252719BAB9007BB9E6 /* DiscoveryPresenter.swift in Sources */,
+				6F74C4252719BAB9007BB9E6 /* DiscoveryNavigator.swift in Sources */,
 				6F018BA026DB7E5F006416D3 /* SceneCoordinator.swift in Sources */,
 				6FE15ED5271AB7B20047D3D8 /* EditMainImageCVCell.swift in Sources */,
 				6FBCB92C26D7CBD500C050B2 /* EmailLinkAuthenticationViewController.swift in Sources */,

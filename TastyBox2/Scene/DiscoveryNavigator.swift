@@ -18,7 +18,7 @@ protocol DiscoveryNavigatorLike: AnyObject {
     func setViewControllers(row: Int)
 }
 
-class DiscoveryPresenter: NSObject, DiscoveryNavigatorLike {
+class DiscoveryNavigator: NSObject, DiscoveryNavigatorLike {
     private var viewControllers: [UIViewController]
     private let sceneCoordinator: SceneCoordinator
     private let user: Firebase.User
@@ -88,7 +88,7 @@ class DiscoveryPresenter: NSObject, DiscoveryNavigatorLike {
 }
 
 
-extension DiscoveryPresenter: toRecipeDetailDelegate {
+extension DiscoveryNavigator: toRecipeDetailDelegate {
     func selectedRecipe(recipe: Recipe) {
         let vm = RecipeVM(sceneCoordinator: self.sceneCoordinator, user: self.user, recipe: recipe)
         let scene: Scene = .recipeScene(scene: .recipe(vm))
@@ -97,7 +97,7 @@ extension DiscoveryPresenter: toRecipeDetailDelegate {
     }
 }
 
-extension DiscoveryPresenter: UIPageViewControllerDelegate, UIPageViewControllerDataSource {
+extension DiscoveryNavigator: UIPageViewControllerDelegate, UIPageViewControllerDataSource {
     func presentationCount(for pageViewController: UIPageViewController) -> Int {
         return viewControllers.count
     }
