@@ -22,6 +22,7 @@ protocol DiscoveryViewModelLike: AnyObject where Self: ViewModelBase {
     var isMenuBarOpenedRelay:  BehaviorRelay<Bool> { get set }
     var pages: [String] { get set }
     var selectedIndex: Int { get set }
+    var isFirstSetUpView: Bool { get set }
     
     func setSideMenuTableViewToPresenter(tableView: SideMenuTableViewController)
     func setPageviewControllerToPresenter(pageViewController: UIPageViewController)
@@ -44,14 +45,16 @@ final class DiscoveryViewModel: ViewModelBase, DiscoveryViewModelLike {
     
     var selectedIndex: Int
     var pages: [String]
+    var isFirstSetUpView: Bool
         
-    init(sceneCoodinator: SceneCoordinator, user: Firebase.User, pages: [String] = ["Subscribed Creator",  "Your Ingredients Recipe", "Most Popular"]) {
+    init(sceneCoodinator: SceneCoordinator, user: Firebase.User, pages: [String] = ["Subscribed Creator",  "Your Ingredients Recipe", "Most Popular"], isFirstSetUpView: Bool = true) {
         let navigator = DiscoveryNavigator(user: user, sceneCoordinator: sceneCoodinator)
         self.navigator = navigator
         self.sceneCoodinator = sceneCoodinator
         self.user = user
         self.isMenuBarOpenedRelay = BehaviorRelay<Bool>(value: false)
         self.selectedIndex = 1
+        self.isFirstSetUpView = isFirstSetUpView
         
         self.pages = pages
     }

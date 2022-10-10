@@ -48,7 +48,10 @@ final class DiscoveryViewController: UIViewController, BindableType {
     }
     
     override func viewDidAppear(_ animated: Bool) {
-        setUpMenuCollectinonView()
+        if viewModel.isFirstSetUpView {
+            setUpMenuCollectinonView()
+            viewModel.isFirstSetUpView = false
+        }
     }
     
     override func viewWillDisappear(_ animated: Bool) {
@@ -122,9 +125,7 @@ final class DiscoveryViewController: UIViewController, BindableType {
     
     private func setUpMenuCollectinonView() {
         self.menuCollectionView.showsHorizontalScrollIndicator = false
-        
-        menuCollectionView.delegate = self
-        
+                
         let firstFocusIndexPath: IndexPath = IndexPath(row: 1, section: 0)
         self.menuCollectionView.scrollToItem(at: firstFocusIndexPath, at: .centeredHorizontally, animated: true)
         guard let cell = menuCollectionView.cellForItem(at: firstFocusIndexPath) as? MenuCollectionViewCell else {

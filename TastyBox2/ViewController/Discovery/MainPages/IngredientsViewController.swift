@@ -72,9 +72,6 @@ class IngredientsViewController: UIViewController, BindableType {
             .bind(to: viewModel.ingredientRelay)
             .disposed(by: viewModel.disposeBag)
         
-        ingredientsCollectionView.isSkeletonable = true
-        recipesCollecitonView.isSkeletonable = true
-        
     }
     
     override func viewWillDisappear(_ animated: Bool) {
@@ -251,10 +248,10 @@ class IngredientsViewController: UIViewController, BindableType {
 extension IngredientsViewController: UICollectionViewDelegateFlowLayout {
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
         if collectionView == ingredientsCollectionView {
-            if viewModel.ingredientRelay.value.isEmpty && indexPath.row == 0 {
+            if indexPath.row == 0 {
                 return estimatedFrame(text: "All", font: .systemFont(ofSize: 10))
             }
-            return estimatedFrame(text: viewModel.ingredientRelay.value[indexPath.row].name, font: .systemFont(ofSize: 10))
+            return estimatedFrame(text: viewModel.ingredientRelay.value[indexPath.row - 1].name, font: .systemFont(ofSize: 10))
         }
         
         let width = (recipesCollecitonView.frame.width - 11) / 2
