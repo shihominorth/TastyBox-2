@@ -46,7 +46,7 @@ class DiscoveryNavigator: NSObject, DiscoveryNavigatorLike {
     }
     
     func setDefaultViewController() {
-        pageViewController?.setViewControllers([viewControllers[1]], direction: .forward, animated: true, completion: { [unowned self] isCompleted in
+        pageViewController?.setViewControllers([viewControllers[1]], direction: .forward, animated: true) { [unowned self] isCompleted in
             
             if isCompleted {
                 
@@ -57,20 +57,20 @@ class DiscoveryNavigator: NSObject, DiscoveryNavigatorLike {
                 }
                 ingredientVC.viewModel.delegate = self
             }
-        })
+        }
         
-//        pageViewController?.delegate = self
         pageViewController?.dataSource = self
     }
     
     func setViewControllers(row: Int) {
-        guard let currentViewController = currentViewController, let currentIndex = viewControllers.firstIndex(where: { String(describing: $0) == String(describing: currentViewController) }) else {
+        guard let currentViewController = currentViewController,
+                let currentIndex = viewControllers.firstIndex(where: { String(describing: $0) == String(describing: currentViewController) }) else {
             return
         }
         
         let orientation: UIPageViewController.NavigationDirection = currentIndex < row ? .forward : .reverse
         
-        pageViewController?.setViewControllers([viewControllers[row]], direction: orientation, animated: true, completion: { [unowned self] isCompleted in
+        pageViewController?.setViewControllers([viewControllers[row]], direction: orientation, animated: true) { [unowned self] isCompleted in
             
             if isCompleted {
                 if let currentViewController = viewControllers[row] as? RankingViewController {
@@ -83,7 +83,7 @@ class DiscoveryNavigator: NSObject, DiscoveryNavigatorLike {
                     currentViewController.viewModel.delegate = self
                 }
             }
-        })
+        }
     }
 }
 
@@ -103,7 +103,8 @@ extension DiscoveryNavigator: UIPageViewControllerDataSource {
     }
     
     func pageViewController(_ pageViewController: UIPageViewController, viewControllerBefore viewController: UIViewController) -> UIViewController? {
-        guard let currentViewController = pageViewController.viewControllers?.first, let index = viewControllers.firstIndex(where: { String(describing: currentViewController) == String(describing: $0) }) else {
+        guard let currentViewController = pageViewController.viewControllers?.first,
+              let index = viewControllers.firstIndex(where: { String(describing: currentViewController) == String(describing: $0) }) else {
             return nil
         }
 
