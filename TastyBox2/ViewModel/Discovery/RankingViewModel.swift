@@ -14,7 +14,6 @@ protocol toRecipeDetailDelegate: AnyObject {
 }
 
 final class RankingViewModel: ViewModelBase {
-    
     let user: Firebase.User
     let apiType: MainDMProtocol.Type
     
@@ -27,16 +26,12 @@ final class RankingViewModel: ViewModelBase {
     weak var delegate: toRecipeDetailDelegate?
     
     init(user: Firebase.User, apiType: MainDMProtocol.Type = MainDM.self) {
-        
         self.user = user
         self.apiType = apiType
         self.selectedRecipeSubject = PublishSubject<Recipe>()
-
     }
     
-    
     func getRecipesRanking() -> Observable<[Recipe]> {
-        
         return self.apiType.getRecipesRanking()
             .do(onNext: { [unowned self] recipes in
                 
@@ -49,11 +44,9 @@ final class RankingViewModel: ViewModelBase {
                 
                 self.recipeRanking = ranking
             })
-        
     }
     
     func getPublisher(recipes: [Recipe]) -> Observable<[String: User]> {
-    
         let ids = recipes.map { $0.userID }
 
         return self.apiType.getPublishers(ids: ids)
@@ -62,8 +55,5 @@ final class RankingViewModel: ViewModelBase {
                 self.pubishers = dic
                 
             })
-                
-        
     }
-    
 }
