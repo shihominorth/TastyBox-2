@@ -9,49 +9,30 @@ import UIKit
 import Kingfisher
 import RxSwift
 
-class RankingViewController: UIViewController, BindableType {
-      
+final class RankingViewController: UIViewController, BindableType {
     typealias ViewModelType = RankingViewModel
     var viewModel: RankingViewModel!
 
     @IBOutlet weak var collectionView: UICollectionView!
     
     var dataSource: RxRecipeRankingCollectionViewDataSource!
-    
-    
+  
     override func viewDidLoad() {
         super.viewDidLoad()
-
-        // Do any additional setup after loading the view.
         
-        let flowLayout = UICollectionViewFlowLayout()
-        
-        flowLayout.sectionInset = UIEdgeInsets(top: 10, left: 5, bottom: 10, right: 5)
-        flowLayout.itemSize = CGSize(width: self.view.frame.width * 0.95, height: 174)
-        flowLayout.scrollDirection = .vertical
-
-        collectionView.collectionViewLayout = flowLayout
-        
-        
+        setUpCollectionView()
     }
     
     override func viewWillAppear(_ animated: Bool) {
-        
         viewModel.getRecipsRanking()
-            .subscribe(onNext: { recipes in
-                
-                self.viewModel.recipesSubject.onNext(recipes)
-                
-            })
+            .bind(to: self.viewModel.recipesSubject)
             .disposed(by: viewModel.disposeBag)
     }
     
 
     func bindViewModel() {
-
         setUpDataSource()
 
-            
         viewModel.recipesSubject
             .flatMapLatest({ [unowned self] recipes in
                 self.viewModel.getPublisher(recipes: recipes)
@@ -63,19 +44,15 @@ class RankingViewController: UIViewController, BindableType {
         
         collectionView.rx.itemSelected
             .withLatestFrom(viewModel.recipesSubject) { indexPath, recipes in
-            
             return recipes[indexPath.row]
         }
         .catch { err in
-            
             print(err)
             
             return .empty()
         }
         .subscribe(onNext: { [unowned self] recipe in
-            
             self.viewModel.delegate?.selectedRecipe(recipe: recipe)
-            
         })
         .disposed(by: viewModel.disposeBag)
     }
@@ -93,7 +70,6 @@ class RankingViewController: UIViewController, BindableType {
                     
                     switch result {
                     case .success:
-                        
                         if isCompletedImgShown {
                             
                             cell.titleLbl.hideSkeleton()
@@ -111,7 +87,6 @@ class RankingViewController: UIViewController, BindableType {
                                 
                                 cell.rankingLbl.text = "\(rank)"
                             }
-                          
                         }
                         else {
                             
@@ -119,13 +94,9 @@ class RankingViewController: UIViewController, BindableType {
                         
                         }
                         
-                    case .failure(let err):
-                        print(err.errorDescription ?? "")
-                  
+                    case .failure(let error):
+                        print(error)
                     }
-                    
-                    
-                    
                 }
                 
             }
@@ -155,25 +126,27 @@ class RankingViewController: UIViewController, BindableType {
                                 
                                 cell.rankingLbl.text = "\(rank)"
                             }
-                        }
-                        else {
-                            
+                        } else {
                             isCompletedImgShown = true
-                        
                         }
-                        
                     case .failure(let err):
                         print(err.errorDescription ?? "")
                     }
-                    
                 }
-            
-           
             }
             
         })
-        
     }
-
+    
+    private func setUpCollectionView() {
+        let flowLayout = UICollectionViewFlowLayout()
+        
+        flowLayout.sectionInset = UIEdgeInsets(top: 10, left: 5, bottom: 10, right: 5)
+        flowLayout.itemSize = CGSize(width: self.view.frame.width * 0.95, height: 174)
+        flowLayout.scrollDirection = .vertical
+        
+        collectionView.collectionViewLayout = flowLayout
+    }
+    
 
 }
