@@ -24,15 +24,12 @@ final class RankingViewController: UIViewController, BindableType {
     }
     
     override func viewWillAppear(_ animated: Bool) {
-        viewModel.getRecipsRanking()
+        viewModel.getRecipesRanking()
             .bind(to: self.viewModel.recipesSubject)
             .disposed(by: viewModel.disposeBag)
     }
     
-
     func bindViewModel() {
-        setUpDataSource()
-
         viewModel.recipesSubject
             .flatMapLatest({ [unowned self] recipes in
                 self.viewModel.getPublisher(recipes: recipes)
@@ -41,101 +38,45 @@ final class RankingViewController: UIViewController, BindableType {
             .bind(to: collectionView.rx.items(dataSource: dataSource))
             .disposed(by: viewModel.disposeBag)
         
-        
         collectionView.rx.itemSelected
+            .catch { err in
+                print(err)
+                
+                return .empty()
+            }
             .withLatestFrom(viewModel.recipesSubject) { indexPath, recipes in
-            return recipes[indexPath.row]
-        }
-        .catch { err in
-            print(err)
-            
-            return .empty()
-        }
-        .subscribe(onNext: { [unowned self] recipe in
-            self.viewModel.delegate?.selectedRecipe(recipe: recipe)
-        })
-        .disposed(by: viewModel.disposeBag)
+                return recipes[indexPath.row]
+            }
+            .subscribe(onNext: { [unowned self] recipe in
+                self.viewModel.delegate?.selectedRecipe(recipe: recipe)
+            })
+            .disposed(by: viewModel.disposeBag)
     }
     
   
-    func setUpDataSource() {
-        
-        dataSource = RxRecipeRankingCollectionViewDataSource(configure: { [unowned self] row, recipe, cell in
-  
-            var isCompletedImgShown = false
+    private func setUpDataSource() {
+        dataSource = RxRecipeRankingCollectionViewDataSource { [weak self] row, recipe, cell in
             
-            if let publisher = self.viewModel.pubishers[recipe.userID], let publisherImgUrl = URL(string: publisher.imageURLString) {
-                
-                cell.publisherImgView.kf.setImage(with: publisherImgUrl, options: [.transition(.fade(1))]) { result in
-                    
-                    switch result {
-                    case .success:
-                        if isCompletedImgShown {
-                            
-                            cell.titleLbl.hideSkeleton()
-                            cell.likedNumLbl.hideSkeleton()
-                            cell.publisherLbl.hideSkeleton()
-                            
-                            cell.titleLbl.text = recipe.title
-                            cell.likedNumLbl.text = "\(recipe.likes)"
-                            
-                            if let name = viewModel.pubishers[recipe.userID]?.name {
-                                cell.publisherLbl.text = "\(name)"
-                            }
-                            
-                            if let rank = viewModel.recipeRanking.first(where: { $0.recipeID == recipe.recipeID })?.rank {
-                                
-                                cell.rankingLbl.text = "\(rank)"
-                            }
-                        }
-                        else {
-                            
-                            isCompletedImgShown = true
-                        
-                        }
-                        
-                    case .failure(let error):
-                        print(error)
-                    }
-                }
-                
+            cell.titleLbl.text = recipe.title
+            cell.likedNumLbl.text = "\(recipe.likes)"
+            
+            if let name = self?.viewModel.pubishers[recipe.userID]?.name {
+                cell.publisherLbl.text = "\(name)"
+            }
+            
+            if let rank = self?.viewModel.recipeRanking.first(where: { $0.recipeID == recipe.recipeID })?.rank {
+                cell.rankingLbl.text = "\(rank)"
+            }
+            
+            if let publisher = self?.viewModel.pubishers[recipe.userID],
+               let publisherImgUrl = URL(string: publisher.imageURLString) {
+                cell.publisherImgView.kf.setImage(with: publisherImgUrl, options: [.transition(.fade(1))])
             }
             
             if let recipeImgUrl = URL(string: recipe.imgString) {
-                
-                cell.imgView.kf.setImage(with: recipeImgUrl, options: [.transition(.fade(1))]) { result in
-                    
-                    switch result {
-                    case .success:
-                        
-                        
-                        if isCompletedImgShown {
-                            
-                            cell.titleLbl.hideSkeleton()
-                            cell.likedNumLbl.hideSkeleton()
-                            cell.publisherLbl.hideSkeleton()
-
-                            cell.titleLbl.text = recipe.title
-                            cell.likedNumLbl.text = "\(recipe.likes)"
-                            
-                            if let name = viewModel.pubishers[recipe.userID]?.name {
-                                cell.publisherLbl.text = "\(name)"
-                            }
-                            
-                            if let rank = viewModel.recipeRanking.first(where: { $0.recipeID == recipe.recipeID })?.rank {
-                                
-                                cell.rankingLbl.text = "\(rank)"
-                            }
-                        } else {
-                            isCompletedImgShown = true
-                        }
-                    case .failure(let err):
-                        print(err.errorDescription ?? "")
-                    }
-                }
+                cell.imgView.kf.setImage(with: recipeImgUrl, options: [.transition(.fade(1))])
             }
-            
-        })
+        }
     }
     
     private func setUpCollectionView() {
@@ -146,6 +87,8 @@ final class RankingViewController: UIViewController, BindableType {
         flowLayout.scrollDirection = .vertical
         
         collectionView.collectionViewLayout = flowLayout
+        
+        setUpDataSource()
     }
     
 

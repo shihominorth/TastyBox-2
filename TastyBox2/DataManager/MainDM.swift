@@ -129,9 +129,6 @@ final class MainDM: MainDMProtocol {
         
     }
     
-    
-    
-    
     static func getVIPRecipes(ingredient: Ingredient) -> Observable<[Recipe]> {
         
         let query = db.collection("recipes").whereField("isVIP", isEqualTo: true).limit(to: 20)

@@ -35,7 +35,7 @@ final class RankingViewModel: ViewModelBase {
     }
     
     
-    func getRecipsRanking() -> Observable<[Recipe]> {
+    func getRecipesRanking() -> Observable<[Recipe]> {
         
         return self.apiType.getRecipesRanking()
             .do(onNext: { [unowned self] recipes in
