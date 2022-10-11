@@ -24,9 +24,7 @@ class IngredientsViewController: UIViewController, BindableType {
     
     @IBOutlet weak var ingredientsCollectionView: UICollectionView!
     @IBOutlet weak var recipesCollecitonView: UICollectionView!
-    
-    @IBOutlet weak var zeroView: UIView!
-    
+        
     var ingredientsDataSource: RxDefaultCollectionViewDataSource<String, IngredientOptionCVCell>!
     var recipeDataSource: RxDefaultCollectionViewDataSource<Recipe, RecipeWithIngredientCVCell>!
     
@@ -47,12 +45,8 @@ class IngredientsViewController: UIViewController, BindableType {
         ingredientsCollectionViewFlowLayout.estimatedItemSize = UICollectionViewFlowLayout.automaticSize
         ingredientsCollectionViewFlowLayout.scrollDirection = .horizontal
         
-//        ingredientsCollectionViewFlowLayout.itemSize = CGSize(width: width + 10, height: ingredientsCollectionView.frame.height - 6)
-        
         ingredientsCollectionView.collectionViewLayout = ingredientsCollectionViewFlowLayout
         
-        let width = (recipesCollecitonView.frame.width - 11) / 2
-        recipesCollectionViewFlowLayout.itemSize = CGSize(width: width, height: width * 1.5)
         recipesCollectionViewFlowLayout.minimumLineSpacing = 1
         recipesCollectionViewFlowLayout.sectionInset = UIEdgeInsets(top: 10, left: 5, bottom: 10, right: 5)
         
@@ -60,40 +54,24 @@ class IngredientsViewController: UIViewController, BindableType {
         
         navigationController?.setNavigationBarHidden(false, animated: false)
         
-        view.backgroundColor = #colorLiteral(red: 0.9998771548, green: 0.9969214797, blue: 0.8987136483, alpha: 1)
-        ingredientsCollectionView.backgroundColor = #colorLiteral(red: 1, green: 0.9960784314, blue: 0.8980392157, alpha: 1)
-        recipesCollecitonView.backgroundColor = #colorLiteral(red: 0.9998771548, green: 0.9969214797, blue: 0.8987136483, alpha: 1)
+        view.backgroundColor = #colorLiteral(red: 0.9978365302, green: 0.9878997207, blue: 0.7690339684, alpha: 1)
+        ingredientsCollectionView.backgroundColor = #colorLiteral(red: 0.9978365302, green: 0.9878997207, blue: 0.7690339684, alpha: 1)
+        recipesCollecitonView.backgroundColor = #colorLiteral(red: 0.9978365302, green: 0.9878997207, blue: 0.7690339684, alpha: 1)
+        
+        ingredientsCollectionView.delegate = self
+        recipesCollecitonView.delegate = self
         
     }
     
     override func viewWillAppear(_ animated: Bool) {
-        
         if lastNavigationBarIsHidden {
             self.navigationController?.setNavigationBarHidden(true, animated: false)
-            
         }
-        
         
         viewModel.getRefrigeratorIngredients()
-            .bind(to: viewModel.ingredientSubject)
+            .bind(to: viewModel.ingredientRelay)
             .disposed(by: viewModel.disposeBag)
         
-        ingredientsCollectionView.isSkeletonable = true
-        recipesCollecitonView.isSkeletonable = true
-        
-        
-        ingredientsCollectionView.showAnimatedGradientSkeleton(usingGradient: .init(baseColor: .concrete), animation: nil, transition: .crossDissolve(0.25))
-        recipesCollecitonView.showAnimatedGradientSkeleton(usingGradient: .init(baseColor: .concrete), animation: nil, transition: .crossDissolve(0.25))
-        
-        
-        DispatchQueue.main.asyncAfter(deadline: .now() + 2.0) { [unowned self] in
-            self.ingredientsCollectionView.stopSkeletonAnimation()
-            self.recipesCollecitonView.stopSkeletonAnimation()
-            self.view.hideSkeleton(reloadDataAfter: true, transition: .crossDissolve(0.25))
-            
-            self.ingredientsCollectionView.reloadData()
-            self.recipesCollecitonView.reloadData()
-        }
     }
     
     override func viewWillDisappear(_ animated: Bool) {
@@ -104,10 +82,9 @@ class IngredientsViewController: UIViewController, BindableType {
     }
     
     func bindViewModel() {
-        
         setUpDataSource()
         
-        viewModel.ingredientSubject
+        viewModel.ingredientRelay
             .map { ingredients in
                 
                 var ingredientsNames = ingredients.map { $0.name }
@@ -121,7 +98,7 @@ class IngredientsViewController: UIViewController, BindableType {
             .disposed(by: viewModel.disposeBag)
         
         
-        viewModel.ingredientSubject
+        viewModel.ingredientRelay
             .debug("get recipe")
             .flatMapLatest { [unowned self] in
                 self.viewModel.getRecipes(allIngredients: $0)
@@ -139,10 +116,7 @@ class IngredientsViewController: UIViewController, BindableType {
         
         viewModel.recipesSubject
             .do(onNext: {
-                
                 self.viewModel.recipes = $0
-                self.zeroView.isHidden = $0.isEmpty ? false : true
-                
             })
             .bind(to: recipesCollecitonView.rx.items(dataSource: recipeDataSource))
             .disposed(by: viewModel.disposeBag)
@@ -160,7 +134,7 @@ class IngredientsViewController: UIViewController, BindableType {
         
         viewModel.selectedIngredientSubject
             .filter { $0 != 0 }
-            .withLatestFrom(self.viewModel.ingredientSubject) { row, ingredients in
+            .withLatestFrom(self.viewModel.ingredientRelay) { row, ingredients in
                 return ingredients[row - 1]
             }
             .flatMapLatest { [unowned self] ingredient in
@@ -175,7 +149,7 @@ class IngredientsViewController: UIViewController, BindableType {
         
         viewModel.selectedIngredientSubject
             .filter { $0 == 0 }
-            .withLatestFrom(viewModel.ingredientSubject)
+            .withLatestFrom(viewModel.ingredientRelay)
             .flatMapLatest { [unowned self] in
                 self.viewModel.getRecipes(allIngredients: $0)
             }
@@ -231,10 +205,8 @@ class IngredientsViewController: UIViewController, BindableType {
             if let url = URL(string: recipe.imgString) {
                 
                 cell.imgView.kf.setImage(with: url) { result in
-                    
                     switch result {
                     case .success:
-                        
                         cell.titleLbel.text = recipe.title
                         
                     default:
@@ -246,13 +218,14 @@ class IngredientsViewController: UIViewController, BindableType {
         }
     }
     
-    private func estimatedFrame(text: String, font: UIFont) -> CGRect {
+    private func estimatedFrame(text: String, font: UIFont) -> CGSize {
         let size = CGSize(width: 200, height: 1_000) // temporary size
         let options = NSStringDrawingOptions.usesFontLeading.union(.usesLineFragmentOrigin)
-        return NSString(string: text).boundingRect(with: size,
-                                                   options: options,
-                                                   attributes: [NSAttributedString.Key.font: font],
-                                                   context: nil)
+        return NSString(string: text)
+            .boundingRect(with: size,
+                          options: options,
+                          attributes: [NSAttributedString.Key.font: font],
+                          context: nil).size
     }
     
     private func updateNavigationBarHiding(scrollDiff: CGFloat) {
@@ -269,6 +242,20 @@ class IngredientsViewController: UIViewController, BindableType {
             lastNavigationBarIsHidden = true
             return
         }
+    }
+}
+
+extension IngredientsViewController: UICollectionViewDelegateFlowLayout {
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
+        if collectionView == ingredientsCollectionView {
+            if indexPath.row == 0 {
+                return estimatedFrame(text: "All", font: .systemFont(ofSize: 10))
+            }
+            return estimatedFrame(text: viewModel.ingredientRelay.value[indexPath.row - 1].name, font: .systemFont(ofSize: 10))
+        }
+        
+        let width = (recipesCollecitonView.frame.width - 11) / 2
+        return CGSize(width: width, height: width * 1.5)
     }
 }
 

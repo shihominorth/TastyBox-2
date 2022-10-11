@@ -68,12 +68,10 @@ final class MainDM: MainDMProtocol {
             }
            
     }
-
     
     static func getTimeLineRecipeDocuments(ids: [String]) -> Observable<[QueryDocumentSnapshot]> {
         
         return .create { observer in
-            
             var implementedNum = 0
             var documents:[QueryDocumentSnapshot] = []
             
@@ -128,9 +126,6 @@ final class MainDM: MainDMProtocol {
         return getDocuments(query: query)
         
     }
-    
-    
-    
     
     static func getVIPRecipes(ingredient: Ingredient) -> Observable<[Recipe]> {
         

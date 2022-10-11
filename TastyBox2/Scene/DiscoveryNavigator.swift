@@ -18,7 +18,7 @@ protocol DiscoveryNavigatorLike: AnyObject {
     func setViewControllers(row: Int)
 }
 
-class DiscoveryPresenter: NSObject, DiscoveryNavigatorLike {
+class DiscoveryNavigator: NSObject, DiscoveryNavigatorLike {
     private var viewControllers: [UIViewController]
     private let sceneCoordinator: SceneCoordinator
     private let user: Firebase.User
@@ -46,7 +46,7 @@ class DiscoveryPresenter: NSObject, DiscoveryNavigatorLike {
     }
     
     func setDefaultViewController() {
-        pageViewController?.setViewControllers([viewControllers[1]], direction: .forward, animated: true, completion: { [unowned self] isCompleted in
+        pageViewController?.setViewControllers([viewControllers[1]], direction: .forward, animated: true) { [unowned self] isCompleted in
             
             if isCompleted {
                 
@@ -57,20 +57,20 @@ class DiscoveryPresenter: NSObject, DiscoveryNavigatorLike {
                 }
                 ingredientVC.viewModel.delegate = self
             }
-        })
+        }
         
-        pageViewController?.delegate = self
         pageViewController?.dataSource = self
     }
     
     func setViewControllers(row: Int) {
-        guard let currentViewController = currentViewController, let currentIndex = viewControllers.firstIndex(where: { String(describing: $0) == String(describing: currentViewController) }) else {
+        guard let currentViewController = currentViewController,
+                let currentIndex = viewControllers.firstIndex(where: { String(describing: $0) == String(describing: currentViewController) }) else {
             return
         }
         
         let orientation: UIPageViewController.NavigationDirection = currentIndex < row ? .forward : .reverse
         
-        pageViewController?.setViewControllers([viewControllers[row]], direction: orientation, animated: true, completion: { [unowned self] isCompleted in
+        pageViewController?.setViewControllers([viewControllers[row]], direction: orientation, animated: true) { [unowned self] isCompleted in
             
             if isCompleted {
                 if let currentViewController = viewControllers[row] as? RankingViewController {
@@ -83,12 +83,12 @@ class DiscoveryPresenter: NSObject, DiscoveryNavigatorLike {
                     currentViewController.viewModel.delegate = self
                 }
             }
-        })
+        }
     }
 }
 
 
-extension DiscoveryPresenter: toRecipeDetailDelegate {
+extension DiscoveryNavigator: toRecipeDetailDelegate {
     func selectedRecipe(recipe: Recipe) {
         let vm = RecipeVM(sceneCoordinator: self.sceneCoordinator, user: self.user, recipe: recipe)
         let scene: Scene = .recipeScene(scene: .recipe(vm))
@@ -97,23 +97,24 @@ extension DiscoveryPresenter: toRecipeDetailDelegate {
     }
 }
 
-extension DiscoveryPresenter: UIPageViewControllerDelegate, UIPageViewControllerDataSource {
+extension DiscoveryNavigator: UIPageViewControllerDataSource {
     func presentationCount(for pageViewController: UIPageViewController) -> Int {
         return viewControllers.count
     }
     
     func pageViewController(_ pageViewController: UIPageViewController, viewControllerBefore viewController: UIViewController) -> UIViewController? {
-        guard let currentViewController = pageViewController.viewControllers?.first, let index = viewControllers.firstIndex(where: { String(describing: currentViewController) == String(describing: $0) }) else {
+        guard let currentViewController = pageViewController.viewControllers?.first,
+              let index = viewControllers.firstIndex(where: { String(describing: currentViewController) == String(describing: $0) }) else {
             return nil
         }
-        
+
         if index - 1 >= 0 {
             return viewControllers[index - 1]
         }
-        
+
         return nil
     }
-    
+
     func pageViewController(_ pageViewController: UIPageViewController, viewControllerAfter viewController: UIViewController) -> UIViewController? {
         guard let currentViewController = pageViewController.viewControllers?.first, let index = viewControllers.firstIndex(where: { String(describing: currentViewController) == String(describing: $0) }) else {
             return nil
@@ -121,7 +122,7 @@ extension DiscoveryPresenter: UIPageViewControllerDelegate, UIPageViewController
         if index + 1 < viewControllers.count {
             return viewControllers[index + 1]
         }
-        
+
         return nil
     }
 }

@@ -45,8 +45,13 @@ final class DiscoveryViewController: UIViewController, BindableType {
         viewModel.setDefaultViewControllers()
         
         NotificationCenter.default.addObserver(self, selector: #selector(showSearch), name: NSNotification.Name("showSearch"), object: nil)
-        
-        setUpMenuCollectinonView()
+    }
+    
+    override func viewDidAppear(_ animated: Bool) {
+        if viewModel.isFirstSetUpView {
+            setUpMenuCollectinonView()
+            viewModel.isFirstSetUpView = false
+        }
     }
     
     override func viewWillDisappear(_ animated: Bool) {
@@ -97,7 +102,6 @@ final class DiscoveryViewController: UIViewController, BindableType {
     }
     
     private func setUpNavigationBar() {
-        
         self.title = "TastyBox"
         
         let appearance = UINavigationBarAppearance()
@@ -109,7 +113,6 @@ final class DiscoveryViewController: UIViewController, BindableType {
         navigationController?.navigationBar.scrollEdgeAppearance = appearance
         
         self.navigationController?.hidesBarsOnTap = false
-        
     }
     
     func setUpPageViewController() {
@@ -117,19 +120,22 @@ final class DiscoveryViewController: UIViewController, BindableType {
             return
         }
         pageViewController.delegate = self
+        viewModel.setPageviewControllerToPresenter(pageViewController: pageViewController)
     }
     
     private func setUpMenuCollectinonView() {
         self.menuCollectionView.showsHorizontalScrollIndicator = false
-        
-        menuCollectionView.isPagingEnabled = false
-        menuCollectionView.scrollToItem(at: IndexPath(row: 1, section: 0), at: .centeredHorizontally, animated: true)
-        menuCollectionView.isPagingEnabled = true
+                
+        let firstFocusIndexPath: IndexPath = IndexPath(row: 1, section: 0)
+        self.menuCollectionView.scrollToItem(at: firstFocusIndexPath, at: .centeredHorizontally, animated: true)
+        guard let cell = menuCollectionView.cellForItem(at: firstFocusIndexPath) as? MenuCollectionViewCell else {
+            return
+        }
+        cell.focusCell(active: true)
     }
     
     
     private func disappearSideMenu() {
-        
         guard let viewWithTag = self.view.viewWithTag(100) else {
             return
         }
@@ -146,7 +152,6 @@ final class DiscoveryViewController: UIViewController, BindableType {
     @IBAction func SearchBarItem() {
         NotificationCenter.default.post(name: NSNotification.Name("showSearch"), object: nil)
     }
-    
     
     private func initialContentView(){
         self.containerView.isHidden = false
@@ -221,17 +226,21 @@ final class DiscoveryViewController: UIViewController, BindableType {
             }
             viewModel.setSideMenuTableViewToPresenter(tableView: sideMenuTableViewController)
         }
-        else if identifier == "showPageVC" {
-            guard let pageViewController = segue.destination as? UIPageViewController else {
-                return
-            }
-            viewModel.setPageviewControllerToPresenter(pageViewController: pageViewController)
-        }
     }
     
     private func focusCell(indexPath: IndexPath) {
         // .CenteredHorizontallyでを指定して、CollectionViewのboundsの中央にindexPathのセルが来るようにする
-        self.menuCollectionView?.scrollToItem(at: indexPath, at: .centeredHorizontally, animated: true)
+        self.menuCollectionView.scrollToItem(at: indexPath, at: .centeredHorizontally, animated: true)
+        guard let cell = menuCollectionView.cellForItem(at: indexPath) as? MenuCollectionViewCell else {
+            return
+        }
+        cell.focusCell(active: true)
+        
+        guard let cell = menuCollectionView.cellForItem(at: IndexPath(row: self.viewModel.selectedIndex, section: 0)) as? MenuCollectionViewCell else {
+            return
+        }
+        cell.focusCell(active: false)
+        
     }    
     
 }
@@ -246,10 +255,10 @@ extension DiscoveryViewController: UICollectionViewDataSource {
             return .init()
         }
         cell.MenuLabel.text = viewModel.pages[indexPath.row]
-                
-        if indexPath.row == 1 {
-            cell.focusCell(active: true)
-        }
+//
+//        if indexPath.row == 1 {
+//            cell.focusCell(active: true)
+//        }
         
         collectionView.rx.itemSelected
             .map { $0.row == indexPath.row }
@@ -263,13 +272,14 @@ extension DiscoveryViewController: UICollectionViewDataSource {
 extension DiscoveryViewController: UICollectionViewDelegate, UICollectionViewDelegateFlowLayout {
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         self.navigationController?.setNavigationBarHidden(false, animated: true)
+        focusCell(indexPath: indexPath)
+        self.viewModel.selectedIndex = indexPath.row
     }
 }
 
 
-extension DiscoveryViewController : UIPageViewControllerDelegate {
+extension DiscoveryViewController: UIPageViewControllerDelegate {
     func pageViewController(_ pageViewController: UIPageViewController, didFinishAnimating finished: Bool, previousViewControllers: [UIViewController], transitionCompleted completed: Bool) {
-        
         var index = 0
         
         guard let currentViewController = pageViewController.viewControllers?.first else {
@@ -285,13 +295,12 @@ extension DiscoveryViewController : UIPageViewControllerDelegate {
         else if currentViewController is RankingViewController {
             index = 2
         }
-        //            // MenuViewControllerの特定のセルにフォーカスをあてる
+                //            // MenuViewControllerの特定のセルにフォーカスをあてる
         let indexPath = IndexPath(row: index, section: 0)
         self.focusCell(indexPath: indexPath)
-        self.menuCollectionView?.scrollToItem(at: indexPath, at: .centeredHorizontally, animated: true)
         
+        self.viewModel.selectedIndex = index
     }
-    
 }
 
 

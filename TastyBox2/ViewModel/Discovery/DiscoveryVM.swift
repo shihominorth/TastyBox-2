@@ -19,9 +19,10 @@ protocol SelectDigitalDataDiscoveryViewModelDelegate: AnyObject {
 }
 
 protocol DiscoveryViewModelLike: AnyObject where Self: ViewModelBase {
-    var navigator: DiscoveryNavigatorLike? { get set }
     var isMenuBarOpenedRelay:  BehaviorRelay<Bool> { get set }
     var pages: [String] { get set }
+    var selectedIndex: Int { get set }
+    var isFirstSetUpView: Bool { get set }
     
     func setSideMenuTableViewToPresenter(tableView: SideMenuTableViewController)
     func setPageviewControllerToPresenter(pageViewController: UIPageViewController)
@@ -33,7 +34,8 @@ protocol DiscoveryViewModelLike: AnyObject where Self: ViewModelBase {
 }
 
 final class DiscoveryViewModel: ViewModelBase, DiscoveryViewModelLike {
-    weak var navigator: DiscoveryNavigatorLike?
+
+    private var navigator: DiscoveryNavigatorLike
     
     private let sceneCoodinator: SceneCoordinator
     private let user: Firebase.User
@@ -43,32 +45,36 @@ final class DiscoveryViewModel: ViewModelBase, DiscoveryViewModelLike {
     
     var selectedIndex: Int
     var pages: [String]
+    var isFirstSetUpView: Bool
         
-    init(sceneCoodinator: SceneCoordinator, user: Firebase.User, pages: [String] = ["Subscribed Creator",  "Your Ingredients Recipe", "Most Popular"]) {
+    init(sceneCoodinator: SceneCoordinator, user: Firebase.User, pages: [String] = ["Subscribed Creator",  "Your Ingredients Recipe", "Most Popular"], isFirstSetUpView: Bool = true) {
+        let navigator = DiscoveryNavigator(user: user, sceneCoordinator: sceneCoodinator)
+        self.navigator = navigator
         self.sceneCoodinator = sceneCoodinator
         self.user = user
         self.isMenuBarOpenedRelay = BehaviorRelay<Bool>(value: false)
         self.selectedIndex = 1
+        self.isFirstSetUpView = isFirstSetUpView
         
-        self.pages = ["Subscribed Creator",  "Your Ingredients Recipe", "Most Popular"]
+        self.pages = pages
     }
     
     func setDefaultViewControllers() {
-        navigator?.setDefaultViewController()
+        navigator.setDefaultViewController()
     }
     
     func setSideMenuTableViewToPresenter(tableView: SideMenuTableViewController) {
-        self.navigator?.sideMenuViewController = tableView
+        self.navigator.sideMenuViewController = tableView
     }
     
     func setPageviewControllerToPresenter(pageViewController: UIPageViewController) {
-        self.navigator?.pageViewController = pageViewController
+        self.navigator.pageViewController = pageViewController
     }
     
     func sideMenuTapped() {
-        self.navigator?.sideMenuViewController?.tableView.rx.itemSelected
+        self.navigator.sideMenuViewController?.tableView.rx.itemSelected
             .subscribe(onNext: { [unowned self] indexPath in
-                navigator?.sideMenuViewController?.tableView.deselectRow(at: indexPath, animated: true)
+                navigator.sideMenuViewController?.tableView.deselectRow(at: indexPath, animated: true)
                 
                 switch indexPath.row {
                 case 0:
@@ -103,7 +109,7 @@ final class DiscoveryViewModel: ViewModelBase, DiscoveryViewModelLike {
     }
     
     func selectPageTitle(row: Int) {
-        navigator?.setViewControllers(row: row)
+        navigator.setViewControllers(row: row)
     }
     
     

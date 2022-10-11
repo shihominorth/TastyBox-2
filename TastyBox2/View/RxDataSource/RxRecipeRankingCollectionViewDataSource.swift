@@ -25,30 +25,22 @@ class RxRecipeRankingCollectionViewDataSource: NSObject, RxCollectionViewDataSou
     }
     
     func collectionView(_ collectionView: UICollectionView, observedEvent: Event<[Recipe]>) {
-        
         let source = values
        
         let target = observedEvent.element ?? []
     
-        
         let changeset = StagedChangeset(source: source, target: target)
         
         guard changeset.isEmpty else {
- 
             collectionView.reload(using: changeset) { data in
-                
                 self.values = data
-            
             }
-            
-           
             
             return
         }
     }
 
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        
         if values.count < 10 {
             
             return values.count
@@ -60,25 +52,11 @@ class RxRecipeRankingCollectionViewDataSource: NSObject, RxCollectionViewDataSou
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         
         if let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "recipeRankingCVCell", for: indexPath) as? RecipeRankingCVCell {
-            
-            cell.imgView.isSkeletonable = true
-            cell.publisherImgView.isSkeletonable = true
-            cell.titleLbl.isSkeletonable = true
-            cell.publisherLbl.isSkeletonable = true
-            cell.likedNumLbl.isSkeletonable = true
-
-            
-            
-            cell.titleLbl.showAnimatedSkeleton()
-            cell.publisherLbl.showAnimatedSkeleton()
-            cell.likedNumLbl.showAnimatedSkeleton()
-            
             cell.publisherImgView.layer.cornerRadius = cell.publisherImgView.frame.width / 2
             
             cell.layer.cornerRadius = 5
             cell.layer.borderWidth = 1
             cell.layer.borderColor = #colorLiteral(red: 0.6352941176, green: 0.5176470588, blue: 0.368627451, alpha: 1)
-            
             
             configure(indexPath.row, values[indexPath.row], cell)
             

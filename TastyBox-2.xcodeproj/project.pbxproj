@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 51;
+	objectVersion = 52;
 	objects = {
 
 /* Begin PBXBuildFile section */
@@ -53,6 +53,10 @@
 		6F15786F28F3DB1D00F0CAAD /* MockDiscoveryPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F15786E28F3DB1D00F0CAAD /* MockDiscoveryPresenter.swift */; };
 		6F15787028F3EFB100F0CAAD /* Pods_TastyBox_2.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1F1CF882957C39AAB229AAF4 /* Pods_TastyBox_2.framework */; };
 		6F15787128F3EFB100F0CAAD /* Pods_TastyBox_2.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 1F1CF882957C39AAB229AAF4 /* Pods_TastyBox_2.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		6F15787628F3FA9800F0CAAD /* FBSDKCoreKit_Basics.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6F15787528F3FA9800F0CAAD /* FBSDKCoreKit_Basics.xcframework */; };
+		6F15787728F3FA9800F0CAAD /* FBSDKCoreKit_Basics.xcframework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 6F15787528F3FA9800F0CAAD /* FBSDKCoreKit_Basics.xcframework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		6F15787928F3FB4000F0CAAD /* FBSDKCoreKit.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6F15787828F3FB4000F0CAAD /* FBSDKCoreKit.xcframework */; };
+		6F15787A28F3FB4000F0CAAD /* FBSDKCoreKit.xcframework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 6F15787828F3FB4000F0CAAD /* FBSDKCoreKit.xcframework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		6F194CBA271C77A40084F829 /* VideoPlayer.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 6F194CB9271C77A40084F829 /* VideoPlayer.storyboard */; };
 		6F194CBC271C7F190084F829 /* UploadingVideoViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F194CBB271C7F190084F829 /* UploadingVideoViewController.swift */; };
 		6F1A092328EEAEF2008AF33B /* ZeroView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 6F1A092228EEAEF2008AF33B /* ZeroView.xib */; };
@@ -107,7 +111,7 @@
 		6F71EBF027234E68001BF538 /* EmptySelectedGenreTVCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F71EBEF27234E68001BF538 /* EmptySelectedGenreTVCell.swift */; };
 		6F71EBF227237082001BF538 /* GenreTVCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F71EBF127237082001BF538 /* GenreTVCell.swift */; };
 		6F71EBF427237536001BF538 /* RxGenreCollectionViewDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F71EBF327237536001BF538 /* RxGenreCollectionViewDataSource.swift */; };
-		6F74C4252719BAB9007BB9E6 /* DiscoveryPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F74C4242719BAB8007BB9E6 /* DiscoveryPresenter.swift */; };
+		6F74C4252719BAB9007BB9E6 /* DiscoveryNavigator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F74C4242719BAB8007BB9E6 /* DiscoveryNavigator.swift */; };
 		6F74C42B2719DEE7007BB9E6 /* CreateRecipeVM.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F74C42A2719DEE7007BB9E6 /* CreateRecipeVM.swift */; };
 		6F74C42E2719E4D5007BB9E6 /* CreateRecipe.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 6F74C42C2719E20A007BB9E6 /* CreateRecipe.storyboard */; };
 		6F77D487272825C800F1FCD9 /* CheckEvaluateRecipeCVCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F77D486272825C800F1FCD9 /* CheckEvaluateRecipeCVCell.swift */; };
@@ -259,7 +263,9 @@
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
+				6F15787A28F3FB4000F0CAAD /* FBSDKCoreKit.xcframework in Embed Frameworks */,
 				6F15787128F3EFB100F0CAAD /* Pods_TastyBox_2.framework in Embed Frameworks */,
+				6F15787728F3FA9800F0CAAD /* FBSDKCoreKit_Basics.xcframework in Embed Frameworks */,
 			);
 			name = "Embed Frameworks";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -326,6 +332,9 @@
 		6F15786428F347DD00F0CAAD /* CheckTimeNServingTVCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CheckTimeNServingTVCell.swift; sourceTree = "<group>"; };
 		6F15786628F34D2E00F0CAAD /* MockDiscoveryViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockDiscoveryViewModel.swift; sourceTree = "<group>"; };
 		6F15786E28F3DB1D00F0CAAD /* MockDiscoveryPresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockDiscoveryPresenter.swift; sourceTree = "<group>"; };
+		6F15787428F3FA8800F0CAAD /* FBSDKCoreKit */ = {isa = PBXFileReference; lastKnownFileType = folder; name = FBSDKCoreKit; path = Pods/FBSDKCoreKit; sourceTree = "<group>"; };
+		6F15787528F3FA9800F0CAAD /* FBSDKCoreKit_Basics.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; name = FBSDKCoreKit_Basics.xcframework; path = Pods/FBSDKCoreKit_Basics/XCFrameworks/FBSDKCoreKit_Basics.xcframework; sourceTree = "<group>"; };
+		6F15787828F3FB4000F0CAAD /* FBSDKCoreKit.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; name = FBSDKCoreKit.xcframework; path = Pods/FBSDKCoreKit/XCFrameworks/FBSDKCoreKit.xcframework; sourceTree = "<group>"; };
 		6F194CB9271C77A40084F829 /* VideoPlayer.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = VideoPlayer.storyboard; sourceTree = "<group>"; };
 		6F194CBB271C7F190084F829 /* UploadingVideoViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UploadingVideoViewController.swift; sourceTree = "<group>"; };
 		6F1A092228EEAEF2008AF33B /* ZeroView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ZeroView.xib; sourceTree = "<group>"; };
@@ -381,7 +390,7 @@
 		6F71EBEF27234E68001BF538 /* EmptySelectedGenreTVCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmptySelectedGenreTVCell.swift; sourceTree = "<group>"; };
 		6F71EBF127237082001BF538 /* GenreTVCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GenreTVCell.swift; sourceTree = "<group>"; };
 		6F71EBF327237536001BF538 /* RxGenreCollectionViewDataSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RxGenreCollectionViewDataSource.swift; sourceTree = "<group>"; };
-		6F74C4242719BAB8007BB9E6 /* DiscoveryPresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiscoveryPresenter.swift; sourceTree = "<group>"; };
+		6F74C4242719BAB8007BB9E6 /* DiscoveryNavigator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiscoveryNavigator.swift; sourceTree = "<group>"; };
 		6F74C42A2719DEE7007BB9E6 /* CreateRecipeVM.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateRecipeVM.swift; sourceTree = "<group>"; };
 		6F74C42C2719E20A007BB9E6 /* CreateRecipe.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = CreateRecipe.storyboard; sourceTree = "<group>"; };
 		6F77D4842726DF8D00F1FCD9 /* CheckTimeNServingTVCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = CheckTimeNServingTVCell.swift; path = "/Users/kitajimashihomi/portfolio/TastyBox-2/TastyBox-2/View/CheckCreatedRecipe/CheckTimeNServingTVCell.swift"; sourceTree = "<absolute>"; };
@@ -534,7 +543,9 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				6F15787928F3FB4000F0CAAD /* FBSDKCoreKit.xcframework in Frameworks */,
 				6F15787028F3EFB100F0CAAD /* Pods_TastyBox_2.framework in Frameworks */,
+				6F15787628F3FA9800F0CAAD /* FBSDKCoreKit_Basics.xcframework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -565,7 +576,7 @@
 				6F018BA326DB82B7006416D3 /* SceneTransitionType.swift */,
 				6F9A0D0C27101A8300DABB45 /* Modal */,
 				6F9A0D1E2710B74200DABB45 /* EditShoppingItemDelegate.swift */,
-				6F74C4242719BAB8007BB9E6 /* DiscoveryPresenter.swift */,
+				6F74C4242719BAB8007BB9E6 /* DiscoveryNavigator.swift */,
 				6F119517277210FB002510EC /* RelatedUsersPreseter.swift */,
 			);
 			path = Scene;
@@ -1288,6 +1299,9 @@
 		85E184E109DC3F54BD23BA66 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				6F15787828F3FB4000F0CAAD /* FBSDKCoreKit.xcframework */,
+				6F15787528F3FA9800F0CAAD /* FBSDKCoreKit_Basics.xcframework */,
+				6F15787428F3FA8800F0CAAD /* FBSDKCoreKit */,
 				1F1CF882957C39AAB229AAF4 /* Pods_TastyBox_2.framework */,
 				05E49A8061EEB432B19A16CB /* Pods_TastyBox_2Tests.framework */,
 			);
@@ -1683,7 +1697,7 @@
 				6F9A0D0E27101ACA00DABB45 /* SemiModalDismissInteractiveTransition.swift in Sources */,
 				6F9E042B27017B91005DCEF4 /* ShoppinglistHeaderView.swift in Sources */,
 				6FBCB92B26D7CBD500C050B2 /* ResetPasswordViewController.swift in Sources */,
-				6F74C4252719BAB9007BB9E6 /* DiscoveryPresenter.swift in Sources */,
+				6F74C4252719BAB9007BB9E6 /* DiscoveryNavigator.swift in Sources */,
 				6F018BA026DB7E5F006416D3 /* SceneCoordinator.swift in Sources */,
 				6FE15ED5271AB7B20047D3D8 /* EditMainImageCVCell.swift in Sources */,
 				6FBCB92C26D7CBD500C050B2 /* EmailLinkAuthenticationViewController.swift in Sources */,

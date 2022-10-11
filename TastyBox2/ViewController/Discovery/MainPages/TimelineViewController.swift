@@ -18,7 +18,7 @@ class TimelineViewController: UIViewController, BindableType {
     var dataSource: RxNoCellTypeTableViewDataSource<Timeline>!
     
     @IBOutlet weak var tableView: UITableView!
-    
+
     override func viewDidLoad() {
         super.viewDidLoad()
     }
@@ -31,7 +31,6 @@ class TimelineViewController: UIViewController, BindableType {
     
     
     func bindViewModel() {
-        
         setUpTableView()
         
         let recipesStream = viewModel.postsSubject
@@ -47,9 +46,8 @@ class TimelineViewController: UIViewController, BindableType {
                     else {
                         return nil
                     }
-                    
                 }
-              
+                
                 return recipeIds
             }
             .flatMapLatest { ids in
@@ -60,15 +58,13 @@ class TimelineViewController: UIViewController, BindableType {
             .map { posts -> [String] in
                 
                 let publisherIds = posts.compactMap { post -> String? in
-                    
                     if case let .recipe(_, _, _, publisherId) = post {
                         
                         return publisherId
                         
                     }
-
+                    
                     return nil
-
                 }
                 
                 return publisherIds
@@ -100,103 +96,92 @@ class TimelineViewController: UIViewController, BindableType {
         tableView.delegate = self
         
         dataSource = RxNoCellTypeTableViewDataSource<Timeline>(configure: { [unowned self] tableView, indexPath, post in
-            
-            
             switch post {
-                
             case let .recipe(_, updateDate, recipeId, publisherId):
-                
-                if let cell = tableView.dequeueReusableCell(withIdentifier: "newRecipe") as? NormalTimelineTVCell {
-                    
-                    if indexPath.row == 0 {
-                        cell.upperLineView.isHidden = true
-                    }
-                    
-                    cell.userImgView.layer.cornerRadius = cell.userImgView.frame.width / 2
-                    cell.recipeImgView.layer.cornerRadius = 30
-                    
-                    
-                    var isOneImgCompleted = false
-                 
-                    if let imgRecipeString = viewModel.recipes.first(where: { $0.recipeID == recipeId })?.imgString,
-                        let recipeUrl = URL(string: imgRecipeString),
-                        let imgPublisherString = self.viewModel.publishers[publisherId]?.imageURLString,
-                        let userUrl = URL(string: imgPublisherString),
-                       let name = viewModel.publishers[publisherId]?.name {
-                        
-                        cell.userImgView.hideSkeleton()
-                        cell.recipeImgView.hideSkeleton()
-                        
-                        if indexPath.row != 0 {
-                            cell.upperLineView.isHidden = false
-                        }
-                        
-                        cell.userImgView.kf.setImage(with: userUrl, options: [.transition(.fade(1))], completionHandler: { _ in
-                            
-                            
-                            if !isOneImgCompleted {
-                                isOneImgCompleted = true
-                            }
-                            else {
-                               
-                                cell.userNameLbl.hideSkeleton()
-                                cell.dateLbl.hideSkeleton()
-                                
-                                cell.userNameLbl.text = name
-                                
-                                let format = "yyyy/MM/dd HH:mm:ss Z"
-                                let formatter: DateFormatter = DateFormatter()
-                                formatter.calendar = Calendar(identifier: .gregorian)
-                                formatter.dateFormat = format
-                                let stringDate = formatter.string(from: updateDate)
-                                
-                                
-                                cell.dateLbl.text = stringDate
-                                
-                            }
-                          
-                            
-                        })
-                        
-                        cell.recipeImgView.kf.setImage(with: recipeUrl, options: [.transition(.fade(1))]) { result in
-                            
-                            if !isOneImgCompleted {
-                                isOneImgCompleted = true
-                            }
-                            else {
-                               
-                                cell.userNameLbl.hideSkeleton()
-                                cell.dateLbl.hideSkeleton()
-                                
-                                cell.userNameLbl.text = name
-                                
-                                let format = "yyyy/MM/dd HH:mm:ss Z"
-                                let formatter: DateFormatter = DateFormatter()
-                                formatter.calendar = Calendar(identifier: .gregorian)
-                                formatter.dateFormat = format
-                                let stringDate = formatter.string(from: updateDate)
-                                
-                                
-                                cell.dateLbl.text = stringDate
-                                
-                            }
-                        }
-                    }
-                    
-                    let leftX = cell.recipeImgView.frame.origin.x
-                    
-                    cell.separatorInset = UIEdgeInsets(top: 0, left: leftX, bottom: 0, right: 0)
-                    
-                    return cell
-                    
+                guard let cell = tableView.dequeueReusableCell(withIdentifier: "newRecipe") as? NormalTimelineTVCell else {
+                    return .init()
                 }
                 
+                if indexPath.row == 0 {
+                    cell.upperLineView.isHidden = true
+                }
+                
+                cell.userImgView.layer.cornerRadius = cell.userImgView.frame.width / 2
+                cell.recipeImgView.layer.cornerRadius = 30
+                
+                
+                var isOneImgCompleted = false
+                
+                guard let imgRecipeString = viewModel.recipes.first(where: { $0.recipeID == recipeId })?.imgString,
+                      let recipeUrl = URL(string: imgRecipeString),
+                      let imgPublisherString = self.viewModel.publishers[publisherId]?.imageURLString,
+                      let userUrl = URL(string: imgPublisherString),
+                      let name = viewModel.publishers[publisherId]?.name else  {
+                    return .init()
+                }
+                
+                cell.userImgView.hideSkeleton()
+                cell.recipeImgView.hideSkeleton()
+                
+                if indexPath.row != 0 {
+                    cell.upperLineView.isHidden = false
+                }
+                
+                cell.userImgView.kf.setImage(with: userUrl, options: [.transition(.fade(1))], completionHandler: { _ in
+                    
+                    
+                    if !isOneImgCompleted {
+                        isOneImgCompleted = true
+                    }
+                    else {
+                        
+                        cell.userNameLbl.hideSkeleton()
+                        cell.dateLbl.hideSkeleton()
+                        
+                        cell.userNameLbl.text = name
+                        
+                        let format = "yyyy/MM/dd HH:mm:ss Z"
+                        let formatter: DateFormatter = DateFormatter()
+                        formatter.calendar = Calendar(identifier: .gregorian)
+                        formatter.dateFormat = format
+                        let stringDate = formatter.string(from: updateDate)
+                        
+                        
+                        cell.dateLbl.text = stringDate
+                        
+                    }
+                })
+                
+                cell.recipeImgView.kf.setImage(with: recipeUrl, options: [.transition(.fade(1))]) { result in
+                    
+                    if !isOneImgCompleted {
+                        isOneImgCompleted = true
+                    }
+                    else {
+                        
+                        cell.userNameLbl.hideSkeleton()
+                        cell.dateLbl.hideSkeleton()
+                        
+                        cell.userNameLbl.text = name
+                        
+                        let format = "yyyy/MM/dd HH:mm:ss Z"
+                        let formatter: DateFormatter = DateFormatter()
+                        formatter.calendar = Calendar(identifier: .gregorian)
+                        formatter.dateFormat = format
+                        let stringDate = formatter.string(from: updateDate)
+                        
+                        
+                        cell.dateLbl.text = stringDate
+                        
+                    }
+                }
+                
+                let leftX = cell.recipeImgView.frame.origin.x
+                
+                cell.separatorInset = UIEdgeInsets(top: 0, left: leftX, bottom: 0, right: 0)
+                
+                return cell
             }
-            
-            
-            
-            return UITableViewCell()
-            
         })
         
         let cellTapped: Observable<Timeline> = tableView.rx.itemSelected
@@ -212,7 +197,6 @@ class TimelineViewController: UIViewController, BindableType {
         
         let newRecipePostSelected = cellTapped
             .filter {
-            
                 if case .recipe = $0 {
                     return true
                 }
