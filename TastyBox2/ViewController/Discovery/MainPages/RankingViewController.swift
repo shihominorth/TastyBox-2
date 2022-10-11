@@ -10,8 +10,8 @@ import Kingfisher
 import RxSwift
 
 final class RankingViewController: UIViewController, BindableType {
-    typealias ViewModelType = RankingViewModel
-    var viewModel: RankingViewModel!
+    typealias ViewModelType = RankingViewModelLike
+    var viewModel: RankingViewModelLike!
 
     @IBOutlet weak var collectionView: UICollectionView!
     
@@ -30,6 +30,8 @@ final class RankingViewController: UIViewController, BindableType {
     }
     
     func bindViewModel() {
+        setUpDataSource()
+
         viewModel.recipesSubject
             .flatMapLatest({ [unowned self] recipes in
                 self.viewModel.getPublisher(recipes: recipes)
@@ -53,29 +55,36 @@ final class RankingViewController: UIViewController, BindableType {
             .disposed(by: viewModel.disposeBag)
     }
     
-  
     private func setUpDataSource() {
-        dataSource = RxRecipeRankingCollectionViewDataSource { [weak self] row, recipe, cell in
+        let configure:(Int, Recipe, RecipeRankingCVCell) -> Void = { [weak self] (row: Int, recipe: Recipe, cell: RecipeRankingCVCell) -> Void in
             
-            cell.titleLbl.text = recipe.title
-            cell.likedNumLbl.text = "\(recipe.likes)"
+            self?.setUpCell(row: row, recipe: recipe, cell: cell)
+        }
+        
+        dataSource = RxRecipeRankingCollectionViewDataSource(configure: configure)
+    }
+
+    private func setUpCell(row: Int, recipe: Recipe, cell: RecipeRankingCVCell) {
+        cell.titleLbl.text = recipe.title
+        cell.likedNumLbl.text = "\(recipe.likes)"
+        
+        let publishers:[String: User] = viewModel.pubishers
+        
+        if let publisher = publishers[recipe.userID] {
+            let name = publisher.name
+            cell.publisherLbl.text = "\(name)"
             
-            if let name = self?.viewModel.pubishers[recipe.userID]?.name {
-                cell.publisherLbl.text = "\(name)"
-            }
-            
-            if let rank = self?.viewModel.recipeRanking.first(where: { $0.recipeID == recipe.recipeID })?.rank {
-                cell.rankingLbl.text = "\(rank)"
-            }
-            
-            if let publisher = self?.viewModel.pubishers[recipe.userID],
-               let publisherImgUrl = URL(string: publisher.imageURLString) {
+            if let publisherImgUrl = URL(string: publisher.imageURLString) {
                 cell.publisherImgView.kf.setImage(with: publisherImgUrl, options: [.transition(.fade(1))])
             }
-            
-            if let recipeImgUrl = URL(string: recipe.imgString) {
-                cell.imgView.kf.setImage(with: recipeImgUrl, options: [.transition(.fade(1))])
-            }
+        }
+        
+        if let rank = viewModel.recipeRanking.first(where: { $0.recipeID == recipe.recipeID })?.rank as? Int {
+            cell.rankingLbl.text = "\(rank)"
+        }
+        
+        if let recipeImgUrl = URL(string: recipe.imgString) {
+            cell.imgView.kf.setImage(with: recipeImgUrl, options: [.transition(.fade(1))])
         }
     }
     
@@ -87,8 +96,6 @@ final class RankingViewController: UIViewController, BindableType {
         flowLayout.scrollDirection = .vertical
         
         collectionView.collectionViewLayout = flowLayout
-        
-        setUpDataSource()
     }
     
 
