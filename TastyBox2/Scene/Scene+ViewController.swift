@@ -193,10 +193,20 @@ extension Scene {
         switch scene {
             
         case .main(let viewModel):
-            let nc = storyboard.instantiateViewController(withIdentifier: "MainNC") as! UINavigationController
-            var vc = nc.viewControllers.first as! DiscoveryViewController
-            vc.bindViewModel(to: viewModel)
-            return nc
+            let tabBarcontroller = storyboard.instantiateInitialViewController() as! MainTabViewController
+            
+            let mainNavigationController = storyboard.instantiateViewController(withIdentifier: "MainNC") as! UINavigationController
+            var dicoveryViewController = mainNavigationController.viewControllers.first as! DiscoveryViewController
+            dicoveryViewController.bindViewModel(to: viewModel)
+            
+            let postNavigationController = storyboard.instantiateViewController(withIdentifier: "PostNC") as! UINavigationController
+            
+            let searchNavigationController = storyboard.instantiateViewController(withIdentifier: "searchNC") as! UINavigationController
+
+            
+            tabBarcontroller.viewControllers = [mainNavigationController, postNavigationController, searchNavigationController]
+            
+            return tabBarcontroller
         }
         
     }

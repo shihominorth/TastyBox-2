@@ -181,6 +181,7 @@
 		6FBCB92B26D7CBD500C050B2 /* ResetPasswordViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FBCB92726D7CBD500C050B2 /* ResetPasswordViewController.swift */; };
 		6FBCB92C26D7CBD500C050B2 /* EmailLinkAuthenticationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FBCB92826D7CBD500C050B2 /* EmailLinkAuthenticationViewController.swift */; };
 		6FBCB92D26D7CBD500C050B2 /* LoginMainPageViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FBCB92926D7CBD500C050B2 /* LoginMainPageViewController.swift */; };
+		6FBE15B428F5C52700E0E243 /* MainTabViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FBE15B328F5C52700E0E243 /* MainTabViewController.swift */; };
 		6FC062C026EAE4020016B990 /* Error+.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FC062BF26EAE4000016B990 /* Error+.swift */; };
 		6FC062C226ECA3D90016B990 /* Notification.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FC062C126ECA3D70016B990 /* Notification.swift */; };
 		6FC062C426ECC9B00016B990 /* LoginErrors.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FC062C326ECC9AF0016B990 /* LoginErrors.swift */; };
@@ -463,6 +464,7 @@
 		6FBCB92726D7CBD500C050B2 /* ResetPasswordViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ResetPasswordViewController.swift; sourceTree = "<group>"; };
 		6FBCB92826D7CBD500C050B2 /* EmailLinkAuthenticationViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EmailLinkAuthenticationViewController.swift; sourceTree = "<group>"; };
 		6FBCB92926D7CBD500C050B2 /* LoginMainPageViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LoginMainPageViewController.swift; sourceTree = "<group>"; };
+		6FBE15B328F5C52700E0E243 /* MainTabViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainTabViewController.swift; sourceTree = "<group>"; };
 		6FC062BF26EAE4000016B990 /* Error+.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Error+.swift"; sourceTree = "<group>"; };
 		6FC062C126ECA3D70016B990 /* Notification.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Notification.swift; sourceTree = "<group>"; };
 		6FC062C326ECC9AF0016B990 /* LoginErrors.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginErrors.swift; sourceTree = "<group>"; };
@@ -1195,6 +1197,7 @@
 				6FEF087A26F2A2DF00C02CDD /* DiscoveryViewController.swift */,
 				6FEF088E26F2AD1000C02CDD /* SideMenuTableViewController.swift */,
 				6FEF088126F2A72400C02CDD /* MainPages */,
+				6FBE15B328F5C52700E0E243 /* MainTabViewController.swift */,
 			);
 			path = Discovery;
 			sourceTree = "<group>";
@@ -1639,6 +1642,7 @@
 				6F71EBF427237536001BF538 /* RxGenreCollectionViewDataSource.swift in Sources */,
 				6FDBA27627D7078100B8F141 /* CreateRecipeViewController.swift in Sources */,
 				6FDB4F552768514400E0C630 /* SelectedImageViewController.swift in Sources */,
+				6FBE15B428F5C52700E0E243 /* MainTabViewController.swift in Sources */,
 				6F9A0D1C27101FFA00DABB45 /* SemiModalPresenter.swift in Sources */,
 				6FB970BD27250A3100350F84 /* CheckEvaluateRecipeTVCell.swift in Sources */,
 				6F9E041F2700C169005DCEF4 /* EditShoppingListViewController.swift in Sources */,

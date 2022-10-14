@@ -57,15 +57,6 @@ enum Scene {
     
 }
 
-
-//enum LoginScene {
-//    case main(LoginMainVM), resetPassword(ResetPasswordVM), emailVerify(RegisterEmailVM), setPassword(SetPasswordVM), profileRegister(RegisterMyInfoProfileVM), about(AboutViewModel), tutorial(TutorialVM)
-//}
-
-//enum DiscoveryScene {
-//    case discovery(DiscoveryVM) //, ranking(RankingVM)
-//}
-
 enum MainScene {
     case timeline(TimelineViewModel), ingredients(IngredientsViewModel), ranking(RankingViewModel)
 }

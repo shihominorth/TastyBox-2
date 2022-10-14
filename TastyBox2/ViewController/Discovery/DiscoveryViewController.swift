@@ -101,9 +101,7 @@ final class DiscoveryViewController: UIViewController, BindableType {
         setUpPageViewController()
     }
     
-    private func setUpNavigationBar() {
-        self.title = "TastyBox"
-        
+    private func setUpNavigationBar() {        
         let appearance = UINavigationBarAppearance()
         appearance.backgroundColor = #colorLiteral(red: 0.9994645715, green: 0.9797875285, blue: 0.7697802186, alpha: 1)
         appearance.titleTextAttributes = [.foregroundColor: UIColor.orange]
