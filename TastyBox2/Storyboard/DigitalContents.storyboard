@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="19529" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="21225" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="gLB-Dc-bwU">
     <device id="retina6_1" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="19519"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="21207"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="System colors in document resources" minToolsVersion="11.0"/>
         <capability name="collection view cell content view" minToolsVersion="11.0"/>
@@ -13,7 +13,7 @@
         <!--Select Digital Contents View Controller-->
         <scene sceneID="Xba-qN-RSJ">
             <objects>
-                <viewController storyboardIdentifier="selectDegitalContentsVC" id="gLB-Dc-bwU" customClass="SelectDigitalContentsViewController" customModule="TastyBox_2" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="selectDegitalContentsVC" id="gLB-Dc-bwU" customClass="SelectDigitalContentsViewController" customModule="TastyBox2" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="umU-mQ-ARJ">
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -28,7 +28,7 @@
                                     <inset key="sectionInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
                                 </collectionViewFlowLayout>
                                 <cells>
-                                    <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="selectDegitalContentsCVCell" id="ciW-Gf-WEa" customClass="SelectDigitalContentsCVCell" customModule="TastyBox_2" customModuleProvider="target">
+                                    <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="selectDegitalContentsCVCell" id="ciW-Gf-WEa" customClass="SelectDigitalContentsCVCell" customModule="TastyBox2" customModuleProvider="target">
                                         <rect key="frame" x="0.0" y="0.0" width="128" height="128"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <collectionViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" id="GSD-64-acG">
@@ -84,7 +84,7 @@
         <!--Selected Image View Controller-->
         <scene sceneID="6EN-pP-Kfd">
             <objects>
-                <viewController storyboardIdentifier="selectedImageVC" id="aau-YV-Iy2" customClass="SelectedImageViewController" customModule="TastyBox_2" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="selectedImageVC" id="aau-YV-Iy2" customClass="SelectedImageViewController" customModule="TastyBox2" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="MBT-q1-e1d">
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -113,7 +113,7 @@
         <!--Selected Video View Controller-->
         <scene sceneID="EF3-Te-s5y">
             <objects>
-                <viewController storyboardIdentifier="selectedVideoVC" id="5AD-B8-CPo" customClass="SelectedVideoViewController" customModule="TastyBox_2" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="selectedVideoVC" id="5AD-B8-CPo" customClass="SelectedVideoViewController" customModule="TastyBox2" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="Jff-su-ojp">
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -128,7 +128,7 @@
         <!--Select Thumbnail View Controller-->
         <scene sceneID="dOZ-zc-wvR">
             <objects>
-                <viewController storyboardIdentifier="selectThumbnailVC" id="E50-7P-hpD" customClass="SelectThumbnailViewController" customModule="TastyBox_2" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="selectThumbnailVC" id="E50-7P-hpD" customClass="SelectThumbnailViewController" customModule="TastyBox2" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="n4d-xy-gzm">
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -146,45 +146,9 @@
             </objects>
             <point key="canvasLocation" x="9288.4057971014499" y="-738.61607142857144"/>
         </scene>
-        <!--Navigation Controller-->
-        <scene sceneID="WuI-nR-Qr0">
-            <objects>
-                <navigationController storyboardIdentifier="selectDigitalContentsNC" automaticallyAdjustsScrollViewInsets="NO" id="axP-NW-KQo" sceneMemberID="viewController">
-                    <toolbarItems/>
-                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="E4X-QX-rKJ">
-                        <rect key="frame" x="0.0" y="44" width="414" height="44"/>
-                        <autoresizingMask key="autoresizingMask"/>
-                    </navigationBar>
-                    <nil name="viewControllers"/>
-                    <connections>
-                        <segue destination="gLB-Dc-bwU" kind="relationship" relationship="rootViewController" id="CPo-7Y-Jlg"/>
-                    </connections>
-                </navigationController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="XmE-Ru-ffP" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
-            </objects>
-            <point key="canvasLocation" x="6557.971014492754" y="-1501.3392857142856"/>
-        </scene>
-        <!--Navigation Controller-->
-        <scene sceneID="Vnz-OQ-7H0">
-            <objects>
-                <navigationController storyboardIdentifier="selectThumbnailNC" automaticallyAdjustsScrollViewInsets="NO" id="L1P-rp-t5m" sceneMemberID="viewController">
-                    <toolbarItems/>
-                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="ntN-8q-jLh">
-                        <rect key="frame" x="0.0" y="44" width="414" height="44"/>
-                        <autoresizingMask key="autoresizingMask"/>
-                    </navigationBar>
-                    <nil name="viewControllers"/>
-                    <connections>
-                        <segue destination="E50-7P-hpD" kind="relationship" relationship="rootViewController" id="xoq-t6-OHg"/>
-                    </connections>
-                </navigationController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="zuh-IK-xpk" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
-            </objects>
-            <point key="canvasLocation" x="8378.2608695652179" y="-738.61607142857144"/>
-        </scene>
     </scenes>
     <resources>
-        <image name="chevron.down.circle.fill" catalog="system" width="128" height="121"/>
+        <image name="chevron.down.circle.fill" catalog="system" width="128" height="123"/>
         <systemColor name="systemBackgroundColor">
             <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
         </systemColor>

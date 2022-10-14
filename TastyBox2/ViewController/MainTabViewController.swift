@@ -7,7 +7,10 @@
 
 import UIKit
 
-class MainTabViewController: UITabBarController {
+class MainTabViewController: UITabBarController, BindableType {
+    typealias ViewModelType = MainTabBarViewModelLike
+    
+    var viewModel: MainTabBarViewModelLike!
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -17,8 +20,18 @@ class MainTabViewController: UITabBarController {
 
     }
     
+    override func viewWillAppear(_ animated: Bool) {
+        self.initialViewControllers()
+    }
+    
+    func bindViewModel() {
+        
+    }
     
     
+    func initialViewControllers() {
+        viewModel.initializeChildren()
+    }
 
     /*
     // MARK: - Navigation

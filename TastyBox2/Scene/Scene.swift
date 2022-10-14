@@ -9,18 +9,24 @@ import Foundation
 import RxSwift
 
 enum Scene {
-    
     enum LoadingScene {
         case loading(LoadingVM), tutorial(TutorialVM)
     }
 
-    
     enum LoginScene {
         case main(LoginMainVM), resetPassword(ResetPasswordVM), emailVerify(EmailLinkAuthenticationVM), setPassword(SetPasswordVM), profileRegister(RegisterMyInfoProfileVM), about(AboutViewModel), tutorial(TutorialVM)
     }
     
+    enum MainScene {
+        case main(MainTabBarViewModelLike)
+    }
+    
     enum DiscoveryScene {
-        case main(DiscoveryViewModelLike)
+        case discovery(DiscoveryViewModelLike)
+    }
+    
+    enum SearchScene {
+        case main
     }
     
     enum WebSiteScene {
@@ -30,7 +36,6 @@ enum Scene {
     enum IngredientScene {
         case refrigerator(RefrigeratorVM), editRefrigerator(EditItemRefrigeratorVM), shoppinglist(ShoppinglistVM), editShoppinglist(EditShoppinglistVM)
     }
-
 
     enum CreateRecipeScene {
         case createRecipe(CreateRecipeVM), selectGenre(SelectGenresVM), uploadingVideo(UploadingVideoVM),  checkRecipe(CheckRecipeVM), publishRecipe(PublishRecipeVM)
@@ -53,7 +58,7 @@ enum Scene {
     }
     
    
-    case loadingScene(scene: LoadingScene), loginScene(scene: LoginScene), discovery(scene: DiscoveryScene), webSite(scene: WebSiteScene), ingredient(scene: IngredientScene), createReceipeScene(scene: CreateRecipeScene), profileScene(scene: ProfileScene), recipeScene(scene: RecipeDetailScene), reportScene(scene: ReportScene), digitalContentsPickerScene(scene: DigitalContentsPickerScene)
+    case loadingScene(scene: LoadingScene), loginScene(scene: LoginScene), main(scene: MainScene), discovery(scene: DiscoveryScene), search(scene: SearchScene), webSite(scene: WebSiteScene), ingredient(scene: IngredientScene), createReceipeScene(scene: CreateRecipeScene), profileScene(scene: ProfileScene), recipeScene(scene: RecipeDetailScene), reportScene(scene: ReportScene), digitalContentsPickerScene(scene: DigitalContentsPickerScene)
     
 }
 

@@ -114,7 +114,7 @@ final class RegisterMyInfoProfileVM: ViewModelBase {
     func goToNext() {
         
         let vm = DiscoveryViewModel(sceneCoodinator: self.sceneCoodinator, user: self.user)
-        let scene: Scene = .discovery(scene: .main(vm))
+        let scene: Scene = .discovery(scene: .discovery(vm))
         self.sceneCoodinator.transition(to: scene, type: .modal(presentationStyle: .fullScreen, modalTransisionStyle: .crossDissolve, hasNavigationController: true))
         
     }
