@@ -365,26 +365,26 @@
             </objects>
             <point key="canvasLocation" x="2413.04347826087" y="814.95535714285711"/>
         </scene>
-        <!--View Controller-->
+        <!--Main Search View Controller-->
         <scene sceneID="I22-lv-6pv">
             <objects>
-                <viewController storyboardIdentifier="mainSearchVC" id="lUs-95-JQv" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="mainSearchVC" id="lUs-95-JQv" customClass="MainSearchViewController" customModule="TastyBox2" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="LdJ-cb-AkC">
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <containerView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Ul4-Rv-ZTm">
-                                <rect key="frame" x="0.0" y="151" width="414" height="696"/>
+                                <rect key="frame" x="0.0" y="179" width="414" height="717"/>
                                 <connections>
                                     <segue destination="G6y-HH-S0D" kind="embed" id="edz-jO-640"/>
                                 </connections>
                             </containerView>
                             <searchBar contentMode="redraw" translatesAutoresizingMaskIntoConstraints="NO" id="cTb-EG-EOd">
-                                <rect key="frame" x="0.0" y="4" width="414" height="56"/>
+                                <rect key="frame" x="0.0" y="92" width="414" height="56"/>
                                 <textInputTraits key="textInputTraits"/>
                             </searchBar>
                             <segmentedControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="0" translatesAutoresizingMaskIntoConstraints="NO" id="gPH-x5-mps">
-                                <rect key="frame" x="0.0" y="112" width="414" height="32"/>
+                                <rect key="frame" x="0.0" y="148" width="414" height="32"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="414" id="bwu-nW-WGL"/>
                                 </constraints>
@@ -393,29 +393,27 @@
                                     <segment title="Second"/>
                                     <segment title=""/>
                                 </segments>
-                                <connections>
-                                    <action selector="actionSegmentActionWithSender:" destination="lUs-95-JQv" eventType="valueChanged" id="vPr-19-LIp"/>
-                                </connections>
                             </segmentedControl>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="VCS-Br-kfe"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                         <constraints>
-                            <constraint firstItem="cTb-EG-EOd" firstAttribute="top" secondItem="LdJ-cb-AkC" secondAttribute="topMargin" constant="-88" id="7S0-Sw-BnE"/>
-                            <constraint firstItem="gPH-x5-mps" firstAttribute="top" secondItem="VCS-Br-kfe" secondAttribute="top" constant="20" id="EXX-9x-JNC"/>
+                            <constraint firstItem="cTb-EG-EOd" firstAttribute="top" secondItem="LdJ-cb-AkC" secondAttribute="topMargin" id="7S0-Sw-BnE"/>
+                            <constraint firstItem="gPH-x5-mps" firstAttribute="top" secondItem="VCS-Br-kfe" secondAttribute="top" constant="56" id="EXX-9x-JNC"/>
                             <constraint firstItem="gPH-x5-mps" firstAttribute="leading" secondItem="cTb-EG-EOd" secondAttribute="leading" id="IfC-h7-J5a"/>
                             <constraint firstItem="gPH-x5-mps" firstAttribute="trailing" secondItem="cTb-EG-EOd" secondAttribute="trailing" id="M2c-GU-M9i"/>
                             <constraint firstItem="gPH-x5-mps" firstAttribute="centerX" secondItem="LdJ-cb-AkC" secondAttribute="centerX" id="a4I-G5-FkJ"/>
                             <constraint firstItem="gPH-x5-mps" firstAttribute="trailing" secondItem="Ul4-Rv-ZTm" secondAttribute="trailing" id="aIC-AJ-Pyb"/>
                             <constraint firstItem="gPH-x5-mps" firstAttribute="leading" secondItem="Ul4-Rv-ZTm" secondAttribute="leading" id="jcd-KS-M7M"/>
-                            <constraint firstItem="VCS-Br-kfe" firstAttribute="bottom" secondItem="Ul4-Rv-ZTm" secondAttribute="bottom" constant="-34" id="nKk-Y3-50Q"/>
-                            <constraint firstItem="Ul4-Rv-ZTm" firstAttribute="top" secondItem="gPH-x5-mps" secondAttribute="bottom" constant="8" id="v9g-nn-FUW"/>
+                            <constraint firstItem="VCS-Br-kfe" firstAttribute="bottom" secondItem="Ul4-Rv-ZTm" secondAttribute="bottom" constant="-83" id="nKk-Y3-50Q"/>
+                            <constraint firstItem="Ul4-Rv-ZTm" firstAttribute="top" secondItem="gPH-x5-mps" secondAttribute="bottom" id="v9g-nn-FUW"/>
                         </constraints>
                     </view>
                     <navigationItem key="navigationItem" id="pQZ-RJ-xcW"/>
                     <connections>
                         <outlet property="containerView" destination="Ul4-Rv-ZTm" id="QXK-hN-gJX"/>
-                        <outlet property="segmentControl" destination="gPH-x5-mps" id="3ht-qY-mlj"/>
+                        <outlet property="searchBar" destination="cTb-EG-EOd" id="Eca-eo-NnW"/>
+                        <outlet property="segmentedControl" destination="gPH-x5-mps" id="smy-gk-bnU"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="kmY-1I-juq" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>

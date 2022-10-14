@@ -223,7 +223,7 @@ extension Scene {
         case .main:
             let navigationViewController = storyboard.instantiateViewController(withIdentifier: "searchNC") as! UINavigationController
             
-            let searchViewController = navigationViewController.topViewController!
+            let searchViewController = navigationViewController.topViewController as! MainSearchViewController
             
             return searchViewController
         }
