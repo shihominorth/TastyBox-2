@@ -13,20 +13,27 @@ import SafariServices
 extension Scene {
     
     func viewController() -> UIViewController {
-
         switch self {
             
         case let .loadingScene(scene):
             
-            return generateViewController(scene: scene)
+            return generateViewController(loadingScene: scene)
           
         case let .loginScene(scene):
             
             return generateViewController(loginScene: scene)
             
+        case let .main(scene):
+            
+            return generateViewController(mainScene: scene)
+            
         case let .discovery(scene):
             
             return generateViewController(discoveryScene: scene)
+            
+        case .search:
+            
+            return generateViewController(searchScene: .main)
             
         case let .webSite(scene):
             
@@ -34,7 +41,7 @@ extension Scene {
             
         case let .ingredient(scene):
             
-            return generateViewController(scene: scene)
+            return generateViewController(IngredientScene: scene)
             
         case let .createReceipeScene(scene):
             
@@ -94,16 +101,14 @@ extension MainScene {
 }
 
 extension Scene {
-    
-    
-    func generateViewController(scene: LoadingScene) -> UIViewController {
+    func generateViewController(loadingScene scene: LoadingScene) -> UIViewController {
         let storyboard = UIStoryboard(name: "Tutorial", bundle: nil)
         
         switch scene {
         case .loading(let viewModel):
             
             let nc = storyboard.instantiateViewController(withIdentifier: "loadingNC") as! UINavigationController
-            var vc = nc.viewControllers.first as! LoadingViewController
+            var vc = nc.topViewController as! LoadingViewController
             vc.bindViewModel(to: viewModel)
           
             return nc
@@ -128,8 +133,8 @@ extension Scene {
         
         case .main(let viewModel):
         
-            let nc = storyboard.instantiateViewController(withIdentifier: "loginMainNC")
-            var vc = nc.children.first as! LoginMainPageViewController
+            let nc = storyboard.instantiateViewController(withIdentifier: "loginMainNC") as! UINavigationController
+            var vc = nc.topViewController as! LoginMainPageViewController
             
             vc.bindViewModel(to: viewModel)
             
@@ -153,7 +158,7 @@ extension Scene {
         case .setPassword(let viewModel):
             
             let nc = storyboard.instantiateViewController(withIdentifier: "setPassword") as! UINavigationController
-            var vc = nc.viewControllers.first as! SetPasswordViewController
+            var vc = nc.topViewController as! SetPasswordViewController
             //        var vc = storyboard.instantiateViewController(identifier: "setPassword") as! SetPasswordViewController
             
             vc.bindViewModel(to: viewModel)
@@ -185,20 +190,43 @@ extension Scene {
         
     }
     
-    func generateViewController(discoveryScene scene: DiscoveryScene) -> UIViewController {
-        
+    func generateViewController(mainScene scene: MainScene) -> UIViewController {
         let storyboard = UIStoryboard(name: "Main", bundle: nil)
-        //    let aboutStoryBoard =  UIStoryboard(name: "About", bundle: nil)
         
         switch scene {
-            
         case .main(let viewModel):
-            let nc = storyboard.instantiateViewController(withIdentifier: "MainNC") as! UINavigationController
-            var vc = nc.viewControllers.first as! DiscoveryViewController
-            vc.bindViewModel(to: viewModel)
-            return nc
+            var mainTabBarController = storyboard.instantiateInitialViewController() as! MainTabViewController
+            mainTabBarController.bindViewModel(to: viewModel)
+            
+            return mainTabBarController
         }
         
+    }
+    
+    func generateViewController(discoveryScene scene: DiscoveryScene) -> UIViewController {
+        let storyboard = UIStoryboard(name: "Main", bundle: nil)
+
+        switch scene {
+        case .discovery(let viewModel):
+            let navigationViewController = storyboard.instantiateViewController(withIdentifier: "discoveryNC") as! UINavigationController
+            var discoveryViewController = navigationViewController.topViewController as! DiscoveryViewController
+            discoveryViewController.bindViewModel(to: viewModel)
+            
+            return discoveryViewController
+        }
+    }
+    
+    func generateViewController(searchScene scene: SearchScene) -> UIViewController {
+        let storyboard = UIStoryboard(name: "Main", bundle: nil)
+
+        switch scene {
+        case .main:
+            let navigationViewController = storyboard.instantiateViewController(withIdentifier: "searchNC") as! UINavigationController
+            
+            let searchViewController = navigationViewController.topViewController as! MainSearchViewController
+            
+            return searchViewController
+        }
     }
     
     func generateViewController(webSiteScene scene: WebSiteScene) -> UIViewController {
@@ -224,7 +252,7 @@ extension Scene {
         }
     }
     
-    func generateViewController(scene: IngredientScene) -> UIViewController {
+    func generateViewController(IngredientScene scene: IngredientScene) -> UIViewController {
 
         let storyboard = UIStoryboard(name: "Ingredient", bundle: nil)
         
@@ -272,7 +300,7 @@ extension Scene {
             
 //            var vc = storyboard.instantiateViewController(withIdentifier: "createRecipe") as! CreateRecipeViewController
             let nc = storyboard.instantiateViewController(withIdentifier: "createRecipeNC") as! UINavigationController
-            var vc = nc.viewControllers.first as! CreateRecipeViewController
+            var vc = nc.topViewController as! CreateRecipeViewController
             
             vc.bindViewModel(to: viewModel)
             
@@ -284,7 +312,7 @@ extension Scene {
             let nc = storyboard.instantiateViewController(withIdentifier: "selectGenreNC") as! UINavigationController
 
 //            var vc = nc.viewControllers.first as? SelectGenresViewController
-            var vc = nc.viewControllers.first as? SearchGenresViewController
+            var vc = nc.topViewController as? SearchGenresViewController
 
 //            var vc = storyboard.instantiateViewController(withIdentifier: "selectGenre") as! SelectGenresViewController
 
@@ -367,9 +395,7 @@ extension Scene {
     }
     
     func generateViewController(recipeScene scene: RecipeDetailScene) -> UIViewController {
-        
         let storyBoard = UIStoryboard(name: "RecipeDetail", bundle: nil)
-        
         
         switch scene {
         case .recipe(let viewModel):
@@ -447,16 +473,12 @@ extension Scene {
             
         case .selectDigitalContents(let viewModel):
             
-            let nc = storyBoard.instantiateViewController(withIdentifier: "selectDigitalContentsNC") as! UINavigationController
-////
+            let nc = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "postNC") as! UINavigationController
             var vc = nc.topViewController as! SelectDigitalContentsViewController
-            
-//            var vc = storyBoard.instantiateViewController(withIdentifier: "selectDegitalContentsVC") as! SelectDigitalContentsViewController
             
             vc.bindViewModel(to: viewModel)
             
-//            return vc
-            return nc
+            return vc
             
         case .selectedImage(let viewModel):
             
@@ -477,7 +499,7 @@ extension Scene {
         case .selectThumbnail(let viewModel):
             
             let nc = storyBoard.instantiateViewController(withIdentifier: "selectThumbnailNC") as! UINavigationController
-            var vc = nc.viewControllers.first as! SelectThumbnailViewController
+            var vc = nc.topViewController as! SelectThumbnailViewController
 //            var vc = storyBoard.instantiateViewController(withIdentifier: "selectThumbnailVC") as! SelectThumbnailViewController
             
             

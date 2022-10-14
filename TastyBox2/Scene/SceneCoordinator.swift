@@ -38,6 +38,37 @@ class SceneCoordinator: NSObject, SceneCoordinatorType {
         }
     }
     
+    func initalizeMainTabBarControllerChildren(firstTabScene: Scene, secondTabScene: Scene, thirdTabScene: Scene) {
+        guard let mainTabBarController = currentViewController as? MainTabViewController,
+        let childNavigationViewControllers = mainTabBarController.children as? [UINavigationController] else {
+            return
+        }
+        
+        childNavigationViewControllers.enumerated().forEach { index, navigationViewController in
+            var viewController: UIViewController? {
+                switch index {
+                case 0:
+                    return firstTabScene.viewController()
+                case 1:
+                    return secondTabScene.viewController()
+                case 2:
+                    return thirdTabScene.viewController()
+                default:
+                    return nil
+                }
+            }
+            
+            guard let viewController else {
+                return
+            }
+            
+            let childNavigationViewController = childNavigationViewControllers[index]
+            childNavigationViewController.viewControllers = [viewController]
+            
+        }
+    
+    }
+    
     
     @discardableResult
     func transition(to scene: Scene, type: SceneTransitionType) -> Completable {
@@ -51,7 +82,6 @@ class SceneCoordinator: NSObject, SceneCoordinatorType {
             subject.onCompleted()
             
         case .push:
-            
             guard let navigationController = currentViewController.navigationController else {
                 fatalError("Can't push a view controller without a current navigation controller")
             }
@@ -68,7 +98,6 @@ class SceneCoordinator: NSObject, SceneCoordinatorType {
             }
             
         case .pushFromBottom:
-            
             guard let navigationController = currentViewController.navigationController else {
                 fatalError("Can't push a view controller without a current navigation controller")
             }
@@ -90,7 +119,6 @@ class SceneCoordinator: NSObject, SceneCoordinatorType {
             
             
         case let .modal(presentationStyle, transitionStyle, hasNavigationController):
-            
             viewController.modalPresentationStyle = presentationStyle ?? .fullScreen
             viewController.modalTransitionStyle =  transitionStyle ?? .flipHorizontal
             
@@ -122,9 +150,7 @@ class SceneCoordinator: NSObject, SceneCoordinatorType {
                 currentViewController = SceneCoordinator.actualViewController(for: viewController)
             }
             
-            
         case .modalHalf:
-            
             semiModalPresenter.viewController = viewController
             
             currentViewController.present(viewController, animated: true) { [unowned self] in
@@ -134,7 +160,6 @@ class SceneCoordinator: NSObject, SceneCoordinatorType {
             }
             
         case .photoPick(let completion):
-            
             if let viewController = viewController as? PHPickerViewController {
                 
                 if !(currentViewController is PHPickerViewController)  {
@@ -160,7 +185,6 @@ class SceneCoordinator: NSObject, SceneCoordinatorType {
             }
             
         case .videoPick(let compeltion):
-            
             if let viewController = viewController as? PHPickerViewController {
                 
                 if !(currentViewController is PHPickerViewController)  {
@@ -180,7 +204,6 @@ class SceneCoordinator: NSObject, SceneCoordinatorType {
                 }
             }
         case .camera(let completion):
-            
             if let viewController = viewController as? UIImagePickerController {
                 
                 currentViewController.present(viewController, animated: true) {
@@ -198,7 +221,6 @@ class SceneCoordinator: NSObject, SceneCoordinatorType {
             }
             
         case .centerCard:
-            
             let segue = CenterCardSegue(identifier: nil, source: currentViewController, destination: viewController) { [unowned self] in
                 
                 self.currentViewController = SceneCoordinator.actualViewController(for: viewController)
@@ -221,7 +243,6 @@ class SceneCoordinator: NSObject, SceneCoordinatorType {
             segue.perform()
             
         case .web:
-            
             currentViewController.present(viewController, animated: true) {
                 subject.onCompleted()
             }

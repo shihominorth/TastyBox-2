@@ -25,7 +25,6 @@ final class LoadingVM: ViewModelBase {
         // login already
         
         if let user = Auth.auth().currentUser {
-        
             self.apiType.isRegisteredMyInfo
                 .retry(3)
                 .catch { err in
@@ -43,17 +42,13 @@ final class LoadingVM: ViewModelBase {
                     self.sceneCoodinator.transition(to: firstScene, type: .push)
                     
                 } else {
-                    
-                    let vm = DiscoveryViewModel(sceneCoodinator: self.sceneCoodinator, user: user)
-                    let firstScene: Scene = .discovery(scene: .main(vm))
+                    let vm = MainTabBarViewModel(sceneCoordinator: self.sceneCoodinator, user: user)
+                    let firstScene: Scene = .main(scene: .main(vm))
                     
                     self.sceneCoodinator.transition(to: firstScene, type: .root)
-                    
                 }
                 
             }).disposed(by: disposeBag)
-            
-            
         }
         // not login yet.
         else {

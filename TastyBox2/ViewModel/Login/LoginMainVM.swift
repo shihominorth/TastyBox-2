@@ -185,7 +185,7 @@ final class LoginMainVM: ViewModelBase {
     private func goToMain(user: Firebase.User) {
 
         let vm = DiscoveryViewModel(sceneCoodinator: self.sceneCoodinator, user: user)
-        let scene: Scene = .discovery(scene: .main(vm))
+        let scene: Scene = .discovery(scene: .discovery(vm))
         self.sceneCoodinator.transition(to: scene, type: .root)
 
     }
