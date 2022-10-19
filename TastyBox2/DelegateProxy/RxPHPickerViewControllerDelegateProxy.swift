@@ -14,7 +14,7 @@ import RxCocoa
 class RxPHPickerViewControllerDelegateProxy: DelegateProxy<PHPickerViewController, PHPickerViewControllerDelegate>,  PHPickerViewControllerDelegate {
     
     public weak private(set) var picker: PHPickerViewController?
-    internal lazy var imageSubject = PublishSubject<Data>()
+    internal lazy var imageSubject = PublishSubject<URL>()
     internal lazy var urlSubject = PublishSubject<URL>()
     
     public init(picker: PHPickerViewController) {
@@ -31,21 +31,13 @@ class RxPHPickerViewControllerDelegateProxy: DelegateProxy<PHPickerViewControlle
         guard let provider = results.first?.itemProvider else { return }
         
         if provider.hasItemConformingToTypeIdentifier(UTType.image.identifier) {
-
-            provider.loadDataRepresentation(forTypeIdentifier: "public.image") { data, err in
-               
-                if let err = err {
-
-                    self.imageSubject.onError(err)
-
-                }
-                else if let data = data {
-
-                    self.imageSubject.onNext(data)
-
+            provider.loadFileRepresentation(forTypeIdentifier: UTType.image.identifier) { url, error in
+                if let error = error {
+                    self.imageSubject.onError(error)
+                } else if let url = url {
+                    self.imageSubject.onNext(url)
                 }
             }
-            
         }
         else if provider.hasItemConformingToTypeIdentifier(UTType.video.identifier) ||  provider.hasItemConformingToTypeIdentifier(UTType.quickTimeMovie.identifier) {
             
@@ -94,10 +86,10 @@ extension Reactive where Base: PHPickerViewController {
         return RxPHPickerViewControllerDelegateProxy.proxy(for: base)
     }
     
-    public var imageData: Observable<Data> {
+    public var imageData: Observable<URL> {
         
         let proxy = RxPHPickerViewControllerDelegateProxy.proxy(for: base)
-        proxy.imageSubject = PublishSubject<Data>()
+        proxy.imageSubject = PublishSubject<URL>()
         
         return proxy.imageSubject.asObservable()
     }

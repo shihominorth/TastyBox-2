@@ -20,7 +20,7 @@ enum SceneTransitionType {
     case VCAsRoot
     case modalHalf
     case imagePick
-    case photoPick(completion: (Data) -> Void)
+    case photoPick(completion: (URL) -> Void)
     case videoPick(compeletion: (URL) -> Void)
     case camera(completion: (Data) -> Void)
     case centerCard

@@ -21,7 +21,7 @@ final class RegisterMyInfoProfileVM: ViewModelBase {
     let user: Firebase.User
     
     let defaultUserImageData =  #imageLiteral(resourceName: "defaultUserImage")
-    var userImageSubject: BehaviorSubject<URL>!
+    var userImageSubject: BehaviorSubject<URL?>!
     var isEnableDone = BehaviorRelay(value: false)
     var observeTxtFields = BehaviorRelay<String>(value: "")
     
@@ -44,7 +44,8 @@ final class RegisterMyInfoProfileVM: ViewModelBase {
         self.user = user
         
         self.photoPickerSubject = PublishSubject<Data>()
-        self.userImageSubject = BehaviorSubject<URL>(value: URL(fileURLWithPath: ""))
+        let defaultImageData = try? Bundle.main.path(forResource: "defaultUserImage", ofType: "png")?.asURL()
+        self.userImageSubject = BehaviorSubject<URL?>(value: defaultImageData)
         
         cuisineTypeOptions = ["Chinese Food", "Japanese Food", "Thai food"]
         familySizeOptions = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15", "16", "17", "18", "19", "20"]
@@ -67,6 +68,7 @@ final class RegisterMyInfoProfileVM: ViewModelBase {
                 }
                 return .empty()
             }
+        
     }
     
     func toPickPhoto() {
@@ -75,7 +77,7 @@ final class RegisterMyInfoProfileVM: ViewModelBase {
         
         self.sceneCoodinator.transition(to: scene, type: .photoPick(completion: { data in
             
-//            self.userImageSubject.onNext(data)
+            self.userImageSubject.onNext(data)
             
         }))
         
@@ -95,13 +97,11 @@ final class RegisterMyInfoProfileVM: ViewModelBase {
     
     func registerUser() -> Observable<Void> {
         
-        return Observable.combineLatest(userName, email, familySize, cuisineType)
-            .flatMap { [unowned self] (name, email, familySize, cuisineType)  in
-                
-                self.apiType.userRegister(userName: name, email: email, familySize: familySize, cuisineType: cuisineType, accountImage: Data())
+        return Observable.combineLatest(userName, email, familySize, cuisineType, userImageSubject)
+            .flatMap { [weak self] (name, email, familySize, cuisineType, userImage)  in
+                self?.apiType.userRegister(userName: name, email: email, familySize: familySize, cuisineType: cuisineType, accountImage: userImage) ?? .empty()
             }
             .catch { err in
-                
                 print(err)
                 
                 err.handleFireStoreError()?.showErrNotification()
