@@ -188,7 +188,6 @@ class SelectThumbnailViewController: UIViewController, BindableType {
  
     
     func bindViewModel() {
-        
         tap.rx.event
             .throttle(.microseconds(1000), scheduler: MainScheduler.instance)
             .debug("tap tapped")
@@ -213,10 +212,8 @@ class SelectThumbnailViewController: UIViewController, BindableType {
         
         self.selectBtn.rx.tap
             .withLatestFrom(viewModel.imageDataSubject)
-            .subscribe(onNext: { [unowned self] data in
-                
-                self.viewModel.selectThumbnail(imageData: data)
-                
+            .subscribe(onNext: { [weak self] url in
+                self?.viewModel.selectThumbnail(imageUrl: url)
             })
             .disposed(by: viewModel.disposeBag)
         
@@ -227,18 +224,5 @@ class SelectThumbnailViewController: UIViewController, BindableType {
                 
             })
             .disposed(by: viewModel.disposeBag)
-        
     }
-    
-    
-    /*
-     // MARK: - Navigation
-     
-     // In a storyboard-based application, you will often want to do a little preparation before navigation
-     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-     // Get the new view controller using segue.destination.
-     // Pass the selected object to the new view controller.
-     }
-     */
-    
 }

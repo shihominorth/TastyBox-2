@@ -121,7 +121,7 @@ class EditInstructionTVCell: UITableViewCell {
     @IBOutlet weak var txtView: UITextView!
     
     var tapped: Observable<Void>!
-    let imgSubject = PublishSubject<Data>()
+    let imgSubject = PublishSubject<URL>()
     
     var disposeBag = DisposeBag()
     
@@ -129,8 +129,6 @@ class EditInstructionTVCell: UITableViewCell {
     lazy var loadingView: UIView = {
         
         let view = UIView()
-//        view.alpha = 0.5
-       
         view.backgroundColor = #colorLiteral(red: 1, green: 1, blue: 1, alpha: 1)
         
         return view
@@ -165,16 +163,14 @@ class EditInstructionTVCell: UITableViewCell {
         
         imgSubject
             .observe(on: MainScheduler.instance)
-            .subscribe(onNext: { [unowned self] data in
+                .subscribe(onNext: { [unowned self] url in
+                    if let data = try? Data(contentsOf: url),
+                       let image = UIImage(data: data) {
+                        self.imgViewBtn.setBackgroundImage(image, for: .normal)
+                    }
                     
-                
-                if let image = UIImage(data: data) {
-                    self.imgViewBtn.setBackgroundImage(image, for: .normal)
-                        
-                }
-                    
-                indicator.stopAnimating()
-                loadingView.removeFromSuperview()
+                    indicator.stopAnimating()
+                    loadingView.removeFromSuperview()
                     
             })
             .disposed(by: disposeBag)
@@ -192,7 +188,7 @@ class EditInstructionTVCell: UITableViewCell {
         
     }
     
-    fileprivate func setUploadingView() {
+    private func setUploadingView() {
         
         imgViewBtn.addSubview(loadingView)
         loadingView.frame = imgViewBtn.frame

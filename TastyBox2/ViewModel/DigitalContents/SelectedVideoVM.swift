@@ -59,21 +59,17 @@ final class SelectedVideoVM: ViewModelBase {
     
     
     func getThumbnail(url: URL) -> Observable<Data> {
-        
         return self.apiType.getThumbnailData(url: url)
-        
     }
     
     
-    func addVideo(data: Data, url: URL) {
+    func addVideo(data: URL?, url: URL) {
         
-        let vm = CreateRecipeVM(sceneCoodinator: self.sceneCoodinator, user: self.user, imgData: data, videoUrl: url, kind: .video)
+        let vm = CreateRecipeVM(sceneCoodinator: self.sceneCoodinator, user: self.user, imageUrl: url, videoUrl: url, kind: .video)
         
         let scene: Scene = .createReceipeScene(scene: .createRecipe(vm))
         
         self.sceneCoodinator.transition(to: scene, type: .push)
-           
-        
     }
     
 }

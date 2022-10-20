@@ -14,8 +14,8 @@ final class EditMainImageTVCell: UITableViewCell {
 
     @IBOutlet weak var collectionView: UICollectionView!
     
-    var mainImgDataSubject = PublishSubject<Data>()
-    var thumbnailDataSubject = PublishSubject<Data>()
+    let mainImgDataSubject = PublishSubject<URL>()
+    let thumbnailDataSubject = PublishSubject<URL>()
    
     var mainImage = UIImage(named: "PhotoUpload")
     var thumbnailImg = UIImage(named: "VideoUpload")
@@ -35,6 +35,37 @@ final class EditMainImageTVCell: UITableViewCell {
     override func setSelected(_ selected: Bool, animated: Bool) {
         super.setSelected(selected, animated: animated)
 
+        setUpCollectionView()
+        
+        mainImgDataSubject
+            .observe(on: MainScheduler.instance)
+            .subscribe(onNext: { [weak self] url in
+                guard let data = try? Data(contentsOf: url) else {
+                    return
+                }
+                self?.mainImage = UIImage(data: data)
+                
+                self?.collectionView.reloadItems(at: [IndexPath(row: 0, section: 0)])
+                
+            })
+            .disposed(by: disposeBag)
+        
+        thumbnailDataSubject
+            .observe(on: MainScheduler.instance)
+            .subscribe(onNext: { [weak self] url in
+                guard let data = try? Data(contentsOf: url) else {
+                    return
+                }
+                
+                self?.thumbnailImg = UIImage(data: data)
+                self?.collectionView.reloadItems(at: [IndexPath(row: 1, section: 0)])
+                
+            })
+            .disposed(by: disposeBag)
+
+    }
+    
+    private func setUpCollectionView() {
         // Configure the view for the selected state
         collectionView.dataSource = self
         
@@ -47,38 +78,10 @@ final class EditMainImageTVCell: UITableViewCell {
         collectionView.collectionViewLayout = layout
         
         collectionView.backgroundColor = hexStringToUIColor(hex: "#FEFACA")
-        
-        mainImgDataSubject
-            .observe(on: MainScheduler.instance)
-            .subscribe(onNext: { [unowned self] data in
-                
-                self.mainImage = UIImage(data: data)
-                self.collectionView.reloadItems(at: [IndexPath(row: 0, section: 0)])
-                
-            }, onError: { err in
-                
-                print(err)
-                
-            })
-            .disposed(by: disposeBag)
-        
-        thumbnailDataSubject
-            .observe(on: MainScheduler.instance)
-            .subscribe(onNext: { [unowned self] data in
-                
-                self.thumbnailImg = UIImage(data: data)
-                self.collectionView.reloadItems(at: [IndexPath(row: 1, section: 0)])
-                
-            }, onError: { err in
-                
-                print(err)
-                
-            })
-            .disposed(by: disposeBag)
-
     }
+    
 
-    func hexStringToUIColor(hex: String) -> UIColor {
+    private func hexStringToUIColor(hex: String) -> UIColor {
         var cString:String = hex.trimmingCharacters(in: .whitespacesAndNewlines).uppercased()
 
         if (cString.hasPrefix("#")) {
@@ -166,9 +169,6 @@ extension EditMainImageTVCell: UICollectionViewDataSource {
                 return lbl
            
             }()
-    
-           
-            
            
             selectOthersView.addSubview(txtLbl)
             
@@ -241,15 +241,11 @@ extension EditMainImageTVCell: UICollectionViewDataSource {
             
             
             NSLayoutConstraint.activate([
-                
                 selectOthersView.leadingAnchor.constraint(equalTo: cell.leadingAnchor),
                 selectOthersView.trailingAnchor.constraint(equalTo: cell.trailingAnchor),
                 selectOthersView.bottomAnchor.constraint(equalTo: cell.bottomAnchor),
                 selectOthersView.heightAnchor.constraint(equalToConstant: cell.frame.height * 0.2)
-            
             ])
-            
-            
               
             return cell
         }
