@@ -74,26 +74,20 @@ final class CreateRecipeDM: CreateRecipeDMProtocol {
             imageGenerator.appliesPreferredTrackTransform = true
             
             do {
-                
                 let thumbnailCGImage = try imageGenerator.copyCGImage(at: CMTimeMake(value: 1, timescale: 60), actualTime: nil)
                
-                if let data = thumbnailCGImage.data {
-                 
-                    observer.onNext(data)
-
+                guard let data = thumbnailCGImage.data else {
+                    return
                 }
                 
+                observer.onNext(data)
+                
             } catch (let err) {
-               
                 observer.onError(err)
-
             }
-            
             return Disposables.create()
         }
-       
     }
-    
     
     static func getMyGenresIDs(user: Firebase.User) -> Observable<[String]> {
         

@@ -11,7 +11,7 @@ import Photos
 import RxSwift
 
 protocol SelectThumbnailDelegate: AnyObject {
-    func selectedThumbnail(imageData: Data)
+    func selectedThumbnail(imageData: URL)
 }
 
 final class SelectThumbnailVM: ViewModelBase {
@@ -20,16 +20,16 @@ final class SelectThumbnailVM: ViewModelBase {
     private let apiType: CreateRecipeDMProtocol.Type
     
     let user: Firebase.User
-    var imageDataSubject: BehaviorSubject<Data>
+    let imageDataSubject: BehaviorSubject<URL>
     
     weak var delegate: SelectThumbnailDelegate?
     
-    init(sceneCoodinator: SceneCoordinator, user: Firebase.User, apiType: CreateRecipeDMProtocol.Type = CreateRecipeDM.self, imageData: Data) {
+    init(sceneCoodinator: SceneCoordinator, user: Firebase.User, apiType: CreateRecipeDMProtocol.Type = CreateRecipeDM.self, imageData: URL) {
         
         self.sceneCoodinator = sceneCoodinator
         self.user = user
         self.apiType = apiType
-        self.imageDataSubject = BehaviorSubject<Data>(value: imageData)
+        self.imageDataSubject = BehaviorSubject<URL>(value: imageData)
         
     }
     
@@ -45,23 +45,19 @@ final class SelectThumbnailVM: ViewModelBase {
         
     }
     
-    func selectThumbnail(imageData: Data) {
+    func selectThumbnail(imageUrl: URL) {
         
-        if let delegate = delegate {
-           
-            self.sceneCoodinator.pop(animated: true) {
-                
-                delegate.selectedThumbnail(imageData: imageData)
-                
-            }
+        guard let delegate = delegate else {
+            return
         }
         
+        self.sceneCoodinator.pop(animated: true) {
+            delegate.selectedThumbnail(imageData: imageUrl)
+        }
     }
     
     func dissmiss() {
-
         self.sceneCoodinator.pop(animated: true)
-
     }
     
 }
@@ -90,10 +86,6 @@ extension SelectThumbnailVM: SelectDegitalContentDelegate {
     }
     
     func selectedImage(imageData: Data) {
-
-        self.imageDataSubject.onNext(imageData)
-
-        
+//        self.imageDataSubject.onNext(imageData)
     }
-
 }

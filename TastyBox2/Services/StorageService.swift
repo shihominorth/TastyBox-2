@@ -11,7 +11,7 @@ import RxSwift
 
 final class StorageService {
     
-    func addImage(path: StorageReference, image: Data) -> Observable<Data> {
+    func addImage(path: StorageReference, url: URL) -> Observable<URL> {
         
        
         return .create { observer in
@@ -19,7 +19,7 @@ final class StorageService {
             let metaData = StorageMetadata()
             metaData.contentType = "image/jpg"
             
-            let uploadTask = path.putData(image, metadata: metaData)
+            let uploadTask = path.putFile(from: url)
            
             // Listen for state changes, errors, and completion of the upload.
             uploadTask.observe(.resume) { snapshot in
@@ -42,7 +42,7 @@ final class StorageService {
             
             uploadTask.observe(.success) { snapShot in
                 
-                observer.onNext(image)
+                observer.onNext(url)
                 
             }
             

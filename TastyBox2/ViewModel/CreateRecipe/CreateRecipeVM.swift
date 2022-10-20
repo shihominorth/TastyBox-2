@@ -17,7 +17,7 @@ import SCLAlertView
 
 
 enum RecipeInput {
-    case mainPhoto(Observable<Data>), isAddedVideo(Observable<Bool>), videoURL(Observable<URL>), title(Observable<String>), time(Observable<String>), serving(Observable<String>), isVIP(Observable<Bool>), selectedGenres(Observable<[Genre]>), ingredients(Observable<[Ingredient]>), instructions(Observable<[Instruction]>)
+    case mainPhoto(Observable<URL>), isAddedVideo(Observable<Bool>), videoURL(Observable<URL>), title(Observable<String>), time(Observable<String>), serving(Observable<String>), isVIP(Observable<Bool>), selectedGenres(Observable<[Genre]>), ingredients(Observable<[Ingredient]>), instructions(Observable<[Instruction]>)
 }
 
 final class CreateRecipeVM: ViewModelBase {
@@ -31,33 +31,33 @@ final class CreateRecipeVM: ViewModelBase {
     
     let keyboardClose = NotificationCenter.default.rx.notification(UIResponder.keyboardWillHideNotification).observe(on: MainScheduler.instance) //全部終わったらkeyboard sizeだけ返すようにする
     
-    var isUserScrollingRelay = BehaviorRelay<Bool>(value: true)
+    let isUserScrollingRelay = BehaviorRelay<Bool>(value: true)
     
-    var isEditableIngredientsRelay = BehaviorRelay<Bool>(value: false)
-    var isEditInstructionsRelay = BehaviorRelay<Bool>(value: false)
+    let isEditableIngredientsRelay = BehaviorRelay<Bool>(value: false)
+    let isEditInstructionsRelay = BehaviorRelay<Bool>(value: false)
     
     let photoPicker = ImagePickScene.photo.viewController()
     let videoPicker = ImagePickScene.video.viewController()
     
-    var videoPlaySubject = BehaviorSubject<URL>(value: URL(fileURLWithPath: ""))
+    let videoPlaySubject = BehaviorSubject<URL>(value: URL(fileURLWithPath: ""))
     
-    var isAddedSubject = BehaviorSubject<Bool>(value: false)
+    let isAddedSubject = BehaviorSubject<Bool>(value: false)
     
-    var mainImgDataSubject = BehaviorSubject<Data>(value: Data())
-    var thumbnailImgDataSubject = BehaviorSubject<Data>(value: Data())
+    let mainImgDataSubject = PublishSubject<URL>()
+    let thumbnailImgDataSubject = PublishSubject<URL>()
     
     let titleSubject = BehaviorSubject<String>(value: "")
     let servingSubject = BehaviorSubject<Int>(value: 0)
     let timeSubject = BehaviorSubject<Int>(value: 0)
     let selectedGenres = BehaviorRelay<[Genre]>(value: [])
-    var isVIPSubject = BehaviorSubject<Bool>(value: false)
+    let isVIPSubject = BehaviorSubject<Bool>(value: false)
     
     
     var ingredients = [Ingredient]()
     var instructions = [Instruction]()
     
-    var ingredientsSubject = BehaviorSubject<[Ingredient]>(value: [])
-    var instructionsSubject = BehaviorSubject<[Instruction]>(value: [])
+    let ingredientsRelay = BehaviorRelay<[Ingredient]>(value: [])
+    let instructionsRelay = BehaviorRelay<[Instruction]>(value: [])
     
     let isMainImgValidation:  Observable<Bool>
     let isTitleValidation:  Observable<Bool>
@@ -69,18 +69,17 @@ final class CreateRecipeVM: ViewModelBase {
     let combinedRequirements: Observable<(Bool, Bool, Bool, Bool)>
     let combinedIngredientAndInstructionValidation: Observable<(Bool, Bool)>
     
-//    let stringInputs: Observable<(String, StrstringInputsing, String)>
     let combinedInputs: [RecipeInput]
     let isIngredienstNotEmpty = PublishSubject<Bool>()
     let isInstructionsNotEmpty = PublishSubject<Bool>()
     
-    var pickingImgIndexSubject = PublishSubject<Int>()
+    let pickingImgIndexSubject = PublishSubject<Int>()
     
     var isExpanded = false
     let selectedTimeSubject: BehaviorRelay<String>
     let mainImgKind: DigitalContentsFor.RecipeMain
     
-    init(sceneCoodinator: SceneCoordinator, user: Firebase.User, imgData: Data, videoUrl: URL?, kind: DigitalContentsFor.RecipeMain, apiType: CreateRecipeDMProtocol.Type = CreateRecipeDM.self) {
+    init(sceneCoodinator: SceneCoordinator, user: Firebase.User, imageUrl: URL?, videoUrl: URL?, kind: DigitalContentsFor.RecipeMain, apiType: CreateRecipeDMProtocol.Type = CreateRecipeDM.self) {
         
         self.sceneCoodinator = sceneCoodinator
         self.user = user
@@ -89,10 +88,10 @@ final class CreateRecipeVM: ViewModelBase {
         self.selectedTimeSubject = BehaviorRelay<String>(value: "")
         
         self.ingredients = []
-        self.ingredientsSubject = BehaviorSubject<[Ingredient]>(value: self.ingredients)
+        self.ingredientsRelay = BehaviorRelay<[Ingredient]>(value: self.ingredients)
         
         self.isMainImgValidation = self.mainImgDataSubject
-            .map { !$0.isEmpty }
+            .map { $0 != nil }
             .share(replay: 1, scope: .forever)
         
         self.isTitleValidation = self.titleSubject
@@ -112,13 +111,13 @@ final class CreateRecipeVM: ViewModelBase {
             .map { !String($0).isEmpty }
             .share(replay: 1, scope: .forever)
         
-        self.ingredientValidation = self.ingredientsSubject
+        self.ingredientValidation = self.ingredientsRelay
             .map { $0[0] }
             .debug()
             .map { !$0.name.isEmpty && !$0.amount.isEmpty }
             .share(replay: 1, scope: .forever)
         
-        self.instructionValidation = self.instructionsSubject.map { $0[0] }
+        self.instructionValidation = self.instructionsRelay.map { $0[0] }
         .map { !$0.text.isEmpty }
         .share(replay: 1, scope: .forever)
         
@@ -131,16 +130,14 @@ final class CreateRecipeVM: ViewModelBase {
             return (isIngredientValid, isInstructionValid)
         }
         
-        self.mainImgDataSubject.onNext(imgData)
+        self.mainImgDataSubject.onNext(imageUrl)
         self.combinedInputs = [.mainPhoto(self.mainImgDataSubject)]
 
         self.mainImgKind = kind
-        
-//        super.init()
-        
+                
         switch kind {
         case .video:
-            thumbnailImgDataSubject.onNext(imgData)
+            thumbnailImgDataSubject.onNext(imageUrl)
         default:
             break
         }
@@ -148,7 +145,6 @@ final class CreateRecipeVM: ViewModelBase {
     }
     
     func isFilledRequirement(isMainImgValid: Bool, isTitleValid: Bool, isTimeValid: Bool, isServingValid: Bool) -> Observable<Bool> {
-        
         
         return Observable.create { observer in
             
@@ -263,7 +259,7 @@ final class CreateRecipeVM: ViewModelBase {
     
     func goToNext(){
         
-        Observable.combineLatest (self.mainImgDataSubject, isAddedSubject, videoPlaySubject, titleSubject, selectedTimeSubject, servingSubject, isVIPSubject, selectedGenres)
+        Observable.combineLatest (mainImgDataSubject, isAddedSubject, videoPlaySubject, titleSubject, selectedTimeSubject, servingSubject, isVIPSubject, selectedGenres)
             .flatMap { mainImageData, isAdded, url, title, timeString, serving, isVIP, genres  -> Observable<CheckRecipeVM> in
                 
                 let url = isAdded ? url : nil
@@ -341,8 +337,7 @@ final class CreateRecipeVM: ViewModelBase {
 
         let indredient = Ingredient(key: uniqueIdString, name: "", amount: "", index: self.ingredients.count)
 
-        self.ingredients.append(indredient)
-        self.ingredientsSubject.onNext(self.ingredients)
+        self.ingredientsRelay.accept(self.ingredients)
     }
     
 
@@ -354,8 +349,7 @@ final class CreateRecipeVM: ViewModelBase {
         
         let instruction = Instruction(id: uniqueIdString, index: self.instructions.count, imageURL: "", text: "")
         
-        self.instructions.append(instruction)
-        self.instructionsSubject.onNext(self.instructions)
+        self.instructionsSubject.accept(self.instructions)
     }
     
     
@@ -392,7 +386,7 @@ final class CreateRecipeVM: ViewModelBase {
 
     }
     
-    func toSelectThumbnail(imageData: Data) {
+    func toSelectThumbnail(imageData: URL) {
         
         let vm = SelectThumbnailVM(sceneCoodinator: self.sceneCoodinator, user: self.user, imageData: imageData)
         let scene: Scene = .digitalContentsPickerScene(scene: .selectThumbnail(vm))
@@ -403,29 +397,22 @@ final class CreateRecipeVM: ViewModelBase {
 
     }
     
-    func instructionsToImagePicker(index: Int) -> Observable<Data> {
-        
-        let subject = PublishSubject<Data>()
-        let scene: Scene = .digitalContentsPickerScene(scene: .photo)
-        
-        self.sceneCoodinator.transition(to: scene, type: .photoPick(completion: { data in
+    func instructionsToImagePicker(index: Int) -> Observable<URL> {
+        return .create { observer in
             
-            let str = String(decoding: data, as: UTF8.self)
+            let scene: Scene = .digitalContentsPickerScene(scene: .photo)
             
-            self.instructions[index].imageURL =  URL(string: str)?.absoluteString
-            
-            self.sceneCoodinator.userDismissed { _ in
+            self.sceneCoodinator.transition(to: scene, type: .photoPick(completion: { url in
                 
-                subject.onNext(data)
+                self.instructions[index].imageURL = url.absoluteString
                 
-            }
-
+                self.sceneCoodinator.userDismissed { _ in
+                    observer.onNext(url)
+                }
+            }))
             
-        }))
-
-        
-        return subject.asObservable()
-        
+            return Disposables.create()
+        }
     }
     
     func toImagePicker() {
@@ -443,22 +430,19 @@ final class CreateRecipeVM: ViewModelBase {
     }
     
     
-    func getImage() -> Observable<Data> {
+    func getImage() -> Observable<URL> {
         
         return photoPicker.rx.imageData
             .catch { err in
-                
                 print(err)
 
                 return .empty()
             }
             .observe(on: MainScheduler.instance)
             .do(onNext: { [unowned self] in
-                
                 self.sceneCoodinator.userDismissed()
                 
                 self.mainImgDataSubject.onNext($0)
-                
             })
                 
     }
@@ -543,29 +527,20 @@ final class CreateRecipeVM: ViewModelBase {
 
 extension CreateRecipeVM: SelectGenreProtocol {
     func addGenre(genres: [Genre]) {
-        
         self.selectedGenres.accept(genres)
-        
     }
 }
 
 
 extension CreateRecipeVM: UploadingVideoVMDelegate {
-    
     func addVideo(isAdded: Bool) {
-        
         isAddedSubject.onNext(isAdded)
-        
     }
 }
 
 extension CreateRecipeVM: SelectThumbnailDelegate {
- 
-    func selectedThumbnail(imageData: Data) {
-
+    func selectedThumbnail(imageData: URL) {
         mainImgDataSubject.onNext(imageData)
-
     }
-
 }
 

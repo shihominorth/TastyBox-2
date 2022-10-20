@@ -14,7 +14,7 @@ protocol RegisterMyInfoProtocol: AnyObject {
     static var firestoreService: FirestoreServices { get }
     static var storageService: StorageService { get }
     static func getUserImage(user: Firebase.User) -> Observable<URL>
-    static func userRegister(userName: String?, email: String?, familySize: String?, cuisineType: String?, accountImage: Data?) -> Observable<Void>
+    static func userRegister(userName: String?, email: String?, familySize: String?, cuisineType: String?, accountImage: URL?) -> Observable<Void>
 }
 
 final class RegisterMyInfoDM: RegisterMyInfoProtocol {
@@ -54,7 +54,7 @@ final class RegisterMyInfoDM: RegisterMyInfoProtocol {
     
     // observer or maybe are the best because the functions for firebase is nested.
     
-    static func userRegister(userName: String?, email: String?, familySize: String?, cuisineType: String?, accountImage: Data?) -> Observable<Void> {
+    static func userRegister(userName: String?, email: String?, familySize: String?, cuisineType: String?, accountImage: URL?) -> Observable<Void> {
         
         if let uid = Auth.auth().currentUser?.uid, let userName = userName, let email = email, let familySize = familySize?.convertToInt(), let cuisineType = cuisineType,  let myImage = accountImage {
             
@@ -73,7 +73,7 @@ final class RegisterMyInfoDM: RegisterMyInfoProtocol {
                 
             ])
                 .flatMapLatest { _ in
-                    self.storageService.addImage(path: imagePath, image: myImage)
+                    self.storageService.addImage(path: imagePath, url: myImage)
                 }
                 .flatMapLatest({ _ in
                     self.storageService.downLoadUrl(path: imagePath)
